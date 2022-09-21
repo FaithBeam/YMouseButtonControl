@@ -3,53 +3,143 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels;assembly=YMouseButtonControl.Core"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
         x:Class="YMouseButtonControl.UI.Views.MainWindow"
         Title="YMouseButtonControl.UI">
     <Design.DataContext>
         <vm:MainWindowViewModel></vm:MainWindowViewModel>
     </Design.DataContext>
-    <Window.Styles>
-        <!-- GroupBox Workaround -->
-        <Style Selector="HeaderedContentControl">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*">
-                            <Border ZIndex="1" Padding="5,0,5,0" Background="White" Margin="5,0,0,0">
-                                <TextBlock FontWeight="Normal" Text="{TemplateBinding Header}" />
-                            </Border>
-                            <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,10,0,10"
-                                    BorderBrush="{TemplateBinding Background}"
-                                    BorderThickness="1">
-                                <ContentPresenter Content="{TemplateBinding Content}" />
-                            </Border>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Styles>
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <HeaderedContentControl Header="Application / Window Profiles:" Background="LightGray">
-                <Grid>
-                    <DataGrid Name="MyDataGrid"
-                              Items="{Binding Profiles}"
-                              AutoGenerateColumns="False" HeadersVisibility="None">
-                        <DataGrid.Columns>
-                            <DataGridCheckBoxColumn Binding="{Binding Checked}" />
-                            <DataGridTextColumn Binding="{Binding Name}" />
-                        </DataGrid.Columns>
-                    </DataGrid>    
-                    <Button>OOGA</Button>
+
+    <StackPanel Orientation="Horizontal" Margin="5">
+        <StackPanel>
+            <StackPanel>
+                <DataGrid Name="ProfilesDataGrid"
+                          Items="{Binding Profiles}"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="None"
+                          Margin="5"
+                          Height="300"
+                          SelectedItem="{Binding CurrentProfile}">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />
+                        <DataGridTextColumn Binding="{Binding Name}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid RowDefinitions="*,*" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" SharedSizeGroup="button" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Add
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Copy
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Export
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Up
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Edit
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Remove
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Import
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        Down
+                    </Button>
                 </Grid>
-            </HeaderedContentControl>
-            
-            <TabControl>
-                <TabItem Header="Layer 1"></TabItem>
-                <TabItem Header="Layer 2"></TabItem>
-                <TabItem Header="Scrolling"></TabItem>
-                <TabItem Header="Options"></TabItem>
-            </TabControl>
+            </StackPanel>
+
+            <StackPanel Margin="5" Orientation="Horizontal">
+                <Button>Settings</Button>
+                <Button>Save Profile</Button>
+                <Button>Load Profile</Button>
+            </StackPanel>
         </StackPanel>
+
+        <StackPanel>
+            <TabControl>
+            <TabItem Header="Layer 1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Layer Name" />
+                        <TextBox Text="Layer 1 (Default)" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Left Button" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Right Button" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Middle Button" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Mouse Button 4" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Mouse Button 5" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Wheel Up" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Wheel Down" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tilt Wheel Right" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tilt Wheel Left" />
+                        <ComboBox></ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Layer 2"></TabItem>
+            <TabItem Header="Scrolling"></TabItem>
+            <TabItem Header="Options"></TabItem>
+        </TabControl>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*,*,*,*">
+                <Label Grid.Row="0" Grid.Column="0" Content="Description"/>
+                <Label Grid.Row="0" Grid.Column="1" Content="{Binding CurrentProfile.Description}"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="Window Caption"/>
+                <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentProfile.WindowCaption}"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="Process"/>
+                <Label Grid.Row="2" Grid.Column="1" Content="{Binding CurrentProfile.Process}"/>
+                <Label Grid.Row="3" Grid.Column="0" Content="Window Class"/>
+                <Label Grid.Row="3" Grid.Column="1" Content="{Binding CurrentProfile.WindowClass}"/>
+                <Label Grid.Row="4" Grid.Column="0" Content="Parent Class"/>
+                <Label Grid.Row="4" Grid.Column="1" Content="{Binding CurrentProfile.ParentClass}"/>
+                <Label Grid.Row="5" Grid.Column="0" Content="Match Type"/>
+                <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentProfile.MatchType}"/>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
 </Window>

@@ -8,16 +8,16 @@
 
         // public IMouseButton MouseButton4 { get; set; }
 
-        // public string Description { get; set; }
+        public string Description { get; set; }
 
-        // public string WindowCaption { get; set; }
+        public string WindowCaption { get; set; }
 
-        // public string Process { get; set; }
+        public string Process { get; set; }
 
-        // public string WindowClass { get; set; }
+        public string WindowClass { get; set; }
 
-        // public string ParentClass { get; set; }
+        public string ParentClass { get; set; }
 
-        // public string MatchType { get; set; }
+        public string MatchType { get; set; }
     }
 }
