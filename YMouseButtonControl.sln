@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl", "YMouseButtonControl\YMouseButtonControl.csproj", "{01B70517-A05A-405C-9AB7-339F7F697854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Core", "YMouseButtonControl.Core\YMouseButtonControl.Core.csproj", "{73FCD432-71C1-4993-8D2F-739E2C031188}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.UI", "YMouseButtonControl.UI\YMouseButtonControl.UI.csproj", "{F34A2312-BF56-45E4-AE3F-9EC04238FB06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01B70517-A05A-405C-9AB7-339F7F697854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B70517-A05A-405C-9AB7-339F7F697854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B70517-A05A-405C-9AB7-339F7F697854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B70517-A05A-405C-9AB7-339F7F697854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73FCD432-71C1-4993-8D2F-739E2C031188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73FCD432-71C1-4993-8D2F-739E2C031188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73FCD432-71C1-4993-8D2F-739E2C031188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73FCD432-71C1-4993-8D2F-739E2C031188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F34A2312-BF56-45E4-AE3F-9EC04238FB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F34A2312-BF56-45E4-AE3F-9EC04238FB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F34A2312-BF56-45E4-AE3F-9EC04238FB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F34A2312-BF56-45E4-AE3F-9EC04238FB06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels;assembly=YMouseButtonControl.Core"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="YMouseButtonControl.UI.Views.MainWindow"
+        Title="YMouseButtonControl.UI">
+    <Design.DataContext>
+        <vm:MainWindowViewModel></vm:MainWindowViewModel>
+    </Design.DataContext>
+    <Window.Styles>
+        <!-- GroupBox Workaround -->
+        <Style Selector="HeaderedContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*">
+                            <Border ZIndex="1" Padding="5,0,5,0" Background="White" Margin="5,0,0,0">
+                                <TextBlock FontWeight="Normal" Text="{TemplateBinding Header}" />
+                            </Border>
+                            <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,10,0,10"
+                                    BorderBrush="{TemplateBinding Background}"
+                                    BorderThickness="1">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Styles>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <HeaderedContentControl Header="Application / Window Profiles:" Background="LightGray">
+                <Grid>
+                    <DataGrid Name="MyDataGrid"
+                              Items="{Binding Profiles}"
+                              AutoGenerateColumns="False" HeadersVisibility="None">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn Binding="{Binding Checked}" />
+                            <DataGridTextColumn Binding="{Binding Name}" />
+                        </DataGrid.Columns>
+                    </DataGrid>    
+                    <Button>OOGA</Button>
+                </Grid>
+            </HeaderedContentControl>
+            
+            <TabControl>
+                <TabItem Header="Layer 1"></TabItem>
+                <TabItem Header="Layer 2"></TabItem>
+                <TabItem Header="Scrolling"></TabItem>
+                <TabItem Header="Options"></TabItem>
+            </TabControl>
+        </StackPanel>
+</Window>
