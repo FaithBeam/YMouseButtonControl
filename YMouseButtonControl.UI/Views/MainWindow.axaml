@@ -98,7 +98,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Mouse Button 4" />
-                        <ComboBox></ComboBox>
+                        <ComboBox Items="{Binding MouseButton4Combo}" SelectedIndex="0"></ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Mouse Button 5" />

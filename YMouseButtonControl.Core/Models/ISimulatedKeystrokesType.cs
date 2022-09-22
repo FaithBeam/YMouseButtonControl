@@ -2,10 +2,10 @@
 
 public interface ISimulatedKeystrokesType
 {
-    public int Index { get; set; }
-    public string Description { get; set; }
-    public string ShortDescription { get; set; }
-    public bool Enabled { get; set; }
+    public int Index { get; }
+    public string Description { get; }
+    public string ShortDescription { get; }
+    public bool Enabled { get; }
     public void Run();
     public void Stop();
 }

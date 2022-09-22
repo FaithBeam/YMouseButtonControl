@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Avalonia" Version="0.10.18" />
       <PackageReference Include="ReactiveUI" Version="18.3.1" />
     </ItemGroup>
 
