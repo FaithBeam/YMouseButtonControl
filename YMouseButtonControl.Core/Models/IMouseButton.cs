@@ -6,4 +6,5 @@ public interface IMouseButton
     public string Description { get; set; }
     public bool CanRaiseDialog { get; set; }
     public string Keys { get; set; }
+    public IButtonMapping ButtonMapping { get; set; }
 }

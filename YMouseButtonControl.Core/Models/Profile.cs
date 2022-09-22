@@ -6,7 +6,7 @@
 
         public string Name { get; set; }
 
-        public IMouseButton MouseButton4 { get; set; }
+        public IButtonMapping MouseButton4 { get; set; }
 
         public string Description { get; set; }
 

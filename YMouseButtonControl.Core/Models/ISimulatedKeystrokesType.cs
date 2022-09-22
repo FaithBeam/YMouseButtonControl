@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.Core.Models;
+namespace YMouseButtonControl.Core.Models;
 
 public interface ISimulatedKeystrokesType
 {
@@ -6,6 +6,4 @@ public interface ISimulatedKeystrokesType
     public string Description { get; }
     public string ShortDescription { get; }
     public bool Enabled { get; }
-    public void Run();
-    public void Stop();
 }

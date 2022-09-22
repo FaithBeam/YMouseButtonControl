@@ -10,9 +10,9 @@ namespace YMouseButtonControl.Core.ViewModels;
 public class MainWindowViewModel : ViewModelBase
 {
     private Profile _curProfile;
-    private IMouseButton _curMb4;
+    private IButtonMapping _curMb4;
     public AvaloniaList<string> MouseButton4Combo { get; set; }
-    public List<Profile> Profiles { get; }
+    public AvaloniaList<Profile> Profiles { get; }
 
     public Profile CurrentProfile
     {
@@ -20,17 +20,16 @@ public class MainWindowViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _curProfile, value);   
-            updateCurrents();
+            UpdateCurrents();
         }
     }
 
-    public IMouseButton CurrentMouseButton4
+    public IButtonMapping CurrentMouseButton4
     {
         get => _curMb4;
         set
         {
             this.RaiseAndSetIfChanged(ref _curMb4, value);
-            MouseButton4Combo[]
         }
     }
 
@@ -40,7 +39,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             "** No Change (Don't Intercept) **"
         };
-        Profiles = new List<Profile>
+        Profiles = new AvaloniaList<Profile>
         {
             new()
             {
@@ -54,8 +53,6 @@ public class MainWindowViewModel : ViewModelBase
                 WindowClass = "N/A",
                 MouseButton4 = new SimulatedKeystrokes()
                 {
-                    Index = 2,
-                    Description = "Simulated Keys (undefined)",
                     CanRaiseDialog = true,
                     Keys = "w",
                     SimulatedKeystrokesType = new StickyHoldActionType()
@@ -76,8 +73,9 @@ public class MainWindowViewModel : ViewModelBase
         CurrentProfile = Profiles.First();
     }
 
-    private void updateCurrents()
+    private void UpdateCurrents()
     {
         CurrentMouseButton4 = CurrentProfile.MouseButton4;
+        MouseButton4Combo[0] = CurrentMouseButton4.ToString();
     }
 }
