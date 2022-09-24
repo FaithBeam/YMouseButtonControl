@@ -15,4 +15,9 @@ public class NothingMapping : IButtonMapping
     {
         throw new System.NotImplementedException();
     }
+
+    public override string ToString()
+    {
+        return Description;
+    }
 }

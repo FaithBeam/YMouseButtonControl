@@ -100,7 +100,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             if (mapping is not null && i == mapping.Index)
             {
-                comboList[i] = mapping.Description;
+                comboList[i] = mapping.ToString();
             }
             else
             {
