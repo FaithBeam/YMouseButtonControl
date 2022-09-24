@@ -1,6 +1,9 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia.Collections;
 using ReactiveUI;
+using YMouseButtonControl.Core.Config;
 using YMouseButtonControl.Core.Factories;
 using YMouseButtonControl.Core.Models;
 using YMouseButtonControl.Core.Models.SimulatedKeystrokesTypes;
@@ -13,6 +16,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private Profile _curProfile;
     private int _mb4LastIndex;
+    private ObservableAsPropertyHelper<bool> _canApply;
 
     #endregion
 
@@ -55,11 +59,14 @@ public class MainWindowViewModel : ViewModelBase
             }
         };
         CurrentProfile = Profiles.First();
+        ApplyCommand = ReactiveCommand.CreateFromTask(OnClickedApply);
     }
 
     #endregion
 
     #region Properties
+    
+    public ICommand ApplyCommand { get; }
 
     public int MouseButton4LastIndex
     {
@@ -88,6 +95,11 @@ public class MainWindowViewModel : ViewModelBase
     #endregion
 
     #region Methods
+
+    private async Task OnClickedApply()
+    {
+        await Task.Run(() => SaveProfiles.Save(Profiles));
+    }
 
     private void ResetMouseCombos()
     {
