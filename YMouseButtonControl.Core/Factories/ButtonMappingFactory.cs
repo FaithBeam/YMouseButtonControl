@@ -6,13 +6,10 @@ namespace YMouseButtonControl.Core.Factories;
 
 public static class ButtonMappingFactory
 {
-    private static Dictionary<int, Type> _buttonMappings = new()
+    public static readonly List<string> ButtonMappings = new()
     {
-        {2, typeof(SimulatedKeystrokes)}
+        "** No Change (Don't Intercept) **",
+        "Disable",
+        "Simulated Keys (undefined)"
     };
-
-    public static List<IButtonMapping> GetMappings()
-    {
-        
-    }
 }

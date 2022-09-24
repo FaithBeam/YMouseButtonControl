@@ -3,7 +3,7 @@
 public class SimulatedKeystrokes : IButtonMapping
 {
     public int Index { get; } = 2;
-    public string Description = "Simulated Keys (undefined)";
+    public string Description { get; }= "Simulated Keys (undefined)";
     public bool Enabled { get; }
 
     public void Run()

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Avalonia.Collections;
 using ReactiveUI;
+using YMouseButtonControl.Core.Factories;
 using YMouseButtonControl.Core.Models;
 using YMouseButtonControl.Core.Models.SimulatedKeystrokesTypes;
 
@@ -9,36 +9,17 @@ namespace YMouseButtonControl.Core.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    #region Fields
+
     private Profile _curProfile;
-    private IButtonMapping _curMb4;
-    public AvaloniaList<string> MouseButton4Combo { get; set; }
-    public AvaloniaList<Profile> Profiles { get; }
+    private int _mb4LastIndex;
 
-    public Profile CurrentProfile
-    {
-        get => _curProfile;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _curProfile, value);   
-            UpdateCurrents();
-        }
-    }
+    #endregion
 
-    public IButtonMapping CurrentMouseButton4
-    {
-        get => _curMb4;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _curMb4, value);
-        }
-    }
+    #region Constructor
 
     public MainWindowViewModel()
     {
-        MouseButton4Combo = new AvaloniaList<string>()
-        {
-            "** No Change (Don't Intercept) **"
-        };
         Profiles = new AvaloniaList<Profile>
         {
             new()
@@ -55,8 +36,9 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     CanRaiseDialog = true,
                     Keys = "w",
-                    SimulatedKeystrokesType = new StickyHoldActionType()
-                }
+                    SimulatedKeystrokesType = new StickyHoldActionType(),
+                },
+                MouseButton4LastIndex = 2
             },
             new()
             {
@@ -67,15 +49,67 @@ public class MainWindowViewModel : ViewModelBase
                 MatchType = "N/A",
                 ParentClass = "N/A",
                 WindowCaption = "N/A",
-                WindowClass = "N/A"
+                WindowClass = "N/A",
+                MouseButton4 = new NothingMapping(),
+                MouseButton4LastIndex = 0
             }
         };
         CurrentProfile = Profiles.First();
     }
 
-    private void UpdateCurrents()
+    #endregion
+
+    #region Properties
+
+    public int MouseButton4LastIndex
     {
-        CurrentMouseButton4 = CurrentProfile.MouseButton4;
-        MouseButton4Combo[0] = CurrentMouseButton4.ToString();
+        get => _mb4LastIndex;
+        set => this.RaiseAndSetIfChanged(ref _mb4LastIndex, value);
     }
+
+    public Profile CurrentProfile
+    {
+        get => _curProfile;
+        set
+        {
+            if (_curProfile is not null)
+            {
+                _curProfile.MouseButton4LastIndex = MouseButton4LastIndex;
+            }
+            this.RaiseAndSetIfChanged(ref _curProfile, value);
+            ResetMouseCombos();
+            MouseButton4LastIndex = _curProfile.MouseButton4LastIndex;
+        }
+    }
+    public AvaloniaList<string> MouseButton4Combo { get; set; } = new(ButtonMappingFactory.ButtonMappings);
+
+    public AvaloniaList<Profile> Profiles { get; }
+
+    #endregion
+
+    #region Methods
+
+    private void ResetMouseCombos()
+    {
+        ResetCombo(MouseButton4Combo, CurrentProfile.MouseButton4);
+    }
+
+    private void ResetCombo(IAvaloniaList<string> comboList, IButtonMapping mapping)
+    {
+        for (var i = 0; i < ButtonMappingFactory.ButtonMappings.Count; i++)
+        {
+            if (mapping is not null && i == mapping.Index)
+            {
+                comboList[i] = mapping.Description;
+            }
+            else
+            {
+                comboList[i] = ButtonMappingFactory.ButtonMappings[i];
+            }
+        }
+    }
+    
+    #endregion
+
+    
 }

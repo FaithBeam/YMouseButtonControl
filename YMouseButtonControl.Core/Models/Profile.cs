@@ -8,6 +8,8 @@
 
         public IButtonMapping MouseButton4 { get; set; }
 
+        public int MouseButton4LastIndex { get; set; } = 0;
+
         public string Description { get; set; }
 
         public string WindowCaption { get; set; }
