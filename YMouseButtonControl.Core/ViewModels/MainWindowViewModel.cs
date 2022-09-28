@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Collections;
 using ReactiveUI;
-using YMouseButtonControl.Core.Config;
 using YMouseButtonControl.Core.Factories;
 using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.DataAccess.Models;
-using YMouseButtonControl.DataAccess.UnitOfWork;
 
 namespace YMouseButtonControl.Core.ViewModels;
 

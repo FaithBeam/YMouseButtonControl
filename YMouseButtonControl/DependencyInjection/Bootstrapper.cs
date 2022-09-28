@@ -1,9 +1,7 @@
-using Avalonia.Collections;
 using Splat;
 using YMouseButtonControl.Configuration;
-using YMouseButtonControl.DataAccess.Models;
 
-namespace YMouseButtonControl.DI;
+namespace YMouseButtonControl.DependencyInjection;
 
 public static class Bootstrapper
 {

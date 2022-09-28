@@ -2,7 +2,7 @@
 using YMouseButtonControl.Services.Environment.Implementations;
 using YMouseButtonControl.Services.Environment.Interfaces;
 
-namespace YMouseButtonControl.DI;
+namespace YMouseButtonControl.DependencyInjection;
 
 public static class EnvironmentServicesBootstrapper
 {

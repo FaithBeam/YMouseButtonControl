@@ -2,7 +2,7 @@
 using Avalonia.ReactiveUI;
 using Splat;
 using YMouseButtonControl.Configuration;
-using YMouseButtonControl.DI;
+using YMouseButtonControl.DependencyInjection;
 
 namespace YMouseButtonControl;
 

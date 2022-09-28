@@ -1,10 +1,9 @@
 ﻿using Splat;
-using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DataAccess.Configuration;
 using YMouseButtonControl.DataAccess.LiteDb;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 
-namespace YMouseButtonControl.DI;
+namespace YMouseButtonControl.DependencyInjection;
 
 public static class DataAccessBootstrapper
 {

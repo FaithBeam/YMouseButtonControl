@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Splat;
@@ -7,7 +8,7 @@ using YMouseButtonControl.DataAccess.Configuration;
 using YMouseButtonControl.Services.Environment.Enums;
 using YMouseButtonControl.Services.Environment.Interfaces;
 
-namespace YMouseButtonControl.DI;
+namespace YMouseButtonControl.DependencyInjection;
 
 public static class ConfigurationBootstrapper
 {
@@ -51,7 +52,7 @@ public static class ConfigurationBootstrapper
         else
         {
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
-            dbDirectory = Path.GetDirectoryName(assemblyLocation);
+            dbDirectory = Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
         }
 
         if (!Directory.Exists(dbDirectory))

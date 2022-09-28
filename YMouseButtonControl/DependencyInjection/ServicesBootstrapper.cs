@@ -2,7 +2,7 @@
 using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 
-namespace YMouseButtonControl.DI;
+namespace YMouseButtonControl.DependencyInjection;
 
 public static class ServicesBootstrapper
 {
