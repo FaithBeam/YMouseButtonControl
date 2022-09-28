@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.Core.Models.SimulatedKeystrokesTypes;
+﻿namespace YMouseButtonControl.DataAccess.Models.SimulatedKeystrokesTypes;
 
 public class StickyHoldActionType: ISimulatedKeystrokesType
 {

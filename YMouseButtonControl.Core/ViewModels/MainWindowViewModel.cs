@@ -5,8 +5,9 @@ using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.Core.Config;
 using YMouseButtonControl.Core.Factories;
-using YMouseButtonControl.Core.Models;
-using YMouseButtonControl.Core.Models.SimulatedKeystrokesTypes;
+using YMouseButtonControl.Core.Services;
+using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.DataAccess.UnitOfWork;
 
 namespace YMouseButtonControl.Core.ViewModels;
 
@@ -16,14 +17,16 @@ public class MainWindowViewModel : ViewModelBase
 
     private Profile _curProfile;
     private int _mb4LastIndex;
+    private IProfilesService _profilesService;
 
     #endregion
 
     #region Constructor
 
-    public MainWindowViewModel(AvaloniaList<Profile> profiles)
+    public MainWindowViewModel(IProfilesService profilesService)
     {
-        Profiles = profiles;
+        _profilesService = profilesService;
+        Profiles = (AvaloniaList<Profile>)_profilesService.GetProfiles();
         CurrentProfile = Profiles.First();
         ApplyCommand = ReactiveCommand.CreateFromTask(OnClickedApply);
     }
@@ -64,7 +67,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private async Task OnClickedApply()
     {
-        await Task.Run(() => SaveProfiles.Save(Profiles));
+        // await Task.Run(() => SaveProfiles.Save(Profiles));
     }
 
     private void ResetMouseCombos()

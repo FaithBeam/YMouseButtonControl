@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Splat;
-using YMouseButtonControl.Core.DI;
 using YMouseButtonControl.Core.ViewModels;
 
 namespace YMouseButtonControl.UI;

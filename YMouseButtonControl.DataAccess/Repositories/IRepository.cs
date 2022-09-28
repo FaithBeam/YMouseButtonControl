@@ -1,8 +1,12 @@
-﻿namespace YMouseButtonControl.DataAccess.Repositories;
+﻿using System.Collections.Generic;
+
+namespace YMouseButtonControl.DataAccess.Repositories;
 
 public interface IRepository<T>
 {
     T GetById(string id);
+
+    IEnumerable<T> GetAll();
 
     void Add(string id, T entity);
 

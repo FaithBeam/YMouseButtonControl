@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using System.Collections.Generic;
+using LiteDB;
 using YMouseButtonControl.DataAccess.Repositories;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
@@ -13,6 +14,8 @@ public class Repository<T> : IRepository<T> where T : class
     }
 
     public T GetById(string id) => _collection.FindById(id);
+
+    public IEnumerable<T> GetAll() => _collection.FindAll();
 
     public void Add(string id, T entity) => _collection.Insert(id, entity);
 

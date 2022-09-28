@@ -1,7 +1,7 @@
 using System;
 using Splat;
 
-namespace YMouseButtonControl.Core.DI;
+namespace YMouseButtonControl.DI;
 
 public static class ReadOnlyDependencyResolverExtensions
 {

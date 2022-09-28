@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Avalonia.Collections;
 using Newtonsoft.Json;
-using YMouseButtonControl.Core.Models;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.Config;
 

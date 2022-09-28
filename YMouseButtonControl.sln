@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.DataAcc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.DataAccess.LiteDb", "YMouseButtonControl.DataAccess.LiteDb\YMouseButtonControl.DataAccess.LiteDb.csproj", "{6AAA8112-7911-4981-B9D0-A4CEE0597045}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.DataAccess.Models", "YMouseButtonControl.DataAccess.Models\YMouseButtonControl.DataAccess.Models.csproj", "{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{6AAA8112-7911-4981-B9D0-A4CEE0597045}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AAA8112-7911-4981-B9D0-A4CEE0597045}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AAA8112-7911-4981-B9D0-A4CEE0597045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

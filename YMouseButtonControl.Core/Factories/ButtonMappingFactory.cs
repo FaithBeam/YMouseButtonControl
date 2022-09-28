@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using YMouseButtonControl.Core.Models;
 
 namespace YMouseButtonControl.Core.Factories;
 

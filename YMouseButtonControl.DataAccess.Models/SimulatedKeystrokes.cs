@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.Core.Models;
+﻿namespace YMouseButtonControl.DataAccess.Models;
 
 public class SimulatedKeystrokes : IButtonMapping
 {
