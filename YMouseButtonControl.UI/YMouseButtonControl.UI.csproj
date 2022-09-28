@@ -27,12 +27,6 @@
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Views\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\YMouseButtonControl.Core\YMouseButtonControl.Core.csproj" />
     </ItemGroup>
 </Project>

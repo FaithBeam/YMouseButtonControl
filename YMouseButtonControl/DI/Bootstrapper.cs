@@ -8,10 +8,12 @@ namespace YMouseButtonControl.DI;
 public static class Bootstrapper
 {
     public static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver,
-        DataAccessConfiguration dataAccessConfiguration)
+        DataAccessConfiguration dataAccessConfig)
     {
+        EnvironmentServicesBootstrapper.RegisterEnvironmentServices(services, resolver);
         ServicesBootstrapper.RegisterServices(services, resolver);
         ViewModelsBootstrapper.RegisterViewModels(services, resolver);
+        ConfigurationBootstrapper.RegisterConfiguration(services, resolver, dataAccessConfig);
         DataAccessBootstrapper.RegisterDataAccess(services, resolver);
     }
 }

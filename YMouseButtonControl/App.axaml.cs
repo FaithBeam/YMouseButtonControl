@@ -3,8 +3,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Splat;
 using YMouseButtonControl.Core.ViewModels;
+using YMouseButtonControl.DI;
+using YMouseButtonControl.Views;
 
-namespace YMouseButtonControl.UI;
+namespace YMouseButtonControl;
 
 public class App : Application
 {
@@ -18,7 +20,7 @@ public class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             DataContext = GetRequiredService<MainWindowViewModel>();
-            desktop.MainWindow = new Views.MainWindow()
+            desktop.MainWindow = new MainWindow()
             {
                 DataContext = DataContext
             };

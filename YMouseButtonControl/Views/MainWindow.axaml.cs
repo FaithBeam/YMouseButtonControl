@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using YMouseButtonControl.Core.ViewModels;
 
-namespace YMouseButtonControl.UI.Views;
+namespace YMouseButtonControl.Views;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {

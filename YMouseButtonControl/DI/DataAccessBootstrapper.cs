@@ -1,4 +1,5 @@
 ﻿using Splat;
+using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DataAccess.Configuration;
 using YMouseButtonControl.DataAccess.LiteDb;
 using YMouseButtonControl.DataAccess.UnitOfWork;

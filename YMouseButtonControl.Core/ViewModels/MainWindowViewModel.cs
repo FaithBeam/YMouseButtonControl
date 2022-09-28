@@ -26,8 +26,8 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(IProfilesService profilesService)
     {
         _profilesService = profilesService;
-        Profiles = (AvaloniaList<Profile>)_profilesService.GetProfiles();
-        CurrentProfile = Profiles.First();
+        Profiles = new AvaloniaList<Profile>(_profilesService.GetProfiles());
+        CurrentProfile = Profiles.FirstOrDefault();
         ApplyCommand = ReactiveCommand.CreateFromTask(OnClickedApply);
     }
 
@@ -54,7 +54,7 @@ public class MainWindowViewModel : ViewModelBase
             }
             this.RaiseAndSetIfChanged(ref _curProfile, value);
             ResetMouseCombos();
-            MouseButton4LastIndex = _curProfile.MouseButton4LastIndex;
+            // MouseButton4LastIndex = _curProfile.MouseButton4LastIndex;
         }
     }
     public AvaloniaList<string> MouseButton4Combo { get; set; } = new(ButtonMappingFactory.ButtonMappings);
@@ -72,7 +72,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private void ResetMouseCombos()
     {
-        ResetCombo(MouseButton4Combo, CurrentProfile.MouseButton4);
+        // ResetCombo(MouseButton4Combo, CurrentProfile.MouseButton4);
     }
 
     private void ResetCombo(IAvaloniaList<string> comboList, IButtonMapping mapping)
