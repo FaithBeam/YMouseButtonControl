@@ -16,48 +16,14 @@ public class MainWindowViewModel : ViewModelBase
 
     private Profile _curProfile;
     private int _mb4LastIndex;
-    private ObservableAsPropertyHelper<bool> _canApply;
 
     #endregion
 
     #region Constructor
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(AvaloniaList<Profile> profiles)
     {
-        Profiles = new AvaloniaList<Profile>
-        {
-            new()
-            {
-                Name = "Default",
-                Checked = true,
-                Description = "N/A",
-                Process = "N/A",
-                MatchType = "N/A",
-                ParentClass = "N/A",
-                WindowCaption = "N/A",
-                WindowClass = "N/A",
-                MouseButton4 = new SimulatedKeystrokes()
-                {
-                    CanRaiseDialog = true,
-                    Keys = "w",
-                    SimulatedKeystrokesType = new StickyHoldActionType(),
-                },
-                MouseButton4LastIndex = 2
-            },
-            new()
-            {
-                Name = "Profile 2",
-                Checked = true,
-                Description = "N/A",
-                Process = "OG",
-                MatchType = "N/A",
-                ParentClass = "N/A",
-                WindowCaption = "N/A",
-                WindowClass = "N/A",
-                MouseButton4 = new NothingMapping(),
-                MouseButton4LastIndex = 0
-            }
-        };
+        Profiles = profiles;
         CurrentProfile = Profiles.First();
         ApplyCommand = ReactiveCommand.CreateFromTask(OnClickedApply);
     }
