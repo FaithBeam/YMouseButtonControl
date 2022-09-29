@@ -14,7 +14,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private Profile _curProfile;
     private IProfilesService _profilesService;
 
     #endregion
@@ -27,7 +26,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         LayerViewModel = layerViewModel;
         Profiles = new AvaloniaList<Profile>(_profilesService.GetProfiles());
         CurrentProfile = profilesService.CurrentProfile;
-        profilesService.SelectedProfileChanged += OnProfileChanged;
     }
 
     #endregion
@@ -42,18 +40,13 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     public Profile CurrentProfile
     {
-        get => _curProfile;
+        get => _profilesService.CurrentProfile;
         set => _profilesService.CurrentProfile = value;
     }
 
     #endregion
 
     #region Methods
-
-    private void OnProfileChanged(object sender, SelectedProfileChangedEventArgs e)
-    {
-        this.RaisePropertyChanged(nameof(CurrentProfile));
-    }
 
     #endregion
 }
