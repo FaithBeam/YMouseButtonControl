@@ -1,6 +1,8 @@
 using Splat;
-using YMouseButtonControl.Core.Services;
-using YMouseButtonControl.Core.ViewModels;
+using YMouseButtonControl.ViewModels.Implementations;
+using YMouseButtonControl.ViewModels.Interfaces;
+using YMouseButtonControl.ViewModels.Services;
+using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -14,6 +16,10 @@ public static class ViewModelsBootstrapper
     private static void RegisterCommonViewModels(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver)
     {
-        services.Register(() => new MainWindowViewModel(resolver.GetRequiredService<IProfilesService>()));
+        services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel());
+        services.RegisterLazySingleton<IMainWindowViewModel>(() => new MainWindowViewModel(
+            resolver.GetRequiredService<IProfilesService>(),
+            resolver.GetRequiredService<ILayerViewModel>()
+        ));
     }
 }

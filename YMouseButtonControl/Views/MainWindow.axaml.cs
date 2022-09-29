@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using YMouseButtonControl.Core.ViewModels;
+using YMouseButtonControl.ViewModels.Implementations;
 
 namespace YMouseButtonControl.Views;
 

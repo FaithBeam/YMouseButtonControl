@@ -1,6 +1,8 @@
 ﻿using Splat;
-using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.DataAccess.UnitOfWork;
+using YMouseButtonControl.ViewModels.Services;
+using YMouseButtonControl.ViewModels.Services.Implementations;
+using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -14,11 +16,12 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver)
     {
-        services.Register<IProfilesService>(() => new ProfilesService(
+        services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
         services.Register<ICheckDefaultProfileService>(() => new CheckDefaultProfileService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
+        services.Register<IProfileMediator>(() => new ProfileMediator());
     }
 }

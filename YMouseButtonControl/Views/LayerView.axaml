@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations;assembly=YMouseButtonControl.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             x:Class="YMouseButtonControl.Views.LayerView">
+    
+    <Design.DataContext>
+        <vm:LayerViewModel />
+    </Design.DataContext>
+    
+    <TabControl>
+        <TabItem Header="Layer 1">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Layer Name" />
+                    <TextBox Text="Layer 1 (Default)" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Left Button" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Right Button" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Middle Button" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Mouse Button 4" />
+                    <ComboBox Items="{Binding MouseButton4Combo}"
+                              SelectedIndex="{Binding MouseButton4LastIndex}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Mouse Button 5" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Wheel Up" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Wheel Down" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Tilt Wheel Right" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Tilt Wheel Left" />
+                    <ComboBox></ComboBox>
+                </StackPanel>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Layer 2"></TabItem>
+        <TabItem Header="Scrolling"></TabItem>
+        <TabItem Header="Options"></TabItem>
+    </TabControl>
+</UserControl>

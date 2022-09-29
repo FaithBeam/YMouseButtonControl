@@ -2,14 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:YMouseButtonControl.Core.ViewModels;assembly=YMouseButtonControl.Core"
+        xmlns:implementations="clr-namespace:YMouseButtonControl.ViewModels.Implementations;assembly=YMouseButtonControl.ViewModels"
+        xmlns:views="clr-namespace:YMouseButtonControl.Views"
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="600"
         x:Class="YMouseButtonControl.Views.MainWindow"
-        Title="YMouseButtonControl.UI">
+        Title="YMouseButtonControl">
+    
     <Design.DataContext>
-        <viewModels:MainWindowViewModel></viewModels:MainWindowViewModel>
+        <implementations:MainWindowViewModel />
     </Design.DataContext>
 
     <StackPanel Orientation="Horizontal" Margin="5">
@@ -70,56 +72,7 @@
                     </Grid>
                 </StackPanel>
                 <StackPanel>
-                    <TabControl>
-                        <TabItem Header="Layer 1">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Layer Name" />
-                                    <TextBox Text="Layer 1 (Default)" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Left Button" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Right Button" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Middle Button" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Mouse Button 4" />
-                                    <ComboBox Items="{Binding MouseButton4Combo}"
-                                              SelectedIndex="{Binding MouseButton4LastIndex}" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Mouse Button 5" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Wheel Up" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Wheel Down" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Tilt Wheel Right" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Tilt Wheel Left" />
-                                    <ComboBox></ComboBox>
-                                </StackPanel>
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Layer 2"></TabItem>
-                        <TabItem Header="Scrolling"></TabItem>
-                        <TabItem Header="Options"></TabItem>
-                    </TabControl>
+                    <views:LayerView DataContext="{Binding LayerViewModel}" />
                     <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*,*,*,*">
                         <Label Grid.Row="0" Grid.Column="0" Content="Description" />
                         <Label Grid.Row="0" Grid.Column="1" Content="{Binding CurrentProfile.Description}" />
@@ -146,7 +99,5 @@
                 <Button>Close</Button>
             </StackPanel>
         </StackPanel>
-
-
     </StackPanel>
 </Window>

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace YMouseButtonControl.Core.Factories;
+namespace YMouseButtonControl.ViewModels.Factories;
 
 public static class ButtonMappingFactory
 {

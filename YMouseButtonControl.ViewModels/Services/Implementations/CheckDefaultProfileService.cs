@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.DataAccess.UnitOfWork;
+using YMouseButtonControl.ViewModels.Services.Interfaces;
 
-namespace YMouseButtonControl.Core.Services;
+namespace YMouseButtonControl.ViewModels.Services.Implementations;
 
 public class CheckDefaultProfileService : ICheckDefaultProfileService
 {

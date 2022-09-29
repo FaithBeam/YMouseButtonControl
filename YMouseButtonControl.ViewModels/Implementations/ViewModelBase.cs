@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace YMouseButtonControl.Core.ViewModels;
+namespace YMouseButtonControl.ViewModels.Implementations;
 
 public class ViewModelBase : ReactiveObject
 {

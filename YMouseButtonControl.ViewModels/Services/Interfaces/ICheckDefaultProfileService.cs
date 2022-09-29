@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.Core.Services;
+﻿namespace YMouseButtonControl.ViewModels.Services.Interfaces;
 
 public interface ICheckDefaultProfileService
 {
