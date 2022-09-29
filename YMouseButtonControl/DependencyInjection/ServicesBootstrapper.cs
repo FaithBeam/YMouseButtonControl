@@ -11,9 +11,13 @@ public static class ServicesBootstrapper
         RegisterCommonServices(services, resolver);
     }
 
-    private static void RegisterCommonServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    private static void RegisterCommonServices(IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver)
     {
         services.Register<IProfilesService>(() => new ProfilesService(
+            resolver.GetRequiredService<IUnitOfWorkFactory>()
+        ));
+        services.Register<ICheckDefaultProfileService>(() => new CheckDefaultProfileService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
     }

@@ -2,6 +2,7 @@
 using Avalonia.ReactiveUI;
 using Splat;
 using YMouseButtonControl.Configuration;
+using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.DependencyInjection;
 
 namespace YMouseButtonControl;
@@ -15,6 +16,7 @@ internal static class Program
             UseInMemoryDatabase = false
         };
         RegisterDependencies(dataAccessConfig);
+        CheckForDefaultProfile();
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
@@ -28,4 +30,9 @@ internal static class Program
     private static void RegisterDependencies(DataAccessConfiguration dataAccessConfiguration) =>
         Bootstrapper.Register(Locator.CurrentMutable, Locator.Current, dataAccessConfiguration);
 
+    private static void CheckForDefaultProfile()
+    {
+        var defaultProfileService = Locator.Current.GetRequiredService<ICheckDefaultProfileService>();
+        defaultProfileService.CheckDefaultProfile();
+    }
 }
