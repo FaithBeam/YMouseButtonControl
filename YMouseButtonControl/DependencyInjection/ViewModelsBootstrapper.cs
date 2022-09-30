@@ -16,6 +16,9 @@ public static class ViewModelsBootstrapper
     private static void RegisterCommonViewModels(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver)
     {
+        services.RegisterLazySingleton<IProfilesInformationViewModel>(() => new ProfilesInformationViewModel(
+            resolver.GetRequiredService<IProfileOperationsMediator>()
+        ));
         services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel());
         services.RegisterLazySingleton<IProfilesListViewModel>(() => new ProfilesListViewModel(
             resolver.GetRequiredService<IProfilesService>(),
@@ -25,7 +28,8 @@ public static class ViewModelsBootstrapper
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<IProfileOperationsMediator>(),
             resolver.GetRequiredService<ILayerViewModel>(),
-            resolver.GetRequiredService<IProfilesListViewModel>()
+            resolver.GetRequiredService<IProfilesListViewModel>(),
+            resolver.GetRequiredService<IProfilesInformationViewModel>()
         ));
     }
 }

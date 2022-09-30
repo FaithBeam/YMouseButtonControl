@@ -20,20 +20,7 @@
                 <views:ProfilesListView DataContext="{Binding ProfilesListViewModel}" />
                 <StackPanel>
                     <views:LayerView DataContext="{Binding LayerViewModel}" />
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*,*,*,*">
-                        <Label Grid.Row="0" Grid.Column="0" Content="Description" />
-                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.Description}" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Window Caption" />
-                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.WindowCaption}" />
-                        <Label Grid.Row="2" Grid.Column="0" Content="Process" />
-                        <Label Grid.Row="2" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.Process}" />
-                        <Label Grid.Row="3" Grid.Column="0" Content="Window Class" />
-                        <Label Grid.Row="3" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.WindowClass}" />
-                        <Label Grid.Row="4" Grid.Column="0" Content="Parent Class" />
-                        <Label Grid.Row="4" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.ParentClass}" />
-                        <Label Grid.Row="5" Grid.Column="0" Content="Match Type" />
-                        <Label Grid.Row="5" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.MatchType}" />
-                    </Grid>
+                    <views:ProfileInformationView DataContext="{Binding ProfilesInformationViewModel}" />
                 </StackPanel>
             </StackPanel>
 

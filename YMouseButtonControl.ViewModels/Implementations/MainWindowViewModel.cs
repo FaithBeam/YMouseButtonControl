@@ -21,18 +21,21 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #region Constructor
 
     public MainWindowViewModel(IProfilesService profilesService, IProfileOperationsMediator profileOperationsMediator,
-        ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel)
+        ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel, IProfilesInformationViewModel profilesInformationViewModel)
     {
         _profilesListViewModel = profilesListViewModel;
         _profilesService = profilesService;
         ProfileOperationsMediator = profileOperationsMediator;
         LayerViewModel = layerViewModel;
+        ProfilesInformationViewModel = profilesInformationViewModel;
     }
 
     #endregion
 
     #region Properties
 
+    public IProfilesInformationViewModel ProfilesInformationViewModel { get; }
+    
     public IProfilesListViewModel ProfilesListViewModel => _profilesListViewModel;
 
     public IProfileOperationsMediator ProfileOperationsMediator { get; }
