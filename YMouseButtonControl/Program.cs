@@ -3,7 +3,6 @@ using Avalonia.ReactiveUI;
 using Splat;
 using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DependencyInjection;
-using YMouseButtonControl.ViewModels.Services;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl;

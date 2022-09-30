@@ -17,10 +17,15 @@ public static class ViewModelsBootstrapper
         IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel());
+        services.RegisterLazySingleton<IProfilesListViewModel>(() => new ProfilesListViewModel(
+            resolver.GetRequiredService<IProfilesService>(),
+            resolver.GetRequiredService<IProfileOperationsMediator>()
+        ));
         services.RegisterLazySingleton<IMainWindowViewModel>(() => new MainWindowViewModel(
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<IProfileOperationsMediator>(),
-            resolver.GetRequiredService<ILayerViewModel>()
+            resolver.GetRequiredService<ILayerViewModel>(),
+            resolver.GetRequiredService<IProfilesListViewModel>()
         ));
     }
 }

@@ -14,31 +14,32 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     private IProfilesService _profilesService;
     private IProfileOperationsMediator _profileOperationsMediator;
+    private IProfilesListViewModel _profilesListViewModel;
 
     #endregion
 
     #region Constructor
 
     public MainWindowViewModel(IProfilesService profilesService, IProfileOperationsMediator profileOperationsMediator,
-        ILayerViewModel layerViewModel)
+        ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel)
     {
+        _profilesListViewModel = profilesListViewModel;
         _profilesService = profilesService;
         ProfileOperationsMediator = profileOperationsMediator;
         LayerViewModel = layerViewModel;
-        Profiles = new AvaloniaList<Profile>(_profilesService.GetProfiles());
     }
 
     #endregion
 
     #region Properties
 
+    public IProfilesListViewModel ProfilesListViewModel => _profilesListViewModel;
+
     public IProfileOperationsMediator ProfileOperationsMediator { get; }
     
     public ILayerViewModel LayerViewModel { get; }
 
     public ICommand ApplyCommand { get; }
-
-    public AvaloniaList<Profile> Profiles { get; }
 
     #endregion
 
