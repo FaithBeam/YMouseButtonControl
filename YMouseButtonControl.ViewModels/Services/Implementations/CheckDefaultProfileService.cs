@@ -36,6 +36,6 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
             });
         }
 
-        _profileOperationsMediator.CurrentProfile = repository.GetAll().First(x => x.Name == "Default");
+        _profileOperationsMediator.CurrentProfile = repository.GetAll().First();
     }
 }
