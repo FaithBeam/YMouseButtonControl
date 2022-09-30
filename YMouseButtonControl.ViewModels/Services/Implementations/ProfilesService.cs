@@ -10,33 +10,7 @@ namespace YMouseButtonControl.ViewModels.Services.Implementations;
 public class ProfilesService : IProfilesService
 {
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
-    private Profile _currentProfile;
     
-    public Profile CurrentProfile
-    {
-        get => _currentProfile;
-        set
-        {
-            if (_currentProfile == value)
-            {
-                return;
-            }
-
-            _currentProfile = value;
-
-            var args = new SelectedProfileChangedEventArgs(_currentProfile);
-            OnProfileChanged(args);
-        }
-    }
-    
-    public event EventHandler<SelectedProfileChangedEventArgs> SelectedProfileChanged;
-
-    public void OnProfileChanged(SelectedProfileChangedEventArgs e)
-    {
-        var handler = SelectedProfileChanged;
-        handler?.Invoke(this, e);
-    }
-
     public ProfilesService(IUnitOfWorkFactory unitOfWorkFactory)
     {
         _unitOfWorkFactory = unitOfWorkFactory;

@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations;assembly=YMouseButtonControl.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             x:Class="YMouseButtonControl.Views.ProfilesListView">
+
+    <Design.DataContext>
+        <vm:ProfilesListViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <DataGrid Name="ProfilesDataGrid"
+                  Items="{Binding Profiles}"
+                  AutoGenerateColumns="False"
+                  HeadersVisibility="None"
+                  Margin="5"
+                  Height="300"
+                  SelectedItem="{Binding ProfileOperationsMediator.CurrentProfile}">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />
+                <DataGridTextColumn Binding="{Binding Name}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid RowDefinitions="*,*" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" SharedSizeGroup="button" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Add
+            </Button>
+            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Copy
+            </Button>
+            <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Export
+            </Button>
+            <Button Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Up
+            </Button>
+            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Edit
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Remove
+            </Button>
+            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Import
+            </Button>
+            <Button Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+                Down
+            </Button>
+        </Grid>
+    </StackPanel>
+</UserControl>

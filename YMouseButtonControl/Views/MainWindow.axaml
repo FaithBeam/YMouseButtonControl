@@ -17,75 +17,22 @@
     <StackPanel Orientation="Horizontal" Margin="5">
         <StackPanel>
             <StackPanel Orientation="Horizontal">
-                <StackPanel>
-                    <DataGrid Name="ProfilesDataGrid"
-                              Items="{Binding Profiles}"
-                              AutoGenerateColumns="False"
-                              HeadersVisibility="None"
-                              Margin="5"
-                              Height="300"
-                              SelectedItem="{Binding CurrentProfile}">
-                        <DataGrid.Columns>
-                            <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />
-                            <DataGridTextColumn Binding="{Binding Name}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <Grid RowDefinitions="*,*" Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80" SharedSizeGroup="button" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Add
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Copy
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Export
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Up
-                        </Button>
-                        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Edit
-                        </Button>
-                        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Remove
-                        </Button>
-                        <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Import
-                        </Button>
-                        <Button Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center">
-                            Down
-                        </Button>
-                    </Grid>
-                </StackPanel>
+                
                 <StackPanel>
                     <views:LayerView DataContext="{Binding LayerViewModel}" />
                     <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*,*,*,*">
                         <Label Grid.Row="0" Grid.Column="0" Content="Description" />
-                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding CurrentProfile.Description}" />
+                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.Description}" />
                         <Label Grid.Row="1" Grid.Column="0" Content="Window Caption" />
-                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentProfile.WindowCaption}" />
+                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.WindowCaption}" />
                         <Label Grid.Row="2" Grid.Column="0" Content="Process" />
-                        <Label Grid.Row="2" Grid.Column="1" Content="{Binding CurrentProfile.Process}" />
+                        <Label Grid.Row="2" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.Process}" />
                         <Label Grid.Row="3" Grid.Column="0" Content="Window Class" />
-                        <Label Grid.Row="3" Grid.Column="1" Content="{Binding CurrentProfile.WindowClass}" />
+                        <Label Grid.Row="3" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.WindowClass}" />
                         <Label Grid.Row="4" Grid.Column="0" Content="Parent Class" />
-                        <Label Grid.Row="4" Grid.Column="1" Content="{Binding CurrentProfile.ParentClass}" />
+                        <Label Grid.Row="4" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.ParentClass}" />
                         <Label Grid.Row="5" Grid.Column="0" Content="Match Type" />
-                        <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentProfile.MatchType}" />
+                        <Label Grid.Row="5" Grid.Column="1" Content="{Binding ProfileOperationsMediator.CurrentProfile.MatchType}" />
                     </Grid>
                 </StackPanel>
             </StackPanel>

@@ -25,12 +25,12 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
             {
                 Checked = true,
                 Name = "Default",
-                Description = string.Empty,
-                Process = string.Empty,
-                MatchType = string.Empty,
-                ParentClass = string.Empty,
-                WindowCaption = string.Empty,
-                WindowClass = string.Empty
+                Description = "Default description",
+                Process = "Some process",
+                MatchType = "N/A",
+                ParentClass = "N/A",
+                WindowCaption = "N/A",
+                WindowClass = "N/A"
             });
         }
     }

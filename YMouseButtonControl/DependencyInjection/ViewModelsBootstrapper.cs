@@ -19,6 +19,7 @@ public static class ViewModelsBootstrapper
         services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel());
         services.RegisterLazySingleton<IMainWindowViewModel>(() => new MainWindowViewModel(
             resolver.GetRequiredService<IProfilesService>(),
+            resolver.GetRequiredService<IProfileOperationsMediator>(),
             resolver.GetRequiredService<ILayerViewModel>()
         ));
     }

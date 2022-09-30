@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models;
@@ -15,34 +13,32 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #region Fields
 
     private IProfilesService _profilesService;
+    private IProfileOperationsMediator _profileOperationsMediator;
 
     #endregion
 
     #region Constructor
 
-    public MainWindowViewModel(IProfilesService profilesService, ILayerViewModel layerViewModel)
+    public MainWindowViewModel(IProfilesService profilesService, IProfileOperationsMediator profileOperationsMediator,
+        ILayerViewModel layerViewModel)
     {
         _profilesService = profilesService;
+        ProfileOperationsMediator = profileOperationsMediator;
         LayerViewModel = layerViewModel;
         Profiles = new AvaloniaList<Profile>(_profilesService.GetProfiles());
-        CurrentProfile = profilesService.CurrentProfile;
     }
 
     #endregion
 
     #region Properties
+
+    public IProfileOperationsMediator ProfileOperationsMediator { get; }
     
     public ILayerViewModel LayerViewModel { get; }
-    
+
     public ICommand ApplyCommand { get; }
 
     public AvaloniaList<Profile> Profiles { get; }
-
-    public Profile CurrentProfile
-    {
-        get => _profilesService.CurrentProfile;
-        set => _profilesService.CurrentProfile = value;
-    }
 
     #endregion
 

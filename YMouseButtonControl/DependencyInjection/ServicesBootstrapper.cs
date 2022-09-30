@@ -22,6 +22,6 @@ public static class ServicesBootstrapper
         services.Register<ICheckDefaultProfileService>(() => new CheckDefaultProfileService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
-        services.Register<IProfileMediator>(() => new ProfileMediator());
+        services.RegisterLazySingleton<IProfileOperationsMediator>(() => new ProfileOperationsMediator());
     }
 }
