@@ -25,14 +25,16 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Grid.Row="1" Margin="5" Orientation="Horizontal">
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*,*,*,*,*"
+              Margin="5">
             <Button>Settings</Button>
-            <Button>Save Profile</Button>
-            <Button>Load Profile</Button>
-            <TextBox Text="Profile: Muh Profile" IsReadOnly="True" />
-            <Button Content="Apply" Command="{Binding ApplyCommand}" />
-            <Button>Close</Button>
-        </StackPanel>
+            <Button Grid.Column="1">Save Profile</Button>
+            <Button Grid.Column="2">Load Profile</Button>
+            <TextBox Grid.Column="3" Text="Profile: Muh Profile" IsReadOnly="True" />
+            <Button Grid.Column="4" Content="Apply" Command="{Binding ApplyCommand}" />
+            <Button Grid.Column="5">Close</Button>
+        </Grid>
     </Grid>
 
 </Window>
