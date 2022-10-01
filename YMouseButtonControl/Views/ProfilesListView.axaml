@@ -12,20 +12,21 @@
         <vm:ProfilesListViewModel />
     </Design.DataContext>
 
-    <StackPanel>
+    <Grid RowDefinitions="*,Auto">
         <DataGrid Name="ProfilesDataGrid"
                   Items="{Binding Profiles}"
                   AutoGenerateColumns="False"
                   HeadersVisibility="None"
                   Margin="5"
                   Height="300"
-                  SelectedItem="{Binding SelectedProfile}">
+                  SelectedItem="{Binding SelectedProfile}"
+                  VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />
                 <DataGridTextColumn Binding="{Binding Name}" />
             </DataGrid.Columns>
         </DataGrid>
-        <Grid RowDefinitions="*,*" Margin="5">
+        <Grid Grid.Row="1" RowDefinitions="*,*" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" SharedSizeGroup="button" />
                 <ColumnDefinition Width="*" />
@@ -67,5 +68,6 @@
                 Down
             </Button>
         </Grid>
-    </StackPanel>
+    </Grid>
+        
 </UserControl>

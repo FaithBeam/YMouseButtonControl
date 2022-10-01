@@ -15,47 +15,50 @@
     <TabControl>
         <TabItem Header="Layer 1">
             <StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Layer Name" />
-                    <TextBox Text="Layer 1 (Default)" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <TextBox Grid.Column="1" Text="Layer 1 (Default)" />
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Left Button" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Right Button" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Middle Button" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1"  HorizontalAlignment="Stretch"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Mouse Button 4" />
-                    <ComboBox Items="{Binding MouseButton4Combo}"
-                              SelectedIndex="{Binding MouseButton4LastIndex}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1"
+                              Items="{Binding MouseButton4Combo}"
+                              SelectedIndex="{Binding MouseButton4LastIndex}"  HorizontalAlignment="Stretch"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Mouse Button 5" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Wheel Up" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Wheel Down" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Tilt Wheel Right" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Tilt Wheel Left" />
-                    <ComboBox></ComboBox>
-                </StackPanel>
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                </Grid>
             </StackPanel>
         </TabItem>
         <TabItem Header="Layer 2"></TabItem>

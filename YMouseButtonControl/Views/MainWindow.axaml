@@ -7,31 +7,32 @@
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="600"
+        Width="800"
+        Height="600"
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl">
-    
+
     <Design.DataContext>
         <implementations:MainWindowViewModel />
     </Design.DataContext>
 
-    <StackPanel Orientation="Horizontal" Margin="5">
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <views:ProfilesListView DataContext="{Binding ProfilesListViewModel}" />
-                <StackPanel>
-                    <views:LayerView DataContext="{Binding LayerViewModel}" />
-                    <views:ProfileInformationView DataContext="{Binding ProfilesInformationViewModel}" />
-                </StackPanel>
+    <Grid RowDefinitions="*,Auto">
+        <Grid ColumnDefinitions="Auto,*">
+            <views:ProfilesListView DataContext="{Binding ProfilesListViewModel}" />
+            <StackPanel Grid.Column="1">
+                <views:LayerView DataContext="{Binding LayerViewModel}" />
+                <views:ProfileInformationView DataContext="{Binding ProfilesInformationViewModel}" />
             </StackPanel>
+        </Grid>
 
-            <StackPanel Margin="5" Orientation="Horizontal">
-                <Button>Settings</Button>
-                <Button>Save Profile</Button>
-                <Button>Load Profile</Button>
-                <TextBox Text="Profile: Muh Profile" IsReadOnly="True" />
-                <Button Content="Apply" Command="{Binding ApplyCommand}" />
-                <Button>Close</Button>
-            </StackPanel>
+        <StackPanel Grid.Row="1" Margin="5" Orientation="Horizontal">
+            <Button>Settings</Button>
+            <Button>Save Profile</Button>
+            <Button>Load Profile</Button>
+            <TextBox Text="Profile: Muh Profile" IsReadOnly="True" />
+            <Button Content="Apply" Command="{Binding ApplyCommand}" />
+            <Button>Close</Button>
         </StackPanel>
-    </StackPanel>
+    </Grid>
+
 </Window>

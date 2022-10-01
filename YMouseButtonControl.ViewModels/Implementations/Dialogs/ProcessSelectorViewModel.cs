@@ -43,7 +43,6 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         {
             if (SelectedProcessModel is null) return;
             SelectedProcessModel.ProcessName = value;
-            this.RaisePropertyChanged(nameof(Processes));
         }
     }
 
@@ -54,7 +53,6 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         {
             if (SelectedProcessModel is null) return;
             SelectedProcessModel.WindowTitle = value;
-            this.RaisePropertyChanged(nameof(Processes));
         }
     }
 
