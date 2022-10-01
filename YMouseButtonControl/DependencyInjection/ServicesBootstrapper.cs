@@ -16,6 +16,7 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver)
     {
+        services.RegisterLazySingleton<IProcessesService>(() => new ProcessesService());
         services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));

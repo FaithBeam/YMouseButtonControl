@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.DataAccess.Models.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
@@ -32,7 +33,14 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 MatchType = "N/A",
                 ParentClass = "N/A",
                 WindowCaption = "N/A",
-                WindowClass = "N/A"
+                WindowClass = "N/A",
+                MouseButton4 = new SimulatedKeystrokes
+                {
+                    Keys = "w",
+                    CanRaiseDialog = true,
+                    SimulatedKeystrokesType = new StickyHoldActionType()
+                },
+                MouseButton4LastIndex = 2
             });
         }
 

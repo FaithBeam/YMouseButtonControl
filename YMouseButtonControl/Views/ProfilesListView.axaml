@@ -32,10 +32,12 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center">
-                Add
-            </Button>
+            <Button Grid.Row="0"
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Add" 
+                    Command="{Binding AddButtonCommand}"/>
             <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center">
                 Copy
