@@ -17,6 +17,7 @@ public class ProcessesService : IProcessesService
             {
                 ProcessName = x.ProcessName,
                 WindowTitle = x.MainWindowTitle
-            });
+            })
+            .OrderBy(x => x.ProcessName);
     }
 }

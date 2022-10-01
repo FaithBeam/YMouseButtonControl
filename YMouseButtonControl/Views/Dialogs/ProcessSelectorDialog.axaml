@@ -4,51 +4,64 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
         mc:Ignorable="d"
-        d:DesignWidth="800"
-        d:DesignHeight="450"
+        d:DesignWidth="400"
+        d:DesignHeight="600"
+        Width="500"
+        Height="600"
         x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
-        Title="Choose Application">
+        Title="Choose Application"
+        SizeToContent="WidthAndHeight">
 
     <Design.DataContext>
         <vm:ProcessSelectorDialogViewModel />
     </Design.DataContext>
 
-    <StackPanel>
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto">
         <!-- Row 1 -->
-        <StackPanel Orientation="Horizontal">
+        <Grid ColumnDefinitions="*,*" VerticalAlignment="Top">
             <Label Content="Select from the list of running applications:" />
-            <Button Content="Refresh" />
-        </StackPanel>
+            <Button Grid.Column="1"
+                    Content="Refresh"
+                    Command="{Binding RefreshButtonCommand}" />
+        </Grid>
 
         <!-- Row 2 -->
-        <DataGrid
-            Items="{Binding Processes}"
-            AutoGenerateColumns="True">
-
+        <DataGrid Grid.Row="1"
+                  Items="{Binding Processes}"
+                  SelectedItem="{Binding SelectedProcessModel}"
+                  AutoGenerateColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  IsReadOnly="True"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
         </DataGrid>
 
         <!-- Row 3 -->
-        <Label Content="Or type in/browse to the application executable (.EXE) file" />
+        <Label Grid.Row="2" VerticalAlignment="Top"
+               Content="Or type in/browse to the application executable (.EXE) file" />
 
         <!-- Row 4 -->
-        <StackPanel Orientation="Horizontal">
+        <Grid Grid.Row="3" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
             <Label Content="Application" />
-            <TextBox></TextBox>
-            <Button Content="..." />
-        </StackPanel>
+            <TextBox Grid.Column="1" Text="{Binding Application}" />
+            <Button Grid.Column="2" Content="..." />
+        </Grid>
 
         <!-- Row 5 -->
-        <StackPanel Orientation="Horizontal">
+        <Grid Grid.Row="4" ColumnDefinitions="*,*" VerticalAlignment="Top">
             <Label Content="Description" />
-            <TextBox></TextBox>
-        </StackPanel>
+            <TextBox Grid.Column="1" VerticalContentAlignment="Center" Text="{Binding Description}" />
+        </Grid>
 
         <!-- Row 6 -->
-        <StackPanel Orientation="Horizontal">
+        <Grid Grid.Row="5" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
             <Button Content="Specific Window" />
-            <Button Content="OK" />
-            <Button Content="Cancel" />
-        </StackPanel>
-    </StackPanel>
+            <Button Grid.Column="1" Content="OK" />
+            <Button Grid.Column="2" Content="Cancel" />
+        </Grid>
+    </Grid>
 
 </Window>

@@ -2,8 +2,6 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using ReactiveUI;
-using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
 namespace YMouseButtonControl.Views.Dialogs;
@@ -22,6 +20,4 @@ public partial class ProcessSelectorDialog : ReactiveWindow<ProcessSelectorDialo
     {
         AvaloniaXamlLoader.Load(this);
     }
-    
-    
 }
