@@ -2,13 +2,53 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations;assembly=YMouseButtonControl.ViewModels"
+        xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="450"
         x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
-        Title="ProcessSelectorDialog">
-    
-        
-        
+        Title="Choose Application">
+
+    <Design.DataContext>
+        <vm:ProcessSelectorDialogViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <!-- Row 1 -->
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Select from the list of running applications:" />
+            <Button Content="Refresh" />
+        </StackPanel>
+
+        <!-- Row 2 -->
+        <DataGrid
+            Items="{Binding Processes}"
+            AutoGenerateColumns="True">
+
+        </DataGrid>
+
+        <!-- Row 3 -->
+        <Label Content="Or type in/browse to the application executable (.EXE) file" />
+
+        <!-- Row 4 -->
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Application" />
+            <TextBox></TextBox>
+            <Button Content="..." />
+        </StackPanel>
+
+        <!-- Row 5 -->
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Description" />
+            <TextBox></TextBox>
+        </StackPanel>
+
+        <!-- Row 6 -->
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Specific Window" />
+            <Button Content="OK" />
+            <Button Content="Cancel" />
+        </StackPanel>
+    </StackPanel>
+
 </Window>
