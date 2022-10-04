@@ -1,9 +1,8 @@
 using Splat;
+using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
-using YMouseButtonControl.ViewModels.Services;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;
@@ -25,7 +24,9 @@ public static class ViewModelsBootstrapper
             resolver.GetRequiredService<IProfileOperationsMediator>()
         ));
         services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel(
-            resolver.GetRequiredService<IProfileOperationsMediator>()));
+            resolver.GetRequiredService<IProfileOperationsMediator>(),
+            resolver.GetRequiredService<IMouseListener>()
+        ));
         services.RegisterLazySingleton<IProfilesListViewModel>(() => new ProfilesListViewModel(
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<IProfileOperationsMediator>(),

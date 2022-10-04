@@ -16,6 +16,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Avalonia", "YMouseButtonControl.Avalonia\YMouseButtonControl.Avalonia.csproj", "{C80D75A0-2740-4E14-8463-515B26D93EDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.KeyboardAndMouse", "YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj", "{13C6876F-1FC2-4D50-99FA-E9B305FCEAEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.KeyboardAndMouse.SharpHook", "YMouseButtonControl.KeyboardAndMouse.SharpHook\YMouseButtonControl.KeyboardAndMouse.SharpHook.csproj", "{F4633549-C46B-4F65-B694-C879DE47B9BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.KeyboardAndMouse.Models", "YMouseButtonControl.KeyboardAndMouse.Models\YMouseButtonControl.KeyboardAndMouse.Models.csproj", "{10AF332C-453D-4D1A-AC60-6E0101CEEC30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +60,17 @@ Global
 		{C80D75A0-2740-4E14-8463-515B26D93EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C80D75A0-2740-4E14-8463-515B26D93EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C80D75A0-2740-4E14-8463-515B26D93EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C6876F-1FC2-4D50-99FA-E9B305FCEAEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C6876F-1FC2-4D50-99FA-E9B305FCEAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C6876F-1FC2-4D50-99FA-E9B305FCEAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C6876F-1FC2-4D50-99FA-E9B305FCEAEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4633549-C46B-4F65-B694-C879DE47B9BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4633549-C46B-4F65-B694-C879DE47B9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4633549-C46B-4F65-B694-C879DE47B9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4633549-C46B-4F65-B694-C879DE47B9BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

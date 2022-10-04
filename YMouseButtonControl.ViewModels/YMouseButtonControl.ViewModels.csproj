@@ -16,6 +16,7 @@
       <ProjectReference Include="..\YMouseButtonControl.DataAccess.LiteDb\YMouseButtonControl.DataAccess.LiteDb.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.DataAccess.Models\YMouseButtonControl.DataAccess.Models.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.DataAccess\YMouseButtonControl.DataAccess.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.Abstractions\YMouseButtonControl.Services.Abstractions.csproj" />
     </ItemGroup>
 

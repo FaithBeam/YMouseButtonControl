@@ -1,0 +1,215 @@
+﻿using System.Collections.Generic;
+using SharpHook.Native;
+
+namespace YMouseButtonControl.KeyboardAndMouse.SharpHook;
+
+public static class KeyCodeMappings
+{
+    public static Dictionary<string, KeyCode> KeyCodes = new()
+    {
+        { "escape", KeyCode.VcEscape },
+            
+        {"f1", KeyCode.VcF1},
+        {"f2", KeyCode.VcF2},
+        {"f3", KeyCode.VcF3},
+        {"f4", KeyCode.VcF4},
+        {"f5", KeyCode.VcF5},
+        {"f6", KeyCode.VcF6},
+        {"f7", KeyCode.VcF7},
+        {"f8", KeyCode.VcF8},
+        {"f9", KeyCode.VcF9},
+        {"f10", KeyCode.VcF10},
+        {"f11", KeyCode.VcF11},
+        {"f12", KeyCode.VcF12},
+        
+        {"f13", KeyCode.VcF13},
+        {"f14", KeyCode.VcF14},
+        {"f15", KeyCode.VcF15},
+        {"f16", KeyCode.VcF16},
+        {"f17", KeyCode.VcF17},
+        {"f18", KeyCode.VcF18},
+        {"f19", KeyCode.VcF19},
+        {"f20", KeyCode.VcF20},
+        {"f21", KeyCode.VcF21},
+        {"f22", KeyCode.VcF22},
+        {"f23", KeyCode.VcF23},
+        {"f24", KeyCode.VcF24},
+        
+        {"`", KeyCode.VcBackquote},
+        
+        {"1", KeyCode.Vc1},
+        {"2", KeyCode.Vc2},
+        {"3", KeyCode.Vc3},
+        {"4", KeyCode.Vc4},
+        {"5", KeyCode.Vc5},
+        {"6", KeyCode.Vc6},
+        {"7", KeyCode.Vc7},
+        {"8", KeyCode.Vc8},
+        {"9", KeyCode.Vc9},
+        {"0", KeyCode.Vc0},
+        
+        {"-", KeyCode.VcMinus},
+        {"=", KeyCode.VcEquals},
+        {"backspace", KeyCode.VcBackspace},
+
+        {"tab", KeyCode.VcTab},
+        {"capslock", KeyCode.VcCapsLock},
+        
+        {"a", KeyCode.VcA},
+        {"b", KeyCode.VcB},
+        {"c", KeyCode.VcC},
+        {"d", KeyCode.VcD},
+        {"e", KeyCode.VcE},
+        {"f", KeyCode.VcF},
+        {"g", KeyCode.VcG},
+        {"h", KeyCode.VcH},
+        {"i", KeyCode.VcI},
+        {"j", KeyCode.VcJ},
+        {"k", KeyCode.VcK},
+        {"l", KeyCode.VcL},
+        {"m", KeyCode.VcM},
+        {"n", KeyCode.VcN},
+        {"o", KeyCode.VcO},
+        {"p", KeyCode.VcP},
+        {"q", KeyCode.VcQ},
+        {"r", KeyCode.VcR},
+        {"s", KeyCode.VcS},
+        {"t", KeyCode.VcT},
+        {"u", KeyCode.VcU},
+        {"v", KeyCode.VcV},
+        {"w", KeyCode.VcW},
+        {"x", KeyCode.VcX},
+        {"y", KeyCode.VcY},
+        {"z", KeyCode.VcZ},
+        
+        {"[", KeyCode.VcOpenBracket},
+        {"]", KeyCode.VcCloseBracket},
+        {"\\", KeyCode.VcBackSlash},
+        
+        {";", KeyCode.VcSemicolon},
+        {"\"", KeyCode.VcQuote},
+        {"enter", KeyCode.VcEnter},
+        
+        {",", KeyCode.VcComma},
+        {".", KeyCode.VcPeriod},
+        {"/", KeyCode.VcSlash},
+        
+        {" ", KeyCode.VcSpace},
+        
+        {"printscreen", KeyCode.VcPrintscreen},
+        {"scrolllock", KeyCode.VcScrollLock},
+        {"pause", KeyCode.VcPause},
+        
+        {"<", KeyCode.VcLesserGreater},
+        
+        {"insert", KeyCode.VcInsert},
+        {"delete", KeyCode.VcDelete},
+        {"home", KeyCode.VcHome},
+        {"end", KeyCode.VcEnd},
+        {"pageup", KeyCode.VcPageUp},
+        {"pagedown", KeyCode.VcPageDown},
+        
+        {"up", KeyCode.VcUp},
+        {"left", KeyCode.VcLeft},
+        {"clear", KeyCode.VcClear},
+        {"right", KeyCode.VcRight},
+        {"down", KeyCode.VcDown},
+        
+        {"numlock", KeyCode.VcNumLock},
+        {"numpaddivide", KeyCode.VcNumPadDivide},
+        {"numpadmultiply", KeyCode.VcNumPadMultiply},
+        {"numpadsubtract", KeyCode.VcNumPadSubtract},
+        {"numpadequals", KeyCode.VcNumPadEquals},
+        {"numpadadd", KeyCode.VcNumPadAdd},
+        {"numpadenter", KeyCode.VcNumPadEnter},
+        {"numpadseparator", KeyCode.VcNumPadSeparator},
+        
+        {"numpad1", KeyCode.VcNumPad1},
+        {"numpad2", KeyCode.VcNumPad2},
+        {"numpad3", KeyCode.VcNumPad3},
+        {"numpad4", KeyCode.VcNumPad4},
+        {"numpad5", KeyCode.VcNumPad5},
+        {"numpad6", KeyCode.VcNumPad6},
+        {"numpad7", KeyCode.VcNumPad7},
+        {"numpad8", KeyCode.VcNumPad8},
+        {"numpad9", KeyCode.VcNumPad9},
+        {"numpad0", KeyCode.VcNumPad0},
+        
+        {"numpadend", KeyCode.VcNumPadEnd},
+        {"numpaddown", KeyCode.VcNumPadDown},
+        {"numpadpagedown", KeyCode.VcNumPadPageDown},
+        {"numpadleft", KeyCode.VcNumPadLeft},
+        {"numpadclear", KeyCode.VcNumPadClear},
+        {"numpadright", KeyCode.VcNumPadRight},
+        {"numpadhome", KeyCode.VcNumPadHome},
+        {"numpadup", KeyCode.VcNumPadUp},
+        {"numpadpageup", KeyCode.VcNumPadPageUp},
+        {"numpadinsert", KeyCode.VcNumPadInsert},
+        {"numpaddelete", KeyCode.VcNumPadDelete},
+        
+        {"leftshift", KeyCode.VcLeftShift},
+        {"rightshift", KeyCode.VcRightShift},
+        {"leftcontrol", KeyCode.VcLeftControl},
+        {"rightcontrol", KeyCode.VcRightControl},
+        {"leftalt", KeyCode.VcLeftAlt},
+        {"rightalt", KeyCode.VcRightAlt},
+        {"leftmeta", KeyCode.VcLeftMeta},
+        {"rightmeta", KeyCode.VcRightMeta},
+        {"contextmenu", KeyCode.VcContextMenu},
+        
+        {"power", KeyCode.VcPower},
+        {"sleep", KeyCode.VcSleep},
+        {"wake", KeyCode.VcWake},
+        
+        {"mediaplay", KeyCode.VcMediaPlay},
+        {"mediastop", KeyCode.VcMediaStop},
+        {"mediaprevious", KeyCode.VcMediaPrevious},
+        {"medianext", KeyCode.VcMediaNext},
+        {"mediaselect", KeyCode.VcMediaSelect},
+        {"mediaeject", KeyCode.VcMediaEject},
+        
+        {"volumemute", KeyCode.VcVolumeMute},
+        {"volumeup", KeyCode.VcVolumeUp},
+        {"volumedown", KeyCode.VcVolumeDown},
+        
+        {"appmail", KeyCode.VcAppMail},
+        {"appcalculator", KeyCode.VcAppCalculator},
+        {"appmusic", KeyCode.VcAppMusic},
+        {"apppictures", KeyCode.VcAppPictures},
+        
+        {"browsersearch", KeyCode.VcBrowserSearch},
+        {"browserhome", KeyCode.VcBrowserHome},
+        {"browserback", KeyCode.VcBrowserBack},
+        {"browserforward", KeyCode.VcBrowserForward},
+        {"browserstop", KeyCode.VcBrowserStop},
+        {"browserrefresh", KeyCode.VcBrowserRefresh},
+        {"browserfavorites", KeyCode.VcBrowserFavorites},
+        
+        {"katakana", KeyCode.VcKatakana},
+        {"_", KeyCode.VcUnderscore},
+        {"furigana", KeyCode.VcFurigana},
+        {"kanji", KeyCode.VcKanji},
+        {"hiragana", KeyCode.VcHiragana},
+        {"yen", KeyCode.VcYen},
+        {"numpadcomma", KeyCode.VcNumPadComma},
+        
+        {"sunhelp", KeyCode.VcSunHelp},
+        
+        {"sunstop", KeyCode.VcSunStop},
+        {"sunprops", KeyCode.VcSunProps},
+        {"sunfront", KeyCode.VcSunFront},
+        {"sunopen", KeyCode.VcSunOpen},
+        {"sunfind", KeyCode.VcSunFind},
+        {"sunagain", KeyCode.VcSunAgain},
+        {"sunundo", KeyCode.VcSunUndo},
+        {"suncopy", KeyCode.VcSunCopy},
+        {"suninsert", KeyCode.VcSunInsert},
+        {"suncut", KeyCode.VcSunCut},
+        
+        {"undefined", KeyCode.VcUndefined},
+        {"charundefined", KeyCode.CharUndefined},
+        
+        
+        
+    };
+}

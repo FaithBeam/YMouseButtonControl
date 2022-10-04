@@ -38,6 +38,8 @@
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse.SharpHook\YMouseButtonControl.KeyboardAndMouse.SharpHook.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.ViewModels\YMouseButtonControl.ViewModels.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.Environment\YMouseButtonControl.Services.Environment.csproj" />
     </ItemGroup>
