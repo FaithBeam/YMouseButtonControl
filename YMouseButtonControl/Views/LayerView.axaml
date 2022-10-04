@@ -22,7 +22,8 @@
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Left Button" />
                     <ComboBox Grid.Column="1"
-                              HorizontalAlignment="Stretch"/>
+                              HorizontalAlignment="Stretch">
+                    </ComboBox>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Right Button" />
@@ -37,7 +38,8 @@
                     <Label Content="Mouse Button 4" />
                     <ComboBox Grid.Column="1"
                               Items="{Binding MouseButton4Combo}"
-                              SelectedIndex="{Binding MouseButton4LastIndex}"  HorizontalAlignment="Stretch"/>
+                              SelectedIndex="{Binding MouseButton4LastIndex}"  HorizontalAlignment="Stretch"
+                              Background="{Binding MouseButton1BackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Mouse Button 5" />

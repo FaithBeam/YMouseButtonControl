@@ -1,4 +1,5 @@
 using Avalonia.Collections;
+using Avalonia.Media;
 using ReactiveUI;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.Services.Abstractions.Enums;
@@ -12,6 +13,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 {
     private readonly IProfileOperationsMediator _profileOperationsMediator;
     private readonly IMouseListener _mouseListener;
+    private IBrush _mouseButton1BackgroundColor = Brushes.White;
 
     public LayerViewModel(IProfileOperationsMediator profileOperationsMediator, IMouseListener mouseListener)
     {
@@ -22,6 +24,12 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     }
 
     public int MouseButton4LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
+
+    public IBrush MouseButton1BackgroundColor
+    {
+        get => _mouseButton1BackgroundColor;
+        set => this.RaiseAndSetIfChanged(ref _mouseButton1BackgroundColor, value);
+    }
 
     public AvaloniaList<string> MouseButton4Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
 
@@ -38,9 +46,9 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
     private void OnMouseClicked(object sender, NewMouseHookEventArgs e)
     {
-        if (e.Button == NewMouseButton.Button4)
+        if (e.Button == NewMouseButton.Button1)
         {
-            
+            MouseButton1BackgroundColor = Brushes.Yellow;
         }
     }
 }
