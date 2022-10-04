@@ -22,44 +22,59 @@
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Left Button" />
                     <ComboBox Grid.Column="1"
-                              HorizontalAlignment="Stretch">
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding MouseButton1BackgroundColor}">
                     </ComboBox>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Right Button" />
                     <ComboBox Grid.Column="1"
-                              HorizontalAlignment="Stretch"/>
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding MouseButton2BackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Middle Button" />
-                    <ComboBox Grid.Column="1"  HorizontalAlignment="Stretch"/>
+                    <ComboBox Grid.Column="1" 
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding MouseButton3BackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Mouse Button 4" />
                     <ComboBox Grid.Column="1"
                               Items="{Binding MouseButton4Combo}"
-                              SelectedIndex="{Binding MouseButton4LastIndex}"  HorizontalAlignment="Stretch"
-                              Background="{Binding MouseButton1BackgroundColor}"/>
+                              SelectedIndex="{Binding MouseButton4LastIndex}"
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding MouseButton4BackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Mouse Button 5" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch" 
+                              Background="{Binding MouseButton5BackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Wheel Up" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding WheelUpBackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Wheel Down" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding WheelDownBackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Tilt Wheel Right" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding WheelRightBackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
                     <Label Content="Tilt Wheel Left" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding WheelLeftBackgroundColor}"/>
                 </Grid>
             </StackPanel>
         </TabItem>
