@@ -65,16 +65,16 @@
                               Background="{Binding WheelDownBackgroundColor}"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*">
-                    <Label Content="Tilt Wheel Right" />
-                    <ComboBox Grid.Column="1"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding WheelRightBackgroundColor}"/>
-                </Grid>
-                <Grid ColumnDefinitions="*,2*">
                     <Label Content="Tilt Wheel Left" />
                     <ComboBox Grid.Column="1"
                               HorizontalAlignment="Stretch"
                               Background="{Binding WheelLeftBackgroundColor}"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,2*">
+                    <Label Content="Tilt Wheel Right" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              Background="{Binding WheelRightBackgroundColor}"/>
                 </Grid>
             </StackPanel>
         </TabItem>

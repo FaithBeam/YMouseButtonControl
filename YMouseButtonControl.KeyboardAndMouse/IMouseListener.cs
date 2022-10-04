@@ -7,5 +7,6 @@ public interface IMouseListener
 {
     event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
     event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;
+    event EventHandler<NewMouseWheelEventArgs> OnMouseWheelEventHandler;
     void Run();
 }

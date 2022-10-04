@@ -31,6 +31,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _mouseListener = mouseListener;
         _mouseListener.OnMousePressedEventHandler += OnMouseClicked;
         _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
+        _mouseListener.OnMouseWheelEventHandler += OnWheelScroll;
     }
 
     public IBrush WheelLeftBackgroundColor
@@ -100,6 +101,27 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         };
         this.RaisePropertyChanged(nameof(MouseButton4Combo));
         this.RaisePropertyChanged(nameof(MouseButton4LastIndex));
+    }
+
+    private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)
+    {
+        switch (e.Direction)
+        {
+            case WheelScrollDirection.VerticalUp:
+                WheelUpBackgroundColor = Brushes.Yellow;
+                break;
+            case WheelScrollDirection.VerticalDown:
+                WheelDownBackgroundColor = Brushes.Yellow;
+                break;
+            case WheelScrollDirection.HorizontalLeft:
+                WheelLeftBackgroundColor = Brushes.Yellow;
+                break;    
+            case WheelScrollDirection.HorizontalRight:
+                WheelRightBackgroundColor = Brushes.Yellow;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private void OnMouseReleased(object sender, NewMouseHookEventArgs e)
