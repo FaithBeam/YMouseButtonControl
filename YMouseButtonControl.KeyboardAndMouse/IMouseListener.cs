@@ -5,6 +5,7 @@ namespace YMouseButtonControl.KeyboardAndMouse;
 
 public interface IMouseListener
 {
-    event EventHandler<NewMouseHookEventArgs> OnMouseClickedEventHandler;
+    event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
+    event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;
     void Run();
 }

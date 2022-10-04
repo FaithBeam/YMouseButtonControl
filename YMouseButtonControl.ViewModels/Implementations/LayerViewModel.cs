@@ -20,7 +20,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _profileOperationsMediator = profileOperationsMediator;
         _profileOperationsMediator.SelectedProfileChanged += OnSelectedProfileChanged;
         _mouseListener = mouseListener;
-        _mouseListener.OnMouseClickedEventHandler += OnMouseClicked;
+        _mouseListener.OnMousePressedEventHandler += OnMouseClicked;
+        _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
     }
 
     public int MouseButton4LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
@@ -42,6 +43,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         };
         this.RaisePropertyChanged(nameof(MouseButton4Combo));
         this.RaisePropertyChanged(nameof(MouseButton4LastIndex));
+    }
+
+    private void OnMouseReleased(object sender, NewMouseHookEventArgs e)
+    {
+        if (e.Button == NewMouseButton.Button1)
+        {
+            MouseButton1BackgroundColor = Brushes.White;
+        }
     }
 
     private void OnMouseClicked(object sender, NewMouseHookEventArgs e)

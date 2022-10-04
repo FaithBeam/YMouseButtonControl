@@ -12,14 +12,13 @@ namespace YMouseButtonControl;
 
 internal static class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         var dataAccessConfig = new DataAccessConfiguration
         {
             UseInMemoryDatabase = false
         };
         RegisterDependencies(dataAccessConfig);
-        var ml = Locator.Current.GetRequiredService<IMouseListener>();
         var t = new Thread(StartMouseListening);
         t.Start();
         CheckForDefaultProfile();

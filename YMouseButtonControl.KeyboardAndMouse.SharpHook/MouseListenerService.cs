@@ -12,22 +12,36 @@ public class MouseListener : IMouseListener
     public MouseListener(TaskPoolGlobalHook hook)
     {
         _hook = hook;
-        hook.MouseClicked += ConvertEvent;
+        hook.MousePressed += ConvertMousePressedEvent;
+        hook.MouseReleased += ConvertMouseReleasedEvent;
     }
 
-    public event EventHandler<NewMouseHookEventArgs> OnMouseClickedEventHandler;
+    public event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
+    public event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;
     
     public void Run() => _hook.Run();
 
-    private void ConvertEvent(object? sender, MouseHookEventArgs mouseHookEventArgs)
+    private void ConvertMousePressedEvent(object sender, MouseHookEventArgs e)
     {
-        var args = new NewMouseHookEventArgs((NewMouseButton)mouseHookEventArgs.Data.Button);
-        OnMouseClicked(args);
+        var args = new NewMouseHookEventArgs((NewMouseButton)e.Data.Button);
+        OnMousePressed(args);
     }
 
-    private void OnMouseClicked(NewMouseHookEventArgs e)
+    private void ConvertMouseReleasedEvent(object sender, MouseHookEventArgs e)
     {
-        var handler = OnMouseClickedEventHandler;
+        var args = new NewMouseHookEventArgs((NewMouseButton)e.Data.Button);
+        OnMouseReleased(args);
+    }
+
+    private void OnMouseReleased(NewMouseHookEventArgs e)
+    {
+        var handler = OnMouseReleasedEventHandler;
+        handler?.Invoke(this, e);
+    }
+
+    private void OnMousePressed(NewMouseHookEventArgs e)
+    {
+        var handler = OnMousePressedEventHandler;
         handler?.Invoke(this, e);
     }
 }
