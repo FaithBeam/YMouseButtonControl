@@ -1,4 +1,5 @@
 using System;
+using System.Timers;
 using Avalonia.Collections;
 using Avalonia.Media;
 using ReactiveUI;
@@ -23,6 +24,11 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private IBrush _wheelDownBackgroundColor = Brushes.White;
     private IBrush _wheelRightBackgroundColor = Brushes.White;
     private IBrush _wheelLeftBackgroundColor = Brushes.White;
+    private readonly Timer _wheelUpTimer = new() { Interval = 200, AutoReset = false };
+    private readonly Timer _wheelDownTimer = new() { Interval = 200, AutoReset = false };
+    private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
+    private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
+
 
     public LayerViewModel(IProfileOperationsMediator profileOperationsMediator, IMouseListener mouseListener)
     {
@@ -32,6 +38,10 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _mouseListener.OnMousePressedEventHandler += OnMouseClicked;
         _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
         _mouseListener.OnMouseWheelEventHandler += OnWheelScroll;
+        _wheelUpTimer.Elapsed += delegate { WheelUpBackgroundColor = Brushes.White; };
+        _wheelDownTimer.Elapsed += delegate { WheelDownBackgroundColor = Brushes.White; };
+        _wheelLeftTimer.Elapsed += delegate { WheelLeftBackgroundColor = Brushes.White; };
+        _wheelRightTimer.Elapsed += delegate { WheelRightBackgroundColor = Brushes.White; };
     }
 
     public IBrush WheelLeftBackgroundColor
@@ -109,15 +119,31 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         {
             case WheelScrollDirection.VerticalUp:
                 WheelUpBackgroundColor = Brushes.Yellow;
+                if (!_wheelUpTimer.Enabled)
+                {
+                    _wheelUpTimer.Start();
+                }
                 break;
             case WheelScrollDirection.VerticalDown:
                 WheelDownBackgroundColor = Brushes.Yellow;
+                if (!_wheelDownTimer.Enabled)
+                {
+                    _wheelDownTimer.Start();
+                }
                 break;
             case WheelScrollDirection.HorizontalLeft:
                 WheelLeftBackgroundColor = Brushes.Yellow;
+                if (!_wheelLeftTimer.Enabled)
+                {
+                    _wheelLeftTimer.Start();
+                }
                 break;    
             case WheelScrollDirection.HorizontalRight:
                 WheelRightBackgroundColor = Brushes.Yellow;
+                if (!_wheelRightTimer.Enabled)
+                {
+                    _wheelRightTimer.Start();
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
