@@ -34,13 +34,21 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 ParentClass = "N/A",
                 WindowCaption = "N/A",
                 WindowClass = "N/A",
+                MouseButton1 = new NothingMapping(),
+                MouseButton2 = new NothingMapping(),
+                MouseButton3 = new NothingMapping(),
                 MouseButton4 = new SimulatedKeystrokes
                 {
                     Keys = "w",
                     CanRaiseDialog = true,
                     SimulatedKeystrokesType = new StickyHoldActionType()
                 },
-                MouseButton4LastIndex = 2
+                MouseButton4LastIndex = 2,
+                MouseButton5 = new NothingMapping(),
+                WheelUp = new NothingMapping(),
+                WheelDown = new NothingMapping(),
+                WheelLeft = new NothingMapping(),
+                WheelRight = new NothingMapping()
             });
         }
 

@@ -91,25 +91,70 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         set => this.RaiseAndSetIfChanged(ref _mouseButton2BackgroundColor, value);
     }
 
-    public int MouseButton4LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
-
     public IBrush MouseButton1BackgroundColor
     {
         get => _mouseButton1BackgroundColor;
         set => this.RaiseAndSetIfChanged(ref _mouseButton1BackgroundColor, value);
     }
+    
+    public AvaloniaList<string> MouseButton1Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseButton1LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton1LastIndex;
+    
+    public AvaloniaList<string> MouseButton2Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseButton2LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton2LastIndex;
+    
+    public AvaloniaList<string> MouseButton3Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseButton3LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton3LastIndex;
 
     public AvaloniaList<string> MouseButton4Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseButton4LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
+    
+    public AvaloniaList<string> MouseButton5Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseButton5LastIndex => _profileOperationsMediator.CurrentProfile.MouseButton5LastIndex;
+
 
     private void OnSelectedProfileChanged(object sender, SelectedProfileChangedEventArgs e)
     {
+        MouseButton1Combo = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_profileOperationsMediator.CurrentProfile.MouseButton1.Index] =
+                _profileOperationsMediator.CurrentProfile.MouseButton1.ToString()
+        };
+        MouseButton2Combo = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_profileOperationsMediator.CurrentProfile.MouseButton2.Index] =
+                _profileOperationsMediator.CurrentProfile.MouseButton2.ToString()
+        };
+        MouseButton3Combo = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_profileOperationsMediator.CurrentProfile.MouseButton3.Index] =
+                _profileOperationsMediator.CurrentProfile.MouseButton3.ToString()
+        };
         MouseButton4Combo = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
         {
             [_profileOperationsMediator.CurrentProfile.MouseButton4.Index] =
                 _profileOperationsMediator.CurrentProfile.MouseButton4.ToString()
         };
+        MouseButton5Combo = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_profileOperationsMediator.CurrentProfile.MouseButton5.Index] =
+                _profileOperationsMediator.CurrentProfile.MouseButton5.ToString()
+        };
+        this.RaisePropertyChanged(nameof(MouseButton1Combo));
+        this.RaisePropertyChanged(nameof(MouseButton1LastIndex));
+        this.RaisePropertyChanged(nameof(MouseButton2Combo));
+        this.RaisePropertyChanged(nameof(MouseButton2LastIndex));
+        this.RaisePropertyChanged(nameof(MouseButton3Combo));
+        this.RaisePropertyChanged(nameof(MouseButton3LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton4Combo));
         this.RaisePropertyChanged(nameof(MouseButton4LastIndex));
+        this.RaisePropertyChanged(nameof(MouseButton5Combo));
+        this.RaisePropertyChanged(nameof(MouseButton5LastIndex));
     }
 
     private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)

@@ -13,6 +13,8 @@
         <None Update="appsettings.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Remove="Resources\gear_icon1.png" />
+        <AvaloniaResource Include="Resources\gear_icon1.png" />
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
@@ -54,6 +56,5 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="Resources\gear_icon.png" />
-      <AvaloniaResource Include="Resources\gear_icon.png" />
     </ItemGroup>
 </Project>

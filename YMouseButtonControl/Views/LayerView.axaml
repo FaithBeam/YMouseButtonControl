@@ -22,29 +22,35 @@
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
                     <Label Content="Left Button" />
                     <ComboBox Grid.Column="1"
+                              Items="{Binding MouseButton1Combo}"
+                              SelectedIndex="{Binding MouseButton1LastIndex}"
                               HorizontalAlignment="Stretch"
                               Background="{Binding MouseButton1BackgroundColor}">
                     </ComboBox>
                     <Button Grid.Column="2" Background="White" >
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5" >
                     <Label Content="Right Button" />
                     <ComboBox Grid.Column="1"
+                              Items="{Binding MouseButton2Combo}"
+                              SelectedIndex="{Binding MouseButton2LastIndex}"
                               HorizontalAlignment="Stretch"
                               Background="{Binding MouseButton2BackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
                     <Label Content="Middle Button" />
                     <ComboBox Grid.Column="1" 
+                              Items="{Binding MouseButton3Combo}"
+                              SelectedIndex="{Binding MouseButton3LastIndex}"
                               HorizontalAlignment="Stretch"
                               Background="{Binding MouseButton3BackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
@@ -55,16 +61,18 @@
                               HorizontalAlignment="Stretch"
                               Background="{Binding MouseButton4BackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
                     <Label Content="Mouse Button 5" />
                     <ComboBox Grid.Column="1"
+                              Items="{Binding MouseButton5Combo}"
+                              SelectedIndex="{Binding MouseButton5LastIndex}"
                               HorizontalAlignment="Stretch" 
                               Background="{Binding MouseButton5BackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
@@ -73,7 +81,7 @@
                               HorizontalAlignment="Stretch"
                               Background="{Binding WheelUpBackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
@@ -82,7 +90,7 @@
                               HorizontalAlignment="Stretch"
                               Background="{Binding WheelDownBackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
@@ -91,7 +99,7 @@
                               HorizontalAlignment="Stretch"
                               Background="{Binding WheelLeftBackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
                 <Grid ColumnDefinitions="*,2*,Auto" Margin="5">
@@ -100,7 +108,7 @@
                               HorizontalAlignment="Stretch"
                               Background="{Binding WheelRightBackgroundColor}"/>
                     <Button Grid.Column="2" Background="White">
-                        <Image Source="../Resources/gear_icon.png" Width="16" Height="16" />
+                        <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
             </StackPanel>
