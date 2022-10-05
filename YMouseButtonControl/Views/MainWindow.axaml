@@ -6,11 +6,12 @@
         xmlns:views="clr-namespace:YMouseButtonControl.Views"
         mc:Ignorable="d"
         d:DesignWidth="800"
-        d:DesignHeight="600"
+        d:DesignHeight="750"
         Width="800"
-        Height="600"
+        Height="700"
         x:Class="YMouseButtonControl.Views.MainWindow"
-        Title="YMouseButtonControl">
+        Title="YMouseButtonControl"
+        SizeToContent="WidthAndHeight">
 
     <Design.DataContext>
         <implementations:MainWindowViewModel />

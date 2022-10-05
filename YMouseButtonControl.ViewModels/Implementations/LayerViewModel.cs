@@ -29,7 +29,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
 
-
     public LayerViewModel(IProfileOperationsMediator profileOperationsMediator, IMouseListener mouseListener)
     {
         _profileOperationsMediator = profileOperationsMediator;
