@@ -52,4 +52,8 @@
     <ItemGroup>
       <AdditionalFiles Include="Views\MainWindow.axaml" />
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="Resources\gear_icon.png" />
+      <AvaloniaResource Include="Resources\gear_icon.png" />
+    </ItemGroup>
 </Project>
