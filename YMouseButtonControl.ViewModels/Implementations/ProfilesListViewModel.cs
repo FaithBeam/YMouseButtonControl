@@ -4,10 +4,8 @@ using System.Windows.Input;
 using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models;
-using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
@@ -15,19 +13,19 @@ namespace YMouseButtonControl.ViewModels.Implementations;
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
     private IProfilesService _profilesService;
-    private IProfileOperationsMediator _profileOperationsMediator;
+    private ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
     private ProcessSelectorDialogViewModel _processSelectorDialogViewModel;
 
     public ICommand AddButtonCommand { get; }
-    public Interaction<ProcessSelectorDialogViewModel, ProcessModel> ShowProcessSelectorInteraction { get; }
+    public Interaction<ProcessSelectorDialogViewModel, Profile> ShowProcessSelectorInteraction { get; }
 
-    public ProfilesListViewModel(IProfilesService profilesService, IProfileOperationsMediator profileOperationsMediator, ProcessSelectorDialogViewModel processSelectorDialogViewModel)
+    public ProfilesListViewModel(IProfilesService profilesService, ICurrentProfileOperationsMediator currentProfileOperationsMediator, ProcessSelectorDialogViewModel processSelectorDialogViewModel)
     {
         ProfilesService = profilesService;
-        _profileOperationsMediator = profileOperationsMediator;
+        _currentProfileOperationsMediator = currentProfileOperationsMediator;
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
-        ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, ProcessModel>();
+        ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, Profile>();
     }
 
     public IProfilesService ProfilesService
@@ -40,12 +38,18 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 
     public Profile SelectedProfile
     {
-        get => _profileOperationsMediator.CurrentProfile;
-        set => _profileOperationsMediator.CurrentProfile = value;
+        get => _currentProfileOperationsMediator.CurrentProfile;
+        set => _currentProfileOperationsMediator.CurrentProfile = value;
     }
 
     private async Task ShowProcessPickerDialogAsync()
     {
         var result = await ShowProcessSelectorInteraction.Handle(_processSelectorDialogViewModel);
+        if (result is null)
+        {
+            return;
+        }
+        _profilesService.AddProfile(result);
+        this.RaisePropertyChanged(nameof(Profiles));
     }
 }

@@ -4,7 +4,7 @@ using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.ViewModels.Services.Interfaces;
 
-public interface IProfileOperationsMediator
+public interface ICurrentProfileOperationsMediator
 {
     public Profile CurrentProfile { get; set; }
 

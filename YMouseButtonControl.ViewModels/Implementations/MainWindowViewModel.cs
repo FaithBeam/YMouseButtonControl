@@ -13,19 +13,19 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #region Fields
 
     private IProfilesService _profilesService;
-    private IProfileOperationsMediator _profileOperationsMediator;
+    private ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
     private IProfilesListViewModel _profilesListViewModel;
 
     #endregion
 
     #region Constructor
 
-    public MainWindowViewModel(IProfilesService profilesService, IProfileOperationsMediator profileOperationsMediator,
+    public MainWindowViewModel(IProfilesService profilesService, ICurrentProfileOperationsMediator currentProfileOperationsMediator,
         ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel, IProfilesInformationViewModel profilesInformationViewModel)
     {
         _profilesListViewModel = profilesListViewModel;
         _profilesService = profilesService;
-        ProfileOperationsMediator = profileOperationsMediator;
+        CurrentProfileOperationsMediator = currentProfileOperationsMediator;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
     }
@@ -38,7 +38,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     
     public IProfilesListViewModel ProfilesListViewModel => _profilesListViewModel;
 
-    public IProfileOperationsMediator ProfileOperationsMediator { get; }
+    public ICurrentProfileOperationsMediator CurrentProfileOperationsMediator { get; }
     
     public ILayerViewModel LayerViewModel { get; }
 

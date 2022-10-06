@@ -18,11 +18,12 @@
 
     <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto">
         <!-- Row 1 -->
-        <Grid ColumnDefinitions="*,*" VerticalAlignment="Top">
+        <Grid ColumnDefinitions="Auto,Auto" VerticalAlignment="Top">
             <Label Content="Select from the list of running applications:" />
             <Button Grid.Column="1"
                     Content="Refresh"
-                    Command="{Binding RefreshButtonCommand}" />
+                    Command="{Binding RefreshButtonCommand}"
+                    HorizontalAlignment="Right"/>
         </Grid>
 
         <!-- Row 2 -->
@@ -59,8 +60,8 @@
         <!-- Row 6 -->
         <Grid Grid.Row="5" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
             <Button Content="Specific Window" />
-            <Button Grid.Column="1" Content="OK" />
-            <Button Grid.Column="2" Content="Cancel" />
+            <Button Grid.Column="1" x:Name="OkButton" Content="OK" Command="{Binding OkCommand}" />
+            <Button Grid.Column="2" x:Name="CancelButton" Content="Cancel" Click="CancelButton_OnClick" />
         </Grid>
     </Grid>
 

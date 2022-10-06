@@ -8,4 +8,5 @@ namespace YMouseButtonControl.ViewModels.Services.Interfaces;
 public interface IProfilesService
 {
     public IEnumerable<Profile> GetProfiles();
+    public void AddProfile(Profile profile);
 }

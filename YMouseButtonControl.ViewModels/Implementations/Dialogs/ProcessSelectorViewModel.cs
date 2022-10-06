@@ -1,10 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System.Reactive;
+using System.Windows.Input;
 using Avalonia.Collections;
 using JetBrains.Annotations;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 using ReactiveUI;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
@@ -15,11 +17,15 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     public ICommand RefreshButtonCommand { get; }
 
+    public ReactiveCommand<Unit, Profile> OkCommand { get; }
+
     public ProcessSelectorDialogViewModel(IProcessesService processesService)
     {
         _processesService = processesService;
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
-        Processes = new(_processesService.GetProcesses());
+        OkCommand = ReactiveCommand.Create(() => new Profile()
+            { Name = Description, Description = Description, Process = Application });
+        Processes = new AvaloniaList<ProcessModel>(_processesService.GetProcesses());
     }
 
     public AvaloniaList<ProcessModel> Processes { get; private set; }

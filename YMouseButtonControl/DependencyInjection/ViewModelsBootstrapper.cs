@@ -21,20 +21,20 @@ public static class ViewModelsBootstrapper
             resolver.GetRequiredService<IProcessesService>()
         ));
         services.RegisterLazySingleton<IProfilesInformationViewModel>(() => new ProfilesInformationViewModel(
-            resolver.GetRequiredService<IProfileOperationsMediator>()
+            resolver.GetRequiredService<ICurrentProfileOperationsMediator>()
         ));
         services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel(
-            resolver.GetRequiredService<IProfileOperationsMediator>(),
+            resolver.GetRequiredService<ICurrentProfileOperationsMediator>(),
             resolver.GetRequiredService<IMouseListener>()
         ));
         services.RegisterLazySingleton<IProfilesListViewModel>(() => new ProfilesListViewModel(
             resolver.GetRequiredService<IProfilesService>(),
-            resolver.GetRequiredService<IProfileOperationsMediator>(),
+            resolver.GetRequiredService<ICurrentProfileOperationsMediator>(),
             resolver.GetRequiredService<ProcessSelectorDialogViewModel>()
         ));
         services.RegisterLazySingleton<IMainWindowViewModel>(() => new MainWindowViewModel(
             resolver.GetRequiredService<IProfilesService>(),
-            resolver.GetRequiredService<IProfileOperationsMediator>(),
+            resolver.GetRequiredService<ICurrentProfileOperationsMediator>(),
             resolver.GetRequiredService<ILayerViewModel>(),
             resolver.GetRequiredService<IProfilesListViewModel>(),
             resolver.GetRequiredService<IProfilesInformationViewModel>()

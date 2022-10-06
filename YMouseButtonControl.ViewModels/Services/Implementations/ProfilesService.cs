@@ -7,6 +7,7 @@ using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Services.Implementations;
 
+
 public class ProfilesService : IProfilesService
 {
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
@@ -22,5 +23,12 @@ public class ProfilesService : IProfilesService
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
         return model;
+    }
+
+    public void AddProfile(Profile profile)
+    {
+        using var unitOfWork = _unitOfWorkFactory.Create();
+        var repository = unitOfWork.GetRepository<Profile>();
+        repository.Add("1", profile);
     }
 }

@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using YMouseButtonControl.Avalonia.Implementations;
-using YMouseButtonControl.Services.Abstractions.Models;
+using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.Views.Dialogs;
@@ -31,7 +31,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
     }
     
     private async Task ShowProcessSelectorDialogAsync(
-        InteractionContext<ProcessSelectorDialogViewModel, ProcessModel> interaction
+        InteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
     )
     {
         var dialog = new ProcessSelectorDialog
@@ -39,7 +39,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
             DataContext = interaction.Input
         };
 
-        var result = await dialog.ShowDialog<ProcessModel>(MainWindowProvider.GetMainWindow());
+        var result = await dialog.ShowDialog<Profile?>(MainWindowProvider.GetMainWindow());
         interaction.SetOutput(result);
     }
 }

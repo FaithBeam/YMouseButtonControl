@@ -5,40 +5,40 @@
         public bool Checked { get; set; }
 
         public string Name { get; set; }
-        
-        public IButtonMapping MouseButton1 { get; set; }
+
+        public IButtonMapping MouseButton1 { get; set; } = new NothingMapping();
 
         public int MouseButton1LastIndex { get; set; }
         
-        public IButtonMapping MouseButton2 { get; set; }
+        public IButtonMapping MouseButton2 { get; set; } = new NothingMapping();
 
         public int MouseButton2LastIndex { get; set; }
         
-        public IButtonMapping MouseButton3 { get; set; }
+        public IButtonMapping MouseButton3 { get; set; } = new NothingMapping();
 
         public int MouseButton3LastIndex { get; set; }
 
-        public IButtonMapping MouseButton4 { get; set; }
+        public IButtonMapping MouseButton4 { get; set; } = new NothingMapping();
 
         public int MouseButton4LastIndex { get; set; }
         
-        public IButtonMapping MouseButton5 { get; set; }
+        public IButtonMapping MouseButton5 { get; set; } = new NothingMapping();
 
         public int MouseButton5LastIndex { get; set; }
         
-        public IButtonMapping WheelUp { get; set; }
+        public IButtonMapping WheelUp { get; set; } = new NothingMapping();
 
         public int WheelUpLastIndex { get; set; }
         
-        public IButtonMapping WheelDown { get; set; }
+        public IButtonMapping WheelDown { get; set; } = new NothingMapping();
 
         public int WheelDownLastIndex { get; set; }
         
-        public IButtonMapping WheelLeft { get; set; }
+        public IButtonMapping WheelLeft { get; set; } = new NothingMapping();
 
         public int WheelLeftLastIndex { get; set; }
         
-        public IButtonMapping WheelRight { get; set; }
+        public IButtonMapping WheelRight { get; set; } = new NothingMapping();
 
         public int WheelRightLastIndex { get; set; }
 

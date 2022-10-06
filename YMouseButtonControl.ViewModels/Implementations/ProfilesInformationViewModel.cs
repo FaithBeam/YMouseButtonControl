@@ -7,27 +7,27 @@ namespace YMouseButtonControl.ViewModels.Implementations;
 
 public class ProfilesInformationViewModel : ViewModelBase, IProfilesInformationViewModel
 {
-    private readonly IProfileOperationsMediator _profileOperationsMediator;
+    private readonly ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
 
-    public ProfilesInformationViewModel(IProfileOperationsMediator profileOperationsMediator)
+    public ProfilesInformationViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator)
     {
-        _profileOperationsMediator = profileOperationsMediator;
-        _profileOperationsMediator.SelectedProfileChanged += OnSelectedProfileChanged;
+        _currentProfileOperationsMediator = currentProfileOperationsMediator;
+        _currentProfileOperationsMediator.SelectedProfileChanged += OnSelectedCurrentProfileChanged;
     }
 
-    public string Description => _profileOperationsMediator.CurrentProfile.Description;
+    public string Description => _currentProfileOperationsMediator.CurrentProfile.Description;
 
-    public string WindowCaption => _profileOperationsMediator.CurrentProfile.WindowCaption;
+    public string WindowCaption => _currentProfileOperationsMediator.CurrentProfile.WindowCaption;
 
-    public string Process => _profileOperationsMediator.CurrentProfile.Process;
+    public string Process => _currentProfileOperationsMediator.CurrentProfile.Process;
 
-    public string WindowClass => _profileOperationsMediator.CurrentProfile.WindowClass;
+    public string WindowClass => _currentProfileOperationsMediator.CurrentProfile.WindowClass;
 
-    public string ParentClass => _profileOperationsMediator.CurrentProfile.ParentClass;
+    public string ParentClass => _currentProfileOperationsMediator.CurrentProfile.ParentClass;
 
-    public string MatchType => _profileOperationsMediator.CurrentProfile.MatchType;
+    public string MatchType => _currentProfileOperationsMediator.CurrentProfile.MatchType;
 
-    private void OnSelectedProfileChanged(object sender, SelectedProfileChangedEventArgs e)
+    private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
     {
         this.RaisePropertyChanged(nameof(Description));
         this.RaisePropertyChanged(nameof(WindowCaption));
