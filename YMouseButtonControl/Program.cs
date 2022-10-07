@@ -11,7 +11,7 @@ namespace YMouseButtonControl;
 
 internal static class Program
 {
-    private static IMouseListener _mouseListener;
+    private static IMouseListener? _mouseListener;
     public static void Main(string[] args)
     {
         var dataAccessConfig = new DataAccessConfiguration
@@ -45,7 +45,7 @@ internal static class Program
 
     private static void StopMouseListening()
     {
-        _mouseListener.Dispose();
+        _mouseListener?.Dispose();
     }
 
     private static void StartMouseListening()
