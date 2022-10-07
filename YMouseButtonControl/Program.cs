@@ -11,6 +11,7 @@ namespace YMouseButtonControl;
 
 internal static class Program
 {
+    private static IMouseListener _mouseListener;
     public static void Main(string[] args)
     {
         var dataAccessConfig = new DataAccessConfiguration
@@ -23,6 +24,7 @@ internal static class Program
         CheckForDefaultProfile();
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
+        StopMouseListening();
         t.Join();
     }
 
@@ -41,9 +43,14 @@ internal static class Program
         defaultProfileService.CheckDefaultProfile();
     }
 
+    private static void StopMouseListening()
+    {
+        _mouseListener.Dispose();
+    }
+
     private static void StartMouseListening()
     {
-        var ml = Locator.Current.GetRequiredService<IMouseListener>();
-        ml.Run();
+        _mouseListener = Locator.Current.GetRequiredService<IMouseListener>();
+        _mouseListener.Run();
     }
 }

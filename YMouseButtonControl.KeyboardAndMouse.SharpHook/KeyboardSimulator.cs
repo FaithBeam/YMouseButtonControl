@@ -5,7 +5,7 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
 {
     public class KeyboardSimulator : IKeyboardSimulator
     {
-        private EventSimulator _keyboardSimulator;
+        private readonly EventSimulator _keyboardSimulator;
 
         public KeyboardSimulator(EventSimulator keyboardSimulator)
         {

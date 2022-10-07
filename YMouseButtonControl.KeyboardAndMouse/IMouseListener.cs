@@ -3,7 +3,7 @@ using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.KeyboardAndMouse;
 
-public interface IMouseListener
+public interface IMouseListener : IDisposable
 {
     event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
     event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;

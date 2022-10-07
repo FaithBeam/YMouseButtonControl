@@ -21,6 +21,7 @@ public static class ServicesBootstrapper
         services.RegisterLazySingleton<IMouseListener>(() => new MouseListener(
             new TaskPoolGlobalHook()
         ));
+        services.RegisterLazySingleton<IKeyboardSimulator>(() => new KeyboardSimulator(new EventSimulator()));
         services.RegisterLazySingleton<IProcessesService>(() => new ProcessesService());
         services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()

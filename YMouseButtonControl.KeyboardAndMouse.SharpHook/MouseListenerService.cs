@@ -13,9 +13,8 @@ public class MouseListener : IMouseListener
     public MouseListener(TaskPoolGlobalHook hook)
     {
         _hook = hook;
-        hook.MousePressed += ConvertMousePressedEvent;
-        hook.MouseReleased += ConvertMouseReleasedEvent;
-        hook.MouseWheel += ConvertMouseWheelEvent;
+        
+        SubscribeToEvents();
     }
 
     public event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
@@ -77,5 +76,26 @@ public class MouseListener : IMouseListener
     {
         var handler = OnMouseWheelEventHandler;
         handler?.Invoke(this, e);
+    }
+
+    private void SubscribeToEvents()
+    {
+        _hook.MousePressed += ConvertMousePressedEvent;
+        _hook.MouseReleased += ConvertMouseReleasedEvent;
+        _hook.MouseWheel += ConvertMouseWheelEvent;
+    }
+    
+    private void UnsubscribeFromEvents()
+    {
+        _hook.MousePressed -= ConvertMousePressedEvent;
+        _hook.MouseReleased -= ConvertMouseReleasedEvent;
+        _hook.MouseWheel -= ConvertMouseWheelEvent;
+    }
+    
+    public void Dispose()
+    {
+        UnsubscribeFromEvents();
+        
+        _hook.Dispose();
     }
 }
