@@ -117,7 +117,22 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     
     public int MouseButton5LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton5LastIndex;
 
+    public AvaloniaList<string> MouseWheelUp { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseWheelUpLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelUpLastIndex;
+    
+    public AvaloniaList<string> MouseWheelDown { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseWheelDownLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelDownLastIndex;
+    
+    public AvaloniaList<string> MouseWheelLeft { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseWheelLeftLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelLeftLastIndex;
 
+    public AvaloniaList<string> MouseWheelRight { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
+    
+    public int MouseWheelRightLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelRightLastIndex;
+    
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
     {
         MouseButton1Combo = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
@@ -145,6 +160,26 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             [_currentProfileOperationsMediator.CurrentProfile.MouseButton5.Index] =
                 _currentProfileOperationsMediator.CurrentProfile.MouseButton5.ToString()
         };
+        MouseWheelUp = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_currentProfileOperationsMediator.CurrentProfile.WheelUp.Index] =
+                _currentProfileOperationsMediator.CurrentProfile.WheelUp.ToString()
+        };
+        MouseWheelDown = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_currentProfileOperationsMediator.CurrentProfile.WheelDown.Index] =
+                _currentProfileOperationsMediator.CurrentProfile.WheelDown.ToString()
+        };
+        MouseWheelLeft = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_currentProfileOperationsMediator.CurrentProfile.WheelLeft.Index] =
+                _currentProfileOperationsMediator.CurrentProfile.WheelLeft.ToString()
+        };
+        MouseWheelRight = new AvaloniaList<string>(Factories.ButtonMappingFactory.ButtonMappings)
+        {
+            [_currentProfileOperationsMediator.CurrentProfile.WheelRight.Index] =
+                _currentProfileOperationsMediator.CurrentProfile.WheelRight.ToString()
+        };
         this.RaisePropertyChanged(nameof(MouseButton1Combo));
         this.RaisePropertyChanged(nameof(MouseButton1LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton2Combo));
@@ -155,6 +190,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         this.RaisePropertyChanged(nameof(MouseButton4LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton5Combo));
         this.RaisePropertyChanged(nameof(MouseButton5LastIndex));
+        this.RaisePropertyChanged(nameof(MouseWheelUp));
+        this.RaisePropertyChanged(nameof(MouseWheelUpLastIndex));
+        this.RaisePropertyChanged(nameof(MouseWheelDown));
+        this.RaisePropertyChanged(nameof(MouseWheelDownLastIndex));
+        this.RaisePropertyChanged(nameof(MouseWheelLeft));
+        this.RaisePropertyChanged(nameof(MouseWheelLeftLastIndex));
+        this.RaisePropertyChanged(nameof(MouseWheelRight));
+        this.RaisePropertyChanged(nameof(MouseWheelRightLastIndex));
     }
 
     private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)

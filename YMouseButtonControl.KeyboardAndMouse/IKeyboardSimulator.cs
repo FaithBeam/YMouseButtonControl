@@ -1,7 +1,7 @@
 
 using YMouseButtonControl.KeyboardAndMouse.Models;
 
-namespace YMouseButtonControl.KeyboardAndMouse.SharpHook;
+namespace YMouseButtonControl.KeyboardAndMouse;
 
 public interface IKeyboardSimulator
 {

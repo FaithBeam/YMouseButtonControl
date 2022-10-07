@@ -21,10 +21,13 @@ public class CheckDefaultProfileServiceTests
     [TestMethod]
     public void TestCheckDefaultProfile()
     {
+        // Test default profile already there, don't add a new one
         var repository = new Mock<IRepository<Profile>>();
         repository
             .Setup(x => x.GetAll())
             .Returns(new List<Profile> {new() {Name = "Default"}});
+        _autoMocker
+            .Use<ICurrentProfileOperationsMediator>(x => x.CurrentProfile == new Profile());
         var uow = new Mock<IUnitOfWork>();
         uow
             .Setup(x => x.GetRepository<Profile>())
@@ -39,9 +42,10 @@ public class CheckDefaultProfileServiceTests
                 It.IsAny<Profile>()
             ), Times.Never);
 
+        // Test default profile missing, add it
         repository
             .Setup(x => x.GetAll())
-            .Returns(new List<Profile>());
+            .Returns(new List<Profile> {new()});
         service.CheckDefaultProfile();
         repository
             .Verify(x => x.Add(
