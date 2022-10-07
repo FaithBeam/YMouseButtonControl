@@ -24,7 +24,7 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
         var model = repository.GetAll();
         if (model.All(x => x.Name != "Default"))
         {
-            repository.Add("0", new Profile
+            repository.Add(new Profile
             {
                 Checked = true,
                 Name = "Default",

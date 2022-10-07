@@ -18,7 +18,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public IEnumerable<T> GetAll() => _collection.FindAll();
 
-    public void Add(string id, T entity) => _collection.Insert(id, entity);
+    public void Add(T entity) => _collection.Insert(entity);
 
     public void Update(string id, T entity) => _collection.Update(id, entity);
 

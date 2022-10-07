@@ -8,7 +8,7 @@ public interface IRepository<T>
 
     IEnumerable<T> GetAll();
 
-    void Add(string id, T entity);
+    void Add(T entity);
 
     void Update(string id, T entity);
 

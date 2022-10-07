@@ -29,6 +29,6 @@ public class ProfilesService : IProfilesService
     {
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
-        repository.Add("1", profile);
+        repository.Add(profile);
     }
 }
