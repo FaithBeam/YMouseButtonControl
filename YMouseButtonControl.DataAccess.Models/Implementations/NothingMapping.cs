@@ -1,4 +1,6 @@
-﻿namespace YMouseButtonControl.DataAccess.Models;
+﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+
+namespace YMouseButtonControl.DataAccess.Models.Implementations;
 
 public class NothingMapping : IButtonMapping
 {
@@ -6,18 +8,11 @@ public class NothingMapping : IButtonMapping
     public bool Enabled { get; } = false;
     public string Description { get; } = "** No Change (Don't Intercept) **";
 
-    public void Run()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void Stop()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override string ToString()
     {
         return Description;
     }
+
+    public string? Keys { get; }
+    public bool State { get; set; }
 }

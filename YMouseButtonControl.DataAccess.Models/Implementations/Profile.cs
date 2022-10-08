@@ -1,4 +1,6 @@
-﻿namespace YMouseButtonControl.DataAccess.Models
+﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+
+namespace YMouseButtonControl.DataAccess.Models.Implementations
 {
     public class Profile
     {

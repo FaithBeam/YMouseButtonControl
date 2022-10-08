@@ -10,8 +10,9 @@ public static class Bootstrapper
     {
         EnvironmentServicesBootstrapper.RegisterEnvironmentServices(services, resolver);
         ServicesBootstrapper.RegisterServices(services, resolver);
-        ViewModelsBootstrapper.RegisterViewModels(services, resolver);
         ConfigurationBootstrapper.RegisterConfiguration(services, resolver, dataAccessConfig);
         DataAccessBootstrapper.RegisterDataAccess(services, resolver);
+        KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services, resolver);
+        ViewModelsBootstrapper.RegisterViewModels(services, resolver);
     }
 }

@@ -1,4 +1,4 @@
-namespace YMouseButtonControl.DataAccess.Models;
+namespace YMouseButtonControl.DataAccess.Models.Interfaces;
 
 public interface ISimulatedKeystrokesType
 {

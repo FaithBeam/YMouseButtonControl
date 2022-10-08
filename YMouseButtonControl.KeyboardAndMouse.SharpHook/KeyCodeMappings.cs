@@ -5,7 +5,7 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook;
 
 public static class KeyCodeMappings
 {
-    public static Dictionary<string, KeyCode> KeyCodes = new()
+    public static readonly Dictionary<string, KeyCode> KeyCodes = new()
     {
         { "escape", KeyCode.VcEscape },
             
@@ -208,8 +208,5 @@ public static class KeyCodeMappings
         
         {"undefined", KeyCode.VcUndefined},
         {"charundefined", KeyCode.CharUndefined},
-        
-        
-        
     };
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using YMouseButtonControl.DataAccess.Models;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+﻿using System.Collections.Generic;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 
 namespace YMouseButtonControl.ViewModels.Services.Interfaces;
 

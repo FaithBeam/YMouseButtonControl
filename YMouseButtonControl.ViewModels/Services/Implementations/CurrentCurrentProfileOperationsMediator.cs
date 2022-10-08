@@ -1,5 +1,6 @@
 using System;
 using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 

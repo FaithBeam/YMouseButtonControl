@@ -3,6 +3,8 @@ using Splat;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook;
+using YMouseButtonControl.Processes.Interfaces;
+using YMouseButtonControl.Profiles.Implementations;
 using YMouseButtonControl.ViewModels.Services.Implementations;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
@@ -18,10 +20,6 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver)
     {
-        services.RegisterLazySingleton<IMouseListener>(() => new MouseListener(
-            new TaskPoolGlobalHook()
-        ));
-        services.RegisterLazySingleton<IKeyboardSimulator>(() => new KeyboardSimulator(new EventSimulator()));
         services.RegisterLazySingleton<IProcessesService>(() => new ProcessesService());
         services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()

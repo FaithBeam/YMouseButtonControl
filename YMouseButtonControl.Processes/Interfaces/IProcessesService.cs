@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using YMouseButtonControl.Services.Abstractions.Models;
 
-namespace YMouseButtonControl.ViewModels.Services.Interfaces;
+namespace YMouseButtonControl.Processes.Interfaces;
 
 public interface IProcessesService
 {

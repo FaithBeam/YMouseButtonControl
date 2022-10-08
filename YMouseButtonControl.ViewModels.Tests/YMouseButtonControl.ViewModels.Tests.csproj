@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.Profiles\YMouseButtonControl.Profiles.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.ViewModels\YMouseButtonControl.ViewModels.csproj" />
     </ItemGroup>
 

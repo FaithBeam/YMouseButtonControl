@@ -4,9 +4,9 @@ using Avalonia.Collections;
 using JetBrains.Annotations;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 using ReactiveUI;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.Processes.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 

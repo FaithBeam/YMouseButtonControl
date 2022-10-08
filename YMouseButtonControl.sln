@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Keyboar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.ViewModels.Tests", "YMouseButtonControl.ViewModels.Tests\YMouseButtonControl.ViewModels.Tests.csproj", "{E86C6444-1893-4EE9-8E6E-8D506CAACD10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Processes", "YMouseButtonControl.Processes\YMouseButtonControl.Processes.csproj", "{74D9519F-46D0-4747-907D-ADBD1F3901B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Profiles", "YMouseButtonControl.Profiles\YMouseButtonControl.Profiles.csproj", "{CD7D9796-7E28-430B-856D-0EC9BFEC5680}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +82,13 @@ Global
 		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

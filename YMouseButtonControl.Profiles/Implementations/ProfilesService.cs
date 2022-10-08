@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using YMouseButtonControl.DataAccess.Models;
+﻿using System.Collections.Generic;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.UnitOfWork;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
-namespace YMouseButtonControl.ViewModels.Services.Implementations;
+namespace YMouseButtonControl.Profiles.Implementations;
 
 
 public class ProfilesService : IProfilesService

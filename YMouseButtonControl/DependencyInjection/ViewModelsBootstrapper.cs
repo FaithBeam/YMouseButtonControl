@@ -1,5 +1,6 @@
 using Splat;
 using YMouseButtonControl.KeyboardAndMouse;
+using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;

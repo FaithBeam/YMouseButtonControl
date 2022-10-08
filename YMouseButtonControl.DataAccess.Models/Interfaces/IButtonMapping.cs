@@ -1,4 +1,4 @@
-namespace YMouseButtonControl.DataAccess.Models;
+namespace YMouseButtonControl.DataAccess.Models.Interfaces;
 
 public interface IButtonMapping
 {
@@ -6,6 +6,6 @@ public interface IButtonMapping
     public bool Enabled { get; }
     public string Description { get; }
     public string ToString();
-    public void Run();
-    public void Stop();
+    public string Keys { get; }
+    public bool State { get; set; }
 }

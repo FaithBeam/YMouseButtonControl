@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using YMouseButtonControl.DataAccess.Models;
-using YMouseButtonControl.DataAccess.Models.SimulatedKeystrokesTypes;
+using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 

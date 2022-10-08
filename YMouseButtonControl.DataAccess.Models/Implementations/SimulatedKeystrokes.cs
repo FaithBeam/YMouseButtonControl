@@ -1,25 +1,17 @@
-﻿namespace YMouseButtonControl.DataAccess.Models;
+﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+
+namespace YMouseButtonControl.DataAccess.Models.Implementations;
 
 public class SimulatedKeystrokes : IButtonMapping
 {
     public int Index { get; } = 2;
     public string Description { get; }= "Simulated Keys (undefined)";
     public bool Enabled { get; }
-
-    public void Run()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void Stop()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public bool CanRaiseDialog { get; set; }
-    public string Keys { get; set; }
+    public string? Keys { get; set; }
+    public bool State { get; set; }
 
-    public ISimulatedKeystrokesType SimulatedKeystrokesType { get; set; }
+    public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 
     public override string ToString()
     {

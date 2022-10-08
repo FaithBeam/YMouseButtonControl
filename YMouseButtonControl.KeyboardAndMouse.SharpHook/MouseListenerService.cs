@@ -8,7 +8,7 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook;
 
 public class MouseListener : IMouseListener
 {
-    private TaskPoolGlobalHook _hook;
+    private readonly TaskPoolGlobalHook _hook;
 
     public MouseListener(TaskPoolGlobalHook hook)
     {

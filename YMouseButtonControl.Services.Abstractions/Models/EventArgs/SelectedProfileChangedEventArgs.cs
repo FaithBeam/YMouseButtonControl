@@ -1,4 +1,5 @@
 using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 
 namespace YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
