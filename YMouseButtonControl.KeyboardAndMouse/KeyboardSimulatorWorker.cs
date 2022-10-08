@@ -44,30 +44,14 @@ public class KeyboardSimulatorWorker : IDisposable
                 case NothingMapping:
                     continue;
                 case SimulatedKeystrokes when buttonMapping.State:
-                    SimulatedKeystrokesReleased(buttonMapping.Keys.Reverse());
+                    _keyboardSimulator.SimulatedKeystrokesReleased(buttonMapping.Keys.Reverse());
                     buttonMapping.State = false;
                     break;
                 case SimulatedKeystrokes:
-                    SimulatedKeystrokesPressed(buttonMapping.Keys);
+                    _keyboardSimulator.SimulatedKeystrokesPressed(buttonMapping.Keys);
                     buttonMapping.State = true;
                     break;
             }
-        }
-    }
-
-    private void SimulatedKeystrokesReleased(IEnumerable<char> keys)
-    {
-        foreach (var c in keys)
-        {
-            _keyboardSimulator.SimulateKeyRelease(c.ToString());
-        }
-    }
-
-    private void SimulatedKeystrokesPressed(string keys)
-    {
-        foreach (var c in keys)
-        {
-            _keyboardSimulator.SimulateKeyPress(c.ToString());
         }
     }
 

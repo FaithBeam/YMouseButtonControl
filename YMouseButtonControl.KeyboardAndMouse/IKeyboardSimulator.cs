@@ -1,10 +1,10 @@
 
-using YMouseButtonControl.KeyboardAndMouse.Models;
+using System.Collections.Generic;
 
 namespace YMouseButtonControl.KeyboardAndMouse;
 
 public interface IKeyboardSimulator
 {
-    SimulateKeyboardResult SimulateKeyPress(string key);
-    SimulateKeyboardResult SimulateKeyRelease(string key);
+    void SimulatedKeystrokesReleased(IEnumerable<char> keys);
+    void SimulatedKeystrokesPressed(string keys);
 }

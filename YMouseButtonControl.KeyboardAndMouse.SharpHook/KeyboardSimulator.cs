@@ -1,4 +1,5 @@
-﻿using SharpHook;
+﻿using System.Collections.Generic;
+using SharpHook;
 using YMouseButtonControl.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
@@ -12,10 +13,27 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
             _keyboardSimulator = keyboardSimulator;
         }
 
-        public SimulateKeyboardResult SimulateKeyPress(string key) => new()
+        private SimulateKeyboardResult SimulateKeyPress(string key) => new()
             { Result = _keyboardSimulator.SimulateKeyPress(KeyCodeMappings.KeyCodes[key]).ToString() };
         
-        public SimulateKeyboardResult SimulateKeyRelease(string key) => new()
+        private SimulateKeyboardResult SimulateKeyRelease(string key) => new()
             { Result = _keyboardSimulator.SimulateKeyRelease(KeyCodeMappings.KeyCodes[key]).ToString() };
+        
+        public void SimulatedKeystrokesReleased(IEnumerable<char> keys)
+        {
+            foreach (var c in keys)
+            {
+                SimulateKeyRelease(c.ToString());
+            }
+        }
+
+        public void SimulatedKeystrokesPressed(string keys)
+        {
+            foreach (var c in keys)
+            {
+                SimulateKeyPress(c.ToString());
+            }
+        }
+        
     }
 }
