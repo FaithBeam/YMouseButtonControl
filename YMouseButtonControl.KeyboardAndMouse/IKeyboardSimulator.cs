@@ -1,10 +1,8 @@
-
-using System.Collections.Generic;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse;
 
 public interface IKeyboardSimulator
 {
-    void SimulatedKeystrokesReleased(IEnumerable<char> keys);
-    void SimulatedKeystrokesPressed(string keys);
+    void SimulatedKeystrokes(IButtonMapping buttonMapping, bool pressed);
 }

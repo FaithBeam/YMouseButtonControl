@@ -147,7 +147,7 @@ public static class KeyCodeMappings
         {"numpadinsert", KeyCode.VcNumPadInsert},
         {"numpaddelete", KeyCode.VcNumPadDelete},
         
-        {"leftshift", KeyCode.VcLeftShift},
+        {"shift", KeyCode.VcLeftShift},
         {"rightshift", KeyCode.VcRightShift},
         {"leftcontrol", KeyCode.VcLeftControl},
         {"rightcontrol", KeyCode.VcRightControl},

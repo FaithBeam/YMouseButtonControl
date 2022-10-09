@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using SharpHook;
+using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Models;
+using YMouseButtonControl.KeyboardAndMouse.SharpHook.Services;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
 {
@@ -18,22 +23,40 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
         
         private SimulateKeyboardResult SimulateKeyRelease(string key) => new()
             { Result = _keyboardSimulator.SimulateKeyRelease(KeyCodeMappings.KeyCodes[key]).ToString() };
+
+        public void SimulatedKeystrokes(IButtonMapping buttonMapping, bool pressed)
+        {
+            if (buttonMapping.SimulatedKeystrokesType is not StickyHoldActionType) return;
+            if (!pressed) return;
+            
+            if (buttonMapping.State)
+            {
+                StickyHoldRelease(ParseKeysService.ParseKeys(buttonMapping.Keys));
+                buttonMapping.State = false;
+            }
+            else
+            {
+                StickyHoldPress(ParseKeysService.ParseKeys(buttonMapping.Keys));
+                buttonMapping.State = true;
+            }
+        }
         
-        public void SimulatedKeystrokesReleased(IEnumerable<char> keys)
+        private void StickyHoldPress(IEnumerable<string> keys)
         {
             foreach (var c in keys)
             {
-                SimulateKeyRelease(c.ToString());
+                System.Diagnostics.Debug.WriteLine(c);
+                SimulateKeyPress(c);
             }
         }
 
-        public void SimulatedKeystrokesPressed(string keys)
+        private void StickyHoldRelease(IEnumerable<string> keys)
         {
-            foreach (var c in keys)
+            foreach (var c in keys.Reverse())
             {
-                SimulateKeyPress(c.ToString());
+                System.Diagnostics.Debug.WriteLine(c);
+                SimulateKeyRelease(c);
             }
         }
-        
     }
 }

@@ -15,4 +15,5 @@ public class NothingMapping : IButtonMapping
 
     public string? Keys { get; }
     public bool State { get; set; }
+    public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 }

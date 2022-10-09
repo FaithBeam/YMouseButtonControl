@@ -43,13 +43,8 @@ public class KeyboardSimulatorWorker : IDisposable
             {
                 case NothingMapping:
                     continue;
-                case SimulatedKeystrokes when buttonMapping.State:
-                    _keyboardSimulator.SimulatedKeystrokesReleased(buttonMapping.Keys.Reverse());
-                    buttonMapping.State = false;
-                    break;
                 case SimulatedKeystrokes:
-                    _keyboardSimulator.SimulatedKeystrokesPressed(buttonMapping.Keys);
-                    buttonMapping.State = true;
+                    _keyboardSimulator.SimulatedKeystrokes(buttonMapping, true);
                     break;
             }
         }

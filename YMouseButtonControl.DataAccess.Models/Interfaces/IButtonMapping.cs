@@ -8,4 +8,6 @@ public interface IButtonMapping
     public string ToString();
     public string Keys { get; }
     public bool State { get; set; }
+    
+    public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 }
