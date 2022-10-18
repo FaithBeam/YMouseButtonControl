@@ -45,7 +45,6 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
         {
             foreach (var c in keys)
             {
-                System.Diagnostics.Debug.WriteLine(c);
                 SimulateKeyPress(c);
             }
         }
@@ -54,7 +53,6 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
         {
             foreach (var c in keys.Reverse())
             {
-                System.Diagnostics.Debug.WriteLine(c);
                 SimulateKeyRelease(c);
             }
         }

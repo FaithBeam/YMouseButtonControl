@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="SharpHook" Version="3.1.1" />
+      <PackageReference Include="SharpHook" Version="3.1.2" />
     </ItemGroup>
 
 </Project>

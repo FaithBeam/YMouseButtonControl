@@ -36,14 +36,14 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 WindowClass = "N/A",
                 MouseButton1 = new NothingMapping(),
                 MouseButton2 = new NothingMapping(),
-                MouseButton3 = new SimulatedKeystrokes
+                MouseButton3 = new NothingMapping(),
+                MouseButton4 = new SimulatedKeystrokes
                 {
-                    Keys = "{shift}W",
+                    Keys = "w",
                     CanRaiseDialog = true,
                     SimulatedKeystrokesType = new StickyHoldActionType()
                 },
-                MouseButton3LastIndex = 2,
-                MouseButton4 = new NothingMapping(),
+                MouseButton4LastIndex = 2,
                 MouseButton5 = new NothingMapping(),
                 WheelUp = new NothingMapping(),
                 WheelDown = new NothingMapping(),
