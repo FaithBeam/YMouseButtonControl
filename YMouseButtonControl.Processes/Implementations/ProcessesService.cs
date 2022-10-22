@@ -4,7 +4,7 @@ using System.Linq;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
 
-namespace YMouseButtonControl.ViewModels.Services.Implementations;
+namespace YMouseButtonControl.Processes.Implementations;
 
 public class ProcessesService : IProcessesService
 {

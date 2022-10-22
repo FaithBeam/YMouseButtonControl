@@ -3,6 +3,7 @@ using Splat;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook;
+using YMouseButtonControl.Processes.Implementations;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
 using YMouseButtonControl.ViewModels.Services.Implementations;

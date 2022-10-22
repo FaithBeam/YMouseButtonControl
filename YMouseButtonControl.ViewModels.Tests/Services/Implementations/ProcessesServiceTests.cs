@@ -1,4 +1,5 @@
 using Moq.AutoMock;
+using YMouseButtonControl.Processes.Implementations;
 using YMouseButtonControl.ViewModels.Services.Implementations;
 
 namespace YMouseButtonControl.ViewModels.Tests.Services.Implementations;
