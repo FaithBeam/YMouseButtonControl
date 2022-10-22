@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
@@ -14,13 +15,15 @@ public class KeyboardSimulatorWorker : IDisposable
     private readonly IMouseListener _mouseListener;
     private readonly IProfilesService _profilesService;
     private readonly IKeyboardSimulator _keyboardSimulator;
+    private readonly IProcessMonitorService _processMonitorService;
     private Dictionary<NewMouseButton, List<IButtonMapping>> _hotkeys;
 
-    public KeyboardSimulatorWorker(IProfilesService profilesService, IMouseListener mouseListener, IKeyboardSimulator keyboardSimulator)
+    public KeyboardSimulatorWorker(IProfilesService profilesService, IMouseListener mouseListener, IKeyboardSimulator keyboardSimulator, IProcessMonitorService processMonitorService)
     {
         _profilesService = profilesService;
         _mouseListener = mouseListener;
         _keyboardSimulator = keyboardSimulator;
+        _processMonitorService = processMonitorService;
     }
 
     private void SubscribeToEvents()
@@ -66,6 +69,10 @@ public class KeyboardSimulatorWorker : IDisposable
         };
         foreach (var profile in _profilesService.GetProfiles())
         {
+            if (!_processMonitorService.ProcessRunning(profile.Process))
+            {
+                continue;
+            }
             _hotkeys[NewMouseButton.Button1].Add(profile.MouseButton1);
             _hotkeys[NewMouseButton.Button2].Add(profile.MouseButton2);
             _hotkeys[NewMouseButton.Button3].Add(profile.MouseButton3);

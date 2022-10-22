@@ -29,7 +29,7 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 Checked = true,
                 Name = "Default",
                 Description = "Default description",
-                Process = "Some process",
+                Process = "Notepad.exe",
                 MatchType = "N/A",
                 ParentClass = "N/A",
                 WindowCaption = "N/A",
