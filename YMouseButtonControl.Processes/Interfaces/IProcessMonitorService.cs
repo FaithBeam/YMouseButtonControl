@@ -3,7 +3,7 @@ using YMouseButtonControl.Services.Abstractions.Models;
 
 namespace YMouseButtonControl.Processes.Interfaces;
 
-public interface IProcessesService
+public interface IProcessMonitorService
 {
     IEnumerable<ProcessModel> GetProcesses();
 }

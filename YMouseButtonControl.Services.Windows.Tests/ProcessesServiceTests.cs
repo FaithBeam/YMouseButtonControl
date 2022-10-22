@@ -1,7 +1,7 @@
 using Moq.AutoMock;
-using YMouseButtonControl.Processes.Implementations;
+using YMouseButtonControl.Services.Windows.Implementations;
 
-namespace YMouseButtonControl.Processes.Tests;
+namespace YMouseButtonControl.Services.Windows.Tests;
 
 [TestClass]
 public class ProcessesServiceTests
@@ -16,7 +16,7 @@ public class ProcessesServiceTests
     [TestMethod]
     public void TestGetProcesses()
     {
-        var vm = _autoMocker.CreateInstance<ProcessesService>();
+        var vm = _autoMocker.CreateInstance<ProcessMonitorService>();
         var procs = vm.GetProcesses();
         Assert.IsTrue(procs.Any());
         foreach (var p in procs)

@@ -1,11 +1,10 @@
-﻿using SharpHook;
-using Splat;
+﻿using Splat;
 using YMouseButtonControl.DataAccess.UnitOfWork;
-using YMouseButtonControl.KeyboardAndMouse;
-using YMouseButtonControl.KeyboardAndMouse.SharpHook;
-using YMouseButtonControl.Processes.Implementations;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
+using YMouseButtonControl.Services.Environment.Enums;
+using YMouseButtonControl.Services.Environment.Interfaces;
+using YMouseButtonControl.Services.Windows.Implementations;
 using YMouseButtonControl.ViewModels.Services.Implementations;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
@@ -16,12 +15,12 @@ public static class ServicesBootstrapper
     public static void RegisterServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         RegisterCommonServices(services, resolver);
+        RegisterPlatformSpecificServices(services, resolver);
     }
 
     private static void RegisterCommonServices(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver)
     {
-        services.RegisterLazySingleton<IProcessesService>(() => new ProcessesService());
         services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
@@ -30,5 +29,21 @@ public static class ServicesBootstrapper
             resolver.GetRequiredService<IUnitOfWorkFactory>(),
             resolver.GetRequiredService<ICurrentProfileOperationsMediator>()
         ));
+    }
+    
+    private static void RegisterPlatformSpecificServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    {
+        var platformService = resolver.GetRequiredService<IPlatformService>();
+        var platform = platformService.GetPlatform();
+
+        if (platform is Platform.Windows)
+        {
+            RegisterWindowsServices(services, resolver);
+        }
+    }
+
+    private static void RegisterWindowsServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    {
+        services.RegisterLazySingleton<IProcessMonitorService>(() => new ProcessMonitorService());
     }
 }

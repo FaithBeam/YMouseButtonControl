@@ -30,6 +30,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Profile
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests", "YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests\YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests.csproj", "{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Services.Windows", "YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj", "{E9873196-0683-4609-9197-6CDF5FD6BCF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Services.Windows.Tests", "YMouseButtonControl.Services.Windows.Tests\YMouseButtonControl.Services.Windows.Tests.csproj", "{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,5 +100,13 @@ Global
 		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

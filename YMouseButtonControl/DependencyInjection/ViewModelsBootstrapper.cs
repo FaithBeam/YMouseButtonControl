@@ -19,7 +19,7 @@ public static class ViewModelsBootstrapper
         IReadonlyDependencyResolver resolver)
     {
         services.Register(() => new ProcessSelectorDialogViewModel(
-            resolver.GetRequiredService<IProcessesService>()
+            resolver.GetRequiredService<IProcessMonitorService>()
         ));
         services.RegisterLazySingleton<IProfilesInformationViewModel>(() => new ProfilesInformationViewModel(
             resolver.GetRequiredService<ICurrentProfileOperationsMediator>()

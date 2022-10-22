@@ -12,20 +12,20 @@ namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
 public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
 {
-    private readonly IProcessesService _processesService;
+    private readonly IProcessMonitorService _processMonitorService;
     [CanBeNull] private ProcessModel _processModel;
 
     public ICommand RefreshButtonCommand { get; }
 
     public ReactiveCommand<Unit, Profile> OkCommand { get; }
 
-    public ProcessSelectorDialogViewModel(IProcessesService processesService)
+    public ProcessSelectorDialogViewModel(IProcessMonitorService processMonitorService)
     {
-        _processesService = processesService;
+        _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
         OkCommand = ReactiveCommand.Create(() => new Profile()
             { Name = Description, Description = Description, Process = Application });
-        Processes = new AvaloniaList<ProcessModel>(_processesService.GetProcesses());
+        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses());
     }
 
     public AvaloniaList<ProcessModel> Processes { get; private set; }
@@ -64,7 +64,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     private void OnRefreshButtonClicked()
     {
-        Processes = new AvaloniaList<ProcessModel>(_processesService.GetProcesses());
+        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses());
         this.RaisePropertyChanged(nameof(Processes));
     }
 }

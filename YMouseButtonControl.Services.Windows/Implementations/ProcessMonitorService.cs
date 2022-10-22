@@ -4,9 +4,9 @@ using System.Linq;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
 
-namespace YMouseButtonControl.Processes.Implementations;
+namespace YMouseButtonControl.Services.Windows.Implementations;
 
-public class ProcessesService : IProcessesService
+public class ProcessMonitorService : IProcessMonitorService
 {
     public IEnumerable<ProcessModel> GetProcesses()
     {
