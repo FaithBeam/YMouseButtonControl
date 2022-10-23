@@ -1,43 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
+using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
 public class ProcessMonitorService : IProcessMonitorService
 {
     private Dictionary<uint, string> _runningProcesses;
-    private ManagementEventWatcher _createdEventWatcher;
-    private ManagementEventWatcher _deletedEventWatcher;
+    private readonly ManagementEventWatcher _createdEventWatcher;
+    private readonly ManagementEventWatcher _deletedEventWatcher;
     private readonly ManagementObjectSearcher _searcher = new ("SELECT * FROM WIN32_PROCESS");
 
     public ProcessMonitorService()
     {
         PopulateRunningProcesses();
-        _createdEventWatcher = new ManagementEventWatcher("root\\CimV2", 
-            "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
+        _createdEventWatcher = new ManagementEventWatcher("root\\CimV2", "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
         _createdEventWatcher.EventArrived += OnCreatedProcess;
         _createdEventWatcher.Start();
-        _deletedEventWatcher = new ManagementEventWatcher("root\\CimV2", 
-            "SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
+        _deletedEventWatcher = new ManagementEventWatcher("root\\CimV2", "SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
         _deletedEventWatcher.EventArrived += OnDeletedProcess;
         _deletedEventWatcher.Start();
     }
 
+    public event EventHandler<ProcessChangedEventArgs> OnProcessChangedEventHandler;
+
+    private void OnProcessChanged(ProcessChangedEventArgs e)
+    {
+        var handler = OnProcessChangedEventHandler;
+        handler?.Invoke(this, e);
+    }
+    
     private void OnDeletedProcess(object sender, EventArrivedEventArgs e)
     {
         var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
-        _runningProcesses.TryAdd((uint)process.Properties["ProcessId"].Value, (string)process.Properties["Name"].Value);
+        var pm = new ProcessModel{ProcessId = (uint)process.Properties["ProcessId"].Value, ProcessName = (string)process.Properties["Name"].Value};
+        _runningProcesses.Remove(pm.ProcessId);
+        OnProcessChanged(new ProcessChangedEventArgs(pm));
     }
 
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
         var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
-        _runningProcesses.Remove((uint)process.Properties["ProcessId"].Value);
+        var pm = new ProcessModel{ProcessId = (uint)process.Properties["ProcessId"].Value, ProcessName = (string)process.Properties["Name"].Value};
+        _runningProcesses.TryAdd(pm.ProcessId, pm.ProcessName);
+        OnProcessChanged(new ProcessChangedEventArgs(pm));
     }
 
     public IEnumerable<ProcessModel> GetProcesses()

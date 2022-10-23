@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
@@ -30,12 +29,20 @@ public class KeyboardSimulatorWorker : IDisposable
     {
         _mouseListener.OnMousePressedEventHandler += OnMousePressed;
         _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
+        _processMonitorService.OnProcessChangedEventHandler += OnProcessChanged;
     }
+
+    private void OnProcessChanged(object sender, ProcessChangedEventArgs e)
+    {
+        BuildHotkeys();
+    }
+
 
     private void UnsubscribeFromEvents()
     {
         _mouseListener.OnMousePressedEventHandler -= OnMousePressed;
         _mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
+        _processMonitorService.OnProcessChangedEventHandler -= OnProcessChanged;
     }
 
     private void OnMousePressed(object sender, NewMouseHookEventArgs e)
@@ -91,5 +98,6 @@ public class KeyboardSimulatorWorker : IDisposable
     {
         UnsubscribeFromEvents();
         _mouseListener?.Dispose();
+        _processMonitorService?.Dispose();
     }
 }
