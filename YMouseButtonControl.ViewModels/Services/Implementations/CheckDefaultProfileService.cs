@@ -29,7 +29,7 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 Checked = true,
                 Name = "Default",
                 Description = "Default description",
-                Process = "Notepad.exe",
+                Process = "*",
                 MatchType = "N/A",
                 ParentClass = "N/A",
                 WindowCaption = "N/A",
@@ -37,13 +37,7 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 MouseButton1 = new NothingMapping(),
                 MouseButton2 = new NothingMapping(),
                 MouseButton3 = new NothingMapping(),
-                MouseButton4 = new SimulatedKeystrokes
-                {
-                    Keys = "w",
-                    CanRaiseDialog = true,
-                    SimulatedKeystrokesType = new StickyHoldActionType()
-                },
-                MouseButton4LastIndex = 2,
+                MouseButton4 = new NothingMapping(),
                 MouseButton5 = new NothingMapping(),
                 WheelUp = new NothingMapping(),
                 WheelDown = new NothingMapping(),
