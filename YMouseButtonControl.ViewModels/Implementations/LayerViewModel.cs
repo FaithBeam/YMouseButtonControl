@@ -98,40 +98,45 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     }
     
     public AvaloniaList<string> MouseButton1Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseButton1LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton1LastIndex;
-    
+
     public AvaloniaList<string> MouseButton2Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseButton2LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton2LastIndex;
-    
+
     public AvaloniaList<string> MouseButton3Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseButton3LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton3LastIndex;
 
     public AvaloniaList<string> MouseButton4Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseButton4LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
-    
+
     public AvaloniaList<string> MouseButton5Combo { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseButton5LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton5LastIndex;
 
     public AvaloniaList<string> MouseWheelUp { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseWheelUpLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelUpLastIndex;
-    
+
     public AvaloniaList<string> MouseWheelDown { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseWheelDownLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelDownLastIndex;
-    
+
     public AvaloniaList<string> MouseWheelLeft { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
-    
-    public int MouseWheelLeftLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelLeftLastIndex;
 
     public AvaloniaList<string> MouseWheelRight { get; set; } = new(Factories.ButtonMappingFactory.ButtonMappings);
     
+    public int MouseButton1LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton1LastIndex;
+    
+    public int MouseButton2LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton2LastIndex;
+    
+    public int MouseButton3LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton3LastIndex;
+
+    public int MouseButton4LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
+    
+    public int MouseButton5LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton5LastIndex;
+
+    public int MouseWheelUpLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelUpLastIndex;
+    
+    public int MouseWheelDownLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelDownLastIndex;
+    
+    public int MouseWheelLeftLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelLeftLastIndex;
+
     public int MouseWheelRightLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelRightLastIndex;
+
+    private void OnComboBoxIndexChanged()
+    {
+        
+    }
     
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
     {
