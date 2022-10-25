@@ -2,6 +2,7 @@
 using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Interfaces;
 using YMouseButtonControl.ViewModels.Services.Interfaces;

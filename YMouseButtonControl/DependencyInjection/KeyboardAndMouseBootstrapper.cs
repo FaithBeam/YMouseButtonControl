@@ -3,6 +3,7 @@ using Splat;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook;
 using YMouseButtonControl.Processes.Interfaces;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;

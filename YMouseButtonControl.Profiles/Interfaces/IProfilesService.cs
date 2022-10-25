@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 
-namespace YMouseButtonControl.ViewModels.Services.Interfaces;
+namespace YMouseButtonControl.Profiles.Interfaces;
 
 public interface IProfilesService
 {

@@ -5,6 +5,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
 using YMouseButtonControl.ViewModels.Services.Interfaces;

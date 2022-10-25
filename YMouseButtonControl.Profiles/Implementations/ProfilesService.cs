@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.UnitOfWork;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
+using YMouseButtonControl.Profiles.Interfaces;
 
 namespace YMouseButtonControl.Profiles.Implementations;
 

@@ -3,6 +3,7 @@ using Splat;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Environment.Enums;
 using YMouseButtonControl.Services.Environment.Interfaces;
 using YMouseButtonControl.Services.Windows.Implementations;

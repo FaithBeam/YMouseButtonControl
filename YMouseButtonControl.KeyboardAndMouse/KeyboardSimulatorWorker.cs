@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse;
 
