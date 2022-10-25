@@ -15,8 +15,7 @@ public class SimulatedKeystrokes : IButtonMapping
 
     public override string ToString()
     {
-        var myStr = "";
-        myStr = SimulatedKeystrokesType is not null
+        var myStr = SimulatedKeystrokesType is not null
             ? $"Simulated Keys: ({SimulatedKeystrokesType.ShortDescription})"
             : Description;
 

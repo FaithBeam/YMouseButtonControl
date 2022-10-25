@@ -13,12 +13,11 @@ public static class ButtonMappingFactory
         {"NothingMapping", () => new NothingMapping()},
         {"SimulatedKeystrokes", () => new SimulatedKeystrokes()},
     };
-    
-    private static readonly Dictionary<int, Func<IButtonMapping>> IntMappings = new()
+
+    public static IEnumerable<IButtonMapping> GetButtonMappings()
     {
-        {0, () => new NothingMapping()},
-        {1, () => new SimulatedKeystrokes()},
-    };
+        return StringMappings.Select(x => x.Value());
+    }
 
     public static IEnumerable<string> GetButtonMappingDescriptions()
     {
@@ -35,13 +34,13 @@ public static class ButtonMappingFactory
         throw new ArgumentException($"Not a valid key: {key}");
     }
     
-    public static IButtonMapping Create(int key)
+    public static IButtonMapping Create(int index)
     {
-        if (IntMappings.ContainsKey(key))
+        if (index > StringMappings.Count)
         {
-            return IntMappings[key]();
+            return StringMappings.ElementAt(index).Value();
         }
 
-        throw new ArgumentException($"Not a valid key: {key}");
+        throw new IndexOutOfRangeException($"Index out of range: {index}");
     }
 }
