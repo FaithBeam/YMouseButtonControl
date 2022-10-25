@@ -1,6 +1,7 @@
 using System;
 using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
@@ -29,7 +30,7 @@ public class CurrentCurrentProfileOperationsMediator: ICurrentProfileOperationsM
     }
 
     public event EventHandler<SelectedProfileChangedEventArgs> SelectedProfileChanged;
-    
+
     private void OnProfileChanged(SelectedProfileChangedEventArgs e)
     {
         var handler = SelectedProfileChanged;

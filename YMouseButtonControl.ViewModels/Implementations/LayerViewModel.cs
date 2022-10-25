@@ -31,7 +31,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
 
-    public LayerViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator, IMouseListener mouseListener)
+    public LayerViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator,
+        IMouseListener mouseListener)
     {
         _currentProfileOperationsMediator = currentProfileOperationsMediator;
         _currentProfileOperationsMediator.SelectedProfileChanged += OnSelectedCurrentProfileChanged;
@@ -98,7 +99,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         get => _mouseButton1BackgroundColor;
         set => this.RaiseAndSetIfChanged(ref _mouseButton1BackgroundColor, value);
     }
-    
+
     public AvaloniaList<IButtonMapping> MouseButton1Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
     public AvaloniaList<IButtonMapping> MouseButton2Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
@@ -117,75 +118,67 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
     public AvaloniaList<IButtonMapping> MouseWheelRight { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
     
+    public IButtonMapping SelectedMouseButton5Combo { get; set; }
+
     public int MouseButton1LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton1LastIndex;
-    
+
     public int MouseButton2LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton2LastIndex;
-    
+
     public int MouseButton3LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton3LastIndex;
 
     public int MouseButton4LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
-    
+
     public int MouseButton5LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton5LastIndex;
 
     public int MouseWheelUpLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelUpLastIndex;
-    
+
     public int MouseWheelDownLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelDownLastIndex;
-    
+
     public int MouseWheelLeftLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelLeftLastIndex;
 
     public int MouseWheelRightLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelRightLastIndex;
 
     private void OnComboBoxIndexChanged()
     {
-        
     }
-    
+
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
     {
         MouseButton1Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.MouseButton1.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton1
+            [e.NewProfile.MouseButton1.Index] = e.NewProfile.MouseButton1
         };
         MouseButton2Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.MouseButton2.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton2
+            [e.NewProfile.MouseButton2.Index] = e.NewProfile.MouseButton2
         };
         MouseButton3Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.MouseButton3.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton3
+            [e.NewProfile.MouseButton3.Index] = e.NewProfile.MouseButton3
         };
         MouseButton4Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.MouseButton4.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton4
+            [e.NewProfile.MouseButton4.Index] = e.NewProfile.MouseButton4
         };
         MouseButton5Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.MouseButton5.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton5
+            [e.NewProfile.MouseButton5.Index] = e.NewProfile.MouseButton5
         };
         MouseWheelUp = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.WheelUp.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelUp
+            [e.NewProfile.WheelUp.Index] = e.NewProfile.WheelUp
         };
         MouseWheelDown = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.WheelDown.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelDown
+            [e.NewProfile.WheelDown.Index] = e.NewProfile.WheelDown
         };
         MouseWheelLeft = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.WheelLeft.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelLeft
+            [e.NewProfile.WheelLeft.Index] = e.NewProfile.WheelLeft
         };
         MouseWheelRight = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [_currentProfileOperationsMediator.CurrentProfile.WheelRight.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelRight
+            [e.NewProfile.WheelRight.Index] = e.NewProfile.WheelRight
         };
         this.RaisePropertyChanged(nameof(MouseButton1Combo));
         this.RaisePropertyChanged(nameof(MouseButton1LastIndex));
@@ -217,6 +210,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 {
                     _wheelUpTimer.Start();
                 }
+
                 break;
             case WheelScrollDirection.VerticalDown:
                 WheelDownBackgroundColor = Brushes.Yellow;
@@ -224,6 +218,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 {
                     _wheelDownTimer.Start();
                 }
+
                 break;
             case WheelScrollDirection.HorizontalLeft:
                 WheelLeftBackgroundColor = Brushes.Yellow;
@@ -231,13 +226,15 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 {
                     _wheelLeftTimer.Start();
                 }
-                break;    
+
+                break;
             case WheelScrollDirection.HorizontalRight:
                 WheelRightBackgroundColor = Brushes.Yellow;
                 if (!_wheelRightTimer.Enabled)
                 {
                     _wheelRightTimer.Start();
                 }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
