@@ -10,38 +10,38 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
 
         public IButtonMapping MouseButton1 { get; set; } = new NothingMapping();
 
-        public int MouseButton1LastIndex { get; set; }
-        
         public IButtonMapping MouseButton2 { get; set; } = new NothingMapping();
 
-        public int MouseButton2LastIndex { get; set; }
-        
         public IButtonMapping MouseButton3 { get; set; } = new NothingMapping();
-
-        public int MouseButton3LastIndex { get; set; }
 
         public IButtonMapping MouseButton4 { get; set; } = new NothingMapping();
 
-        public int MouseButton4LastIndex { get; set; }
-        
         public IButtonMapping MouseButton5 { get; set; } = new NothingMapping();
 
-        public int MouseButton5LastIndex { get; set; }
-        
         public IButtonMapping WheelUp { get; set; } = new NothingMapping();
 
-        public int WheelUpLastIndex { get; set; }
-        
         public IButtonMapping WheelDown { get; set; } = new NothingMapping();
 
-        public int WheelDownLastIndex { get; set; }
-        
         public IButtonMapping WheelLeft { get; set; } = new NothingMapping();
 
-        public int WheelLeftLastIndex { get; set; }
-        
         public IButtonMapping WheelRight { get; set; } = new NothingMapping();
 
+        public int MouseButton1LastIndex { get; set; }
+
+        public int MouseButton2LastIndex { get; set; }
+        
+        public int MouseButton3LastIndex { get; set; }
+
+        public int MouseButton4LastIndex { get; set; }
+        
+        public int MouseButton5LastIndex { get; set; }
+        
+        public int WheelUpLastIndex { get; set; }
+        
+        public int WheelDownLastIndex { get; set; }
+        
+        public int WheelLeftLastIndex { get; set; }
+        
         public int WheelRightLastIndex { get; set; }
 
         public string Description { get; set; }
