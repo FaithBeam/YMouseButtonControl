@@ -37,7 +37,12 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 MouseButton1 = new NothingMapping(),
                 MouseButton2 = new NothingMapping(),
                 MouseButton3 = new NothingMapping(),
-                MouseButton4 = new NothingMapping(),
+                MouseButton4 = new SimulatedKeystrokes
+                {
+                    Keys = "w",
+                    SimulatedKeystrokesType = new StickyHoldActionType()
+                },
+                MouseButton4LastIndex = 2,
                 MouseButton5 = new NothingMapping(),
                 WheelUp = new NothingMapping(),
                 WheelDown = new NothingMapping(),

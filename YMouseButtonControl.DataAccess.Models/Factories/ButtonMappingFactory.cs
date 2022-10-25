@@ -9,6 +9,7 @@ public static class ButtonMappingFactory
     private static readonly Dictionary<ButtonMappings, Func<IButtonMapping>> ButtonMappingDictionary = new()
     {
         { ButtonMappings.Nothing, () => new NothingMapping() },
+        { ButtonMappings.Disabled, () => new DisabledMapping() },
         { ButtonMappings.SimulatedKeystrokes, () => new SimulatedKeystrokes() },
     };
 

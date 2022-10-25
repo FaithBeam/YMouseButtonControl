@@ -4,6 +4,7 @@ using Avalonia.Collections;
 using Avalonia.Media;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Factories;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
@@ -98,23 +99,23 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         set => this.RaiseAndSetIfChanged(ref _mouseButton1BackgroundColor, value);
     }
     
-    public AvaloniaList<string> MouseButton1Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseButton1Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseButton2Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseButton2Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseButton3Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseButton3Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseButton4Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseButton4Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseButton5Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseButton5Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseWheelUp { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseWheelUp { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseWheelDown { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseWheelDown { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseWheelLeft { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseWheelLeft { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<string> MouseWheelRight { get; set; } = new(ButtonMappingFactory.GetButtonMappingDescriptions());
+    public AvaloniaList<IButtonMapping> MouseWheelRight { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
     
     public int MouseButton1LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton1LastIndex;
     
@@ -141,50 +142,50 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
     {
-        MouseButton1Combo = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseButton1Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.MouseButton1.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton1.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.MouseButton1
         };
-        MouseButton2Combo = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseButton2Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.MouseButton2.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton2.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.MouseButton2
         };
-        MouseButton3Combo = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseButton3Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.MouseButton3.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton3.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.MouseButton3
         };
-        MouseButton4Combo = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseButton4Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.MouseButton4.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton4.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.MouseButton4
         };
-        MouseButton5Combo = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseButton5Combo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.MouseButton5.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.MouseButton5.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.MouseButton5
         };
-        MouseWheelUp = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseWheelUp = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.WheelUp.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelUp.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.WheelUp
         };
-        MouseWheelDown = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseWheelDown = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.WheelDown.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelDown.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.WheelDown
         };
-        MouseWheelLeft = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseWheelLeft = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.WheelLeft.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelLeft.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.WheelLeft
         };
-        MouseWheelRight = new AvaloniaList<string>(ButtonMappingFactory.GetButtonMappingDescriptions())
+        MouseWheelRight = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [_currentProfileOperationsMediator.CurrentProfile.WheelRight.Index] =
-                _currentProfileOperationsMediator.CurrentProfile.WheelRight.ToString()
+                _currentProfileOperationsMediator.CurrentProfile.WheelRight
         };
         this.RaisePropertyChanged(nameof(MouseButton1Combo));
         this.RaisePropertyChanged(nameof(MouseButton1LastIndex));

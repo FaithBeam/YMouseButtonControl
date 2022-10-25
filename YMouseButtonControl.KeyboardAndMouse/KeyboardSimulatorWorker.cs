@@ -76,7 +76,7 @@ public class KeyboardSimulatorWorker : IDisposable
         };
         foreach (var profile in _profilesService.GetProfiles())
         {
-            if (!_processMonitorService.ProcessRunning(profile.Process))
+            if (profile.Process != "*" && !_processMonitorService.ProcessRunning(profile.Process))
             {
                 continue;
             }
