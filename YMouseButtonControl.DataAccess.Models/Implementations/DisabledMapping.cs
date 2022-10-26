@@ -7,7 +7,7 @@ public class DisabledMapping : IButtonMapping
     public int Index { get; } = 1;
     public bool Enabled { get; }
     public string Description { get; } = "Disabled";
-    public bool CanRaiseDialog { get; } = false;
+    public bool CanRaiseDialog { get; set; } = false;
     public string Keys { get; }
     public bool State { get; set; }
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }

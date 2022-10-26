@@ -155,10 +155,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     public IButtonMapping SelectedMouseButton1Mapping
     {
         get => _selectedMouseButton1Mapping;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _selectedMouseButton1Mapping, value);            
-        } 
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseButton1Mapping, value);
     }
 
     public IButtonMapping SelectedMouseButton2Mapping
@@ -274,30 +271,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         SelectedMouseWheelDownMapping = _currentProfileOperationsMediator.CurrentProfile.WheelDown;
         SelectedMouseWheelLeftMapping = _currentProfileOperationsMediator.CurrentProfile.WheelLeft;
         SelectedMouseWheelRightMapping = _currentProfileOperationsMediator.CurrentProfile.WheelRight;
-    }
-
-    private async Task GetMappingAsync(IButtonMapping mapping, string mouseAction)
-    {
-        if (mapping is null || !mapping.CanRaiseDialog)
-        {
-            return;
-        }
-        
-        if (mapping is SimulatedKeystrokes)
-        {
-            var result = await ShowSimulatedKeystrokesDialog();
-            if (result is not null)
-            {
-                switch (mouseAction)
-                {
-                    case "mb5":
-                        _currentProfileOperationsMediator.CurrentProfile.MouseButton5 = result;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
     }
 
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
@@ -449,6 +422,30 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         }
     }
 
+    private async Task GetMappingAsync(IButtonMapping mapping, string mouseAction)
+    {
+        if (mapping is null || !mapping.CanRaiseDialog)
+        {
+            return;
+        }
+        
+        if (mapping is SimulatedKeystrokes)
+        {
+            var result = await ShowSimulatedKeystrokesDialog();
+            if (result is not null)
+            {
+                switch (mouseAction)
+                {
+                    case "mb5":
+                        _currentProfileOperationsMediator.UpdateMouseButton5(result);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    
     private async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()
     {
         var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(new SimulatedKeystrokesDialogViewModel());
