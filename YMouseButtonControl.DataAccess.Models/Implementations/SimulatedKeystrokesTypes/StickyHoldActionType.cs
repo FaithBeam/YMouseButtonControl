@@ -8,4 +8,8 @@ public class StickyHoldActionType: ISimulatedKeystrokesType
     public string Description { get; } = "Sticky (held down until button is pressed again)";
     public string ShortDescription { get; } = "sticky hold";
     public bool Enabled { get; } = true;
+    public override string ToString()
+    {
+        return Description;
+    }
 }

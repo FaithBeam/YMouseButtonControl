@@ -7,7 +7,7 @@ public class SimulatedKeystrokes : IButtonMapping
     public int Index { get; } = 2;
     public string Description { get; }= "Simulated Keys (undefined)";
     public bool Enabled { get; }
-    public bool CanRaiseDialog { get; set; }
+    public bool CanRaiseDialog { get; set; } = true;
     public string? Keys { get; set; }
     public bool State { get; set; }
 

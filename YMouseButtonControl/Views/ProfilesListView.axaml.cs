@@ -39,7 +39,6 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         {
             DataContext = interaction.Input
         };
-
         var result = await dialog.ShowDialog<Profile?>(MainWindowProvider.GetMainWindow());
         interaction.SetOutput(result);
     }

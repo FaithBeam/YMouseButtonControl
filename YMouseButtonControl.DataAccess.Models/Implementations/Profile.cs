@@ -26,23 +26,23 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
 
         public IButtonMapping WheelRight { get; set; } = new NothingMapping();
 
-        public int MouseButton1LastIndex { get; set; }
+        public int MouseButton1LastIndex { get; set; } = 0;
 
-        public int MouseButton2LastIndex { get; set; }
+        public int MouseButton2LastIndex { get; set; } = 0;
         
-        public int MouseButton3LastIndex { get; set; }
+        public int MouseButton3LastIndex { get; set; } = 0;
 
-        public int MouseButton4LastIndex { get; set; }
+        public int MouseButton4LastIndex { get; set; } = 0;
         
-        public int MouseButton5LastIndex { get; set; }
+        public int MouseButton5LastIndex { get; set; } = 0;
         
-        public int WheelUpLastIndex { get; set; }
+        public int MouseWheelUpLastIndex { get; set; } = 0;
         
-        public int WheelDownLastIndex { get; set; }
+        public int MouseWheelDownLastIndex { get; set; } = 0;
         
-        public int WheelLeftLastIndex { get; set; }
+        public int MouseWheelLeftLastIndex { get; set; } = 0;
         
-        public int WheelRightLastIndex { get; set; }
+        public int MouseWheelRightLastIndex { get; set; } = 0;
 
         public string Description { get; set; }
 

@@ -1,0 +1,41 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        x:Class="YMouseButtonControl.Views.Dialogs.SimulatedKeystrokesDialog"
+        Title="SimulatedKeystrokesDialog">
+    <Design.DataContext>
+        <vm:SimulatedKeystrokesDialogViewModel />
+    </Design.DataContext>
+    
+    <Grid RowDefinitions="*,*,*,*,*">
+        <Label HorizontalAlignment="Left" Content="Enter the custom key(s)" />
+        
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding CustomKeys}" />
+            <ComboBox Grid.Column="1" Items="\{\}" />
+        </Grid>
+        
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
+            <Label HorizontalAlignment="Left" Content="How to send the simulated key strokes:" />
+            <ComboBox Grid.Column="1" 
+                      Items="{Binding SimulatedKeystrokesTypes}"
+                      SelectedItem="{Binding CurrentSimulatedKeystrokesType}"
+                      SelectedIndex="0" />
+        </Grid>
+        
+        <Grid Grid.Row="3" Grid.ColumnDefinitions="Auto,Auto">
+            <Label Content="Description (to show in the button drop-down)" />
+            <TextBox Grid.Column="1" Text="{Binding Description}"></TextBox>
+        </Grid>
+        
+        <Grid Grid.Row="4" ColumnDefinitions="Auto,Auto">
+            <Button Content="OK" Command="{Binding OkCommand}" />
+            <Button Grid.Column="1" Content="Cancel" Click="Button_OnClick"></Button>
+        </Grid>
+    </Grid>
+</Window>

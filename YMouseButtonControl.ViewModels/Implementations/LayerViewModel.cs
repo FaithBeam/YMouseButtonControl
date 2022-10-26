@@ -1,14 +1,19 @@
 using System;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using Avalonia.Collections;
 using Avalonia.Media;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Factories;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
+using YMouseButtonControl.ViewModels.Models;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
@@ -30,6 +35,29 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private readonly Timer _wheelDownTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
+    private IButtonMapping _selectedMouseButton1Mapping;
+    private IButtonMapping _selectedMouseButton2Mapping;
+    private IButtonMapping _selectedMouseButton3Mapping;
+    private IButtonMapping _selectedMouseButton4Mapping;
+    private IButtonMapping _selectedMouseButton5Mapping;
+    private IButtonMapping _selectedMouseWheelUpMapping;
+    private IButtonMapping _selectedMouseWheelDownMapping;
+    private IButtonMapping _selectedMouseWheelLeftMapping;
+    private IButtonMapping _selectedMouseWheelRightMapping;
+    private int _currentMouseButton1ComboIndex;
+    private int _currentMouseButton2ComboIndex;
+    private int _currentMouseButton3ComboIndex;
+    private int _currentMouseButton4ComboIndex;
+    private int _currentMouseButton5ComboIndex;
+    private int _currentMouseWheelUpComboIndex;
+    private int _currentMouseWheelDownComboIndex;
+    private int _currentMouseWheelLeftComboIndex;
+    private int _currentMouseWheelRightComboIndex;
+     
+    public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel> ShowSimulatedKeystrokesPickerInteraction
+    {
+        get;
+    }
 
     public LayerViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator,
         IMouseListener mouseListener)
@@ -44,6 +72,12 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _wheelDownTimer.Elapsed += delegate { WheelDownBackgroundColor = Brushes.White; };
         _wheelLeftTimer.Elapsed += delegate { WheelLeftBackgroundColor = Brushes.White; };
         _wheelRightTimer.Elapsed += delegate { WheelRightBackgroundColor = Brushes.White; };
+        ShowSimulatedKeystrokesPickerInteraction =
+            new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
+        this
+            .WhenAnyValue(x => x.SelectedMouseButton5Mapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mb5"));
+        InitialLoadSelectedMappings();
     }
 
     public IBrush WheelLeftBackgroundColor
@@ -110,36 +144,160 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
     public AvaloniaList<IButtonMapping> MouseButton5Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelUp { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public AvaloniaList<IButtonMapping> MouseWheelUpCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelDown { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public AvaloniaList<IButtonMapping> MouseWheelDownCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelLeft { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public AvaloniaList<IButtonMapping> MouseWheelLeftCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelRight { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
-    
-    public IButtonMapping SelectedMouseButton5Combo { get; set; }
+    public AvaloniaList<IButtonMapping> MouseWheelRightCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public int MouseButton1LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton1LastIndex;
-
-    public int MouseButton2LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton2LastIndex;
-
-    public int MouseButton3LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton3LastIndex;
-
-    public int MouseButton4LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton4LastIndex;
-
-    public int MouseButton5LastIndex => _currentProfileOperationsMediator.CurrentProfile.MouseButton5LastIndex;
-
-    public int MouseWheelUpLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelUpLastIndex;
-
-    public int MouseWheelDownLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelDownLastIndex;
-
-    public int MouseWheelLeftLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelLeftLastIndex;
-
-    public int MouseWheelRightLastIndex => _currentProfileOperationsMediator.CurrentProfile.WheelRightLastIndex;
-
-    private void OnComboBoxIndexChanged()
+    public IButtonMapping SelectedMouseButton1Mapping
     {
+        get => _selectedMouseButton1Mapping;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedMouseButton1Mapping, value);            
+        } 
+    }
+
+    public IButtonMapping SelectedMouseButton2Mapping
+    {
+        get => _selectedMouseButton2Mapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseButton2Mapping, value);
+    }
+
+    public IButtonMapping SelectedMouseButton3Mapping
+    {
+        get => _selectedMouseButton3Mapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseButton3Mapping, value);
+    }
+
+    public IButtonMapping SelectedMouseButton4Mapping
+    {
+        get => _selectedMouseButton4Mapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseButton4Mapping, value);
+    }
+
+    public IButtonMapping SelectedMouseButton5Mapping
+    {
+        get => _selectedMouseButton5Mapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseButton5Mapping, value);
+    }
+
+    public IButtonMapping SelectedMouseWheelUpMapping
+    {
+        get => _selectedMouseWheelUpMapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseWheelUpMapping, value);
+    }
+
+    public IButtonMapping SelectedMouseWheelDownMapping
+    {
+        get => _selectedMouseWheelDownMapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseWheelDownMapping, value);
+    }
+
+    public IButtonMapping SelectedMouseWheelLeftMapping
+    {
+        get => _selectedMouseWheelLeftMapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseWheelLeftMapping, value);
+    }
+
+    public IButtonMapping SelectedMouseWheelRightMapping
+    {
+        get => _selectedMouseWheelRightMapping;
+        set => this.RaiseAndSetIfChanged(ref _selectedMouseWheelRightMapping, value);
+    }
+
+    public int CurrentMouseButton1ComboIndex
+    {
+        get => _currentMouseButton1ComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseButton1ComboIndex, value);
+    }
+    
+    public int CurrentMouseButton2ComboIndex
+    {
+        get => _currentMouseButton2ComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseButton2ComboIndex, value);
+    }
+    
+    public int CurrentMouseButton3ComboIndex
+    {
+        get => _currentMouseButton3ComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseButton3ComboIndex, value);
+    }
+    
+    public int CurrentMouseButton4ComboIndex
+    {
+        get => _currentMouseButton4ComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseButton4ComboIndex, value);
+    }
+    
+    public int CurrentMouseButton5ComboIndex
+    {
+        get => _currentMouseButton5ComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseButton5ComboIndex, value);
+    }
+    
+    public int CurrentMouseWheelUpComboIndex
+    {
+        get => _currentMouseWheelUpComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseWheelUpComboIndex, value);
+    }
+    
+    public int CurrentMouseWheelDownComboIndex
+    {
+        get => _currentMouseWheelDownComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseWheelDownComboIndex, value);
+    }
+    
+    public int CurrentMouseWheelLeftComboIndex
+    {
+        get => _currentMouseWheelLeftComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseWheelLeftComboIndex, value);
+    }
+    
+    public int CurrentMouseWheelRightComboIndex
+    {
+        get => _currentMouseWheelRightComboIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentMouseWheelRightComboIndex, value);
+    }
+    
+    private void InitialLoadSelectedMappings()
+    {
+        SelectedMouseButton1Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton1;
+        SelectedMouseButton2Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton2;
+        SelectedMouseButton3Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton3;
+        SelectedMouseButton4Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton4;
+        SelectedMouseButton5Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton5;
+        SelectedMouseWheelUpMapping = _currentProfileOperationsMediator.CurrentProfile.WheelUp;
+        SelectedMouseWheelDownMapping = _currentProfileOperationsMediator.CurrentProfile.WheelDown;
+        SelectedMouseWheelLeftMapping = _currentProfileOperationsMediator.CurrentProfile.WheelLeft;
+        SelectedMouseWheelRightMapping = _currentProfileOperationsMediator.CurrentProfile.WheelRight;
+    }
+
+    private async Task GetMappingAsync(IButtonMapping mapping, string mouseAction)
+    {
+        if (mapping is null || !mapping.CanRaiseDialog)
+        {
+            return;
+        }
+        
+        if (mapping is SimulatedKeystrokes)
+        {
+            var result = await ShowSimulatedKeystrokesDialog();
+            if (result is not null)
+            {
+                switch (mouseAction)
+                {
+                    case "mb5":
+                        _currentProfileOperationsMediator.CurrentProfile.MouseButton5 = result;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
@@ -164,40 +322,42 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         {
             [e.NewProfile.MouseButton5.Index] = e.NewProfile.MouseButton5
         };
-        MouseWheelUp = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
+        MouseWheelUpCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [e.NewProfile.WheelUp.Index] = e.NewProfile.WheelUp
         };
-        MouseWheelDown = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
+        MouseWheelDownCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [e.NewProfile.WheelDown.Index] = e.NewProfile.WheelDown
         };
-        MouseWheelLeft = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
+        MouseWheelLeftCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [e.NewProfile.WheelLeft.Index] = e.NewProfile.WheelLeft
         };
-        MouseWheelRight = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
+        MouseWheelRightCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
             [e.NewProfile.WheelRight.Index] = e.NewProfile.WheelRight
         };
+        
         this.RaisePropertyChanged(nameof(MouseButton1Combo));
-        this.RaisePropertyChanged(nameof(MouseButton1LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton2Combo));
-        this.RaisePropertyChanged(nameof(MouseButton2LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton3Combo));
-        this.RaisePropertyChanged(nameof(MouseButton3LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton4Combo));
-        this.RaisePropertyChanged(nameof(MouseButton4LastIndex));
         this.RaisePropertyChanged(nameof(MouseButton5Combo));
-        this.RaisePropertyChanged(nameof(MouseButton5LastIndex));
-        this.RaisePropertyChanged(nameof(MouseWheelUp));
-        this.RaisePropertyChanged(nameof(MouseWheelUpLastIndex));
-        this.RaisePropertyChanged(nameof(MouseWheelDown));
-        this.RaisePropertyChanged(nameof(MouseWheelDownLastIndex));
-        this.RaisePropertyChanged(nameof(MouseWheelLeft));
-        this.RaisePropertyChanged(nameof(MouseWheelLeftLastIndex));
-        this.RaisePropertyChanged(nameof(MouseWheelRight));
-        this.RaisePropertyChanged(nameof(MouseWheelRightLastIndex));
+        this.RaisePropertyChanged(nameof(MouseWheelUpCombo));
+        this.RaisePropertyChanged(nameof(MouseWheelDownCombo));
+        this.RaisePropertyChanged(nameof(MouseWheelLeftCombo));
+        this.RaisePropertyChanged(nameof(MouseWheelRightCombo));
+        
+        CurrentMouseButton1ComboIndex = e.NewProfile.MouseButton1LastIndex;
+        CurrentMouseButton2ComboIndex = e.NewProfile.MouseButton2LastIndex;
+        CurrentMouseButton3ComboIndex = e.NewProfile.MouseButton3LastIndex;
+        CurrentMouseButton4ComboIndex = e.NewProfile.MouseButton4LastIndex;
+        CurrentMouseButton5ComboIndex = e.NewProfile.MouseButton5LastIndex;
+        CurrentMouseWheelUpComboIndex = e.NewProfile.MouseWheelUpLastIndex;
+        CurrentMouseWheelDownComboIndex = e.NewProfile.MouseWheelDownLastIndex;
+        CurrentMouseWheelLeftComboIndex = e.NewProfile.MouseWheelLeftLastIndex;
+        CurrentMouseWheelRightComboIndex = e.NewProfile.MouseWheelRightLastIndex;
     }
 
     private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)
@@ -287,5 +447,20 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()
+    {
+        var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(new SimulatedKeystrokesDialogViewModel());
+        if (result is null)
+        {
+            return null;
+        }
+
+        return new SimulatedKeystrokes()
+        {
+            Keys = result.CustomKeys,
+            SimulatedKeystrokesType = result.SimulatedKeystrokesType,
+        };
     }
 }
