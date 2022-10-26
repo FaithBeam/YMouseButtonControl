@@ -1,5 +1,4 @@
-﻿using ORMi;
-using Splat;
+﻿using Splat;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
