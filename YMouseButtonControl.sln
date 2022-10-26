@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.DataAccess.Models.Tests", "YMouseButtonControl.DataAccess.Models.Tests\YMouseButtonControl.DataAccess.Models.Tests.csproj", "{E251AD42-C42E-4801-BF82-086D3CB18E39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Services.MacOS", "YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj", "{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,5 +116,9 @@ Global
 		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
