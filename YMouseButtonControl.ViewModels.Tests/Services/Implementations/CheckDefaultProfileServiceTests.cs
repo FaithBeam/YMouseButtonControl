@@ -3,6 +3,7 @@ using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Repositories;
 using YMouseButtonControl.DataAccess.UnitOfWork;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Services.Implementations;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
 

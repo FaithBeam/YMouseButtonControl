@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Interfaces;
 using YMouseButtonControl.ViewModels.Services.Interfaces;
@@ -12,7 +13,7 @@ public class ProfilesInformationViewModel : ViewModelBase, IProfilesInformationV
     public ProfilesInformationViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator)
     {
         _currentProfileOperationsMediator = currentProfileOperationsMediator;
-        _currentProfileOperationsMediator.SelectedProfileChanged += OnSelectedCurrentProfileChanged;
+        _currentProfileOperationsMediator.CurrentProfileChanged += OnSelectedCurrentProfileChanged;
     }
 
     public string Description => _currentProfileOperationsMediator.CurrentProfile.Description;

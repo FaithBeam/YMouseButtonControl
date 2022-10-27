@@ -1,15 +1,13 @@
 using System;
-using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
-namespace YMouseButtonControl.ViewModels.Services.Implementations;
+namespace YMouseButtonControl.Profiles.Implementations;
 
 public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediator
 {
-    
     private Profile _currentProfile;
     
     public Profile CurrentProfile
@@ -25,15 +23,17 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
             _currentProfile = value;
 
             var args = new SelectedProfileChangedEventArgs(_currentProfile);
-            OnProfileChanged(args);
+            OnCurrentProfileChanged(args);
         }
     }
+    
+    public event EventHandler<SelectedProfileChangedEventArgs> CurrentProfileChanged;
 
     public void SetMouseButton5LastIndex(int index)
     {
         CurrentProfile.MouseButton5LastIndex = index;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
-        OnProfileChanged(args);
+        OnCurrentProfileChanged(args);
     }
 
     public void UpdateMouseButton5(IButtonMapping value)
@@ -42,14 +42,12 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         CurrentProfile.MouseButton5LastIndex = value.Index;
         CurrentProfile.MouseButton5.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
-        OnProfileChanged(args);
+        OnCurrentProfileChanged(args);
     }
 
-    public event EventHandler<SelectedProfileChangedEventArgs> SelectedProfileChanged;
-
-    private void OnProfileChanged(SelectedProfileChangedEventArgs e)
+    private void OnCurrentProfileChanged(SelectedProfileChangedEventArgs e)
     {
-        var handler = SelectedProfileChanged;
+        var handler = CurrentProfileChanged;
         handler?.Invoke(this, e);
     }
 }

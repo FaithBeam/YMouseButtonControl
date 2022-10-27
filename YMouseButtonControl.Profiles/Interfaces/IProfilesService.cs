@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Profiles.Interfaces;
 
 public interface IProfilesService
 {
-    public IEnumerable<Profile> GetProfiles();
-    public void AddProfile(Profile profile);
+    event EventHandler<ProfilesChangedEventArgs> OnProfilesChangedEventHandler;
+    IEnumerable<Profile> GetProfiles();
+    void AddProfile(Profile profile);
 }

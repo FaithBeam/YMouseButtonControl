@@ -16,16 +16,19 @@ public class MacOSProcessMonitorService : IProcessMonitorService
     }
 
     public event EventHandler<ProcessChangedEventArgs> OnProcessChangedEventHandler;
+    
     public IEnumerable<ProcessModel> GetProcesses()
     {
         return Process
             .GetProcesses()
+            .Where(x => !string.IsNullOrWhiteSpace(x.ProcessName))
             .Select(x => new ProcessModel
             {
                 ProcessId = (uint) x.Id,
                 ProcessName = x.ProcessName,
                 WindowTitle = x.MainWindowTitle
-            });
+            })
+            .OrderBy(x => x.ProcessName);
     }
 
     public bool ProcessRunning(string process)

@@ -9,6 +9,7 @@ using YMouseButtonControl.DataAccess.Models.Factories;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
@@ -63,7 +64,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         IMouseListener mouseListener)
     {
         _currentProfileOperationsMediator = currentProfileOperationsMediator;
-        _currentProfileOperationsMediator.SelectedProfileChanged += OnSelectedCurrentProfileChanged;
+        _currentProfileOperationsMediator.CurrentProfileChanged += OnSelectedCurrentProfileChanged;
         _mouseListener = mouseListener;
         _mouseListener.OnMousePressedEventHandler += OnMouseClicked;
         _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
