@@ -6,6 +6,8 @@
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
+             MaxWidth="450"
+             MaxHeight="600"
              x:Class="YMouseButtonControl.Views.ProfilesListView">
 
     <Design.DataContext>

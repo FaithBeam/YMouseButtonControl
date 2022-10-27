@@ -22,6 +22,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
 
             _currentProfile = value;
 
+            if (value is null)
+            {
+                return;
+            }
             var args = new SelectedProfileChangedEventArgs(_currentProfile);
             OnCurrentProfileChanged(args);
         }

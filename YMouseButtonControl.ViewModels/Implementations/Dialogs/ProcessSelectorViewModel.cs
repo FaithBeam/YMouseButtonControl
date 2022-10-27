@@ -24,7 +24,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
         OkCommand = ReactiveCommand.Create(() => new Profile()
-            { Name = Description, Description = Description, Process = Application });
+            { Name = ProcessName, Description = WindowTitle, Process = ProcessName });
         Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses());
     }
 
@@ -37,12 +37,12 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         set
         {
             _processModel = value;
-            this.RaisePropertyChanged(nameof(Application));
-            this.RaisePropertyChanged(nameof(Description));
+            this.RaisePropertyChanged(nameof(ProcessName));
+            this.RaisePropertyChanged(nameof(WindowTitle));
         }
     }
 
-    public string Application
+    public string ProcessName
     {
         get => SelectedProcessModel?.ProcessName;
         set
@@ -52,7 +52,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         }
     }
 
-    public string Description
+    public string WindowTitle
     {
         get => SelectedProcessModel?.WindowTitle;
         set
