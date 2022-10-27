@@ -33,6 +33,13 @@ public class ProfilesService : IProfilesService
         OnProfilesChanged(e);
     }
 
+    public void ApplyProfiles()
+    {
+        using var unitOfWork = _unitOfWorkFactory.Create();
+        var repository = unitOfWork.GetRepository<Profile>();
+        repository.ApplyAction(_profiles);
+    }
+
     private void LoadProfilesFromDb()
     {
         using var unitOfWork = _unitOfWorkFactory.Create();

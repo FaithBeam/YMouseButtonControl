@@ -1,11 +1,7 @@
-﻿using System.Windows.Input;
-using Avalonia.Collections;
+﻿using System.Reactive;
 using ReactiveUI;
-using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 
@@ -29,6 +25,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         CurrentProfileOperationsMediator = currentProfileOperationsMediator;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
+        ApplyCommand = ReactiveCommand.Create(_profilesService.ApplyProfiles);
     }
 
     #endregion
@@ -43,7 +40,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     
     public ILayerViewModel LayerViewModel { get; }
 
-    public ICommand ApplyCommand { get; }
+    public ReactiveCommand<Unit, Unit> ApplyCommand { get; }
 
     #endregion
 

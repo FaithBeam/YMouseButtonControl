@@ -8,9 +8,11 @@
         d:DesignHeight="600"
         Width="500"
         Height="600"
+        MaxWidth="500"
+        MaxHeight="600"
+        WindowStartupLocation="CenterOwner"
         x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
-        Title="Choose Application"
-        SizeToContent="WidthAndHeight">
+        Title="Choose Application">
 
     <Design.DataContext>
         <vm:ProcessSelectorDialogViewModel />

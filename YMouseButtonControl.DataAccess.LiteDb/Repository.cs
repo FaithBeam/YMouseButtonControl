@@ -25,4 +25,10 @@ public class Repository<T> : IRepository<T> where T : class
     public void Upsert(string id, T entity) => _collection.Upsert(id, entity);
 
     public void Remove(string id) => _collection.Delete(id);
+
+    public void ApplyAction(IEnumerable<T> entities)
+    {
+        _collection.DeleteAll();
+        _collection.InsertBulk(entities);
+    }
 }

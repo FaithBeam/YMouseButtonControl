@@ -76,6 +76,9 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         ShowSimulatedKeystrokesPickerInteraction =
             new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
         this
+            .WhenAnyValue(x => x.SelectedMouseButton4Mapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mb4"));
+        this
             .WhenAnyValue(x => x.SelectedMouseButton5Mapping)
             .Subscribe(async x => await GetMappingAsync(x, "mb5"));
         InitialLoadSelectedMappings();
@@ -437,6 +440,9 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             {
                 switch (mouseAction)
                 {
+                    case "mb4":
+                        _currentProfileOperationsMediator.UpdateMouseButton4(result);
+                        break;
                     case "mb5":
                         _currentProfileOperationsMediator.UpdateMouseButton5(result);
                         break;

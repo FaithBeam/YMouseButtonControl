@@ -32,10 +32,12 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     }
     
     public event EventHandler<SelectedProfileChangedEventArgs> CurrentProfileChanged;
-
-    public void SetMouseButton5LastIndex(int index)
+    
+    public void UpdateMouseButton4(IButtonMapping value)
     {
-        CurrentProfile.MouseButton5LastIndex = index;
+        CurrentProfile.MouseButton4 = value;
+        CurrentProfile.MouseButton4LastIndex = value.Index;
+        CurrentProfile.MouseButton4.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }

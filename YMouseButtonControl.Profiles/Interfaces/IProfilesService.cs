@@ -10,4 +10,5 @@ public interface IProfilesService
     event EventHandler<ProfilesChangedEventArgs> OnProfilesChangedEventHandler;
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);
+    void ApplyProfiles();
 }
