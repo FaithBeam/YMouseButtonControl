@@ -33,6 +33,33 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public event EventHandler<SelectedProfileChangedEventArgs> CurrentProfileChanged;
     
+    public void UpdateMouseButton1(IButtonMapping value)
+    {
+        CurrentProfile.MouseButton1 = value;
+        CurrentProfile.MouseButton1LastIndex = value.Index;
+        CurrentProfile.MouseButton1.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
+    
+    public void UpdateMouseButton2(IButtonMapping value)
+    {
+        CurrentProfile.MouseButton2 = value;
+        CurrentProfile.MouseButton2LastIndex = value.Index;
+        CurrentProfile.MouseButton2.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
+    
+    public void UpdateMouseButton3(IButtonMapping value)
+    {
+        CurrentProfile.MouseButton3 = value;
+        CurrentProfile.MouseButton3LastIndex = value.Index;
+        CurrentProfile.MouseButton3.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
+    
     public void UpdateMouseButton4(IButtonMapping value)
     {
         CurrentProfile.MouseButton4 = value;
@@ -50,7 +77,43 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
+    
+    public void UpdateMouseWheelUp(IButtonMapping value)
+    {
+        CurrentProfile.MouseWheelUp = value;
+        CurrentProfile.MouseWheelUpLastIndex = value.Index;
+        CurrentProfile.MouseWheelUp.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
+    
+    public void UpdateMouseWheelDown(IButtonMapping value)
+    {
+        CurrentProfile.MouseWheelDown = value;
+        CurrentProfile.MouseWheelDownLastIndex = value.Index;
+        CurrentProfile.MouseWheelDown.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
+    
+    public void UpdateMouseWheelLeft(IButtonMapping value)
+    {
+        CurrentProfile.MouseWheelLeft = value;
+        CurrentProfile.MouseWheelLeftLastIndex = value.Index;
+        CurrentProfile.MouseWheelLeft.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
 
+    public void UpdateMouseWheelRight(IButtonMapping value)
+    {
+        CurrentProfile.MouseWheelRight = value;
+        CurrentProfile.MouseWheelRightLastIndex = value.Index;
+        CurrentProfile.MouseWheelRight.CanRaiseDialog = false;
+        var args = new SelectedProfileChangedEventArgs(_currentProfile);
+        OnCurrentProfileChanged(args);
+    }
+    
     private void OnCurrentProfileChanged(SelectedProfileChangedEventArgs e)
     {
         var handler = CurrentProfileChanged;

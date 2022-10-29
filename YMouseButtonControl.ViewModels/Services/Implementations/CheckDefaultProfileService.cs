@@ -40,10 +40,10 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
                 MouseButton3 = new NothingMapping(),
                 MouseButton4 = new NothingMapping(),
                 MouseButton5 = new NothingMapping(),
-                WheelUp = new NothingMapping(),
-                WheelDown = new NothingMapping(),
-                WheelLeft = new NothingMapping(),
-                WheelRight = new NothingMapping()
+                MouseWheelUp = new NothingMapping(),
+                MouseWheelDown = new NothingMapping(),
+                MouseWheelLeft = new NothingMapping(),
+                MouseWheelRight = new NothingMapping()
             });
         }
 

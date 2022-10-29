@@ -75,12 +75,35 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _wheelRightTimer.Elapsed += delegate { WheelRightBackgroundColor = Brushes.White; };
         ShowSimulatedKeystrokesPickerInteraction =
             new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
+        
+        this
+            .WhenAnyValue(x => x.SelectedMouseButton1Mapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mb1"));
+        this
+            .WhenAnyValue(x => x.SelectedMouseButton2Mapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mb2"));
+        this
+            .WhenAnyValue(x => x.SelectedMouseButton3Mapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mb3"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton4Mapping)
             .Subscribe(async x => await GetMappingAsync(x, "mb4"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton5Mapping)
             .Subscribe(async x => await GetMappingAsync(x, "mb5"));
+        this
+            .WhenAnyValue(x => x.SelectedMouseWheelUpMapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mwu"));
+        this
+            .WhenAnyValue(x => x.SelectedMouseWheelDownMapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mwd"));
+        this
+            .WhenAnyValue(x => x.SelectedMouseWheelLeftMapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mwl"));
+        this
+            .WhenAnyValue(x => x.SelectedMouseWheelRightMapping)
+            .Subscribe(async x => await GetMappingAsync(x, "mwr"));
+        
         InitialLoadSelectedMappings();
     }
 
@@ -271,10 +294,10 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         SelectedMouseButton3Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton3;
         SelectedMouseButton4Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton4;
         SelectedMouseButton5Mapping = _currentProfileOperationsMediator.CurrentProfile.MouseButton5;
-        SelectedMouseWheelUpMapping = _currentProfileOperationsMediator.CurrentProfile.WheelUp;
-        SelectedMouseWheelDownMapping = _currentProfileOperationsMediator.CurrentProfile.WheelDown;
-        SelectedMouseWheelLeftMapping = _currentProfileOperationsMediator.CurrentProfile.WheelLeft;
-        SelectedMouseWheelRightMapping = _currentProfileOperationsMediator.CurrentProfile.WheelRight;
+        SelectedMouseWheelUpMapping = _currentProfileOperationsMediator.CurrentProfile.MouseWheelUp;
+        SelectedMouseWheelDownMapping = _currentProfileOperationsMediator.CurrentProfile.MouseWheelDown;
+        SelectedMouseWheelLeftMapping = _currentProfileOperationsMediator.CurrentProfile.MouseWheelLeft;
+        SelectedMouseWheelRightMapping = _currentProfileOperationsMediator.CurrentProfile.MouseWheelRight;
     }
 
     private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
@@ -301,19 +324,19 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         };
         MouseWheelUpCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [e.NewProfile.WheelUp.Index] = e.NewProfile.WheelUp
+            [e.NewProfile.MouseWheelUp.Index] = e.NewProfile.MouseWheelUp
         };
         MouseWheelDownCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [e.NewProfile.WheelDown.Index] = e.NewProfile.WheelDown
+            [e.NewProfile.MouseWheelDown.Index] = e.NewProfile.MouseWheelDown
         };
         MouseWheelLeftCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [e.NewProfile.WheelLeft.Index] = e.NewProfile.WheelLeft
+            [e.NewProfile.MouseWheelLeft.Index] = e.NewProfile.MouseWheelLeft
         };
         MouseWheelRightCombo = new AvaloniaList<IButtonMapping>(ButtonMappingFactory.GetButtonMappings())
         {
-            [e.NewProfile.WheelRight.Index] = e.NewProfile.WheelRight
+            [e.NewProfile.MouseWheelRight.Index] = e.NewProfile.MouseWheelRight
         };
         
         this.RaisePropertyChanged(nameof(MouseButton1Combo));
@@ -440,11 +463,32 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             {
                 switch (mouseAction)
                 {
+                    case "mb1":
+                        _currentProfileOperationsMediator.UpdateMouseButton1(result);
+                        break;
+                    case "mb2":
+                        _currentProfileOperationsMediator.UpdateMouseButton2(result);
+                        break;
+                    case "mb3":
+                        _currentProfileOperationsMediator.UpdateMouseButton3(result);
+                        break;
                     case "mb4":
                         _currentProfileOperationsMediator.UpdateMouseButton4(result);
                         break;
                     case "mb5":
                         _currentProfileOperationsMediator.UpdateMouseButton5(result);
+                        break;
+                    case "mwu":
+                        _currentProfileOperationsMediator.UpdateMouseWheelUp(result);
+                        break;
+                    case "mwd":
+                        _currentProfileOperationsMediator.UpdateMouseWheelDown(result);
+                        break;
+                    case "mwl":
+                        _currentProfileOperationsMediator.UpdateMouseWheelLeft(result);
+                        break;
+                    case "mwr":
+                        _currentProfileOperationsMediator.UpdateMouseWheelRight(result);
                         break;
                     default:
                         break;

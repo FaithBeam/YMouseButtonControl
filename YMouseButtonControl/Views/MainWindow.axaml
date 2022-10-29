@@ -11,6 +11,7 @@
         Height="700"
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
+        Icon="/Resources/mouse.png"
         SizeToContent="WidthAndHeight">
 
     <Design.DataContext>

@@ -18,13 +18,13 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
 
         public IButtonMapping MouseButton5 { get; set; } = new NothingMapping();
 
-        public IButtonMapping WheelUp { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelUp { get; set; } = new NothingMapping();
 
-        public IButtonMapping WheelDown { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelDown { get; set; } = new NothingMapping();
 
-        public IButtonMapping WheelLeft { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelLeft { get; set; } = new NothingMapping();
 
-        public IButtonMapping WheelRight { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelRight { get; set; } = new NothingMapping();
 
         public int MouseButton1LastIndex { get; set; } = 0;
 

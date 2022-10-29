@@ -15,6 +15,8 @@
         </None>
         <None Remove="Resources\gear_icon1.png" />
         <AvaloniaResource Include="Resources\gear_icon1.png" />
+        <None Remove="Resources\mouse.png" />
+        <AvaloniaResource Include="Resources\mouse.png" />
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
