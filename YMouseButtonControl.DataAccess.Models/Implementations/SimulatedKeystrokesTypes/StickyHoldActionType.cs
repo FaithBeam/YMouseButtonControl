@@ -13,7 +13,6 @@ public class StickyHoldActionType: ISimulatedKeystrokesType, IEquatable<StickyHo
         return Description;
     }
 
-
     public bool Equals(StickyHoldActionType? other)
     {
         if (ReferenceEquals(null, other)) return false;

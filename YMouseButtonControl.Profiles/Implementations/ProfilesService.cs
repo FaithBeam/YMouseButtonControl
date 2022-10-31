@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -19,8 +20,16 @@ public class ProfilesService : IProfilesService
         LoadProfilesFromDb();
     }
 
-    public event EventHandler<ProfilesChangedEventArgs> OnProfilesChangedEventHandler; 
+    public event EventHandler<ProfilesChangedEventArgs> OnProfilesChangedEventHandler;
 
+    public bool IsUnsavedChanges()
+    {
+        using var unitOfWork = _unitOfWorkFactory.Create();
+        var repository = unitOfWork.GetRepository<Profile>();
+        var dbProfiles = repository.GetAll().ToList();
+        return _profiles.Any(inMemProfile => !dbProfiles.Contains(inMemProfile));
+    }
+    
     public IEnumerable<Profile> GetProfiles()
     {
         return _profiles;
