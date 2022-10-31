@@ -46,6 +46,7 @@ public class KeyboardSimulatorWorker : IDisposable
     {
         _mouseListener.OnMousePressedEventHandler += OnMousePressed;
         _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
+        _mouseListener.OnMouseWheelEventHandler += OnMouseWheel;
         _processMonitorService.OnProcessChangedEventHandler += OnProcessChanged;
         _profilesService.OnProfilesChangedEventHandler += OnProfilesChanged;
         _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
@@ -66,11 +67,11 @@ public class KeyboardSimulatorWorker : IDisposable
         BuildHotkeys();
     }
 
-
     private void UnsubscribeFromEvents()
     {
         _mouseListener.OnMousePressedEventHandler -= OnMousePressed;
         _mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
+        _mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
         _processMonitorService.OnProcessChangedEventHandler -= OnProcessChanged;
         _profilesService.OnProfilesChangedEventHandler -= OnProfilesChanged;
     }
@@ -81,8 +82,6 @@ public class KeyboardSimulatorWorker : IDisposable
         {
             switch (buttonMapping)
             {
-                case NothingMapping:
-                    continue;
                 case SimulatedKeystrokes:
                     _keyboardSimulator.SimulatedKeystrokes(buttonMapping, true);
                     break;
@@ -91,6 +90,10 @@ public class KeyboardSimulatorWorker : IDisposable
     }
 
     private void OnMouseReleased(object sender, NewMouseHookEventArgs e)
+    {
+    }
+    
+    private void OnMouseWheel(object sender, NewMouseWheelEventArgs e)
     {
     }
 
