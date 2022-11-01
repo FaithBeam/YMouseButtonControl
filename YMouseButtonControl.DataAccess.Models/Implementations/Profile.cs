@@ -4,6 +4,7 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
 {
     public class Profile : IEquatable<Profile>
     {
+        public int Id { get; set; }
         public bool Checked { get; set; }
 
         public string Name { get; set; } = string.Empty;
