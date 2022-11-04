@@ -123,39 +123,30 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
         this
             .WhenAnyValue(x => x.SelectedMouseButton1Mapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mb1"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton2Mapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mb2"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton3Mapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mb3"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton4Mapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mb4"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton5Mapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mb5"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelUpMapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mwu"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelDownMapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mwd"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelLeftMapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mwl"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelRightMapping)
-            .Where(x => x.CanRaiseDialog)
             .Subscribe(async x => await GetMappingAsync(x, "mwr"));
     }
 
@@ -452,6 +443,10 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 return;
             case SimulatedKeystrokes:
             {
+                if (!mapping.CanRaiseDialog)
+                {
+                    return;
+                }
                 var result = await ShowSimulatedKeystrokesDialog();
                 if (result is not null)
                 {
