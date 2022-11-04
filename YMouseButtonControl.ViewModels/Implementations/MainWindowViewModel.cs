@@ -30,7 +30,13 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         _currentProfileOperationsMediator = currentProfileOperationsMediator;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
-        _profilesService.OnProfilesChangedEventHandler += OnProfilesChanged;
+        var profilesChanged =
+            Observable.FromEventPattern<ProfilesChangedEventArgs>(_profilesService, "OnProfilesChangedEventHandler");
+        profilesChanged
+            .Subscribe(e =>
+            {
+                CanApply = _profilesService.IsUnsavedChanges();
+            });
         var canApply = this
             .WhenAnyValue(x => x.CanApply)
             .DistinctUntilChanged();
@@ -69,20 +75,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     }
 
     public string ProfileName => _profileName.Value;
-
-    #endregion
-
-    #region Methods
-    
-    private void OnCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
-    {
-        CanApply = _profilesService.IsUnsavedChanges();
-    }
-    
-    private void OnProfilesChanged(object sender, ProfilesChangedEventArgs profilesChangedEventArgs)
-    {
-        CanApply = _profilesService.IsUnsavedChanges();
-    }
 
     #endregion
 }
