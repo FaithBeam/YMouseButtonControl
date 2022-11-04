@@ -16,6 +16,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     private ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
     private IProfilesListViewModel _profilesListViewModel;
     private bool _canApply;
+    private readonly ObservableAsPropertyHelper<string> _profileName;
 
     #endregion
 
@@ -38,7 +39,15 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             _profilesService.ApplyProfiles();
             CanApply = false;
         }, canApply);
-        _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
+        var profileChanged =
+            Observable.FromEventPattern<SelectedProfileChangedEventArgs>(_currentProfileOperationsMediator, "CurrentProfileChanged");
+        profileChanged.Subscribe(e =>
+        {
+            CanApply = _profilesService.IsUnsavedChanges();
+        });
+        _profileName = profileChanged
+            .Select(x => x.EventArgs.NewProfile.Name)
+            .ToProperty(this, x => x.ProfileName);
     }
 
     #endregion
@@ -58,6 +67,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         get => _canApply;
         set => this.RaiseAndSetIfChanged(ref _canApply, value);
     }
+
+    public string ProfileName => _profileName.Value;
 
     #endregion
 
