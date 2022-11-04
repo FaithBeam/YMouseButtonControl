@@ -35,6 +35,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseButton1(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseButton1 = value;
         CurrentProfile.MouseButton1LastIndex = value.Index;
         CurrentProfile.MouseButton1.CanRaiseDialog = false;
@@ -44,6 +48,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseButton2(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseButton2 = value;
         CurrentProfile.MouseButton2LastIndex = value.Index;
         CurrentProfile.MouseButton2.CanRaiseDialog = false;
@@ -53,6 +61,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseButton3(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseButton3 = value;
         CurrentProfile.MouseButton3LastIndex = value.Index;
         CurrentProfile.MouseButton3.CanRaiseDialog = false;
@@ -62,6 +74,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseButton4(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseButton4 = value;
         CurrentProfile.MouseButton4LastIndex = value.Index;
         CurrentProfile.MouseButton4.CanRaiseDialog = false;
@@ -71,6 +87,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
 
     public void UpdateMouseButton5(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseButton5 = value;
         CurrentProfile.MouseButton5LastIndex = value.Index;
         CurrentProfile.MouseButton5.CanRaiseDialog = false;
@@ -80,6 +100,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseWheelUp(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseWheelUp = value;
         CurrentProfile.MouseWheelUpLastIndex = value.Index;
         CurrentProfile.MouseWheelUp.CanRaiseDialog = false;
@@ -89,6 +113,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseWheelDown(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseWheelDown = value;
         CurrentProfile.MouseWheelDownLastIndex = value.Index;
         CurrentProfile.MouseWheelDown.CanRaiseDialog = false;
@@ -98,6 +126,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
     
     public void UpdateMouseWheelLeft(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseWheelLeft = value;
         CurrentProfile.MouseWheelLeftLastIndex = value.Index;
         CurrentProfile.MouseWheelLeft.CanRaiseDialog = false;
@@ -107,6 +139,10 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
 
     public void UpdateMouseWheelRight(IButtonMapping value)
     {
+        if (value is null)
+        {
+            return;
+        }
         CurrentProfile.MouseWheelRight = value;
         CurrentProfile.MouseWheelRightLastIndex = value.Index;
         CurrentProfile.MouseWheelRight.CanRaiseDialog = false;
