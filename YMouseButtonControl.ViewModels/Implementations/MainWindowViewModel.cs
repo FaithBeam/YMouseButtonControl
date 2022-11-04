@@ -34,7 +34,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             .WhenAnyValue(x => x.CanApply)
             .DistinctUntilChanged();
         ApplyCommand = ReactiveCommand.Create(_profilesService.ApplyProfiles, canApply);
-        // _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
+        _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
     }
 
     #endregion
