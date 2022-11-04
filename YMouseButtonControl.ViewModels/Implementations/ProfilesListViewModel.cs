@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -25,6 +26,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     {
         ProfilesService = profilesService;
         _currentProfileOperationsMediator = currentProfileOperationsMediator;
+        _currentProfileOperationsMediator.CurrentProfile = _profilesService.GetProfiles().FirstOrDefault();
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
         ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, Profile>();

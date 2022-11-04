@@ -26,7 +26,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     {
         _profilesListViewModel = profilesListViewModel;
         _profilesService = profilesService;
-        CurrentProfileOperationsMediator = currentProfileOperationsMediator;
+        _currentProfileOperationsMediator = currentProfileOperationsMediator;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
         _profilesService.OnProfilesChangedEventHandler += OnProfilesChanged;
@@ -34,6 +34,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             .WhenAnyValue(x => x.CanApply)
             .DistinctUntilChanged();
         ApplyCommand = ReactiveCommand.Create(_profilesService.ApplyProfiles, canApply);
+        // _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
     }
 
     #endregion
@@ -44,8 +45,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     
     public IProfilesListViewModel ProfilesListViewModel => _profilesListViewModel;
 
-    public ICurrentProfileOperationsMediator CurrentProfileOperationsMediator { get; }
-    
     public ILayerViewModel LayerViewModel { get; }
 
     public ReactiveCommand<Unit, Unit> ApplyCommand { get; }
@@ -59,6 +58,11 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #endregion
 
     #region Methods
+    
+    private void OnCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
+    {
+        CanApply = _profilesService.IsUnsavedChanges();
+    }
     
     private void OnProfilesChanged(object sender, ProfilesChangedEventArgs profilesChangedEventArgs)
     {
