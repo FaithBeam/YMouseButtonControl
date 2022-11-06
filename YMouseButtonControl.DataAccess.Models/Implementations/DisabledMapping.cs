@@ -7,7 +7,7 @@ public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
     public int Index { get; } = 1;
     public bool Enabled { get; }
     public string Description { get; } = "Disabled";
-    public bool CanRaiseDialog { get; set; } = false;
+    public bool HasBeenRaised { get; set; } = false;
     public string Keys { get; }
     public bool State { get; set; }
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
@@ -21,7 +21,7 @@ public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Index == other.Index && Enabled == other.Enabled && Description == other.Description && CanRaiseDialog == other.CanRaiseDialog && Keys == other.Keys && State == other.State && Equals(SimulatedKeystrokesType, other.SimulatedKeystrokesType);
+        return Index == other.Index && Enabled == other.Enabled && Description == other.Description && HasBeenRaised == other.HasBeenRaised && Keys == other.Keys && State == other.State && Equals(SimulatedKeystrokesType, other.SimulatedKeystrokesType);
     }
 
     public override bool Equals(object? obj)
@@ -39,7 +39,7 @@ public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
             var hashCode = Index;
             hashCode = (hashCode * 397) ^ Enabled.GetHashCode();
             hashCode = (hashCode * 397) ^ Description.GetHashCode();
-            hashCode = (hashCode * 397) ^ CanRaiseDialog.GetHashCode();
+            hashCode = (hashCode * 397) ^ HasBeenRaised.GetHashCode();
             hashCode = (hashCode * 397) ^ Keys.GetHashCode();
             hashCode = (hashCode * 397) ^ State.GetHashCode();
             hashCode = (hashCode * 397) ^ (SimulatedKeystrokesType != null ? SimulatedKeystrokesType.GetHashCode() : 0);

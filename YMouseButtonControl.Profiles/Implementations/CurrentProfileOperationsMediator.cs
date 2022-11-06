@@ -41,7 +41,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseButton1 = value;
         CurrentProfile.MouseButton1LastIndex = value.Index;
-        CurrentProfile.MouseButton1.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -54,7 +53,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseButton2 = value;
         CurrentProfile.MouseButton2LastIndex = value.Index;
-        CurrentProfile.MouseButton2.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -67,7 +65,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseButton3 = value;
         CurrentProfile.MouseButton3LastIndex = value.Index;
-        CurrentProfile.MouseButton3.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -80,7 +77,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseButton4 = value;
         CurrentProfile.MouseButton4LastIndex = value.Index;
-        CurrentProfile.MouseButton4.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -93,7 +89,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseButton5 = value;
         CurrentProfile.MouseButton5LastIndex = value.Index;
-        CurrentProfile.MouseButton5.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -106,7 +101,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseWheelUp = value;
         CurrentProfile.MouseWheelUpLastIndex = value.Index;
-        CurrentProfile.MouseWheelUp.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -119,7 +113,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseWheelDown = value;
         CurrentProfile.MouseWheelDownLastIndex = value.Index;
-        CurrentProfile.MouseWheelDown.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -132,7 +125,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseWheelLeft = value;
         CurrentProfile.MouseWheelLeftLastIndex = value.Index;
-        CurrentProfile.MouseWheelLeft.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }
@@ -145,7 +137,6 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         }
         CurrentProfile.MouseWheelRight = value;
         CurrentProfile.MouseWheelRightLastIndex = value.Index;
-        CurrentProfile.MouseWheelRight.CanRaiseDialog = false;
         var args = new SelectedProfileChangedEventArgs(_currentProfile);
         OnCurrentProfileChanged(args);
     }

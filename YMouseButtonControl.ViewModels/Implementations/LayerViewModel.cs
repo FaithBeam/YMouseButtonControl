@@ -1,4 +1,5 @@
 using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -123,31 +124,131 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
         this
             .WhenAnyValue(x => x.SelectedMouseButton1Mapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mb1"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton2Mapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mb2"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton3Mapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mb3"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton4Mapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mb4"));
         this
             .WhenAnyValue(x => x.SelectedMouseButton5Mapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mb5"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelUpMapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mwu"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelDownMapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mwd"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelLeftMapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mwl"));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelRightMapping)
+            .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mwr"));
+
+        var mb1ComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseButton1Mapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mb2ComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseButton2Mapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mb3ComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseButton3Mapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mb4ComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseButton4Mapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mb5ComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseButton5Mapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mwuComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseWheelUpMapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mwdComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseWheelDownMapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mwlComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseWheelLeftMapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        var mwrComboSettingCanExecute = this
+            .WhenAnyValue(x => x.SelectedMouseWheelRightMapping,
+                (mapping) => 
+                    mapping is not DisabledMapping 
+                    && mapping is not NothingMapping
+                    && !string.IsNullOrWhiteSpace(mapping.Keys));
+        MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseButton1Mapping, "mb1");
+        }, mb1ComboSettingCanExecute);
+        MouseButton2ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseButton2Mapping, "mb2");
+        }, mb2ComboSettingCanExecute);
+        MouseButton3ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseButton3Mapping, "mb3");
+        }, mb3ComboSettingCanExecute);
+        MouseButton4ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseButton4Mapping, "mb4");
+        }, mb4ComboSettingCanExecute);
+        MouseButton5ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseButton5Mapping, "mb5");
+        }, mb5ComboSettingCanExecute);
+        MouseWheelUpComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseWheelUpMapping, "mwu");
+        }, mwuComboSettingCanExecute);
+        MouseWheelDownComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseWheelDownMapping, "mwd");
+        }, mwdComboSettingCanExecute);
+        MouseWheelLeftComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseWheelLeftMapping, "mwl");
+        }, mwlComboSettingCanExecute);
+        MouseWheelRightComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await GetMappingAsync(SelectedMouseWheelRightMapping, "mwr");
+        }, mwrComboSettingCanExecute);
     }
 
     public IButtonMapping SelectedMouseButton1Mapping => _selectedMouseButton1Mapping.Value;
@@ -159,6 +260,16 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     public IButtonMapping SelectedMouseWheelDownMapping => _selectedMouseWheelDownMapping.Value;
     public IButtonMapping SelectedMouseWheelLeftMapping => _selectedMouseWheelLeftMapping.Value;
     public IButtonMapping SelectedMouseWheelRightMapping => _selectedMouseWheelRightMapping.Value;
+    
+    public ReactiveCommand<Unit, Unit> MouseButton1ComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseButton2ComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseButton3ComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseButton4ComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseButton5ComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseWheelUpComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseWheelDownComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseWheelLeftComboSettingCommand { get; }
+    public ReactiveCommand<Unit, Unit> MouseWheelRightComboSettingCommand { get; }
     
     public IBrush WheelLeftBackgroundColor
     {
@@ -443,10 +554,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 return;
             case SimulatedKeystrokes:
             {
-                if (!mapping.CanRaiseDialog)
-                {
-                    return;
-                }
                 var result = await ShowSimulatedKeystrokesDialog();
                 if (result is not null)
                 {

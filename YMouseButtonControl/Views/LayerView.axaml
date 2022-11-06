@@ -30,7 +30,7 @@
                               Width="275"
                               Background="{Binding MouseButton1BackgroundColor}">
                     </ComboBox>
-                    <Button Grid.Column="3" Background="White" >
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseButton1ComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -44,7 +44,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton2BackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseButton2ComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -58,7 +58,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton3BackgroundColor}" />
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseButton3ComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -72,7 +72,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton4BackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseButton4ComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -86,7 +86,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton5BackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseButton5ComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -100,7 +100,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelUpBackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseWheelUpComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -114,7 +114,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelDownBackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseWheelDownComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -128,7 +128,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelLeftBackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseWheelLeftComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
@@ -142,7 +142,7 @@
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelRightBackgroundColor}"/>
-                    <Button Grid.Column="3" Background="White">
+                    <Button Grid.Column="3" Background="White" Command="{Binding MouseWheelRightComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
                     </Button>
                 </Grid>
