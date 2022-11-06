@@ -76,6 +76,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         ShowSimulatedKeystrokesPickerInteraction =
             new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
 
+        // When the combobox index changes, get the mapping
         _selectedMouseButton1Mapping = this
             .WhenAnyValue(x => x.CurrentMouseButton1ComboIndex)
             .Where(x => x >= 0)
@@ -122,6 +123,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Select(x => MouseWheelRightCombo[x])
             .ToProperty(this, x => x.SelectedMouseWheelRightMapping);
 
+        // when the mapping changes, try to raise its key type window
         this
             .WhenAnyValue(x => x.SelectedMouseButton1Mapping)
             .Where(x => string.IsNullOrWhiteSpace(x.Keys))
@@ -159,6 +161,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Where(x => string.IsNullOrWhiteSpace(x.Keys))
             .Subscribe(async x => await GetMappingAsync(x, "mwr"));
 
+        // Bool to represent whether the gear settings button is enabled/disabled
         var mb1ComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseButton1Mapping,
                 (mapping) => 
@@ -213,6 +216,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                     mapping is not DisabledMapping 
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
+        
+        // When the gear button is clicked, try to open the key dialog
         MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             await GetMappingAsync(SelectedMouseButton1Mapping, "mb1");
