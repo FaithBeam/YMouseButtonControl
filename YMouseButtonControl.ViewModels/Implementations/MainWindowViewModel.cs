@@ -46,7 +46,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             CanApply = false;
         }, canApply);
         _currentProfileOperationsMediator.CurrentProfileChanged += OnProfileChanged;
-        ProfileName = _currentProfileOperationsMediator.CurrentProfile.Name;
+        ProfileName = _currentProfileOperationsMediator?.CurrentProfile?.Name ?? string.Empty;
     }
 
     #endregion
