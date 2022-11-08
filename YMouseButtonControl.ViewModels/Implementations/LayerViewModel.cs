@@ -33,10 +33,10 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private IBrush _wheelDownBackgroundColor = Brushes.White;
     private IBrush _wheelRightBackgroundColor = Brushes.White;
     private IBrush _wheelLeftBackgroundColor = Brushes.White;
-    private readonly Timer _wheelUpTimer = new() { Interval = 200, AutoReset = false };
-    private readonly Timer _wheelDownTimer = new() { Interval = 200, AutoReset = false };
-    private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
-    private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
+    private readonly Timer _wheelUpTimer = new() {Interval = 200, AutoReset = false};
+    private readonly Timer _wheelDownTimer = new() {Interval = 200, AutoReset = false};
+    private readonly Timer _wheelLeftTimer = new() {Interval = 200, AutoReset = false};
+    private readonly Timer _wheelRightTimer = new() {Interval = 200, AutoReset = false};
     private readonly ObservableAsPropertyHelper<IButtonMapping> _selectedMouseButton1Mapping;
     private readonly ObservableAsPropertyHelper<IButtonMapping> _selectedMouseButton2Mapping;
     private readonly ObservableAsPropertyHelper<IButtonMapping> _selectedMouseButton3Mapping;
@@ -55,11 +55,9 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private int _currentMouseWheelDownComboIndex;
     private int _currentMouseWheelLeftComboIndex;
     private int _currentMouseWheelRightComboIndex;
-     
-    public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel> ShowSimulatedKeystrokesPickerInteraction
-    {
-        get;
-    }
+
+    public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>
+        ShowSimulatedKeystrokesPickerInteraction { get; }
 
     public LayerViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator,
         IMouseListener mouseListener)
@@ -128,125 +126,116 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         // when the mapping changes, try to raise its key type window
         this
             .WhenAnyValue(x => x.SelectedMouseButton1Mapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mb1"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseButton1));
         this
             .WhenAnyValue(x => x.SelectedMouseButton2Mapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mb2"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseButton2));
         this
             .WhenAnyValue(x => x.SelectedMouseButton3Mapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mb3"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseButton3));
         this
             .WhenAnyValue(x => x.SelectedMouseButton4Mapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mb4"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseButton4));
         this
             .WhenAnyValue(x => x.SelectedMouseButton5Mapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mb5"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseButton5));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelUpMapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mwu"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseWheelUp));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelDownMapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mwd"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseWheelDown));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelLeftMapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mwl"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseWheelLeft));
         this
             .WhenAnyValue(x => x.SelectedMouseWheelRightMapping)
-            .Subscribe(async x => await GetMappingAsync(x, "mwr"));
+            .Subscribe(async x => await GetMappingAsync(x, MouseButton.MouseWheelRight));
 
         // Bool to represent whether the gear settings button is enabled/disabled
         var mb1ComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseButton1Mapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb2ComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseButton2Mapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb3ComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseButton3Mapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb4ComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseButton4Mapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb5ComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseButton5Mapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwuComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseWheelUpMapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwdComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseWheelDownMapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwlComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseWheelLeftMapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwrComboSettingCanExecute = this
             .WhenAnyValue(x => x.SelectedMouseWheelRightMapping,
-                (mapping) => 
-                    mapping is not DisabledMapping 
+                (mapping) =>
+                    mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
-        
+
         // When the gear button is clicked, try to open the key dialog
-        MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseButton1Mapping, "mb1", true);
-        }, mb1ComboSettingCanExecute);
-        MouseButton2ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseButton2Mapping, "mb2", true);
-        }, mb2ComboSettingCanExecute);
-        MouseButton3ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseButton3Mapping, "mb3", true);
-        }, mb3ComboSettingCanExecute);
-        MouseButton4ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseButton4Mapping, "mb4", true);
-        }, mb4ComboSettingCanExecute);
-        MouseButton5ComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseButton5Mapping, "mb5", true);
-        }, mb5ComboSettingCanExecute);
-        MouseWheelUpComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseWheelUpMapping, "mwu", true);
-        }, mwuComboSettingCanExecute);
-        MouseWheelDownComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseWheelDownMapping, "mwd", true);
-        }, mwdComboSettingCanExecute);
-        MouseWheelLeftComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseWheelLeftMapping, "mwl", true);
-        }, mwlComboSettingCanExecute);
-        MouseWheelRightComboSettingCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await GetMappingAsync(SelectedMouseWheelRightMapping, "mwr", true);
-        }, mwrComboSettingCanExecute);
+        MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseButton1Mapping, MouseButton.MouseButton1, true); },
+            mb1ComboSettingCanExecute);
+        MouseButton2ComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseButton2Mapping, MouseButton.MouseButton2, true); },
+            mb2ComboSettingCanExecute);
+        MouseButton3ComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseButton3Mapping, MouseButton.MouseButton3, true); },
+            mb3ComboSettingCanExecute);
+        MouseButton4ComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseButton4Mapping, MouseButton.MouseButton4, true); },
+            mb4ComboSettingCanExecute);
+        MouseButton5ComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseButton5Mapping, MouseButton.MouseButton5, true); },
+            mb5ComboSettingCanExecute);
+        MouseWheelUpComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseWheelUpMapping, MouseButton.MouseWheelUp, true); },
+            mwuComboSettingCanExecute);
+        MouseWheelDownComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseWheelDownMapping, MouseButton.MouseWheelDown, true); },
+            mwdComboSettingCanExecute);
+        MouseWheelLeftComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseWheelLeftMapping, MouseButton.MouseWheelLeft, true); },
+            mwlComboSettingCanExecute);
+        MouseWheelRightComboSettingCommand = ReactiveCommand.CreateFromTask(
+            async () => { await GetMappingAsync(SelectedMouseWheelRightMapping, MouseButton.MouseWheelRight, true); },
+            mwrComboSettingCanExecute);
     }
 
     public IButtonMapping SelectedMouseButton1Mapping => _selectedMouseButton1Mapping.Value;
@@ -258,7 +247,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     public IButtonMapping SelectedMouseWheelDownMapping => _selectedMouseWheelDownMapping.Value;
     public IButtonMapping SelectedMouseWheelLeftMapping => _selectedMouseWheelLeftMapping.Value;
     public IButtonMapping SelectedMouseWheelRightMapping => _selectedMouseWheelRightMapping.Value;
-    
+
     public ReactiveCommand<Unit, Unit> MouseButton1ComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseButton2ComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseButton3ComboSettingCommand { get; }
@@ -268,7 +257,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     public ReactiveCommand<Unit, Unit> MouseWheelDownComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseWheelLeftComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseWheelRightComboSettingCommand { get; }
-    
+
     public IBrush WheelLeftBackgroundColor
     {
         get => _wheelLeftBackgroundColor;
@@ -335,60 +324,63 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
     public AvaloniaList<IButtonMapping> MouseWheelUpCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelDownCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public AvaloniaList<IButtonMapping> MouseWheelDownCombo { get; set; } =
+        new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelLeftCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public AvaloniaList<IButtonMapping> MouseWheelLeftCombo { get; set; } =
+        new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelRightCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public AvaloniaList<IButtonMapping> MouseWheelRightCombo { get; set; } =
+        new(ButtonMappingFactory.GetButtonMappings());
 
     public int CurrentMouseButton1ComboIndex
     {
         get => _currentMouseButton1ComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseButton1ComboIndex, value);
     }
-    
+
     public int CurrentMouseButton2ComboIndex
     {
         get => _currentMouseButton2ComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseButton2ComboIndex, value);
     }
-    
+
     public int CurrentMouseButton3ComboIndex
     {
         get => _currentMouseButton3ComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseButton3ComboIndex, value);
     }
-    
+
     public int CurrentMouseButton4ComboIndex
     {
         get => _currentMouseButton4ComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseButton4ComboIndex, value);
     }
-    
+
     public int CurrentMouseButton5ComboIndex
     {
         get => _currentMouseButton5ComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseButton5ComboIndex, value);
     }
-    
+
     public int CurrentMouseWheelUpComboIndex
     {
         get => _currentMouseWheelUpComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseWheelUpComboIndex, value);
     }
-    
+
     public int CurrentMouseWheelDownComboIndex
     {
         get => _currentMouseWheelDownComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseWheelDownComboIndex, value);
     }
-    
+
     public int CurrentMouseWheelLeftComboIndex
     {
         get => _currentMouseWheelLeftComboIndex;
         set => this.RaiseAndSetIfChanged(ref _currentMouseWheelLeftComboIndex, value);
     }
-    
+
     public int CurrentMouseWheelRightComboIndex
     {
         get => _currentMouseWheelRightComboIndex;
@@ -448,7 +440,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         {
             [e.NewProfile.MouseWheelRight.Index] = e.NewProfile.MouseWheelRight
         };
-        
+
         this.RaisePropertyChanged(nameof(MouseButton1Combo));
         this.RaisePropertyChanged(nameof(MouseButton2Combo));
         this.RaisePropertyChanged(nameof(MouseButton3Combo));
@@ -458,7 +450,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         this.RaisePropertyChanged(nameof(MouseWheelDownCombo));
         this.RaisePropertyChanged(nameof(MouseWheelLeftCombo));
         this.RaisePropertyChanged(nameof(MouseWheelRightCombo));
-        
+
         CurrentMouseButton1ComboIndex = e.NewProfile.MouseButton1LastIndex;
         CurrentMouseButton2ComboIndex = e.NewProfile.MouseButton2LastIndex;
         CurrentMouseButton3ComboIndex = e.NewProfile.MouseButton3LastIndex;
@@ -559,114 +551,122 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         }
     }
 
-    private async Task GetMappingAsync(IButtonMapping mapping, string mouseAction, bool force = false)
+    private async Task GetMappingAsync(IButtonMapping mapping, MouseButton button, bool force = false)
     {
         switch (mapping)
         {
-            case null:
-                return;
             case SimulatedKeystrokes:
             {
                 if (force)
+                {
+                    var result = await ShowSimulatedKeystrokesDialog();
+                    if (result is null)
                     {
-                        switch (mouseAction)
+                        return;
+                    }
+                    switch (button)
+                    {
+                        case MouseButton.MouseButton1:
+                            _currentProfileOperationsMediator.UpdateMouseButton1(result);
+                            break;
+                        case MouseButton.MouseButton2:
+                            _currentProfileOperationsMediator.UpdateMouseButton2(result);
+                            break;
+                        case MouseButton.MouseButton3:
+                            _currentProfileOperationsMediator.UpdateMouseButton3(result);
+                            break;
+                        case MouseButton.MouseButton4:
+                            _currentProfileOperationsMediator.UpdateMouseButton4(result);
+                            break;
+                        case MouseButton.MouseButton5:
+                            _currentProfileOperationsMediator.UpdateMouseButton5(result);
+                            break;
+                        case MouseButton.MouseWheelUp:
+                            _currentProfileOperationsMediator.UpdateMouseWheelUp(result);
+                            break;
+                        case MouseButton.MouseWheelDown:
+                            _currentProfileOperationsMediator.UpdateMouseWheelDown(result);
+                            break;
+                        case MouseButton.MouseWheelLeft:
+                            _currentProfileOperationsMediator.UpdateMouseWheelLeft(result);
+                            break;
+                        case MouseButton.MouseWheelRight:
+                            _currentProfileOperationsMediator.UpdateMouseWheelRight(result);
+                            break;
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(mapping.Keys))
+                    {
+                        var result = await ShowSimulatedKeystrokesDialog();
+                        if (result is null)
                         {
-                            case "mb1":
+                            return;
+                        }
+                        switch (button)
+                        {
+                            case MouseButton.MouseButton1:
                                 _currentProfileOperationsMediator.UpdateMouseButton1(result);
                                 break;
-                            case "mb2":
+                            case MouseButton.MouseButton2:
                                 _currentProfileOperationsMediator.UpdateMouseButton2(result);
                                 break;
-                            case "mb3":
+                            case MouseButton.MouseButton3:
                                 _currentProfileOperationsMediator.UpdateMouseButton3(result);
                                 break;
-                            case "mb4":
+                            case MouseButton.MouseButton4:
                                 _currentProfileOperationsMediator.UpdateMouseButton4(result);
                                 break;
-                            case "mb5":
+                            case MouseButton.MouseButton5:
                                 _currentProfileOperationsMediator.UpdateMouseButton5(result);
                                 break;
-                            case "mwu":
+                            case MouseButton.MouseWheelUp:
                                 _currentProfileOperationsMediator.UpdateMouseWheelUp(result);
                                 break;
-                            case "mwd":
+                            case MouseButton.MouseWheelDown:
                                 _currentProfileOperationsMediator.UpdateMouseWheelDown(result);
                                 break;
-                            case "mwl":
+                            case MouseButton.MouseWheelLeft:
                                 _currentProfileOperationsMediator.UpdateMouseWheelLeft(result);
                                 break;
-                            case "mwr":
+                            case MouseButton.MouseWheelRight:
                                 _currentProfileOperationsMediator.UpdateMouseWheelRight(result);
                                 break;
                         }
                     }
-                    else
-                    {
-                        if (string.IsNullOrWhiteSpace(mapping.Keys))
-                        {
-                            switch (mouseAction)
-                            {
-                                case "mb1":
-                                    _currentProfileOperationsMediator.UpdateMouseButton1(result);
-                                    break;
-                                case "mb2":
-                                    _currentProfileOperationsMediator.UpdateMouseButton2(result);
-                                    break;
-                                case "mb3":
-                                    _currentProfileOperationsMediator.UpdateMouseButton3(result);
-                                    break;
-                                case "mb4":
-                                    _currentProfileOperationsMediator.UpdateMouseButton4(result);
-                                    break;
-                                case "mb5":
-                                    _currentProfileOperationsMediator.UpdateMouseButton5(result);
-                                    break;
-                                case "mwu":
-                                    _currentProfileOperationsMediator.UpdateMouseWheelUp(result);
-                                    break;
-                                case "mwd":
-                                    _currentProfileOperationsMediator.UpdateMouseWheelDown(result);
-                                    break;
-                                case "mwl":
-                                    _currentProfileOperationsMediator.UpdateMouseWheelLeft(result);
-                                    break;
-                                case "mwr":
-                                    _currentProfileOperationsMediator.UpdateMouseWheelRight(result);
-                                    break;
-                            }
-                        }
-                    }
-                
+                }
+
                 break;
             }
             default:
-                switch (mouseAction)
+                switch (button)
                 {
-                    case "mb1":
+                    case MouseButton.MouseButton1:
                         _currentProfileOperationsMediator.UpdateMouseButton1(mapping);
                         break;
-                    case "mb2":
+                    case MouseButton.MouseButton2:
                         _currentProfileOperationsMediator.UpdateMouseButton2(mapping);
                         break;
-                    case "mb3":
+                    case MouseButton.MouseButton3:
                         _currentProfileOperationsMediator.UpdateMouseButton3(mapping);
                         break;
-                    case "mb4":
+                    case MouseButton.MouseButton4:
                         _currentProfileOperationsMediator.UpdateMouseButton4(mapping);
                         break;
-                    case "mb5":
+                    case MouseButton.MouseButton5:
                         _currentProfileOperationsMediator.UpdateMouseButton5(mapping);
                         break;
-                    case "mwu":
+                    case MouseButton.MouseWheelUp:
                         _currentProfileOperationsMediator.UpdateMouseWheelUp(mapping);
                         break;
-                    case "mwd":
+                    case MouseButton.MouseWheelDown:
                         _currentProfileOperationsMediator.UpdateMouseWheelDown(mapping);
                         break;
-                    case "mwl":
+                    case MouseButton.MouseWheelLeft:
                         _currentProfileOperationsMediator.UpdateMouseWheelLeft(mapping);
                         break;
-                    case "mwr":
+                    case MouseButton.MouseWheelRight:
                         _currentProfileOperationsMediator.UpdateMouseWheelRight(mapping);
                         break;
                 }
@@ -674,7 +674,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 break;
         }
     }
-    
+
     private async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()
     {
         var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(new SimulatedKeystrokesDialogViewModel());
