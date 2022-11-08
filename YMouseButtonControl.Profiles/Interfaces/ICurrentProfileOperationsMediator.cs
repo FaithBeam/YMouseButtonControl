@@ -9,6 +9,7 @@ public interface ICurrentProfileOperationsMediator
 {
     Profile CurrentProfile { get; set; }
     event EventHandler<SelectedProfileChangedEventArgs> CurrentProfileChanged;
+    event EventHandler<SelectedProfileEditedEventArgs> CurrentProfileEdited;
     void UpdateMouseButton1(IButtonMapping value);
     void UpdateMouseButton2(IButtonMapping value);
     void UpdateMouseButton3(IButtonMapping value);

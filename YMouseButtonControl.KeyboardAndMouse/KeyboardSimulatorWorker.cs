@@ -50,9 +50,15 @@ public class KeyboardSimulatorWorker : IDisposable
         _processMonitorService.OnProcessChangedEventHandler += OnProcessChanged;
         _profilesService.OnProfilesChangedEventHandler += OnProfilesChanged;
         _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
+        _currentProfileOperationsMediator.CurrentProfileEdited += OnCurrentProfileEdited;
     }
 
     private void OnCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
+    {
+        BuildHotkeys();
+    }
+
+    private void OnCurrentProfileEdited(object sender, SelectedProfileEditedEventArgs e)
     {
         BuildHotkeys();
     }
