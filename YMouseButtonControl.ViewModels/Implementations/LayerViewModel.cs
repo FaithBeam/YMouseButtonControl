@@ -399,6 +399,34 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 MouseButton2Combo[e.Mapping.Index] = e.Mapping;
                 CurrentMouseButton2ComboIndex = e.Mapping.Index;
                 break;
+            case MouseButton.MouseButton3:
+                MouseButton3Combo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseButton3ComboIndex = e.Mapping.Index;
+                break;
+            case MouseButton.MouseButton4:
+                MouseButton4Combo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseButton4ComboIndex = e.Mapping.Index;
+                break;
+            case MouseButton.MouseButton5:
+                MouseButton5Combo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseButton5ComboIndex = e.Mapping.Index;
+                break;
+            case MouseButton.MouseWheelUp:
+                MouseWheelUpCombo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseWheelUpComboIndex = e.Mapping.Index;
+                break;
+            case MouseButton.MouseWheelDown:
+                MouseWheelDownCombo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseWheelDownComboIndex = e.Mapping.Index;
+                break;
+            case MouseButton.MouseWheelLeft:
+                MouseWheelLeftCombo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseWheelLeftComboIndex = e.Mapping.Index;
+                break;
+            case MouseButton.MouseWheelRight:
+                MouseWheelRightCombo[e.Mapping.Index] = e.Mapping;
+                CurrentMouseWheelRightComboIndex = e.Mapping.Index;
+                break;
         }
     }
 
@@ -597,43 +625,44 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 }
                 else
                 {
+                    SimulatedKeystrokes result = default;
                     if (string.IsNullOrWhiteSpace(mapping.Keys))
                     {
-                        var result = await ShowSimulatedKeystrokesDialog();
-                        if (result is null)
-                        {
-                            return;
-                        }
-                        switch (button)
-                        {
-                            case MouseButton.MouseButton1:
-                                _currentProfileOperationsMediator.UpdateMouseButton1(result);
-                                break;
-                            case MouseButton.MouseButton2:
-                                _currentProfileOperationsMediator.UpdateMouseButton2(result);
-                                break;
-                            case MouseButton.MouseButton3:
-                                _currentProfileOperationsMediator.UpdateMouseButton3(result);
-                                break;
-                            case MouseButton.MouseButton4:
-                                _currentProfileOperationsMediator.UpdateMouseButton4(result);
-                                break;
-                            case MouseButton.MouseButton5:
-                                _currentProfileOperationsMediator.UpdateMouseButton5(result);
-                                break;
-                            case MouseButton.MouseWheelUp:
-                                _currentProfileOperationsMediator.UpdateMouseWheelUp(result);
-                                break;
-                            case MouseButton.MouseWheelDown:
-                                _currentProfileOperationsMediator.UpdateMouseWheelDown(result);
-                                break;
-                            case MouseButton.MouseWheelLeft:
-                                _currentProfileOperationsMediator.UpdateMouseWheelLeft(result);
-                                break;
-                            case MouseButton.MouseWheelRight:
-                                _currentProfileOperationsMediator.UpdateMouseWheelRight(result);
-                                break;
-                        }
+                        result = await ShowSimulatedKeystrokesDialog();
+                    }
+                    if (result is null)
+                    {
+                        return;
+                    }
+                    switch (button)
+                    {
+                        case MouseButton.MouseButton1:
+                            _currentProfileOperationsMediator.UpdateMouseButton1(result);
+                            break;
+                        case MouseButton.MouseButton2:
+                            _currentProfileOperationsMediator.UpdateMouseButton2(result);
+                            break;
+                        case MouseButton.MouseButton3:
+                            _currentProfileOperationsMediator.UpdateMouseButton3(result);
+                            break;
+                        case MouseButton.MouseButton4:
+                            _currentProfileOperationsMediator.UpdateMouseButton4(result);
+                            break;
+                        case MouseButton.MouseButton5:
+                            _currentProfileOperationsMediator.UpdateMouseButton5(result);
+                            break;
+                        case MouseButton.MouseWheelUp:
+                            _currentProfileOperationsMediator.UpdateMouseWheelUp(result);
+                            break;
+                        case MouseButton.MouseWheelDown:
+                            _currentProfileOperationsMediator.UpdateMouseWheelDown(result);
+                            break;
+                        case MouseButton.MouseWheelLeft:
+                            _currentProfileOperationsMediator.UpdateMouseWheelLeft(result);
+                            break;
+                        case MouseButton.MouseWheelRight:
+                            _currentProfileOperationsMediator.UpdateMouseWheelRight(result);
+                            break;
                     }
                 }
 
