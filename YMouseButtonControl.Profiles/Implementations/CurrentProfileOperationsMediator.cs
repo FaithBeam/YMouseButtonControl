@@ -1,4 +1,5 @@
 using System;
+using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
@@ -7,140 +8,64 @@ using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Profiles.Implementations;
 
-public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediator
+public class CurrentProfileOperationsMediator : ReactiveObject, ICurrentProfileOperationsMediator
 {
     private Profile _currentProfile;
     
     public Profile CurrentProfile
     {
         get => _currentProfile;
-        set
-        {
-            if (_currentProfile == value)
-            {
-                return;
-            }
-
-            _currentProfile = value;
-
-            if (value is null)
-            {
-                return;
-            }
-            var args = new SelectedProfileChangedEventArgs(_currentProfile);
-            OnCurrentProfileChanged(args);
-        }
+        set => this.RaiseAndSetIfChanged(ref _currentProfile, value);
     }
     
     public event EventHandler<SelectedProfileChangedEventArgs> CurrentProfileChanged;
-    public event EventHandler<SelectedProfileEditedEventArgs> CurrentProfileEdited;
-    
-    public void UpdateMouseButton1(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseButton1 = value;
-        CurrentProfile.MouseButton1LastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseButton1);
-        OnCurrentProfileEdited(args);
-    }
-    
-    public void UpdateMouseButton2(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseButton2 = value;
-        CurrentProfile.MouseButton2LastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseButton2);
-        OnCurrentProfileEdited(args);
-    }
-    
-    public void UpdateMouseButton3(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseButton3 = value;
-        CurrentProfile.MouseButton3LastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseButton3);
-        OnCurrentProfileEdited(args);
-    }
-    
-    public void UpdateMouseButton4(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseButton4 = value;
-        CurrentProfile.MouseButton4LastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseButton4);
-        OnCurrentProfileEdited(args);
-    }
+    public event EventHandler<SelectedProfileEditedEventArgs> CurrentProfileButtonMappingEdited;
 
-    public void UpdateMouseButton5(IButtonMapping value)
+    public void UpdateMouse(IButtonMapping value, MouseButton button)
     {
-        if (value is null)
+        var args = new SelectedProfileEditedEventArgs(value, button);
+        switch (button)
         {
-            return;
+            case MouseButton.MouseButton1:
+                CurrentProfile.MouseButton1 = value;
+                CurrentProfile.MouseButton1LastIndex = value.Index;
+                break;
+            case MouseButton.MouseButton2:
+                CurrentProfile.MouseButton2 = value;
+                CurrentProfile.MouseButton2LastIndex = value.Index;
+                break;
+            case MouseButton.MouseButton3:
+                CurrentProfile.MouseButton3 = value;
+                CurrentProfile.MouseButton3LastIndex = value.Index;
+                break;
+            case MouseButton.MouseButton4:
+                CurrentProfile.MouseButton4 = value;
+                CurrentProfile.MouseButton4LastIndex = value.Index;
+                break;
+            case MouseButton.MouseButton5:
+                CurrentProfile.MouseButton5 = value;
+                CurrentProfile.MouseButton5LastIndex = value.Index;
+                break;
+            case MouseButton.MouseWheelUp:
+                CurrentProfile.MouseWheelUp = value;
+                CurrentProfile.MouseWheelUpLastIndex = value.Index;
+                break;
+            case MouseButton.MouseWheelDown:
+                CurrentProfile.MouseWheelDown = value;
+                CurrentProfile.MouseWheelDownLastIndex = value.Index;
+                break;
+            case MouseButton.MouseWheelLeft:
+                CurrentProfile.MouseWheelLeft = value;
+                CurrentProfile.MouseWheelLeftLastIndex = value.Index;
+                break;
+            case MouseButton.MouseWheelRight:
+                CurrentProfile.MouseWheelRight = value;
+                CurrentProfile.MouseWheelRightLastIndex = value.Index;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(button), button, null);
         }
-        CurrentProfile.MouseButton5 = value;
-        CurrentProfile.MouseButton5LastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseButton5);
-        OnCurrentProfileEdited(args);
-    }
-    
-    public void UpdateMouseWheelUp(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseWheelUp = value;
-        CurrentProfile.MouseWheelUpLastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseWheelUp);
-        OnCurrentProfileEdited(args);
-    }
-    
-    public void UpdateMouseWheelDown(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseWheelDown = value;
-        CurrentProfile.MouseWheelDownLastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseWheelDown);
-        OnCurrentProfileEdited(args);
-    }
-    
-    public void UpdateMouseWheelLeft(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseWheelLeft = value;
-        CurrentProfile.MouseWheelLeftLastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseWheelLeft);
-        OnCurrentProfileEdited(args);
-    }
-
-    public void UpdateMouseWheelRight(IButtonMapping value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        CurrentProfile.MouseWheelRight = value;
-        CurrentProfile.MouseWheelRightLastIndex = value.Index;
-        var args = new SelectedProfileEditedEventArgs(value, MouseButton.MouseWheelRight);
-        OnCurrentProfileEdited(args);
+        OnCurrentProfileButtonMappingEdited(args);
     }
     
     private void OnCurrentProfileChanged(SelectedProfileChangedEventArgs e)
@@ -148,8 +73,8 @@ public class CurrentProfileOperationsMediator : ICurrentProfileOperationsMediato
         CurrentProfileChanged?.Invoke(this, e);
     }
 
-    private void OnCurrentProfileEdited(SelectedProfileEditedEventArgs e)
+    private void OnCurrentProfileButtonMappingEdited(SelectedProfileEditedEventArgs e)
     {
-        CurrentProfileEdited?.Invoke(this, e);
+        CurrentProfileButtonMappingEdited?.Invoke(this, e);
     }
 }

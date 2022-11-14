@@ -24,11 +24,10 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton1Combo}"
-                              SelectedItem="{Binding SelectedMouseButton1Mapping}"
-                              SelectedIndex="{Binding CurrentMouseButton1ComboIndex}"
+                              SelectedIndex="{Binding Mb1Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
-                              Background="{Binding MouseButton1BackgroundColor}">
+                              Background="{Binding MouseButton1BackgroundColor}" >
                     </ComboBox>
                     <Button Grid.Column="3" Background="White" Command="{Binding MouseButton1ComboSettingCommand}">
                         <Image Source="../Resources/gear_icon1.png" />
@@ -39,8 +38,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton2Combo}"
-                              SelectedItem="{Binding SelectedMouseButton2Mapping}"
-                              SelectedIndex="{Binding CurrentMouseButton2ComboIndex}"
+                              SelectedIndex="{Binding Mb2Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton2BackgroundColor}"/>
@@ -53,8 +51,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2" 
                               Items="{Binding MouseButton3Combo}"
-                              SelectedItem="{Binding SelectedMouseButton3Mapping}"
-                              SelectedIndex="{Binding CurrentMouseButton3ComboIndex}"
+                              SelectedIndex="{Binding Mb3Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton3BackgroundColor}" />
@@ -67,8 +64,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton4Combo}"
-                              SelectedItem="{Binding SelectedMouseButton4Mapping}"
-                              SelectedIndex="{Binding CurrentMouseButton4ComboIndex}"
+                              SelectedIndex="{Binding Mb4Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton4BackgroundColor}"/>
@@ -81,8 +77,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton5Combo}"
-                              SelectedItem="{Binding SelectedMouseButton5Mapping}"
-                              SelectedIndex="{Binding CurrentMouseButton5ComboIndex}"
+                              SelectedIndex="{Binding Mb5Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton5BackgroundColor}"/>
@@ -95,8 +90,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelUpCombo}"
-                              SelectedItem="{Binding SelectedMouseWheelUpMapping}"
-                              SelectedIndex="{Binding CurrentMouseWheelUpComboIndex}"
+                              SelectedIndex="{Binding MwuIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelUpBackgroundColor}"/>
@@ -109,8 +103,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelDownCombo}"
-                              SelectedItem="{Binding SelectedMouseWheelDownMapping}"
-                              SelectedIndex="{Binding CurrentMouseWheelDownComboIndex}"
+                              SelectedIndex="{Binding MwdIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelDownBackgroundColor}"/>
@@ -123,8 +116,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelLeftCombo}"
-                              SelectedItem="{Binding SelectedMouseWheelLeftMapping}"
-                              SelectedIndex="{Binding CurrentMouseWheelLeftComboIndex}"
+                              SelectedIndex="{Binding MwlIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelLeftBackgroundColor}"/>
@@ -137,8 +129,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelRightCombo}"
-                              SelectedItem="{Binding SelectedMouseWheelRightMapping}"
-                              SelectedIndex="{Binding CurrentMouseWheelRightComboIndex}"
+                              SelectedIndex="{Binding MwrIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelRightBackgroundColor}"/>

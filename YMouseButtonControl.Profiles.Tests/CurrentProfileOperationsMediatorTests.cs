@@ -20,7 +20,7 @@ public class CurrentProfileOperationsMediatorTests
             MouseButton1 = new DisabledMapping()
         };
         cpom.CurrentProfile = profile;
-        cpom.CurrentProfileEdited += (sender, e) => events.Add(e);
+        cpom.CurrentProfileButtonMappingEdited += (sender, e) => events.Add(e);
 
         cpom.UpdateMouseButton1(new SimulatedKeystrokes{Keys = "w"});
         Assert.IsTrue(events.Count == 1);

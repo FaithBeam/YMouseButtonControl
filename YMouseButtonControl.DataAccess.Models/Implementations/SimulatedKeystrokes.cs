@@ -1,8 +1,9 @@
-﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using ReactiveUI;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations;
 
-public class SimulatedKeystrokes : IButtonMapping, IEquatable<SimulatedKeystrokes>
+public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<SimulatedKeystrokes>
 {
     public int Index { get; } = 2;
     public string Description { get; }= "Simulated Keys (undefined)";

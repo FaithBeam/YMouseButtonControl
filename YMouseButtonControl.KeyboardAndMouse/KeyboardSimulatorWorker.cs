@@ -50,7 +50,7 @@ public class KeyboardSimulatorWorker : IDisposable
         _processMonitorService.OnProcessChangedEventHandler += OnProcessChanged;
         _profilesService.OnProfilesChangedEventHandler += OnProfilesChanged;
         _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
-        _currentProfileOperationsMediator.CurrentProfileEdited += OnCurrentProfileEdited;
+        _currentProfileOperationsMediator.CurrentProfileButtonMappingEdited += OnCurrentProfileEdited;
     }
 
     private void OnCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
