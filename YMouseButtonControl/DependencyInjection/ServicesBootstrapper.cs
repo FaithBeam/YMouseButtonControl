@@ -26,10 +26,9 @@ public static class ServicesBootstrapper
         services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
-        services.RegisterLazySingleton<ICurrentProfileOperationsMediator>(() => new CurrentProfileOperationsMediator());
         services.Register<ICheckDefaultProfileService>(() => new CheckDefaultProfileService(
             resolver.GetRequiredService<IUnitOfWorkFactory>(),
-            resolver.GetRequiredService<ICurrentProfileOperationsMediator>()
+            resolver.GetRequiredService<IProfilesService>()
         ));
     }
     

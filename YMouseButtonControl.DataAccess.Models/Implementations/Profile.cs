@@ -1,31 +1,78 @@
-﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using ReactiveUI;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations
 {
-    public class Profile : IEquatable<Profile>
+    public class Profile : ReactiveObject, IEquatable<Profile>
     {
+        private IButtonMapping _mb1 = new NothingMapping();
+        private IButtonMapping _mb2 = new NothingMapping();
+        private IButtonMapping _mb3 = new NothingMapping();
+        private IButtonMapping _mb4 = new NothingMapping();
+        private IButtonMapping _mb5 = new NothingMapping();
+        private IButtonMapping _mwu = new NothingMapping();
+        private IButtonMapping _mwd = new NothingMapping();
+        private IButtonMapping _mwl = new NothingMapping();
+        private IButtonMapping _mwr = new NothingMapping();
+        
         public int Id { get; set; }
         public bool Checked { get; set; }
 
         public string Name { get; set; } = string.Empty;
 
-        public IButtonMapping MouseButton1 { get; set; } = new NothingMapping();
+        public IButtonMapping MouseButton1
+        {
+            get => _mb1;
+            set => this.RaiseAndSetIfChanged(ref _mb1, value);
+        }
 
-        public IButtonMapping MouseButton2 { get; set; } = new NothingMapping();
+        public IButtonMapping MouseButton2
+        {
+            get => _mb2;
+            set => this.RaiseAndSetIfChanged(ref _mb2, value);
+        }
 
-        public IButtonMapping MouseButton3 { get; set; } = new NothingMapping();
+        public IButtonMapping MouseButton3
+        {
+            get => _mb3;
+            set => this.RaiseAndSetIfChanged(ref _mb3, value);
+        }
 
-        public IButtonMapping MouseButton4 { get; set; } = new NothingMapping();
+        public IButtonMapping MouseButton4
+        {
+            get => _mb4;
+            set => this.RaiseAndSetIfChanged(ref _mb4, value);
+        }
 
-        public IButtonMapping MouseButton5 { get; set; } = new NothingMapping();
+        public IButtonMapping MouseButton5
+        {
+            get => _mb5;
+            set => this.RaiseAndSetIfChanged(ref _mb5, value);
+        }
 
-        public IButtonMapping MouseWheelUp { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelUp
+        {
+            get => _mwu;
+            set => this.RaiseAndSetIfChanged(ref _mwu, value);
+        }
 
-        public IButtonMapping MouseWheelDown { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelDown
+        {
+            get => _mwd;
+            set => this.RaiseAndSetIfChanged(ref _mwd, value);
+        }
 
-        public IButtonMapping MouseWheelLeft { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelLeft
+        {
+            get => _mwl;
+            set => this.RaiseAndSetIfChanged(ref _mwl, value);
+        }
 
-        public IButtonMapping MouseWheelRight { get; set; } = new NothingMapping();
+        public IButtonMapping MouseWheelRight
+        {
+            get => _mwr;
+            set => this.RaiseAndSetIfChanged(ref _mwr, value);
+        }
 
         public int MouseButton1LastIndex { get; set; } = 0;
 

@@ -12,18 +12,21 @@ namespace YMouseButtonControl.ViewModels.Tests.Implementations;
 [TestClass]
 public class LayerViewModelTests
 {
-    private readonly AutoMocker _autoMocker;
+    private AutoMocker? _autoMocker;
+    private LayerViewModel? _lvm;
 
-    public LayerViewModelTests()
+
+    [TestInitialize]
+    public void TestInitialize()
     {
         _autoMocker = new AutoMocker();
+        _lvm = _autoMocker.CreateInstance<LayerViewModel>();
     }
-
+    
     [TestMethod]
     public void TestChangeCurrentMouseButton()
     {
         // Test changing mb1 to disabled mapping
-        var lvm = _autoMocker.CreateInstance<LayerViewModel>();
         lvm.CurrentMouseButton1ComboIndex = 1;
         var cpom = _autoMocker.GetMock<ICurrentProfileOperationsMediator>();
         cpom.Verify(x => x.UpdateMouseButton1(It.IsAny<DisabledMapping>()), Times.Once);

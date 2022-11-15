@@ -16,12 +16,12 @@
 
     <Grid RowDefinitions="*,Auto">
         <DataGrid Name="ProfilesDataGrid"
-                  Items="{Binding Profiles}"
+                  Items="{Binding ProfilesService.Profiles}"
                   AutoGenerateColumns="False"
                   HeadersVisibility="None"
                   Margin="5"
                   Height="300"
-                  SelectedItem="{Binding SelectedProfile}"
+                  SelectedIndex="{Binding ProfilesService.CurrentProfileIndex}"
                   VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />

@@ -10,12 +10,12 @@ namespace YMouseButtonControl.ViewModels.Services.Implementations;
 public class CheckDefaultProfileService : ICheckDefaultProfileService
 {
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
-    private readonly ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
+    private readonly IProfilesService _profilesService;
 
-    public CheckDefaultProfileService(IUnitOfWorkFactory unitOfWorkFactory, ICurrentProfileOperationsMediator currentProfileOperationsMediator)
+    public CheckDefaultProfileService(IUnitOfWorkFactory unitOfWorkFactory, IProfilesService profilesService)
     {
         _unitOfWorkFactory = unitOfWorkFactory;
-        _currentProfileOperationsMediator = currentProfileOperationsMediator;
+        _profilesService = profilesService;
     }
 
     public void CheckDefaultProfile()
@@ -47,6 +47,6 @@ public class CheckDefaultProfileService : ICheckDefaultProfileService
             });
         }
 
-        _currentProfileOperationsMediator.CurrentProfile = repository.GetAll().First();
+        _profilesService.CurrentProfileIndex = 0;
     }
 }

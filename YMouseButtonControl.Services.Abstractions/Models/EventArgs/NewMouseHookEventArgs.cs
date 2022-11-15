@@ -1,12 +1,12 @@
-﻿using YMouseButtonControl.Services.Abstractions.Enums;
+﻿using YMouseButtonControl.DataAccess.Models.Enums;
 
 namespace YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 public class NewMouseHookEventArgs : System.EventArgs
 {
-    public NewMouseButton Button { get; }
+    public MouseButton Button { get; }
 
-    public NewMouseHookEventArgs(NewMouseButton button)
+    public NewMouseHookEventArgs(MouseButton button)
     {
         Button = button;
     }

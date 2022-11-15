@@ -1,40 +1,28 @@
 ﻿using ReactiveUI;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 
 public class ProfilesInformationViewModel : ViewModelBase, IProfilesInformationViewModel
 {
-    private readonly ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
+    private readonly IProfilesService _profilesService;
 
-    public ProfilesInformationViewModel(ICurrentProfileOperationsMediator currentProfileOperationsMediator)
+    public ProfilesInformationViewModel(IProfilesService profilesService)
     {
-        _currentProfileOperationsMediator = currentProfileOperationsMediator;
-        _currentProfileOperationsMediator.CurrentProfileChanged += OnSelectedCurrentProfileChanged;
+        _profilesService = profilesService;
     }
 
-    public string Description => _currentProfileOperationsMediator.CurrentProfile.Description;
+    public string Description => _profilesService.CurrentProfile.Description;
 
-    public string WindowCaption => _currentProfileOperationsMediator.CurrentProfile.WindowCaption;
+    public string WindowCaption => _profilesService.CurrentProfile.WindowCaption;
 
-    public string Process => _currentProfileOperationsMediator.CurrentProfile.Process;
+    public string Process => _profilesService.CurrentProfile.Process;
 
-    public string WindowClass => _currentProfileOperationsMediator.CurrentProfile.WindowClass;
+    public string WindowClass => _profilesService.CurrentProfile.WindowClass;
 
-    public string ParentClass => _currentProfileOperationsMediator.CurrentProfile.ParentClass;
+    public string ParentClass => _profilesService.CurrentProfile.ParentClass;
 
-    public string MatchType => _currentProfileOperationsMediator.CurrentProfile.MatchType;
-
-    private void OnSelectedCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
-    {
-        this.RaisePropertyChanged(nameof(Description));
-        this.RaisePropertyChanged(nameof(WindowCaption));
-        this.RaisePropertyChanged(nameof(Process));
-        this.RaisePropertyChanged(nameof(WindowClass));
-        this.RaisePropertyChanged(nameof(ParentClass));
-        this.RaisePropertyChanged(nameof(MatchType));
-    }
+    public string MatchType => _profilesService.CurrentProfile.MatchType;
 }

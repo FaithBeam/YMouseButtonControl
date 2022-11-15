@@ -21,8 +21,7 @@ public static class KeyboardAndMouseBootstrapper
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<IMouseListener>(),
             resolver.GetRequiredService<IKeyboardSimulator>(),
-            resolver.GetRequiredService<IProcessMonitorService>(),
-            resolver.GetRequiredService<ICurrentProfileOperationsMediator>()
+            resolver.GetRequiredService<IProcessMonitorService>()
         ));
     }
 }
