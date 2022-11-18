@@ -1,7 +1,11 @@
+using Avalonia.Collections;
 using Moq;
 using Moq.AutoMock;
+using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.DataAccess.Repositories;
+using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.Profiles.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations;
@@ -14,6 +18,9 @@ public class LayerViewModelTests
 {
     private AutoMocker? _autoMocker;
     private LayerViewModel? _lvm;
+    private Mock<IRepository<Profile>> _repoMock;
+    private Mock<IUnitOfWork> _uowMock;
+    private Mock<IProfilesService> _psMock;
 
 
     [TestInitialize]
@@ -24,16 +31,16 @@ public class LayerViewModelTests
     }
     
     [TestMethod]
-    public void TestChangeCurrentMouseButton()
+    public void TestChangeMouseButtonIndex()
     {
         // Test changing mb1 to disabled mapping
-        lvm.CurrentMouseButton1ComboIndex = 1;
-        var cpom = _autoMocker.GetMock<ICurrentProfileOperationsMediator>();
-        cpom.Verify(x => x.UpdateMouseButton1(It.IsAny<DisabledMapping>()), Times.Once);
-
-        lvm = _autoMocker.CreateInstance<LayerViewModel>();
-        lvm.CurrentMouseButton1ComboIndex = 2;
-        var skdvm = _autoMocker.GetMock<SimulatedKeystrokesDialogViewModel>();
-        skdvm.Verify();
+        var psMock = _autoMocker!.GetMock<IProfilesService>();
+        _lvm!.Mb1Index = 1;
+        Assert.IsTrue(_lvm.Mb1Index == 1);
+        Assert.IsTrue(_lvm.Mb1 is DisabledMapping);
+        psMock.Verify(x => x.UpdateCurrentMouse(It.IsAny<DisabledMapping>(), MouseButton.MouseButton1), Times.Once);
+        // _autoMocker.VerifyAll();
+        ;
+        // _psMock.Verify(x => x.UpdateCurrentMouse(It.IsAny<DisabledMapping>(), MouseButton.MouseButton1), Times.Once);
     }
 }

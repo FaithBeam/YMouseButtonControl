@@ -40,15 +40,15 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
 
-    private int _mb1Index = -1;
-    private int _mb2Index = -1;
-    private int _mb3Index = -1;
-    private int _mb4Index = -1;
-    private int _mb5Index = -1;
-    private int _mwuIndex = -1;
-    private int _mwdIndex = -1;
-    private int _mwlIndex = -1;
-    private int _mwrIndex = -1;
+    private int _mb1Index;
+    private int _mb2Index;
+    private int _mb3Index;
+    private int _mb4Index;
+    private int _mb5Index;
+    private int _mwuIndex;
+    private int _mwdIndex;
+    private int _mwlIndex;
+    private int _mwrIndex;
 
     private IButtonMapping _mb1;
     private IButtonMapping _mb2;
@@ -68,6 +68,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _profilesService = profilesService;
         this
             .WhenAnyValue(x => x._profilesService.CurrentProfile)
+            .WhereNotNull()
+            .DistinctUntilChanged()
             .Subscribe(OnSelectedCurrentProfileChanged);
         _mouseListener = mouseListener;
         _mouseListener.OnMousePressedEventHandler += OnMouseClicked;
@@ -110,85 +112,103 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
         this
             .WhenAnyValue(x => x.Mb1)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton1));
         this
             .WhenAnyValue(x => x.Mb2)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton2));
         this
             .WhenAnyValue(x => x.Mb3)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton3));
         this
             .WhenAnyValue(x => x.Mb4)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton4));
         this
             .WhenAnyValue(x => x.Mb5)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton5));
         this
             .WhenAnyValue(x => x.Mwu)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelUp));
         this
             .WhenAnyValue(x => x.Mwd)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelDown));
         this
             .WhenAnyValue(x => x.Mwl)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelLeft));
         this
             .WhenAnyValue(x => x.Mwr)
+            .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelRight));
 
         // Bool to represent whether the gear settings button is enabled/disabled
         var mb1ComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mb1,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb2ComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mb2,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb3ComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mb3,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb4ComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mb4,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mb5ComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mb5,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwuComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mwu,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwdComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mwd,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwlComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mwl,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
         var mwrComboSettingCanExecute = this
             .WhenAnyValue(x => x.Mwr,
                 (mapping) =>
-                    mapping is not DisabledMapping
+                    mapping is not null
+                    && mapping is not DisabledMapping
                     && mapping is not NothingMapping
                     && !string.IsNullOrWhiteSpace(mapping.Keys));
 
