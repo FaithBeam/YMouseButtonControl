@@ -63,6 +63,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>
         ShowSimulatedKeystrokesPickerInteraction { get; }
 
+    public bool ComputerEditing { get; set; } = false;
+    
     public LayerViewModel(IProfilesService profilesService, IMouseListener mouseListener)
     {
         _profilesService = profilesService;
@@ -112,38 +114,49 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
         this
             .WhenAnyValue(x => x.Mb1)
+            .DistinctUntilChanged()
             .WhereNotNull()
+            .Where(_ => !ComputerEditing)
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton1));
         this
             .WhenAnyValue(x => x.Mb2)
+            .DistinctUntilChanged()
             .WhereNotNull()
+            .Where(_ => !ComputerEditing)
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton2));
         this
             .WhenAnyValue(x => x.Mb3)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton3));
         this
             .WhenAnyValue(x => x.Mb4)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton4));
         this
             .WhenAnyValue(x => x.Mb5)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton5));
         this
             .WhenAnyValue(x => x.Mwu)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelUp));
         this
             .WhenAnyValue(x => x.Mwd)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelDown));
         this
             .WhenAnyValue(x => x.Mwl)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelLeft));
         this
             .WhenAnyValue(x => x.Mwr)
+            .DistinctUntilChanged()
             .WhereNotNull()
             .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelRight));
 
@@ -658,7 +671,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             return;
         }
 
+        if (ComputerEditing)
+        {
+            return;
+        }
+
+        ComputerEditing = true;
         await GetMappingAsync(mapping, button);
+        ComputerEditing = false;
     }
     
     private async Task GetMappingAsync(IButtonMapping mapping, MouseButton button)
@@ -678,7 +698,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             case MouseButton.MouseButton1:
                 MouseButton1Combo.RemoveAt(newMapping.Index);
                 MouseButton1Combo.Insert(newMapping.Index, newMapping);
-                Mb1Index = newMapping.Index;
+                // Mb1Index = newMapping.Index;
                 break;
             case MouseButton.MouseButton2:
                 MouseButton2Combo.RemoveAt(newMapping.Index);

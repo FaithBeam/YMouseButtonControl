@@ -38,7 +38,7 @@ public class LayerViewModelTests
         _lvm!.Mb1Index = 1;
         Assert.IsTrue(_lvm.Mb1Index == 1);
         Assert.IsTrue(_lvm.Mb1 is DisabledMapping);
-        psMock.Verify(x => x.UpdateCurrentMouse(It.IsAny<DisabledMapping>(), MouseButton.MouseButton1), Times.Once);
+        psMock.Verify(x => x.UpdateCurrentMouse(It.IsAny<IButtonMapping>(), MouseButton.MouseButton1), Times.Once);
         // _autoMocker.VerifyAll();
         ;
         // _psMock.Verify(x => x.UpdateCurrentMouse(It.IsAny<DisabledMapping>(), MouseButton.MouseButton1), Times.Once);
