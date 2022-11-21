@@ -23,7 +23,7 @@ public interface IProfilesService
     IDisposable DelayChangeNotifications();
     event PropertyChangingEventHandler PropertyChanging;
     event PropertyChangedEventHandler PropertyChanged;
-    void UpdateCurrentMouse(IButtonMapping value, MouseButton button);
+    // void UpdateCurrentMouse(IButtonMapping value, MouseButton button);
     bool IsUnsavedChanges();
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);

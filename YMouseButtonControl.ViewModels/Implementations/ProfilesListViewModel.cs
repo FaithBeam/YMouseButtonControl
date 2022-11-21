@@ -9,7 +9,6 @@ using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 

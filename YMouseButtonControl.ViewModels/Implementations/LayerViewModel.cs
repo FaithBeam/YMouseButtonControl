@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Avalonia.Collections;
 using Avalonia.Media;
+using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Factories;
@@ -22,7 +23,7 @@ namespace YMouseButtonControl.ViewModels.Implementations;
 
 public class LayerViewModel : ViewModelBase, ILayerViewModel
 {
-    private readonly IProfilesService _profilesService;
+    private IProfilesService _profilesService;
     private readonly IMouseListener _mouseListener;
 
     private IBrush _mouseButton1BackgroundColor = Brushes.White;
@@ -40,34 +41,26 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
 
-    private int _mb1Index;
-    private int _mb2Index;
-    private int _mb3Index;
-    private int _mb4Index;
-    private int _mb5Index;
-    private int _mwuIndex;
-    private int _mwdIndex;
-    private int _mwlIndex;
-    private int _mwrIndex;
-
-    private IButtonMapping _mb1;
-    private IButtonMapping _mb2;
-    private IButtonMapping _mb3;
     private IButtonMapping _mb4;
-    private IButtonMapping _mb5;
-    private IButtonMapping _mwu;
-    private IButtonMapping _mwd;
-    private IButtonMapping _mwl;
-    private IButtonMapping _mwr;
+
+    public IButtonMapping Mb4
+    {
+        get => _mb4;
+        set => this.RaiseAndSetIfChanged(ref _mb4, value);
+    }
 
     public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>
         ShowSimulatedKeystrokesPickerInteraction { get; }
 
-    public bool ComputerEditing { get; set; } = false;
-    
+    public IProfilesService ProfilesService
+    {
+        get => _profilesService;
+        private set => this.RaiseAndSetIfChanged(ref _profilesService, value);
+    }
+
     public LayerViewModel(IProfilesService profilesService, IMouseListener mouseListener)
     {
-        _profilesService = profilesService;
+        ProfilesService = profilesService;
         this
             .WhenAnyValue(x => x._profilesService.CurrentProfile)
             .WhereNotNull()
@@ -84,343 +77,186 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         ShowSimulatedKeystrokesPickerInteraction =
             new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
 
+        Mb4 = _profilesService.CurrentProfile.MouseButton4;
+        
         this
-            .WhenAnyValue(x => x.Mb1Index)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseButton1));
-        this
-            .WhenAnyValue(x => x.Mb2Index)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseButton2));
-        this
-            .WhenAnyValue(x => x.Mb3Index)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseButton3));
-        this
-            .WhenAnyValue(x => x.Mb4Index)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseButton4));
-        this
-            .WhenAnyValue(x => x.Mb5Index)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseButton5));
-        this
-            .WhenAnyValue(x => x.MwuIndex)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseWheelUp));
-        this
-            .WhenAnyValue(x => x.MwdIndex)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseWheelDown));
-        this
-            .WhenAnyValue(x => x.MwlIndex)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseWheelLeft));
-        this
-            .WhenAnyValue(x => x.MwrIndex)
-            .Subscribe(x => UpdateMouseOnIndexChange(x, MouseButton.MouseWheelRight));
-
-        this
-            .WhenAnyValue(x => x.Mb1)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton1)
             .WhereNotNull()
-            .Where(_ => !ComputerEditing)
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton1));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton1));
         this
-            .WhenAnyValue(x => x.Mb2)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton2)
             .WhereNotNull()
-            .Where(_ => !ComputerEditing)
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton2));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton2));
         this
-            .WhenAnyValue(x => x.Mb3)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton3)
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton3));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton3));
         this
             .WhenAnyValue(x => x.Mb4)
-            .DistinctUntilChanged()
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton4));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton4));
         this
-            .WhenAnyValue(x => x.Mb5)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton5)
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton5));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton5));
         this
-            .WhenAnyValue(x => x.Mwu)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelUp)
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelUp));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelUp));
         this
-            .WhenAnyValue(x => x.Mwd)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelDown)
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelDown));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelDown));
         this
-            .WhenAnyValue(x => x.Mwl)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelLeft)
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelLeft));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelLeft));
         this
-            .WhenAnyValue(x => x.Mwr)
-            .DistinctUntilChanged()
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelRight)
             .WhereNotNull()
-            .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelRight));
+            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelRight));
+
+        // this
+        //     .WhenAnyValue(x => x.Mb1)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Where(_ => !ComputerEditing)
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton1));
+        // this
+        //     .WhenAnyValue(x => x.Mb2)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Where(_ => !ComputerEditing)
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton2));
+        // this
+        //     .WhenAnyValue(x => x.Mb3)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton3));
+        // this
+        //     .WhenAnyValue(x => x.Mb4)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton4));
+        // this
+        //     .WhenAnyValue(x => x.Mb5)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton5));
+        // this
+        //     .WhenAnyValue(x => x.Mwu)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelUp));
+        // this
+        //     .WhenAnyValue(x => x.Mwd)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelDown));
+        // this
+        //     .WhenAnyValue(x => x.Mwl)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelLeft));
+        // this
+        //     .WhenAnyValue(x => x.Mwr)
+        //     .DistinctUntilChanged()
+        //     .WhereNotNull()
+        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelRight));
 
         // Bool to represent whether the gear settings button is enabled/disabled
-        var mb1ComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mb1,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mb2ComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mb2,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mb3ComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mb3,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mb4ComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mb4,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mb5ComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mb5,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mwuComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mwu,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mwdComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mwd,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mwlComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mwl,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-        var mwrComboSettingCanExecute = this
-            .WhenAnyValue(x => x.Mwr,
-                (mapping) =>
-                    mapping is not null
-                    && mapping is not DisabledMapping
-                    && mapping is not NothingMapping
-                    && !string.IsNullOrWhiteSpace(mapping.Keys));
-
-        // When the gear button is clicked, try to open the key dialog
-        MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mb1, MouseButton.MouseButton1); },
-            mb1ComboSettingCanExecute);
-        MouseButton2ComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mb2, MouseButton.MouseButton2); },
-            mb2ComboSettingCanExecute);
-        MouseButton3ComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mb3, MouseButton.MouseButton3); },
-            mb3ComboSettingCanExecute);
-        MouseButton4ComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mb4, MouseButton.MouseButton4); },
-            mb4ComboSettingCanExecute);
-        MouseButton5ComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mb5, MouseButton.MouseButton5); },
-            mb5ComboSettingCanExecute);
-        MouseWheelUpComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mwu, MouseButton.MouseWheelUp); },
-            mwuComboSettingCanExecute);
-        MouseWheelDownComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mwd, MouseButton.MouseWheelDown); },
-            mwdComboSettingCanExecute);
-        MouseWheelLeftComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mwl, MouseButton.MouseWheelLeft); },
-            mwlComboSettingCanExecute);
-        MouseWheelRightComboSettingCommand = ReactiveCommand.CreateFromTask(
-            async () => { await GetMappingAsync(Mwr, MouseButton.MouseWheelRight); },
-            mwrComboSettingCanExecute);
-    }
-
-    private void UpdateMouseOnIndexChange(int index, MouseButton button)
-    {
-        if (index < 0)
-        {
-            return;
-        }
-
-        IButtonMapping mapping;
-        switch (button)
-        {
-            case MouseButton.MouseButton1:
-                mapping = MouseButton1Combo[index];
-                Mb1 = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseButton1);
-                break;
-            case MouseButton.MouseButton2:
-                mapping = MouseButton2Combo[index];
-                Mb2 = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseButton2);
-                break;
-            case MouseButton.MouseButton3:
-                mapping = MouseButton3Combo[index];
-                Mb3 = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseButton3);
-                break;
-            case MouseButton.MouseButton4:
-                mapping = MouseButton4Combo[index];
-                Mb4 = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseButton4);
-                break;
-            case MouseButton.MouseButton5:
-                mapping = MouseButton5Combo[index];
-                Mb5 = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseButton5);
-                break;
-            case MouseButton.MouseWheelUp:
-                mapping = MouseWheelUpCombo[index];
-                Mwu = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseWheelUp);
-                break;
-            case MouseButton.MouseWheelDown:
-                mapping = MouseWheelDownCombo[index];
-                Mwd = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseWheelDown);
-                break;
-            case MouseButton.MouseWheelLeft:
-                mapping = MouseWheelLeftCombo[index];
-                Mwl = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseWheelLeft);
-                break;
-            case MouseButton.MouseWheelRight:
-                mapping = MouseWheelRightCombo[index];
-                Mwr = mapping;
-                _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseWheelRight);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(button), button, null);
-        }
-    }
-
-    public IButtonMapping Mb1
-    {
-        get => _mb1;
-        set => this.RaiseAndSetIfChanged(ref _mb1, value);
-    }
-
-    public IButtonMapping Mb2
-    {
-        get => _mb2;
-        set => this.RaiseAndSetIfChanged(ref _mb2, value);
-    }
-
-    public IButtonMapping Mb3
-    {
-        get => _mb3;
-        set => this.RaiseAndSetIfChanged(ref _mb3, value);
-    }
-
-    public IButtonMapping Mb4
-    {
-        get => _mb4;
-        set => this.RaiseAndSetIfChanged(ref _mb4, value);
-    }
-
-    public IButtonMapping Mb5
-    {
-        get => _mb5;
-        set => this.RaiseAndSetIfChanged(ref _mb5, value);
-    }
-
-    public IButtonMapping Mwu
-    {
-        get => _mwu;
-        set => this.RaiseAndSetIfChanged(ref _mwu, value);
-    }
-
-    public IButtonMapping Mwd
-    {
-        get => _mwd;
-        set => this.RaiseAndSetIfChanged(ref _mwd, value);
-    }
-
-    public IButtonMapping Mwl
-    {
-        get => _mwl;
-        set => this.RaiseAndSetIfChanged(ref _mwl, value);
-    }
-
-    public IButtonMapping Mwr
-    {
-        get => _mwr;
-        set => this.RaiseAndSetIfChanged(ref _mwr, value);
-    }
-
-    public int Mb1Index
-    {
-        get => _mb1Index;
-        set => this.RaiseAndSetIfChanged(ref _mb1Index, value);
-    }
-
-    public int Mb2Index
-    {
-        get => _mb2Index;
-        set => this.RaiseAndSetIfChanged(ref _mb2Index, value);
-    }
-
-    public int Mb3Index
-    {
-        get => _mb3Index;
-        set => this.RaiseAndSetIfChanged(ref _mb3Index, value);
-    }
-
-    public int Mb4Index
-    {
-        get => _mb4Index;
-        set => this.RaiseAndSetIfChanged(ref _mb4Index, value);
-    }
-
-    public int Mb5Index
-    {
-        get => _mb5Index;
-        set => this.RaiseAndSetIfChanged(ref _mb5Index, value);
-    }
-
-    public int MwuIndex
-    {
-        get => _mwuIndex;
-        set => this.RaiseAndSetIfChanged(ref _mwuIndex, value);
-    }
-
-    public int MwdIndex
-    {
-        get => _mwdIndex;
-        set => this.RaiseAndSetIfChanged(ref _mwdIndex, value);
-    }
-
-    public int MwlIndex
-    {
-        get => _mwlIndex;
-        set => this.RaiseAndSetIfChanged(ref _mwlIndex, value);
-    }
-
-    public int MwrIndex
-    {
-        get => _mwrIndex;
-        set => this.RaiseAndSetIfChanged(ref _mwrIndex, value);
+        // var mb1ComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mb1,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mb2ComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mb2,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mb3ComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mb3,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mb4ComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mb4,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mb5ComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mb5,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mwuComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mwu,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mwdComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mwd,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mwlComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mwl,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        // var mwrComboSettingCanExecute = this
+        //     .WhenAnyValue(x => x.Mwr,
+        //         (mapping) =>
+        //             mapping is not null
+        //             && mapping is not DisabledMapping
+        //             && mapping is not NothingMapping
+        //             && !string.IsNullOrWhiteSpace(mapping.Keys));
+        //
+        // // When the gear button is clicked, try to open the key dialog
+        // MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseButton1, MouseButton.MouseButton1, force: true); },
+        //     mb1ComboSettingCanExecute);
+        // MouseButton2ComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseButton2, MouseButton.MouseButton2, force: true); },
+        //     mb2ComboSettingCanExecute);
+        // MouseButton3ComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseButton3, MouseButton.MouseButton3, force: true); },
+        //     mb3ComboSettingCanExecute);
+        // MouseButton4ComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseButton4, MouseButton.MouseButton4, force: true); },
+        //     mb4ComboSettingCanExecute);
+        // MouseButton5ComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseButton5, MouseButton.MouseButton5, force: true); },
+        //     mb5ComboSettingCanExecute);
+        // MouseWheelUpComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseWheelUp, MouseButton.MouseWheelUp, force: true); },
+        //     mwuComboSettingCanExecute);
+        // MouseWheelDownComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseWheelDown, MouseButton.MouseWheelDown, force: true); },
+        //     mwdComboSettingCanExecute);
+        // MouseWheelLeftComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseWheelLeft, MouseButton.MouseWheelLeft, force: true); },
+        //     mwlComboSettingCanExecute);
+        // MouseWheelRightComboSettingCommand = ReactiveCommand.CreateFromTask(
+        //     async () => { await GetMappingAsync(_profilesService.CurrentProfile.MouseWheelRight, MouseButton.MouseWheelRight, force: true); },
+        //     mwrComboSettingCanExecute);
     }
 
     public ReactiveCommand<Unit, Unit> MouseButton1ComboSettingCommand { get; }
@@ -563,16 +399,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             MouseWheelRightCombo[mapping.Index] = mapping;
         }
         MouseWheelRightCombo[newProfile.MouseWheelRight.Index] = newProfile.MouseWheelRight;
-
-        Mb1Index = newProfile.MouseButton1LastIndex;
-        Mb2Index = newProfile.MouseButton2LastIndex;
-        Mb3Index = newProfile.MouseButton3LastIndex;
-        Mb4Index = newProfile.MouseButton4LastIndex;
-        Mb5Index = newProfile.MouseButton5LastIndex;
-        MwuIndex = newProfile.MouseWheelUpLastIndex;
-        MwdIndex = newProfile.MouseWheelDownLastIndex;
-        MwlIndex = newProfile.MouseWheelLeftLastIndex;
-        MwrIndex = newProfile.MouseWheelRightLastIndex;
     }
 
     private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)
@@ -664,25 +490,57 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         }
     }
 
-    private async Task HumanSwitchedComboBoxAsync(IButtonMapping mapping, MouseButton button)
+    private async Task UpdateMouseOnMappingChange(IButtonMapping mapping, MouseButton button, bool force = false)
     {
-        if (!string.IsNullOrWhiteSpace(mapping.Keys))
+        switch (button)
         {
-            return;
+            case MouseButton.MouseButton1:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton1, force);
+                _profilesService.CurrentProfile.MouseButton1 = mapping;
+                break;
+            case MouseButton.MouseButton2:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton2, force);
+                _profilesService.CurrentProfile.MouseButton2 = mapping;
+                break;
+            case MouseButton.MouseButton3:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton3, force);
+                _profilesService.CurrentProfile.MouseButton3 = mapping;
+                break;
+            case MouseButton.MouseButton4:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton4, force);
+                _profilesService.CurrentProfile.MouseButton4 = mapping;
+                break;
+            case MouseButton.MouseButton5:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton5, force);
+                _profilesService.CurrentProfile.MouseButton5 = mapping;
+                break;
+            case MouseButton.MouseWheelUp:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelUp, force);
+                _profilesService.CurrentProfile.MouseWheelUp = mapping;
+                break;
+            case MouseButton.MouseWheelDown:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelDown, force);
+                _profilesService.CurrentProfile.MouseWheelDown = mapping;
+                break;
+            case MouseButton.MouseWheelLeft:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelLeft, force);
+                _profilesService.CurrentProfile.MouseWheelLeft = mapping;
+                break;
+            case MouseButton.MouseWheelRight:
+                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelRight, force);
+                _profilesService.CurrentProfile.MouseWheelRight = mapping;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(button), button, null);
         }
-
-        if (ComputerEditing)
-        {
-            return;
-        }
-
-        ComputerEditing = true;
-        await GetMappingAsync(mapping, button);
-        ComputerEditing = false;
     }
     
-    private async Task GetMappingAsync(IButtonMapping mapping, MouseButton button)
+    private async Task<IButtonMapping> GetMappingAsync(IButtonMapping mapping, MouseButton button, bool force = false)
     {
+        if (!force && mapping is not null && !string.IsNullOrWhiteSpace(mapping.Keys))
+        {
+            return mapping;
+        }
         var newMapping = mapping switch
         {
             SimulatedKeystrokes => await ShowSimulatedKeystrokesDialog(),
@@ -690,9 +548,9 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         };
         if (newMapping is null)
         {
-            return;
+            return null;
         }
-        _profilesService.UpdateCurrentMouse(newMapping, button);
+        // _profilesService.UpdateCurrentMouse(newMapping, button);
         switch (button)
         {
             case MouseButton.MouseButton1:
@@ -703,46 +561,48 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             case MouseButton.MouseButton2:
                 MouseButton2Combo.RemoveAt(newMapping.Index);
                 MouseButton2Combo.Insert(newMapping.Index, newMapping);
-                Mb2Index = newMapping.Index;
+                // Mb2Index = newMapping.Index;
                 break;
             case MouseButton.MouseButton3:
                 MouseButton3Combo.RemoveAt(newMapping.Index);
                 MouseButton3Combo.Insert(newMapping.Index, newMapping);
-                Mb3Index = newMapping.Index;
+                // Mb3Index = newMapping.Index;
                 break;
             case MouseButton.MouseButton4:
                 MouseButton4Combo.RemoveAt(newMapping.Index);
                 MouseButton4Combo.Insert(newMapping.Index, newMapping);
-                Mb4Index = newMapping.Index;
+                // Mb4Index = newMapping.Index;
                 break;
             case MouseButton.MouseButton5:
                 MouseButton5Combo.RemoveAt(newMapping.Index);
                 MouseButton5Combo.Insert(newMapping.Index, newMapping);
-                Mb5Index = newMapping.Index;
+                // Mb5Index = newMapping.Index;
                 break;
             case MouseButton.MouseWheelUp:
                 MouseWheelUpCombo.RemoveAt(newMapping.Index);
                 MouseWheelUpCombo.Insert(newMapping.Index, newMapping);
-                MwuIndex = newMapping.Index;
+                // MwuIndex = newMapping.Index;
                 break;
             case MouseButton.MouseWheelDown:
                 MouseWheelDownCombo.RemoveAt(newMapping.Index);
                 MouseWheelDownCombo.Insert(newMapping.Index, newMapping);
-                MwdIndex = newMapping.Index;
+                // MwdIndex = newMapping.Index;
                 break;
             case MouseButton.MouseWheelLeft:
                 MouseWheelLeftCombo.RemoveAt(newMapping.Index);
                 MouseWheelLeftCombo.Insert(newMapping.Index, newMapping);
-                MwlIndex = newMapping.Index;
+                // MwlIndex = newMapping.Index;
                 break;
             case MouseButton.MouseWheelRight:
                 MouseWheelRightCombo.RemoveAt(newMapping.Index);
                 MouseWheelRightCombo.Insert(newMapping.Index, newMapping);
-                MwrIndex = newMapping.Index;
+                // MwrIndex = newMapping.Index;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(button), button, null);
         }
+
+        return newMapping;
     }
 
     private async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()

@@ -24,6 +24,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
     public ProfilesService(IUnitOfWorkFactory unitOfWorkFactory)
     {
         _unitOfWorkFactory = unitOfWorkFactory;
+        CheckDefaultProfile();
         LoadProfilesFromDb();
         _currentProfile = this
             .WhenAnyValue(x => x.CurrentProfileIndex)
@@ -41,48 +42,78 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public Profile CurrentProfile => _currentProfile.Value;
     
-    public void UpdateCurrentMouse(IButtonMapping value, MouseButton button)
+    // public void UpdateCurrentMouse(IButtonMapping value, MouseButton button)
+    // {
+    //     switch (button)
+    //     {
+    //         case MouseButton.MouseButton1:
+    //             CurrentProfile.MouseButton1 = value;
+    //             CurrentProfile.MouseButton1LastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseButton2:
+    //             CurrentProfile.MouseButton2 = value;
+    //             CurrentProfile.MouseButton2LastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseButton3:
+    //             CurrentProfile.MouseButton3 = value;
+    //             CurrentProfile.MouseButton3LastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseButton4:
+    //             CurrentProfile.MouseButton4 = value;
+    //             CurrentProfile.MouseButton4LastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseButton5:
+    //             CurrentProfile.MouseButton5 = value;
+    //             CurrentProfile.MouseButton5LastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseWheelUp:
+    //             CurrentProfile.MouseWheelUp = value;
+    //             CurrentProfile.MouseWheelUpLastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseWheelDown:
+    //             CurrentProfile.MouseWheelDown = value;
+    //             CurrentProfile.MouseWheelDownLastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseWheelLeft:
+    //             CurrentProfile.MouseWheelLeft = value;
+    //             CurrentProfile.MouseWheelLeftLastIndex = value.Index;
+    //             break;
+    //         case MouseButton.MouseWheelRight:
+    //             CurrentProfile.MouseWheelRight = value;
+    //             CurrentProfile.MouseWheelRightLastIndex = value.Index;
+    //             break;
+    //         default:
+    //             throw new ArgumentOutOfRangeException(nameof(button), button, null);
+    //     }
+    // }
+    
+    private void CheckDefaultProfile()
     {
-        switch (button)
+        using var unitOfWork = _unitOfWorkFactory.Create();
+        var repository = unitOfWork.GetRepository<Profile>();
+        var model = repository.GetAll();
+        if (model.All(x => x.Name != "Default"))
         {
-            case MouseButton.MouseButton1:
-                CurrentProfile.MouseButton1 = value;
-                CurrentProfile.MouseButton1LastIndex = value.Index;
-                break;
-            case MouseButton.MouseButton2:
-                CurrentProfile.MouseButton2 = value;
-                CurrentProfile.MouseButton2LastIndex = value.Index;
-                break;
-            case MouseButton.MouseButton3:
-                CurrentProfile.MouseButton3 = value;
-                CurrentProfile.MouseButton3LastIndex = value.Index;
-                break;
-            case MouseButton.MouseButton4:
-                CurrentProfile.MouseButton4 = value;
-                CurrentProfile.MouseButton4LastIndex = value.Index;
-                break;
-            case MouseButton.MouseButton5:
-                CurrentProfile.MouseButton5 = value;
-                CurrentProfile.MouseButton5LastIndex = value.Index;
-                break;
-            case MouseButton.MouseWheelUp:
-                CurrentProfile.MouseWheelUp = value;
-                CurrentProfile.MouseWheelUpLastIndex = value.Index;
-                break;
-            case MouseButton.MouseWheelDown:
-                CurrentProfile.MouseWheelDown = value;
-                CurrentProfile.MouseWheelDownLastIndex = value.Index;
-                break;
-            case MouseButton.MouseWheelLeft:
-                CurrentProfile.MouseWheelLeft = value;
-                CurrentProfile.MouseWheelLeftLastIndex = value.Index;
-                break;
-            case MouseButton.MouseWheelRight:
-                CurrentProfile.MouseWheelRight = value;
-                CurrentProfile.MouseWheelRightLastIndex = value.Index;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(button), button, null);
+            repository.Add(new Profile
+            {
+                Checked = true,
+                Name = "Default",
+                Description = "Default description",
+                Process = "*",
+                MatchType = "N/A",
+                ParentClass = "N/A",
+                WindowCaption = "N/A",
+                WindowClass = "N/A",
+                MouseButton1 = new NothingMapping(),
+                MouseButton2 = new NothingMapping(),
+                MouseButton3 = new NothingMapping(),
+                MouseButton4 = new NothingMapping(),
+                MouseButton5 = new NothingMapping(),
+                MouseWheelUp = new NothingMapping(),
+                MouseWheelDown = new NothingMapping(),
+                MouseWheelLeft = new NothingMapping(),
+                MouseWheelRight = new NothingMapping()
+            });
         }
     }
 

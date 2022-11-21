@@ -6,7 +6,6 @@ using Splat;
 using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.KeyboardAndMouse;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl;
 
@@ -25,7 +24,6 @@ internal static class Program
         t.Start();
         var t2 = new Thread(StartKeyboardSimulator);
         t2.Start();
-        CheckForDefaultProfile();
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
         StopKeyboardSimulator();
@@ -42,12 +40,6 @@ internal static class Program
     
     private static void RegisterDependencies(DataAccessConfiguration dataAccessConfiguration) =>
         Bootstrapper.Register(Locator.CurrentMutable, Locator.Current, dataAccessConfiguration);
-
-    private static void CheckForDefaultProfile()
-    {
-        var defaultProfileService = Locator.Current.GetRequiredService<ICheckDefaultProfileService>();
-        defaultProfileService.CheckDefaultProfile();
-    }
 
     private static void StartKeyboardSimulator()
     {
