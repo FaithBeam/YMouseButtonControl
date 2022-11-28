@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -114,6 +116,23 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         private set => this.RaiseAndSetIfChanged(ref _profilesService, value);
     }
 
+    private async Task OnComboIndexChangedAsync(IReadOnlyList<IButtonMapping> list, Action<IButtonMapping> setComboList, int index, Action<IButtonMapping> setMouseMapping)
+    {
+        if (index < 0)
+        {
+            return;
+        }
+        var mapping = list[index];
+        var newMapping = mapping;
+        if (mapping is SimulatedKeystrokes && string.IsNullOrWhiteSpace(mapping.Keys))
+        {
+            newMapping = await ShowSimulatedKeystrokesDialog();
+            setComboList(newMapping);
+        }
+
+        setMouseMapping(newMapping);
+    }
+
     public LayerViewModel(IProfilesService profilesService, IMouseListener mouseListener)
     {
         ProfilesService = profilesService;
@@ -136,7 +155,75 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         this
             .WhenAnyValue(x => x.Mb1Index)
             .DistinctUntilChanged()
-            .
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton1Combo, value =>
+            {
+                MouseButton1Combo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseButton1Combo));
+            }, x, value => _profilesService.CurrentProfile.MouseButton1 = value));
+        this
+            .WhenAnyValue(x => x.Mb2Index)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton2Combo, value =>
+            {
+                MouseButton2Combo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseButton2Combo));
+            }, x, value => _profilesService.CurrentProfile.MouseButton2 = value));
+        this
+            .WhenAnyValue(x => x.Mb3Index)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton3Combo, value =>
+            {
+                MouseButton3Combo[x] = value;
+                Mb3Index = x;
+            }, x, value => _profilesService.CurrentProfile.MouseButton3 = value));
+        this
+            .WhenAnyValue(x => x.Mb4Index)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton4Combo, value =>
+            {
+                MouseButton4Combo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseButton4Combo));
+            }, x, value => _profilesService.CurrentProfile.MouseButton4 = value));
+        this
+            .WhenAnyValue(x => x.Mb5Index)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton5Combo, value =>
+            {
+                MouseButton5Combo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseButton5Combo));
+            }, x, value => _profilesService.CurrentProfile.MouseButton5 = value));
+        this
+            .WhenAnyValue(x => x.MwuIndex)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelUpCombo, value =>
+            {
+                MouseWheelUpCombo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseWheelUpCombo));
+            }, x, value => _profilesService.CurrentProfile.MouseWheelUp = value));
+        this
+            .WhenAnyValue(x => x.MwdIndex)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelDownCombo, value =>
+            {
+                MouseWheelDownCombo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseWheelDownCombo));
+            }, x, value => _profilesService.CurrentProfile.MouseWheelDown = value));
+        this
+            .WhenAnyValue(x => x.MwlIndex)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelLeftCombo, value =>
+            {
+                MouseWheelLeftCombo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseWheelLeftCombo));
+            }, x, value => _profilesService.CurrentProfile.MouseWheelLeft = value));
+        this
+            .WhenAnyValue(x => x.MwrIndex)
+            .DistinctUntilChanged()
+            .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelRightCombo, value =>
+            {
+                MouseWheelRightCombo[x] = value;
+                this.RaisePropertyChanged(nameof(MouseWheelRightCombo));
+            }, x, value => _profilesService.CurrentProfile.MouseWheelRight = value));
 
         // Bool to represent whether the gear settings button is enabled/disabled
         // var mb1ComboSettingCanExecute = this
@@ -297,25 +384,25 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         set => this.RaiseAndSetIfChanged(ref _mouseButton1BackgroundColor, value);
     }
 
-    public AvaloniaList<IButtonMapping> MouseButton1Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public List<IButtonMapping> MouseButton1Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseButton2Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public List<IButtonMapping> MouseButton2Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseButton3Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public ObservableCollection<IButtonMapping> MouseButton3Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseButton4Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public List<IButtonMapping> MouseButton4Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseButton5Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public List<IButtonMapping> MouseButton5Combo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelUpCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
+    public List<IButtonMapping> MouseWheelUpCombo { get; set; } = new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelDownCombo { get; set; } =
+    public List<IButtonMapping> MouseWheelDownCombo { get; set; } =
         new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelLeftCombo { get; set; } =
+    public List<IButtonMapping> MouseWheelLeftCombo { get; set; } =
         new(ButtonMappingFactory.GetButtonMappings());
 
-    public AvaloniaList<IButtonMapping> MouseWheelRightCombo { get; set; } =
+    public List<IButtonMapping> MouseWheelRightCombo { get; set; } =
         new(ButtonMappingFactory.GetButtonMappings());
 
     private void OnSelectedCurrentProfileChanged(Profile newProfile)
@@ -325,54 +412,64 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             MouseButton1Combo[mapping.Index] = mapping;
         }
         MouseButton1Combo[newProfile.MouseButton1.Index] = newProfile.MouseButton1;
+        Mb1Index = newProfile.MouseButton1.Index;
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseButton2Combo[mapping.Index] = mapping;
         }
         MouseButton2Combo[newProfile.MouseButton2.Index] = newProfile.MouseButton2;
+        Mb2Index = newProfile.MouseButton2.Index;
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseButton3Combo[mapping.Index] = mapping;
         }
         MouseButton3Combo[newProfile.MouseButton3.Index] = newProfile.MouseButton3;
+        Mb3Index = newProfile.MouseButton3.Index;
+        // this.RaisePropertyChanged(nameof(MouseButton3Combo));
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseButton4Combo[mapping.Index] = mapping;
         }
         MouseButton4Combo[newProfile.MouseButton4.Index] = newProfile.MouseButton4;
+        Mb4Index = newProfile.MouseButton4.Index;
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseButton5Combo[mapping.Index] = mapping;
         }
         MouseButton5Combo[newProfile.MouseButton5.Index] = newProfile.MouseButton5;
+        Mb5Index = newProfile.MouseButton5.Index;
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseWheelUpCombo[mapping.Index] = mapping;
         }
         MouseWheelUpCombo[newProfile.MouseWheelUp.Index] = newProfile.MouseWheelUp;
+        MwuIndex = newProfile.MouseWheelUp.Index;
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseWheelDownCombo[mapping.Index] = mapping;
         }
         MouseWheelDownCombo[newProfile.MouseWheelDown.Index] = newProfile.MouseWheelDown;
-        
+        MwdIndex = newProfile.MouseWheelDown.Index;
+
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseWheelLeftCombo[mapping.Index] = mapping;
         }
         MouseWheelLeftCombo[newProfile.MouseWheelLeft.Index] = newProfile.MouseWheelLeft;
+        MwlIndex = newProfile.MouseWheelLeft.Index;
         
         foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
         {
             MouseWheelRightCombo[mapping.Index] = mapping;
         }
         MouseWheelRightCombo[newProfile.MouseWheelRight.Index] = newProfile.MouseWheelRight;
+        MwrIndex = newProfile.MouseWheelRight.Index;
     }
 
     private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)
