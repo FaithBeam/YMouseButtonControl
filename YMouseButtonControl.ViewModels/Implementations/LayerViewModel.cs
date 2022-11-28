@@ -158,7 +158,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton1Combo, value =>
             {
                 MouseButton1Combo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseButton1Combo));
+                Mb1Index = x;
             }, x, value => _profilesService.CurrentProfile.MouseButton1 = value));
         this
             .WhenAnyValue(x => x.Mb2Index)
@@ -166,7 +166,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton2Combo, value =>
             {
                 MouseButton2Combo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseButton2Combo));
+                Mb2Index = x;
             }, x, value => _profilesService.CurrentProfile.MouseButton2 = value));
         this
             .WhenAnyValue(x => x.Mb3Index)
@@ -182,7 +182,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton4Combo, value =>
             {
                 MouseButton4Combo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseButton4Combo));
+                Mb4Index = x;
             }, x, value => _profilesService.CurrentProfile.MouseButton4 = value));
         this
             .WhenAnyValue(x => x.Mb5Index)
@@ -190,7 +190,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseButton5Combo, value =>
             {
                 MouseButton5Combo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseButton5Combo));
+                Mb5Index = x;
             }, x, value => _profilesService.CurrentProfile.MouseButton5 = value));
         this
             .WhenAnyValue(x => x.MwuIndex)
@@ -198,7 +198,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelUpCombo, value =>
             {
                 MouseWheelUpCombo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseWheelUpCombo));
+                MwuIndex = x;
             }, x, value => _profilesService.CurrentProfile.MouseWheelUp = value));
         this
             .WhenAnyValue(x => x.MwdIndex)
@@ -206,7 +206,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelDownCombo, value =>
             {
                 MouseWheelDownCombo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseWheelDownCombo));
+                MwdIndex = x;
             }, x, value => _profilesService.CurrentProfile.MouseWheelDown = value));
         this
             .WhenAnyValue(x => x.MwlIndex)
@@ -214,7 +214,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelLeftCombo, value =>
             {
                 MouseWheelLeftCombo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseWheelLeftCombo));
+                MwlIndex = x;
             }, x, value => _profilesService.CurrentProfile.MouseWheelLeft = value));
         this
             .WhenAnyValue(x => x.MwrIndex)
@@ -222,7 +222,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(async x => await OnComboIndexChangedAsync(MouseWheelRightCombo, value =>
             {
                 MouseWheelRightCombo[x] = value;
-                this.RaisePropertyChanged(nameof(MouseWheelRightCombo));
+                MwrIndex = x;
             }, x, value => _profilesService.CurrentProfile.MouseWheelRight = value));
 
         // Bool to represent whether the gear settings button is enabled/disabled
