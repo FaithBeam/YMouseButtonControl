@@ -24,7 +24,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton1Combo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseButton1}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton1BackgroundColor}" >
@@ -38,7 +38,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton2Combo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseButton2}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton2BackgroundColor}"/>
@@ -51,7 +51,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2" 
                               Items="{Binding MouseButton3Combo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseButton3}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton3BackgroundColor}" />
@@ -64,7 +64,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton4Combo}"
-                              SelectedItem="{Binding Mb4}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton4BackgroundColor}"/>
@@ -77,7 +77,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseButton5Combo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseButton5}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding MouseButton5BackgroundColor}"/>
@@ -90,7 +90,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelUpCombo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseWheelUp}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelUpBackgroundColor}"/>
@@ -103,7 +103,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelDownCombo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseWheelDown}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelDownBackgroundColor}"/>
@@ -116,7 +116,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelLeftCombo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseWheelLeft}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelLeftBackgroundColor}"/>
@@ -129,7 +129,7 @@
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
                               Items="{Binding MouseWheelRightCombo}"
-                              SelectedItem="{Binding ProfilesService.CurrentProfile.MouseWheelRight}"
+                              SelectedIndex=""
                               HorizontalAlignment="Stretch"
                               Width="275"
                               Background="{Binding WheelRightBackgroundColor}"/>

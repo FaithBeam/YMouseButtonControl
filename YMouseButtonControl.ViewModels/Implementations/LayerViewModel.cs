@@ -26,6 +26,16 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private IProfilesService _profilesService;
     private readonly IMouseListener _mouseListener;
 
+    private int _mb1Index;
+    private int _mb2Index;
+    private int _mb3Index;
+    private int _mb4Index;
+    private int _mb5Index;
+    private int _mwuIndex;
+    private int _mwdIndex;
+    private int _mwlIndex;
+    private int _mwrIndex;
+
     private IBrush _mouseButton1BackgroundColor = Brushes.White;
     private IBrush _mouseButton2BackgroundColor = Brushes.White;
     private IBrush _mouseButton3BackgroundColor = Brushes.White;
@@ -41,14 +51,60 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private readonly Timer _wheelLeftTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelRightTimer = new() { Interval = 200, AutoReset = false };
 
-    private IButtonMapping _mb4;
-
-    public IButtonMapping Mb4
+    public int Mb1Index
     {
-        get => _mb4;
-        set => this.RaiseAndSetIfChanged(ref _mb4, value);
+        get => _mb1Index;
+        set => this.RaiseAndSetIfChanged(ref _mb1Index, value);
+    }
+    
+    public int Mb2Index
+    {
+        get => _mb2Index;
+        set => this.RaiseAndSetIfChanged(ref _mb2Index, value);
+    }
+    
+    public int Mb3Index
+    {
+        get => _mb3Index;
+        set => this.RaiseAndSetIfChanged(ref _mb3Index, value);
+    }
+    
+    public int Mb4Index
+    {
+        get => _mb4Index;
+        set => this.RaiseAndSetIfChanged(ref _mb4Index, value);
+    }
+    
+    public int Mb5Index
+    {
+        get => _mb5Index;
+        set => this.RaiseAndSetIfChanged(ref _mb5Index, value);
+    }
+    
+    public int MwuIndex
+    {
+        get => _mwuIndex;
+        set => this.RaiseAndSetIfChanged(ref _mwuIndex, value);
+    }
+    
+    public int MwdIndex
+    {
+        get => _mwdIndex;
+        set => this.RaiseAndSetIfChanged(ref _mwdIndex, value);
+    }
+    
+    public int MwlIndex
+    {
+        get => _mwlIndex;
+        set => this.RaiseAndSetIfChanged(ref _mwlIndex, value);
     }
 
+    public int MwrIndex
+    {
+        get => _mwrIndex;
+        set => this.RaiseAndSetIfChanged(ref _mwrIndex, value);
+    }
+    
     public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>
         ShowSimulatedKeystrokesPickerInteraction { get; }
 
@@ -77,92 +133,10 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         ShowSimulatedKeystrokesPickerInteraction =
             new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
 
-        Mb4 = _profilesService.CurrentProfile.MouseButton4;
-        
         this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton1)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton1));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton2)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton2));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton3)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton3));
-        this
-            .WhenAnyValue(x => x.Mb4)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton4));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseButton5)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseButton5));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelUp)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelUp));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelDown)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelDown));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelLeft)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelLeft));
-        this
-            .WhenAnyValue(x => x.ProfilesService.CurrentProfile.MouseWheelRight)
-            .WhereNotNull()
-            .Subscribe(async x => await UpdateMouseOnMappingChange(x, MouseButton.MouseWheelRight));
-
-        // this
-        //     .WhenAnyValue(x => x.Mb1)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Where(_ => !ComputerEditing)
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton1));
-        // this
-        //     .WhenAnyValue(x => x.Mb2)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Where(_ => !ComputerEditing)
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton2));
-        // this
-        //     .WhenAnyValue(x => x.Mb3)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton3));
-        // this
-        //     .WhenAnyValue(x => x.Mb4)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton4));
-        // this
-        //     .WhenAnyValue(x => x.Mb5)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseButton5));
-        // this
-        //     .WhenAnyValue(x => x.Mwu)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelUp));
-        // this
-        //     .WhenAnyValue(x => x.Mwd)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelDown));
-        // this
-        //     .WhenAnyValue(x => x.Mwl)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelLeft));
-        // this
-        //     .WhenAnyValue(x => x.Mwr)
-        //     .DistinctUntilChanged()
-        //     .WhereNotNull()
-        //     .Subscribe(async x => await HumanSwitchedComboBoxAsync(x, MouseButton.MouseWheelRight));
+            .WhenAnyValue(x => x.Mb1Index)
+            .DistinctUntilChanged()
+            .
 
         // Bool to represent whether the gear settings button is enabled/disabled
         // var mb1ComboSettingCanExecute = this
