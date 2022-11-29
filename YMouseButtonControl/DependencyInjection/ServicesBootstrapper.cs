@@ -7,8 +7,6 @@ using YMouseButtonControl.Services.Environment.Enums;
 using YMouseButtonControl.Services.Environment.Interfaces;
 using YMouseButtonControl.Services.MacOS.Implementations;
 using YMouseButtonControl.Services.Windows.Implementations;
-using YMouseButtonControl.ViewModels.Services.Implementations;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -25,11 +23,6 @@ public static class ServicesBootstrapper
     {
         services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
             resolver.GetRequiredService<IUnitOfWorkFactory>()
-        ));
-        services.RegisterLazySingleton<ICurrentProfileOperationsMediator>(() => new CurrentProfileOperationsMediator());
-        services.Register<ICheckDefaultProfileService>(() => new CheckDefaultProfileService(
-            resolver.GetRequiredService<IUnitOfWorkFactory>(),
-            resolver.GetRequiredService<ICurrentProfileOperationsMediator>()
         ));
     }
     

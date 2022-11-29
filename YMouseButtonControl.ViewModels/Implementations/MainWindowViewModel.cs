@@ -2,8 +2,8 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using ReactiveUI;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.ViewModels.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
@@ -12,8 +12,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private IProfilesService _profilesService;
-    private ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
+    private IProfilesService _ps;
     private IProfilesListViewModel _profilesListViewModel;
     private bool _canApply;
     private string _profileName;
@@ -22,31 +21,26 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     #region Constructor
 
-    public MainWindowViewModel(IProfilesService profilesService, ICurrentProfileOperationsMediator currentProfileOperationsMediator,
-        ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel, IProfilesInformationViewModel profilesInformationViewModel)
+    public MainWindowViewModel(IProfilesService ps,
+        ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel,
+        IProfilesInformationViewModel profilesInformationViewModel)
     {
         _profilesListViewModel = profilesListViewModel;
-        _profilesService = profilesService;
-        _currentProfileOperationsMediator = currentProfileOperationsMediator;
+        _ps = ps;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
-        var profilesChanged =
-            Observable.FromEventPattern<ProfilesChangedEventArgs>(_profilesService, "OnProfilesChangedEventHandler");
-        profilesChanged
-            .Subscribe(e =>
-            {
-                CanApply = _profilesService.IsUnsavedChanges();
-            });
         var canApply = this
-            .WhenAnyValue(x => x.CanApply)
+            .WhenAnyValue(x => x._ps.CurrentProfile, x => x._ps.CurrentProfile.MouseButton1,
+                x => x._ps.CurrentProfile.MouseButton2,
+                x => x._ps.CurrentProfile.MouseButton3, x => x._ps.CurrentProfile.MouseButton4,
+                x => x._ps.CurrentProfile.MouseButton5)
+            .Select(_ => _ps.IsUnsavedChanges())
             .DistinctUntilChanged();
-        ApplyCommand = ReactiveCommand.Create(() =>
-        {
-            _profilesService.ApplyProfiles();
-            CanApply = false;
-        }, canApply);
-        _currentProfileOperationsMediator.CurrentProfileChanged += OnProfileChanged;
-        ProfileName = _currentProfileOperationsMediator?.CurrentProfile?.Name ?? string.Empty;
+        ApplyCommand = ReactiveCommand.Create(() => _ps.ApplyProfiles(), canApply);
+        this
+            .WhenAnyValue(x => x._ps.CurrentProfile)
+            .Subscribe(OnProfileChanged);
+        ProfileName = _ps.CurrentProfile.Name;
     }
 
     #endregion
@@ -54,7 +48,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #region Properties
 
     public IProfilesInformationViewModel ProfilesInformationViewModel { get; }
-    
+
     public IProfilesListViewModel ProfilesListViewModel => _profilesListViewModel;
 
     public ILayerViewModel LayerViewModel { get; }
@@ -75,8 +69,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     #endregion
 
-    private void OnProfileChanged(object sender, SelectedProfileChangedEventArgs e)
+    private void OnProfileChanged(Profile profile)
     {
-        ProfileName = e.NewProfile.Name;
+        ProfileName = profile.Name;
     }
 }

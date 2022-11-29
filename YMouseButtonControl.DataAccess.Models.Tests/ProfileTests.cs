@@ -34,7 +34,6 @@ public class ProfileTests
         {
             Keys = "w",
             State = false,
-            HasBeenRaised = true,
             SimulatedKeystrokesType = new StickyHoldActionType()
         };
         Assert.AreNotEqual(p1, p2);
@@ -43,7 +42,6 @@ public class ProfileTests
         {
             Keys = "w",
             State = false,
-            HasBeenRaised = true,
             SimulatedKeystrokesType = new StickyHoldActionType()
         };
         Assert.AreEqual(p1, p2);
@@ -52,7 +50,6 @@ public class ProfileTests
         {
             Keys = "W",
             State = false,
-            HasBeenRaised = true,
             SimulatedKeystrokesType = new StickyHoldActionType()
         };
         Assert.AreNotEqual(p1, p2);

@@ -4,7 +4,6 @@ using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.ViewModels.Services.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -21,8 +20,7 @@ public static class KeyboardAndMouseBootstrapper
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<IMouseListener>(),
             resolver.GetRequiredService<IKeyboardSimulator>(),
-            resolver.GetRequiredService<IProcessMonitorService>(),
-            resolver.GetRequiredService<ICurrentProfileOperationsMediator>()
+            resolver.GetRequiredService<IProcessMonitorService>()
         ));
     }
 }

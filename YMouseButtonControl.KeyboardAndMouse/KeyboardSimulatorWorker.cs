@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Avalonia.Collections;
+using Avalonia.Remote.Protocol.Input;
+using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using MouseButton = YMouseButtonControl.DataAccess.Models.Enums.MouseButton;
 
 namespace YMouseButtonControl.KeyboardAndMouse;
 
@@ -15,18 +20,36 @@ public class KeyboardSimulatorWorker : IDisposable
     private readonly IProfilesService _profilesService;
     private readonly IKeyboardSimulator _keyboardSimulator;
     private readonly IProcessMonitorService _processMonitorService;
-    private readonly ICurrentProfileOperationsMediator _currentProfileOperationsMediator;
-    private Dictionary<NewMouseButton, List<IButtonMapping>> _hotkeys;
+    private Dictionary<MouseButton, List<IButtonMapping>> _hotkeys;
 
     public KeyboardSimulatorWorker(IProfilesService profilesService, IMouseListener mouseListener,
-        IKeyboardSimulator keyboardSimulator, IProcessMonitorService processMonitorService,
-        ICurrentProfileOperationsMediator currentProfileOperationsMediator)
+        IKeyboardSimulator keyboardSimulator, IProcessMonitorService processMonitorService)
     {
         _profilesService = profilesService;
         _mouseListener = mouseListener;
         _keyboardSimulator = keyboardSimulator;
         _processMonitorService = processMonitorService;
-        _currentProfileOperationsMediator = currentProfileOperationsMediator;
+        this
+            .WhenAnyValue(x => x._profilesService.CurrentProfile)
+            .Subscribe(OnCurrentProfileChanged);
+        this
+            .WhenAnyValue(x => x._profilesService.CurrentProfile.MouseButton1)
+            .Subscribe(x => BuildHotkeys(x, MouseButton.MouseButton1));
+        this
+            .WhenAnyValue(x => x._profilesService.CurrentProfile.MouseButton2)
+            .Subscribe(x => BuildHotkeys(x, MouseButton.MouseButton2));
+        this
+            .WhenAnyValue(x => x._profilesService.CurrentProfile.MouseButton3)
+            .Subscribe(x => BuildHotkeys(x, MouseButton.MouseButton3));
+        this
+            .WhenAnyValue(x => x._profilesService.CurrentProfile.MouseButton4)
+            .Subscribe(x => BuildHotkeys(x, MouseButton.MouseButton4));
+        this
+            .WhenAnyValue(x => x._profilesService.CurrentProfile.MouseButton5)
+            .Subscribe(x => BuildHotkeys(x, MouseButton.MouseButton5));
+        this
+            .WhenAnyValue(x => x._profilesService.Profiles)
+            .Subscribe(OnProfilesChanged);
     }
 
     public void Run()
@@ -48,16 +71,14 @@ public class KeyboardSimulatorWorker : IDisposable
         _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
         _mouseListener.OnMouseWheelEventHandler += OnMouseWheel;
         _processMonitorService.OnProcessChangedEventHandler += OnProcessChanged;
-        _profilesService.OnProfilesChangedEventHandler += OnProfilesChanged;
-        _currentProfileOperationsMediator.CurrentProfileChanged += OnCurrentProfileChanged;
     }
 
-    private void OnCurrentProfileChanged(object sender, SelectedProfileChangedEventArgs e)
+    private void OnCurrentProfileChanged(Profile newProfile)
     {
         BuildHotkeys();
     }
 
-    private void OnProfilesChanged(object sender, ProfilesChangedEventArgs e)
+    private void OnProfilesChanged(AvaloniaList<Profile> profiles)
     {
         BuildHotkeys();
     }
@@ -73,7 +94,6 @@ public class KeyboardSimulatorWorker : IDisposable
         _mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
         _mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
         _processMonitorService.OnProcessChangedEventHandler -= OnProcessChanged;
-        _profilesService.OnProfilesChangedEventHandler -= OnProfilesChanged;
     }
 
     private void OnMousePressed(object sender, NewMouseHookEventArgs e)
@@ -97,28 +117,48 @@ public class KeyboardSimulatorWorker : IDisposable
     {
     }
 
+    private void BuildHotkeys(IButtonMapping mapping, MouseButton button)
+    {
+        _hotkeys[button] = button switch
+        {
+            MouseButton.MouseButton1 => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseButton1).ToList(),
+            MouseButton.MouseButton2 => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseButton2).ToList(),
+            MouseButton.MouseButton3 => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseButton3).ToList(),
+            MouseButton.MouseButton4 => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseButton4).ToList(),
+            MouseButton.MouseButton5 => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseButton5).ToList(),
+            MouseButton.MouseWheelUp => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseWheelUp).ToList(),
+            MouseButton.MouseWheelDown => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseWheelDown).ToList(),
+            MouseButton.MouseWheelLeft => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseWheelLeft).ToList(),
+            MouseButton.MouseWheelRight => _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)).Select(x => x.MouseWheelRight).ToList(),
+            _ => throw new ArgumentOutOfRangeException(nameof(button), button, null)
+        };
+    }
+    
     private void BuildHotkeys()
     {
-        _hotkeys = new Dictionary<NewMouseButton, List<IButtonMapping>>
+        _hotkeys = new Dictionary<MouseButton, List<IButtonMapping>>
         {
-            {NewMouseButton.Button1, new List<IButtonMapping>()},
-            {NewMouseButton.Button2, new List<IButtonMapping>()},
-            {NewMouseButton.Button3, new List<IButtonMapping>()},
-            {NewMouseButton.Button4, new List<IButtonMapping>()},
-            {NewMouseButton.Button5, new List<IButtonMapping>()}
+            {MouseButton.MouseButton1, new List<IButtonMapping>()},
+            {MouseButton.MouseButton2, new List<IButtonMapping>()},
+            {MouseButton.MouseButton3, new List<IButtonMapping>()},
+            {MouseButton.MouseButton4, new List<IButtonMapping>()},
+            {MouseButton.MouseButton5, new List<IButtonMapping>()},
+            {MouseButton.MouseWheelUp, new List<IButtonMapping>()},
+            {MouseButton.MouseWheelDown, new List<IButtonMapping>()},
+            {MouseButton.MouseWheelLeft, new List<IButtonMapping>()},
+            {MouseButton.MouseWheelRight, new List<IButtonMapping>()}
         };
-        foreach (var profile in _profilesService.GetProfiles())
+        foreach (var profile in _profilesService.Profiles.Where(profile => profile.Process == "*" || _processMonitorService.ProcessRunning(profile.Process)))
         {
-            if (profile.Process != "*" && !_processMonitorService.ProcessRunning(profile.Process))
-            {
-                continue;
-            }
-
-            _hotkeys[NewMouseButton.Button1].Add(profile.MouseButton1);
-            _hotkeys[NewMouseButton.Button2].Add(profile.MouseButton2);
-            _hotkeys[NewMouseButton.Button3].Add(profile.MouseButton3);
-            _hotkeys[NewMouseButton.Button4].Add(profile.MouseButton4);
-            _hotkeys[NewMouseButton.Button5].Add(profile.MouseButton5);
+            _hotkeys[MouseButton.MouseButton1].Add(profile.MouseButton1);
+            _hotkeys[MouseButton.MouseButton2].Add(profile.MouseButton2);
+            _hotkeys[MouseButton.MouseButton3].Add(profile.MouseButton3);
+            _hotkeys[MouseButton.MouseButton4].Add(profile.MouseButton4);
+            _hotkeys[MouseButton.MouseButton5].Add(profile.MouseButton5);
+            _hotkeys[MouseButton.MouseWheelUp].Add(profile.MouseButton5);
+            _hotkeys[MouseButton.MouseWheelDown].Add(profile.MouseButton5);
+            _hotkeys[MouseButton.MouseWheelLeft].Add(profile.MouseButton5);
+            _hotkeys[MouseButton.MouseWheelRight].Add(profile.MouseButton5);
         }
     }
 }

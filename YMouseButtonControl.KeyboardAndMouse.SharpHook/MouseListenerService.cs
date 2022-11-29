@@ -3,6 +3,7 @@ using SharpHook;
 using SharpHook.Native;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using MouseButton = YMouseButtonControl.DataAccess.Models.Enums.MouseButton;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook;
 
@@ -50,13 +51,13 @@ public class MouseListener : IMouseListener
 
     private void ConvertMousePressedEvent(object sender, MouseHookEventArgs e)
     {
-        var args = new NewMouseHookEventArgs((NewMouseButton)e.Data.Button);
+        var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button-1));
         OnMousePressed(args);
     }
 
     private void ConvertMouseReleasedEvent(object sender, MouseHookEventArgs e)
     {
-        var args = new NewMouseHookEventArgs((NewMouseButton)e.Data.Button);
+        var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button-1));
         OnMouseReleased(args);
     }
 
