@@ -7,6 +7,7 @@ public interface IButtonMapping
     public string Description { get; }
     public string Keys { get; }
     public bool State { get; set; }
+    public bool CanRaiseDialog { get; }
     
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 }
