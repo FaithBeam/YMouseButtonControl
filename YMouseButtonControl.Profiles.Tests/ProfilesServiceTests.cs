@@ -101,6 +101,21 @@ public class ProfilesServiceTests
     }
 
     [TestMethod]
+    public void TestRemoveProfile()
+    {
+        var defaultProfile = _profilesService.Profiles[0];
+        var newProfile = new Profile { Name = "NewProfile" };
+        _profilesService!.AddProfile(newProfile);
+        _profilesService.CurrentProfileIndex = 1;
+        var removedProfile = _profilesService!.CurrentProfile;
+        
+        _profilesService!.RemoveProfile(_profilesService.CurrentProfile);
+        CollectionAssert.DoesNotContain(_profilesService.Profiles, removedProfile);
+
+        Assert.AreEqual(defaultProfile, _profilesService.CurrentProfile);
+    }
+
+    [TestMethod]
     public void TestGetProfiles()
     {
         CollectionAssert.AreEquivalent(_profilesService!.GetProfiles().ToList(), new List<Profile>{new(){Name = "Default"}});
@@ -120,7 +135,6 @@ public class ProfilesServiceTests
     public void TestApplyProfiles()
     {
         var newProfile = new Profile { Name = "NewProfile" };
-        var newList = new List<Profile> { newProfile };
         _profilesService!.AddProfile(newProfile);
         _profilesService.ApplyProfiles();
         _repoMock!.Verify(x => x.ApplyAction(It.IsAny<IEnumerable<Profile>>()), Times.Once());

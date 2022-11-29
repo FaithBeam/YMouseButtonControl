@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Collections;
 using Avalonia.Remote.Protocol.Input;
@@ -78,7 +79,7 @@ public class KeyboardSimulatorWorker : IDisposable
         BuildHotkeys();
     }
 
-    private void OnProfilesChanged(AvaloniaList<Profile> profiles)
+    private void OnProfilesChanged(ObservableCollection<Profile> profiles)
     {
         BuildHotkeys();
     }
