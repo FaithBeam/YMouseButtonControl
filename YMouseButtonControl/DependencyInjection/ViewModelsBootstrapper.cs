@@ -2,9 +2,11 @@ using Splat;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
+using YMouseButtonControl.ViewModels;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
+using YMouseButtonControl.ViewModels.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -24,9 +26,11 @@ public static class ViewModelsBootstrapper
         services.RegisterLazySingleton<IProfilesInformationViewModel>(() => new ProfilesInformationViewModel(
             resolver.GetRequiredService<IProfilesService>()
         ));
+        services.RegisterLazySingleton<IShowSimulatedKeystrokesDialogService>(() => new ShowSimulatedKeystrokesDialogService());
         services.RegisterLazySingleton<ILayerViewModel>(() => new LayerViewModel(
             resolver.GetRequiredService<IProfilesService>(),
-            resolver.GetRequiredService<IMouseListener>()
+            resolver.GetRequiredService<IMouseListener>(),
+            resolver.GetRequiredService<IShowSimulatedKeystrokesDialogService>()
         ));
         services.RegisterLazySingleton<IProfilesListViewModel>(() => new ProfilesListViewModel(
             resolver.GetRequiredService<IProfilesService>(),

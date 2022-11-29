@@ -105,14 +105,13 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         set => this.RaiseAndSetIfChanged(ref _mwrIndex, value);
     }
     
-    public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>
-        ShowSimulatedKeystrokesPickerInteraction { get; }
-
     public IProfilesService ProfilesService
     {
         get => _profilesService;
         private set => this.RaiseAndSetIfChanged(ref _profilesService, value);
     }
+
+    public IShowSimulatedKeystrokesDialogService ShowSimulatedKeystrokesDialogService { get; }
 
     private async Task OnComboIndexChangedAsync(IReadOnlyList<IButtonMapping> list, Action<IButtonMapping> setComboList, int index, Action<IButtonMapping> setMouseMapping, bool settingsGearClicked = false)
     {
@@ -121,10 +120,18 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             return;
         }
         var mapping = list[index];
+        if (mapping is null)
+        {
+            return;
+        }
         var newMapping = mapping;
         if (mapping is SimulatedKeystrokes && (string.IsNullOrWhiteSpace(mapping.Keys) || settingsGearClicked))
         {
-            newMapping = await ShowSimulatedKeystrokesDialog();
+            newMapping = await ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesDialog();
+            if (newMapping is null)
+            {
+                return;
+            }
             setComboList(newMapping);
         }
 
@@ -136,10 +143,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         return mapping is not null && mapping.CanRaiseDialog && !string.IsNullOrWhiteSpace(mapping.Keys);
     }
     
-    public LayerViewModel(IProfilesService profilesService, IMouseListener mouseListener)
+    public LayerViewModel(IProfilesService profilesService, IMouseListener mouseListener, IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService)
     {
-        ShowSimulatedKeystrokesPickerInteraction =
-            new Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel>();
         ProfilesService = profilesService;
         this
             .WhenAnyValue(x => x._profilesService.CurrentProfile)
@@ -154,6 +159,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _wheelDownTimer.Elapsed += delegate { WheelDownBackgroundColor = Brushes.White; };
         _wheelLeftTimer.Elapsed += delegate { WheelLeftBackgroundColor = Brushes.White; };
         _wheelRightTimer.Elapsed += delegate { WheelRightBackgroundColor = Brushes.White; };
+        ShowSimulatedKeystrokesDialogService = showSimulatedKeystrokesDialogService;
 
         this
             .WhenAnyValue(x => x.Mb1Index)
@@ -597,20 +603,5 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             default:
                 throw new ArgumentOutOfRangeException();
         }
-    }
-
-    private async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()
-    {
-        var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(new SimulatedKeystrokesDialogViewModel());
-        if (result is null)
-        {
-            return null;
-        }
-
-        return new SimulatedKeystrokes()
-        {
-            Keys = result.CustomKeys,
-            SimulatedKeystrokesType = result.SimulatedKeystrokesType,
-        };
     }
 }

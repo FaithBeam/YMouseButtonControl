@@ -20,7 +20,7 @@ public partial class LayerView : ReactiveUserControl<LayerViewModel>
 
         this.WhenActivated(d =>
         {
-            d(ViewModel.ShowSimulatedKeystrokesPickerInteraction.RegisterHandler(ShowSimulateKeystrokesPicker));
+            d(ViewModel.ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesPickerInteraction.RegisterHandler(ShowSimulateKeystrokesPicker));
         });
     }
 

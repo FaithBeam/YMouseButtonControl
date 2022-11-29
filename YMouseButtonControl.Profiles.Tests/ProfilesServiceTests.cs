@@ -1,6 +1,5 @@
 ﻿using Moq;
 using Moq.AutoMock;
-using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Repositories;
 using YMouseButtonControl.DataAccess.UnitOfWork;
@@ -54,7 +53,7 @@ public class ProfilesServiceTests
     [TestMethod]
     public void TestChangingCurrentProfiles()
     {
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseButton1);
+        _profilesService!.CurrentProfile.MouseButton1 = new DisabledMapping();
         var newProfile = new Profile();
         _profilesService.AddProfile(newProfile);
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton1 is DisabledMapping);
@@ -65,31 +64,31 @@ public class ProfilesServiceTests
     [TestMethod]
     public void TestUpdateMouseButton()
     {
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseButton1);
+        _profilesService!.CurrentProfile.MouseButton1 = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton1 is DisabledMapping);
-        
-        _profilesService.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseButton2);
+
+        _profilesService.CurrentProfile.MouseButton2 = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton2 is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseButton3);
+
+        _profilesService!.CurrentProfile.MouseButton3 = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton3 is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseButton4);
+
+        _profilesService!.CurrentProfile.MouseButton4 = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton4 is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseButton5);
+
+        _profilesService!.CurrentProfile.MouseButton5 = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton5 is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseWheelUp);
+
+        _profilesService!.CurrentProfile.MouseWheelUp = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseWheelUp is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseWheelDown);
+
+        _profilesService!.CurrentProfile.MouseWheelDown = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseWheelDown is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseWheelLeft);
+
+        _profilesService!.CurrentProfile.MouseWheelLeft = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseWheelLeft is DisabledMapping);
-        
-        _profilesService!.UpdateCurrentMouse(new DisabledMapping(), MouseButton.MouseWheelRight);
+
+        _profilesService!.CurrentProfile.MouseWheelRight = new DisabledMapping();
         Assert.IsTrue(_profilesService.CurrentProfile.MouseWheelRight is DisabledMapping);
     }
 
@@ -113,8 +112,7 @@ public class ProfilesServiceTests
         // Default test, should be no differences
         Assert.IsFalse(_profilesService!.IsUnsavedChanges());
 
-        var mapping = new DisabledMapping();
-        _profilesService.UpdateCurrentMouse(mapping, MouseButton.MouseButton1);
+        _profilesService.CurrentProfile.MouseButton1 = new DisabledMapping();
         Assert.IsTrue(_profilesService.IsUnsavedChanges());
     }
 
