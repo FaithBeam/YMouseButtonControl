@@ -5,9 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using Avalonia.Collections;
 using Avalonia.Media;
-using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Factories;
@@ -599,121 +597,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             default:
                 throw new ArgumentOutOfRangeException();
         }
-    }
-
-    private async Task UpdateMouseOnMappingChange(IButtonMapping mapping, MouseButton button, bool force = false)
-    {
-        switch (button)
-        {
-            case MouseButton.MouseButton1:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton1, force);
-                _profilesService.CurrentProfile.MouseButton1 = mapping;
-                break;
-            case MouseButton.MouseButton2:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton2, force);
-                _profilesService.CurrentProfile.MouseButton2 = mapping;
-                break;
-            case MouseButton.MouseButton3:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton3, force);
-                _profilesService.CurrentProfile.MouseButton3 = mapping;
-                break;
-            case MouseButton.MouseButton4:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton4, force);
-                _profilesService.CurrentProfile.MouseButton4 = mapping;
-                break;
-            case MouseButton.MouseButton5:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseButton5, force);
-                _profilesService.CurrentProfile.MouseButton5 = mapping;
-                break;
-            case MouseButton.MouseWheelUp:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelUp, force);
-                _profilesService.CurrentProfile.MouseWheelUp = mapping;
-                break;
-            case MouseButton.MouseWheelDown:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelDown, force);
-                _profilesService.CurrentProfile.MouseWheelDown = mapping;
-                break;
-            case MouseButton.MouseWheelLeft:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelLeft, force);
-                _profilesService.CurrentProfile.MouseWheelLeft = mapping;
-                break;
-            case MouseButton.MouseWheelRight:
-                mapping = await GetMappingAsync(mapping, MouseButton.MouseWheelRight, force);
-                _profilesService.CurrentProfile.MouseWheelRight = mapping;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(button), button, null);
-        }
-    }
-    
-    private async Task<IButtonMapping> GetMappingAsync(IButtonMapping mapping, MouseButton button, bool force = false)
-    {
-        if (!force && mapping is not null && !string.IsNullOrWhiteSpace(mapping.Keys))
-        {
-            return mapping;
-        }
-        var newMapping = mapping switch
-        {
-            SimulatedKeystrokes => await ShowSimulatedKeystrokesDialog(),
-            _ => mapping
-        };
-        if (newMapping is null)
-        {
-            return null;
-        }
-        // _profilesService.UpdateCurrentMouse(newMapping, button);
-        switch (button)
-        {
-            case MouseButton.MouseButton1:
-                MouseButton1Combo.RemoveAt(newMapping.Index);
-                MouseButton1Combo.Insert(newMapping.Index, newMapping);
-                // Mb1Index = newMapping.Index;
-                break;
-            case MouseButton.MouseButton2:
-                MouseButton2Combo.RemoveAt(newMapping.Index);
-                MouseButton2Combo.Insert(newMapping.Index, newMapping);
-                // Mb2Index = newMapping.Index;
-                break;
-            case MouseButton.MouseButton3:
-                MouseButton3Combo.RemoveAt(newMapping.Index);
-                MouseButton3Combo.Insert(newMapping.Index, newMapping);
-                // Mb3Index = newMapping.Index;
-                break;
-            case MouseButton.MouseButton4:
-                MouseButton4Combo.RemoveAt(newMapping.Index);
-                MouseButton4Combo.Insert(newMapping.Index, newMapping);
-                // Mb4Index = newMapping.Index;
-                break;
-            case MouseButton.MouseButton5:
-                MouseButton5Combo.RemoveAt(newMapping.Index);
-                MouseButton5Combo.Insert(newMapping.Index, newMapping);
-                // Mb5Index = newMapping.Index;
-                break;
-            case MouseButton.MouseWheelUp:
-                MouseWheelUpCombo.RemoveAt(newMapping.Index);
-                MouseWheelUpCombo.Insert(newMapping.Index, newMapping);
-                // MwuIndex = newMapping.Index;
-                break;
-            case MouseButton.MouseWheelDown:
-                MouseWheelDownCombo.RemoveAt(newMapping.Index);
-                MouseWheelDownCombo.Insert(newMapping.Index, newMapping);
-                // MwdIndex = newMapping.Index;
-                break;
-            case MouseButton.MouseWheelLeft:
-                MouseWheelLeftCombo.RemoveAt(newMapping.Index);
-                MouseWheelLeftCombo.Insert(newMapping.Index, newMapping);
-                // MwlIndex = newMapping.Index;
-                break;
-            case MouseButton.MouseWheelRight:
-                MouseWheelRightCombo.RemoveAt(newMapping.Index);
-                MouseWheelRightCombo.Insert(newMapping.Index, newMapping);
-                // MwrIndex = newMapping.Index;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(button), button, null);
-        }
-
-        return newMapping;
     }
 
     private async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()
