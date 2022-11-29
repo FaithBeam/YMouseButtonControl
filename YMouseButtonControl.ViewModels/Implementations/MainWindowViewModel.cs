@@ -33,7 +33,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             .WhenAnyValue(x => x._ps.CurrentProfile, x => x._ps.CurrentProfile.MouseButton1,
                 x => x._ps.CurrentProfile.MouseButton2,
                 x => x._ps.CurrentProfile.MouseButton3, x => x._ps.CurrentProfile.MouseButton4,
-                x => x._ps.CurrentProfile.MouseButton5)
+                x => x._ps.CurrentProfile.MouseButton5, x => x._ps.Profiles)
             .Select(_ => _ps.IsUnsavedChanges())
             .DistinctUntilChanged();
         ApplyCommand = ReactiveCommand.Create(() => _ps.ApplyProfiles(), canApply);

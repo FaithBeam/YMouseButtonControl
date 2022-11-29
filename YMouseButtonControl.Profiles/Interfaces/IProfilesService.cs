@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 
@@ -12,7 +13,7 @@ public interface IProfilesService
     IObservable<IReactivePropertyChangedEventArgs<IReactiveObject>> Changing { get; }
     IObservable<IReactivePropertyChangedEventArgs<IReactiveObject>> Changed { get; }
     IObservable<Exception> ThrownExceptions { get; }
-    ObservableCollection<Profile> Profiles { get; }
+    AvaloniaList<Profile> Profiles { get; }
     int CurrentProfileIndex { get; set; }
     Profile CurrentProfile { get; }
     IDisposable SuppressChangeNotifications();

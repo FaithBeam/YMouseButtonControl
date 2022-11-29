@@ -13,7 +13,7 @@ namespace YMouseButtonControl.Profiles.Implementations;
 public class ProfilesService : ReactiveObject, IProfilesService
 {
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
-    private ObservableCollection<Profile> _profiles;
+    private AvaloniaList<Profile> _profiles;
     private int _currentProfileIndex;
     private readonly ObservableAsPropertyHelper<Profile> _currentProfile;
 
@@ -28,7 +28,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
             .ToProperty(this, x => x.CurrentProfile);
     }
 
-    public ObservableCollection<Profile> Profiles => _profiles;
+    public AvaloniaList<Profile> Profiles => _profiles;
 
     public int CurrentProfileIndex
     {
@@ -73,7 +73,8 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return _profiles.Any(inMemProfile => !dbProfiles.Contains(inMemProfile));
+        return _profiles.Any(inMemProfile => !dbProfiles.Contains(inMemProfile)) ||
+               dbProfiles.Any(x => !_profiles.Contains(x));
     }
     
     public IEnumerable<Profile> GetProfiles()
@@ -88,7 +89,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public void RemoveProfile(Profile profile)
     {
-        _profiles.Remove(profile);
+        Profiles.Remove(profile);
         CurrentProfileIndex = 0;
     }
 
@@ -104,6 +105,6 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
-        _profiles = new ObservableCollection<Profile>(model);
+        _profiles = new AvaloniaList<Profile>(model);
     }
 }

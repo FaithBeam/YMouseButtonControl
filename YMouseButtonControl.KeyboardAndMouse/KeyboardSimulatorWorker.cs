@@ -79,7 +79,7 @@ public class KeyboardSimulatorWorker : IDisposable
         BuildHotkeys();
     }
 
-    private void OnProfilesChanged(ObservableCollection<Profile> profiles)
+    private void OnProfilesChanged(AvaloniaList<Profile> profiles)
     {
         BuildHotkeys();
     }
