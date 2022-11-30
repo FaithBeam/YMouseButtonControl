@@ -10,6 +10,8 @@ namespace YMouseButtonControl.Services.MacOS.Implementations;
 
 public class MacOSProcessMonitorService : IProcessMonitorService
 {
+    private readonly object _processLockObject = new();
+    
     public void Dispose()
     {
         return;
@@ -19,20 +21,26 @@ public class MacOSProcessMonitorService : IProcessMonitorService
     
     public IEnumerable<ProcessModel> GetProcesses()
     {
-        return Process
-            .GetProcesses()
-            .Where(x => !string.IsNullOrWhiteSpace(x.ProcessName))
-            .Select(x => new ProcessModel
-            {
-                ProcessId = (uint) x.Id,
-                ProcessName = x.ProcessName,
-                WindowTitle = x.MainWindowTitle
-            })
-            .OrderBy(x => x.ProcessName);
+        lock (_processLockObject)
+        {
+            return Process
+                .GetProcesses()
+                .Where(x => !string.IsNullOrWhiteSpace(x.ProcessName))
+                .Select(x => new ProcessModel
+                {
+                    ProcessId = (uint) x.Id,
+                    ProcessName = x.ProcessName,
+                    WindowTitle = x.MainWindowTitle
+                })
+                .OrderBy(x => x.ProcessName);       
+        }
     }
 
     public bool ProcessRunning(string process)
     {
-        return Process.GetProcessesByName(process).Any();
+        lock (_processLockObject)
+        {
+            return Process.GetProcessesByName(process).Any();
+        }
     }
 }
