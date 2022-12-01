@@ -12,7 +12,7 @@ namespace YMouseButtonControl.ViewModels.Implementations;
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
     private IProfilesService _profilesService;
-    private ProcessSelectorDialogViewModel _processSelectorDialogViewModel;
+    private readonly ProcessSelectorDialogViewModel _processSelectorDialogViewModel;
 
     public ICommand AddButtonCommand { get; }
     public ICommand RemoveButtonCommand { get; }

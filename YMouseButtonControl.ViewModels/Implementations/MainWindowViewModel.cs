@@ -12,8 +12,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private IProfilesService _ps;
-    private IProfilesListViewModel _profilesListViewModel;
+    private readonly IProfilesService _ps;
+    private readonly IProfilesListViewModel _profilesListViewModel;
     private bool _canApply;
     private string _profileName;
 

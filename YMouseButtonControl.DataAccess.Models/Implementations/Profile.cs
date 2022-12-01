@@ -14,6 +14,13 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
         private IButtonMapping _mwd = new NothingMapping();
         private IButtonMapping _mwl = new NothingMapping();
         private IButtonMapping _mwr = new NothingMapping();
+
+        private string _description = "N/A";
+        private string _windowCaption = "N/A";
+        private string _process = "N/A";
+        private string _windowClass = "N/A";
+        private string _parentClass = "N/A";
+        private string _matchType = "N/A";
         
         public int Id { get; set; }
         public bool Checked { get; set; }
@@ -74,17 +81,41 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
             set => this.RaiseAndSetIfChanged(ref _mwr, value);
         }
 
-        public string Description { get; set; } = "N/A";
+        public string Description
+        {
+            get => _description;
+            set => this.RaiseAndSetIfChanged(ref _description, value);
+        }
 
-        public string WindowCaption { get; set; } = "N/A";
+        public string WindowCaption
+        {
+            get => _windowCaption;
+            set => this.RaiseAndSetIfChanged(ref _windowCaption, value);
+        }
 
-        public string Process { get; set; } = "N/A";
+        public string Process
+        {
+            get => _process;
+            set => this.RaiseAndSetIfChanged(ref _process, value);
+        }
 
-        public string WindowClass { get; set; } = "N/A";
+        public string WindowClass
+        {
+            get => _windowClass;
+            set => this.RaiseAndSetIfChanged(ref _windowClass, value);
+        }
 
-        public string ParentClass { get; set; } = "N/A";
+        public string ParentClass
+        {
+            get => _parentClass;
+            set => this.RaiseAndSetIfChanged(ref _parentClass, value);
+        }
 
-        public string MatchType { get; set; } = "N/A";
+        public string MatchType
+        {
+            get => _matchType;
+            set => this.RaiseAndSetIfChanged(ref _matchType, value);
+        }
 
         public bool Equals(Profile? other)
         {
