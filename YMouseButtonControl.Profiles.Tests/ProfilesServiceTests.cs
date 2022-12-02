@@ -23,8 +23,6 @@ public class ProfilesServiceTests
         _repoMock = new Mock<IRepository<Profile>>();
         _repoMock
             .Setup(x => x.GetAll())
-            // Return a function that creates a new list of profile because edits to the profile in the profile service,
-            // will edit this profile as well.
             .Returns(() => new List<Profile> {new() {Name = "Default"}});
         _uowMock = new Mock<IUnitOfWork>();
         _uowMock
