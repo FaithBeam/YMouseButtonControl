@@ -43,29 +43,28 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
-        if (model.All(x => x.Name != "Default"))
+        if (model.Any(x => x.Name == "Default")) return;
+        var defaultProfile = new Profile
         {
-            repository.Add(new Profile
-            {
-                Checked = true,
-                Name = "Default",
-                Description = "Default description",
-                Process = "*",
-                MatchType = "N/A",
-                ParentClass = "N/A",
-                WindowCaption = "N/A",
-                WindowClass = "N/A",
-                MouseButton1 = new NothingMapping(),
-                MouseButton2 = new NothingMapping(),
-                MouseButton3 = new NothingMapping(),
-                MouseButton4 = new NothingMapping(),
-                MouseButton5 = new NothingMapping(),
-                MouseWheelUp = new NothingMapping(),
-                MouseWheelDown = new NothingMapping(),
-                MouseWheelLeft = new NothingMapping(),
-                MouseWheelRight = new NothingMapping()
-            });
-        }
+            Checked = true,
+            Name = "Default",
+            Description = "Default description",
+            Process = "*",
+            MatchType = "N/A",
+            ParentClass = "N/A",
+            WindowCaption = "N/A",
+            WindowClass = "N/A",
+            MouseButton1 = new NothingMapping(),
+            MouseButton2 = new NothingMapping(),
+            MouseButton3 = new NothingMapping(),
+            MouseButton4 = new NothingMapping(),
+            MouseButton5 = new NothingMapping(),
+            MouseWheelUp = new NothingMapping(),
+            MouseWheelDown = new NothingMapping(),
+            MouseWheelLeft = new NothingMapping(),
+            MouseWheelRight = new NothingMapping()
+        };
+        repository.Add(defaultProfile);
     }
 
     public bool IsUnsavedChanges()

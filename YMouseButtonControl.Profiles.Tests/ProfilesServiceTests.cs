@@ -145,4 +145,39 @@ public class ProfilesServiceTests
     {
         CollectionAssert.AreEquivalent(_profilesService!.Profiles, new List<Profile> {new() {Name = "Default"}});
     }
+
+    [TestMethod]
+    public void TestCheckDefaultProfile()
+    {
+        // Default profile doesn't exist in db, add it
+        var newAutoMocker = new AutoMocker();
+        var newRepositoryMock = new Mock<IRepository<Profile>>();
+        newRepositoryMock
+            .SetupSequence(x => x.GetAll())
+            .Returns(() => new List<Profile>())
+            .Returns(() => new List<Profile> { new() { Name = "Default" } });
+        var newUowMock = new Mock<IUnitOfWork>();
+        newUowMock
+            .Setup(x => x.GetRepository<Profile>())
+            .Returns(newRepositoryMock.Object);
+        newAutoMocker
+            .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
+            .Returns(newUowMock.Object);
+        var newProfilesService = newAutoMocker.CreateInstance<ProfilesService>();
+        newRepositoryMock.Verify(x => x.Add(It.IsAny<Profile>()), Times.Once);
+
+        // Default profile already exists in db, don't add it
+        newRepositoryMock = new Mock<IRepository<Profile>>();
+        newRepositoryMock
+            .Setup(x => x.GetAll())
+            .Returns(() => new List<Profile> { new() { Name = "Default" } });
+        newUowMock
+            .Setup(x => x.GetRepository<Profile>())
+            .Returns(newRepositoryMock.Object);
+        newAutoMocker
+            .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
+            .Returns(newUowMock.Object);
+        newProfilesService = newAutoMocker.CreateInstance<ProfilesService>();
+        newRepositoryMock.Verify(x => x.Add(It.IsAny<Profile>()), Times.Never);
+    }
 }
