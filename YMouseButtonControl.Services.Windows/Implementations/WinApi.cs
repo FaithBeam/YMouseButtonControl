@@ -103,7 +103,11 @@ public class WinApi
     
     public Icon GetBitmapFromPath(string pathToExe)
     {
-        return pathToExe == "/" ? null : Icon.ExtractAssociatedIcon(pathToExe);
+        if (pathToExe == "/" || !File.Exists(pathToExe))
+        {
+            return null;
+        }
+        return Icon.ExtractAssociatedIcon(pathToExe);
     }
     
     public string GetBitmapPathFromProcessId(string pId)

@@ -35,6 +35,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         InteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
     )
     {
+        interaction.Input.RefreshButtonCommand.Execute(null);
         var dialog = new ProcessSelectorDialog
         {
             DataContext = interaction.Input
