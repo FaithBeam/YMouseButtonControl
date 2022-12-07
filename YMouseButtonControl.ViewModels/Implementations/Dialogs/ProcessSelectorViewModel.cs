@@ -1,4 +1,6 @@
-﻿using System.Reactive;
+﻿using System.Drawing;
+using System.Linq;
+using System.Reactive;
 using System.Windows.Input;
 using Avalonia.Collections;
 using JetBrains.Annotations;
@@ -25,7 +27,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
         OkCommand = ReactiveCommand.Create(() => new Profile()
             { Name = ProcessName, Description = WindowTitle, Process = ProcessName });
-        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses());
+        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
     }
 
     public AvaloniaList<ProcessModel> Processes { get; private set; }
@@ -39,6 +41,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             _processModel = value;
             this.RaisePropertyChanged(nameof(ProcessName));
             this.RaisePropertyChanged(nameof(WindowTitle));
+            this.RaisePropertyChanged(nameof(BitmapPath));
         }
     }
 
@@ -61,10 +64,21 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             SelectedProcessModel.WindowTitle = value;
         }
     }
+    
+    [CanBeNull]
+    public string BitmapPath
+    {
+        get => SelectedProcessModel?.BitmapPath;
+        set
+        {
+            if (SelectedProcessModel is null) return;
+            SelectedProcessModel.BitmapPath = value;
+        }
+    }
 
     private void OnRefreshButtonClicked()
     {
-        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses());
+        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
         this.RaisePropertyChanged(nameof(Processes));
     }
 }

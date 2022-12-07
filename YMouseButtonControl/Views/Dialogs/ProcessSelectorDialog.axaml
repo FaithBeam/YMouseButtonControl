@@ -3,6 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
+        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
+        xmlns:vm2="clr-namespace:YMouseButtonControl.Services.Abstractions.Models;assembly=YMouseButtonControl.Services.Abstractions"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="600"
@@ -17,6 +19,10 @@
     <Design.DataContext>
         <vm:ProcessSelectorDialogViewModel />
     </Design.DataContext>
+    
+    <Window.Resources>
+        <converters:BitmapConverter x:Key="BitmapConverter" />
+    </Window.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto">
         <!-- Row 1 -->
@@ -32,7 +38,7 @@
         <DataGrid Grid.Row="1"
                   Items="{Binding Processes}"
                   SelectedItem="{Binding SelectedProcessModel}"
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"
                   IsReadOnly="True"
@@ -40,6 +46,16 @@
                   HorizontalScrollBarVisibility="Auto"
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Bitmap">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="12" Stretch="Uniform" Source="{Binding BitmapPath, Converter={StaticResource BitmapConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Process" Binding="{Binding ProcessName}" />
+            </DataGrid.Columns>
         </DataGrid>
 
         <!-- Row 3 -->

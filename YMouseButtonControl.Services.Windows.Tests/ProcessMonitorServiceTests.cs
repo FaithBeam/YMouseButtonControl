@@ -4,11 +4,11 @@ using YMouseButtonControl.Services.Windows.Implementations;
 namespace YMouseButtonControl.Services.Windows.Tests;
 
 [TestClass]
-public class ProcessesServiceTests
+public class ProcessMonitorServiceTests
 {
     private readonly AutoMocker _autoMocker;
 
-    public ProcessesServiceTests()
+    public ProcessMonitorServiceTests()
     {
         _autoMocker = new AutoMocker();
     }
