@@ -47,7 +47,7 @@
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Bitmap">
+                <DataGridTemplateColumn Width="12" CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Width="12" Stretch="Uniform" Source="{Binding BitmapPath, Converter={StaticResource BitmapConverter}}" />
