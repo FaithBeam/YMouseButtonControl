@@ -45,7 +45,7 @@
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Auto"
                   VerticalAlignment="Stretch"
-                  HorizontalAlignment="Stretch">
+                  HorizontalAlignment="Stretch" Margin="0">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="12" CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
@@ -55,6 +55,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Process" Binding="{Binding ProcessName}" />
+                <DataGridTextColumn Header="Window Title" Binding="{Binding WindowTitle}" />
             </DataGrid.Columns>
         </DataGrid>
 

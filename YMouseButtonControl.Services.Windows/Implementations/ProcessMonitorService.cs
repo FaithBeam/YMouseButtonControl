@@ -59,11 +59,16 @@ public class ProcessMonitorService : IProcessMonitorService
         {
             var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
             var pId = (uint)process.Properties["ProcessId"].Value;
+            var hWnd = _winApi.GetHWndFromProcessId(pId);
+            if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
+            {
+                windowTitle = (string)process.Properties["Description"].Value;
+            }
             var pm = new ProcessModel
             {
                 ProcessId = pId,
                 ProcessName = (string)process.Properties["Name"].Value,
-                WindowTitle = (string)process.Properties["Description"].Value,
+                WindowTitle = windowTitle,
                 BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
             };
             if (_runningProcesses.Values.Any(x => x.ProcessName == pm.ProcessName))
@@ -100,11 +105,15 @@ public class ProcessMonitorService : IProcessMonitorService
             {
                 var pId = (uint)i.Properties["ProcessId"].Value;
                 var hWnd = _winApi.GetHWndFromProcessId(pId);
+                if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
+                {
+                    windowTitle = (string)i.Properties["Description"].Value;
+                }
                 var pm = new ProcessModel()
                 {
                     ProcessId = (uint)i.Properties["ProcessId"].Value,
                     ProcessName = (string)i.Properties["Name"].Value,
-                    WindowTitle = (string)i.Properties["Description"].Value,
+                    WindowTitle = windowTitle,
                     BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
                 };
                 if (_runningProcesses.Values.Any(x => x.ProcessName == pm.ProcessName))

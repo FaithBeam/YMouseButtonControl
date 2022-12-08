@@ -50,6 +50,12 @@ public class WinApi
     [DllImport("shell32.dll", CharSet=CharSet.Auto)]
     static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, uint uFlags);
     
+    [DllImport("user32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+    static extern int GetWindowTextLength(IntPtr hWnd);
+    
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+    
     private static bool EnumWindowsProcCallback(IntPtr hWnd, ref EnumWindowData lParam)
     {
         GetWindowThreadProcessId(hWnd, out var processId);
@@ -99,6 +105,15 @@ public class WinApi
         };
         EnumWindows(EnumWindowsProcCallback, ref data);
         return data.HWnd;
+    }
+
+    public bool GetWindowTitleFromHwnd(IntPtr hWnd, out string windowTitle)
+    {
+        var length = GetWindowTextLength(hWnd);
+        var sb = new StringBuilder(length + 1);
+        GetWindowText(hWnd, sb, sb.Capacity);
+        windowTitle = sb.ToString();
+        return sb.Length > 0;
     }
     
     public Icon GetBitmapFromPath(string pathToExe)
