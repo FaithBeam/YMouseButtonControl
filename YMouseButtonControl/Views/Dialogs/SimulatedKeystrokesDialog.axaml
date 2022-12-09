@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
         xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         WindowStartupLocation="CenterOwner"
@@ -12,12 +13,34 @@
         <vm:SimulatedKeystrokesDialogViewModel />
     </Design.DataContext>
     
+    <Window.Resources>
+        <converters:SimulatedKeystrokesDialogKeyConverter x:Key="DialogKeyConverter" />
+    </Window.Resources>
+    
     <Grid RowDefinitions="*,*,*,*,*">
         <Label HorizontalAlignment="Left" Content="Enter the custom key(s)" />
         
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-            <TextBox Text="{Binding CustomKeys}" />
-            <ComboBox Grid.Column="1" Items="\{\}" />
+            <TextBox Text="{Binding CustomKeys}"
+                     CaretIndex="{Binding CaretIndex, Mode=TwoWay}"/>
+            <SplitButton Grid.Column="1"
+                         Content="\{\}"
+                         Command="{Binding SplitButtonCommand}"
+                         CommandParameter="\{\}">
+                <SplitButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuItem Header="Modifier Keys"
+                                  Items="{Binding ModifierKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}">
+                            <!-- <MenuItem Header="Shift"  -->
+                            <!--           Command="{Binding SplitButtonCommand}" -->
+                            <!--           CommandParameter="\{SHIFT\}"/> -->
+                        </MenuItem>
+                    </MenuFlyout>
+                </SplitButton.Flyout>
+            </SplitButton>
         </Grid>
         
         <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
