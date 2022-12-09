@@ -24,8 +24,7 @@
             <Label HorizontalAlignment="Left" Content="How to send the simulated key strokes:" />
             <ComboBox Grid.Column="1" 
                       Items="{Binding SimulatedKeystrokesTypes}"
-                      SelectedItem="{Binding CurrentSimulatedKeystrokesType}"
-                      SelectedIndex="0" />
+                      SelectedIndex="{Binding SimulatedKeystrokesIndex}" />
         </Grid>
         
         <Grid Grid.Row="3" Grid.ColumnDefinitions="Auto,Auto">

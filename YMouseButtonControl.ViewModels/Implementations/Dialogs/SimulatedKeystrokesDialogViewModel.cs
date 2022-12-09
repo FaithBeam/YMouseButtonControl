@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using System.Reactive.Linq;
 using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Factories;
@@ -11,6 +12,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
 {
     private string _customKeys;
     private string _description;
+    private int _simulatedKeystrokesIndex;
+    private readonly ObservableAsPropertyHelper<ISimulatedKeystrokesType> _currentSimulatedKeystrokesType;
     
     public SimulatedKeystrokesDialogViewModel()
     {
@@ -19,6 +22,12 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             CustomKeys = CustomKeys,
             SimulatedKeystrokesType = CurrentSimulatedKeystrokesType
         });
+        _currentSimulatedKeystrokesType = this
+            .WhenAnyValue(x => x.SimulatedKeystrokesIndex)
+            .DistinctUntilChanged()
+            .Select(x => SimulatedKeystrokesTypes[x])
+            .ToProperty(this, x => x.CurrentSimulatedKeystrokesType);
+        _simulatedKeystrokesIndex = 0;
     }
 
     public string CustomKeys
@@ -36,7 +45,13 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     public AvaloniaList<ISimulatedKeystrokesType> SimulatedKeystrokesTypes { get; set; } =
         new(SimulatedKeystrokesMappingFactory.GetSimulatedKeystrokesTypes());
 
-    public ISimulatedKeystrokesType CurrentSimulatedKeystrokesType { get; set; }
+    public int SimulatedKeystrokesIndex
+    {
+        get => _simulatedKeystrokesIndex;
+        set => this.RaiseAndSetIfChanged(ref _simulatedKeystrokesIndex, value);
+    }
+
+    private ISimulatedKeystrokesType CurrentSimulatedKeystrokesType => _currentSimulatedKeystrokesType.Value;
 
     public ReactiveCommand<Unit, SimulatedKeystrokesDialogModel> OkCommand { get; }
 }
