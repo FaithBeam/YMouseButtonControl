@@ -34,9 +34,6 @@
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}">
-                            <!-- <MenuItem Header="Shift"  -->
-                            <!--           Command="{Binding SplitButtonCommand}" -->
-                            <!--           CommandParameter="\{SHIFT\}"/> -->
                         </MenuItem>
                     </MenuFlyout>
                 </SplitButton.Flyout>
