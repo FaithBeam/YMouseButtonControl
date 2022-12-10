@@ -26,6 +26,7 @@ public class ShowSimulatedKeystrokesDialogService : IShowSimulatedKeystrokesDial
         return new SimulatedKeystrokes()
         {
             Keys = result.CustomKeys,
+            PriorityDescription = result.Description,
             SimulatedKeystrokesType = result.SimulatedKeystrokesType,
         };
     }

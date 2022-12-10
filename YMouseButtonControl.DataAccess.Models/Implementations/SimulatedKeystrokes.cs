@@ -5,8 +5,9 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations;
 
 public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<SimulatedKeystrokes>
 {
-    public int Index { get; } = 2;
-    public string Description { get; }= "Simulated Keys (undefined)";
+    public int Index => 2;
+    public string Description => "Simulated Keys (undefined)";
+    public string? PriorityDescription { get; set; }
     public bool Enabled { get; }
     public string? Keys { get; set; }
     public bool State { get; set; }
@@ -20,7 +21,11 @@ public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<Si
             ? $"Simulated Keys: ({SimulatedKeystrokesType.ShortDescription})"
             : Description;
 
-        if (!string.IsNullOrWhiteSpace(Keys))
+        if (!string.IsNullOrWhiteSpace(PriorityDescription))
+        {
+            myStr += $"[{PriorityDescription}]";
+        }
+        else if (!string.IsNullOrWhiteSpace(Keys))
         {
             myStr += $"[{Keys}]";
         }

@@ -15,9 +15,7 @@ using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
-using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Models;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 
