@@ -2,6 +2,7 @@ using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.DataAccess.Repositories;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -44,7 +45,7 @@ public class LayerViewModelTests
         _lvm.Mb1Index = 2;
         Assert.IsTrue(_lvm.Mb1Index == 2);
         Assert.IsTrue(_lvm.MouseButton1Combo[_lvm.Mb1Index] is SimulatedKeystrokes);
-        dialog.Verify(x => x.ShowSimulatedKeystrokesDialog(), Times.Once);
+        dialog.Verify(x => x.ShowSimulatedKeystrokesDialog(It.IsAny<IButtonMapping>()), Times.Once);
 
         _lvm.Mb2Index = 1;
         Assert.IsTrue(_lvm.Mb2Index == 1);

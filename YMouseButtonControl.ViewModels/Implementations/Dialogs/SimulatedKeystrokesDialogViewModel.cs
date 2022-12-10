@@ -19,7 +19,9 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     private int _caretIndex;
     private readonly ObservableAsPropertyHelper<ISimulatedKeystrokesType> _currentSimulatedKeystrokesType;
     
-    public SimulatedKeystrokesDialogViewModel()
+    public SimulatedKeystrokesDialogViewModel() : this(null) {}
+
+    public SimulatedKeystrokesDialogViewModel(IButtonMapping currentMapping)
     {
         OkCommand = ReactiveCommand.Create(() => new SimulatedKeystrokesDialogModel
         {
@@ -41,9 +43,9 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             .DistinctUntilChanged()
             .Select(x => SimulatedKeystrokesTypes[x])
             .ToProperty(this, x => x.CurrentSimulatedKeystrokesType);
-        _description = string.Empty;
-        _customKeys = string.Empty;
-        _simulatedKeystrokesIndex = 0;
+        _description = currentMapping?.PriorityDescription ?? string.Empty;
+        _customKeys = currentMapping?.Keys ?? string.Empty;
+        _simulatedKeystrokesIndex = currentMapping?.SimulatedKeystrokesType?.Index ?? 0;
         _caretIndex = 0;
     }
 

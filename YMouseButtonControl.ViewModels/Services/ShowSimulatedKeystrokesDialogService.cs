@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Models;
 
@@ -17,7 +18,12 @@ public class ShowSimulatedKeystrokesDialogService : IShowSimulatedKeystrokesDial
     public Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel> ShowSimulatedKeystrokesPickerInteraction { get; }
     public async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog()
     {
-        var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(new SimulatedKeystrokesDialogViewModel());
+        return await ShowSimulatedKeystrokesDialog(null);
+    }
+
+    public async Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog(IButtonMapping mapping)
+    {
+        var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(new SimulatedKeystrokesDialogViewModel(mapping));
         if (result is null)
         {
             return null;

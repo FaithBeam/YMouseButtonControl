@@ -1,4 +1,5 @@
 using System.Reactive.Linq;
+using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Factories;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
@@ -55,5 +56,17 @@ public class SimulatedKeystrokesDialogViewModelTests
         Assert.AreEqual("abc123", result.CustomKeys);
         Assert.AreEqual("my description", result.Description);
         Assert.IsInstanceOfType(result.SimulatedKeystrokesType, typeof(ISimulatedKeystrokesType));
+    }
+
+    [TestMethod]
+    public void TestSimulatedKeystrokesDialogViewModel()
+    {
+        var ibMock = new Mock<IButtonMapping>();
+        ibMock.SetupProperty(x => x.PriorityDescription, "TEST");
+        ibMock.SetupGet(x => x.Keys).Returns("w");
+        _autoMocker.Use(ibMock);
+        var skdvmt = _autoMocker.CreateInstance<SimulatedKeystrokesDialogViewModel>();
+        Assert.AreEqual("w", skdvmt.CustomKeys);
+        Assert.AreEqual("TEST", skdvmt.Description);
     }
 }

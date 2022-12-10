@@ -125,7 +125,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         var newMapping = mapping;
         if (mapping is SimulatedKeystrokes && (string.IsNullOrWhiteSpace(mapping.Keys) || settingsGearClicked))
         {
-            newMapping = await ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesDialog();
+            newMapping = await ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesDialog(mapping);
             if (newMapping is null)
             {
                 return;
