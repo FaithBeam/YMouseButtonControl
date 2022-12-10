@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Collections;
-using Avalonia.Remote.Protocol.Input;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using MouseButton = YMouseButtonControl.DataAccess.Models.Enums.MouseButton;
 
@@ -156,10 +153,10 @@ public class KeyboardSimulatorWorker : IDisposable
             _hotkeys[MouseButton.MouseButton3].Add(profile.MouseButton3);
             _hotkeys[MouseButton.MouseButton4].Add(profile.MouseButton4);
             _hotkeys[MouseButton.MouseButton5].Add(profile.MouseButton5);
-            _hotkeys[MouseButton.MouseWheelUp].Add(profile.MouseButton5);
-            _hotkeys[MouseButton.MouseWheelDown].Add(profile.MouseButton5);
-            _hotkeys[MouseButton.MouseWheelLeft].Add(profile.MouseButton5);
-            _hotkeys[MouseButton.MouseWheelRight].Add(profile.MouseButton5);
+            _hotkeys[MouseButton.MouseWheelUp].Add(profile.MouseWheelUp);
+            _hotkeys[MouseButton.MouseWheelDown].Add(profile.MouseWheelDown);
+            _hotkeys[MouseButton.MouseWheelLeft].Add(profile.MouseWheelLeft);
+            _hotkeys[MouseButton.MouseWheelRight].Add(profile.MouseWheelRight);
         }
     }
 }

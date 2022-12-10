@@ -62,7 +62,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     }
 
     public AvaloniaList<ISimulatedKeystrokesType> SimulatedKeystrokesTypes { get; set; } =
-        new(SimulatedKeystrokesMappingFactory.GetSimulatedKeystrokesTypes());
+        new(SimulatedKeystrokeTypesMappingFactory.GetSimulatedKeystrokesTypes());
 
     public int SimulatedKeystrokesIndex
     {

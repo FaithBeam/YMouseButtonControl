@@ -2,18 +2,19 @@
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 
-public class StickyHoldActionType: ISimulatedKeystrokesType, IEquatable<StickyHoldActionType>
+public class DuringMouseActionType : ISimulatedKeystrokesType, IEquatable<DuringMouseActionType>
 {
-    public int Index { get; } = 7;
-    public string Description { get; } = "Sticky (held down until button is pressed again)";
-    public string ShortDescription { get; } = "sticky hold";
+    public int Index { get; } = 2;
+    public string Description { get; } = "During (press on down, release on up)";
+    public string ShortDescription { get; } = "during";
     public bool Enabled { get; } = true;
+
     public override string ToString()
     {
         return $"{Index + 1} {Description}";
     }
 
-    public bool Equals(StickyHoldActionType? other)
+    public bool Equals(DuringMouseActionType? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -25,7 +26,7 @@ public class StickyHoldActionType: ISimulatedKeystrokesType, IEquatable<StickyHo
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((StickyHoldActionType)obj);
+        return Equals((DuringMouseActionType)obj);
     }
 
     public override int GetHashCode()

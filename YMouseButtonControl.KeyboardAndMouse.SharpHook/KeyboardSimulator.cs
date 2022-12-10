@@ -26,18 +26,27 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook
 
         public void SimulatedKeystrokes(IButtonMapping buttonMapping, bool pressed)
         {
-            if (buttonMapping.SimulatedKeystrokesType is not StickyHoldActionType) return;
-            if (!pressed) return;
-            
-            if (buttonMapping.State)
+            switch (buttonMapping.SimulatedKeystrokesType)
             {
-                StickyHoldRelease(ParseKeysService.ParseKeys(buttonMapping.Keys));
-                buttonMapping.State = false;
+                case StickyHoldActionType:
+                    StickyHold(buttonMapping, pressed);
+                    break;
+            }
+        }
+
+        private void StickyHold(IButtonMapping mapping, bool pressed)
+        {
+            if (!pressed) return;
+
+            if (mapping.State)
+            {
+                StickyHoldRelease(ParseKeysService.ParseKeys(mapping.Keys));
+                mapping.State = false;
             }
             else
             {
-                StickyHoldPress(ParseKeysService.ParseKeys(buttonMapping.Keys));
-                buttonMapping.State = true;
+                StickyHoldPress(ParseKeysService.ParseKeys(mapping.Keys));
+                mapping.State = true;
             }
         }
         
