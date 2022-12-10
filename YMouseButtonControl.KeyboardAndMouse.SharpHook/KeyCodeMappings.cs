@@ -96,7 +96,7 @@ public static class KeyCodeMappings
         
         {" ", KeyCode.VcSpace},
         
-        {"printscreen", KeyCode.VcPrintscreen},
+        {"printscreen", KeyCode.VcPrintScreen},
         {"scrolllock", KeyCode.VcScrollLock},
         {"pause", KeyCode.VcPause},
         

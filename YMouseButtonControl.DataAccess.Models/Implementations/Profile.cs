@@ -83,7 +83,14 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
 
         public string Description
         {
-            get => _description;
+            get
+            {
+                if (Name == "Default")
+                {
+                    return "Default";
+                }
+                return string.IsNullOrWhiteSpace(_description) ? _process : _description;
+            }
             set => this.RaiseAndSetIfChanged(ref _description, value);
         }
 
