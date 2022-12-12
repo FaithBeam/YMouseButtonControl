@@ -25,6 +25,8 @@ public class AppViewModel : ViewModelBase, IAppViewModel
             }
         });
     }
+
+    public string ToolTipText => $"YMouseButtonControl v{GetType().Assembly.GetName().Version}";
     
     public ReactiveCommand<Unit, Unit> ExitCommand { get; }
     public ReactiveCommand<Unit, Unit> SetupCommand { get; }

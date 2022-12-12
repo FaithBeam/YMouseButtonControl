@@ -25,7 +25,9 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     {
         ProfilesService = profilesService;
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
-        RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked);
+        var removeCanExecute = this
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile, curProf => curProf.Name != "Default");
+        RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked, removeCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
         ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, Profile>();
         var editCanExecute = this

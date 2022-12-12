@@ -13,7 +13,7 @@
     
     <TrayIcon.Icons>
         <TrayIcons>
-            <TrayIcon Icon="/Resources/mouse.png" ToolTipText="YMouseButtonControl v0.?.0">
+            <TrayIcon Icon="/Resources/mouse.png" ToolTipText="{Binding ToolTipText}">
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="Setup" Command="{Binding SetupCommand}" />
