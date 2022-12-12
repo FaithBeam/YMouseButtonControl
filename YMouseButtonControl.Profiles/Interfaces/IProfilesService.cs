@@ -25,6 +25,7 @@ public interface IProfilesService
     bool IsUnsavedChanges();
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);
+    void ReplaceProfile(Profile oldProfile, Profile newProfile);
     void RemoveProfile(Profile profile);
     void ApplyProfiles();
 }

@@ -178,4 +178,24 @@ public class ProfilesServiceTests
         newProfilesService = newAutoMocker.CreateInstance<ProfilesService>();
         newRepositoryMock.Verify(x => x.Add(It.IsAny<Profile>()), Times.Never);
     }
+
+    [TestMethod]
+    public void TestReplaceProfile()
+    {
+        var ps = _mocker.CreateInstance<ProfilesService>();
+        var dummyProfile = new Profile { Name = "Test" };
+        ps.AddProfile(dummyProfile);
+        var newProfile = new Profile { Name = "NewProfile" };
+        ps.ReplaceProfile(dummyProfile, newProfile);
+        CollectionAssert.DoesNotContain(ps.Profiles, dummyProfile);
+        
+        // Replace a profile that's the current profile
+        ps = _mocker.CreateInstance<ProfilesService>();
+        ps.AddProfile(dummyProfile);
+        ps.CurrentProfileIndex = 1;
+        ps.ReplaceProfile(dummyProfile, newProfile);
+        CollectionAssert.DoesNotContain(ps.Profiles, dummyProfile);
+        Assert.AreEqual(1, ps.CurrentProfileIndex);
+        Assert.AreEqual(newProfile, ps.CurrentProfile);
+    }
 }

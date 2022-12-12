@@ -7,6 +7,7 @@ using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Views.Dialogs;
 
 namespace YMouseButtonControl.Views;
@@ -21,7 +22,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         {
             if (ViewModel is not null)
             {
-                d(ViewModel.ShowProcessSelectorInteraction.RegisterHandler(ShowProcessSelectorDialogAsync));
+                d(ViewModel.ShowProcessSelectorInteraction.RegisterHandler(async x => await ShowProcessSelectorDialogAsync(x)));
             }
         });
     }

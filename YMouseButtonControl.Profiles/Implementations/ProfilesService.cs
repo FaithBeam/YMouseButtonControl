@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using Avalonia.Collections;
+using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.UnitOfWork;
@@ -25,6 +26,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         _currentProfile = this
             .WhenAnyValue(x => x.CurrentProfileIndex)
             .Select(x => _profiles[x])
+            .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
     }
 
@@ -84,6 +86,15 @@ public class ProfilesService : ReactiveObject, IProfilesService
     public void AddProfile(Profile profile)
     {
         _profiles.Add(profile);
+    }
+
+    public void ReplaceProfile(Profile oldProfile, Profile newProfile)
+    {
+        var pIndex = _profiles.IndexOf(oldProfile);
+        _profiles.Replace(oldProfile, newProfile);
+        // Trigger CurrentProfile to update
+        CurrentProfileIndex = 0;
+        CurrentProfileIndex = pIndex;
     }
 
     public void RemoveProfile(Profile profile)

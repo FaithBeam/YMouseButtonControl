@@ -25,7 +25,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
     {
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
-        OkCommand = ReactiveCommand.Create(() => new Profile()
+        OkCommand = ReactiveCommand.Create(() => new Profile
             { Name = ProcessName, Description = WindowTitle, Process = ProcessName });
         Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
     }
