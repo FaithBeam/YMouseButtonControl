@@ -69,6 +69,5 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             return;
         }
         _profilesService.AddProfile(result);
-        this.RaisePropertyChanged(nameof(Profiles));
     }
 }
