@@ -37,5 +37,5 @@
             <Button Grid.Column="5">Close</Button>
         </Grid>
     </Grid>
-
+    
 </Window>

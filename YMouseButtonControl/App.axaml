@@ -1,8 +1,27 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations;assembly=YMouseButtonControl.ViewModels"
              x:Class="YMouseButtonControl.App">
     <Application.Styles>
         <FluentTheme Mode="Light"/>
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
+    
+    <Design.DataContext>
+        <vm:AppViewModel />
+    </Design.DataContext>
+    
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Resources/mouse.png" ToolTipText="YMouseButtonControl v0.?.0">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Setup" Command="{Binding SetupCommand}" />
+                        <NativeMenuItem Header="Exit" Command="{Binding ExitCommand}" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+    
 </Application>

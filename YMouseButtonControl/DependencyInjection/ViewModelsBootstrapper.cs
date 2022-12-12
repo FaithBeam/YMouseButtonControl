@@ -42,5 +42,6 @@ public static class ViewModelsBootstrapper
             resolver.GetRequiredService<IProfilesListViewModel>(),
             resolver.GetRequiredService<IProfilesInformationViewModel>()
         ));
+        services.RegisterLazySingleton<IAppViewModel>(() => new AppViewModel());
     }
 }
