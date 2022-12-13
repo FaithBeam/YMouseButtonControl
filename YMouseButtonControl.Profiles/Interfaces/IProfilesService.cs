@@ -23,6 +23,7 @@ public interface IProfilesService
     event PropertyChangingEventHandler PropertyChanging;
     event PropertyChangedEventHandler PropertyChanged;
     // void UpdateCurrentMouse(IButtonMapping value, MouseButton button);
+    Profile CopyProfile(Profile p);
     bool IsUnsavedChanges();
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);

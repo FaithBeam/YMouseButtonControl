@@ -1,7 +1,9 @@
-﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using Newtonsoft.Json;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 
+[JsonObject(MemberSerialization.OptOut)]
 public class RepeatedlyWhileButtonDownActionType : ISimulatedKeystrokesType, IEquatable<RepeatedlyWhileButtonDownActionType>
 {
     public int Index { get; } = 5;

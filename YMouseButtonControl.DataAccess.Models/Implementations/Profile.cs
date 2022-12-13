@@ -1,8 +1,10 @@
-﻿using ReactiveUI;
+﻿using Newtonsoft.Json;
+using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Profile : ReactiveObject, IEquatable<Profile>
     {
         private IButtonMapping _mb1 = new NothingMapping();

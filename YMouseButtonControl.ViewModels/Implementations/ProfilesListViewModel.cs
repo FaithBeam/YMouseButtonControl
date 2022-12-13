@@ -21,6 +21,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     public ReactiveCommand<Unit,Unit> UpCommand { get; }
     public ReactiveCommand<Unit,Unit> DownCommand { get; }
     public ReactiveCommand<Unit,Unit> RemoveButtonCommand { get; }
+    public ReactiveCommand<Unit,Unit> CopyCommand { get; }
     public Interaction<ProcessSelectorDialogViewModel, Profile> ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(IProfilesService profilesService, ProcessSelectorDialogViewModel processSelectorDialogViewModel)
@@ -43,12 +44,33 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         var editCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfile, curProf => curProf.Name != "Default");
         EditButtonCommand = ReactiveCommand.CreateFromTask(EditButtonClickedAsync, editCanExecute);
+        CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
     }
     
     public IProfilesService ProfilesService
     {
         get => _profilesService;
         set => _profilesService = value;
+    }
+
+    private async Task OnCopyClickedAsync()
+    {
+        var newProfile = await ShowProcessSelectorInteraction.Handle(_processSelectorDialogViewModel);
+        if (newProfile is null)
+        {
+            return;
+        }
+
+        var copiedProfile = _profilesService.CopyProfile(_profilesService.CurrentProfile);
+        copiedProfile.Name = newProfile.Name;
+        copiedProfile.Description = newProfile.Description;
+        copiedProfile.Checked = newProfile.Checked;
+        copiedProfile.Process = newProfile.Process;
+        copiedProfile.MatchType = newProfile.MatchType;
+        copiedProfile.ParentClass = newProfile.ParentClass;
+        copiedProfile.WindowCaption = newProfile.WindowCaption;
+        copiedProfile.WindowClass = newProfile.WindowClass;
+        _profilesService.AddProfile(copiedProfile);
     }
 
     private void OnRemoveButtonClicked()

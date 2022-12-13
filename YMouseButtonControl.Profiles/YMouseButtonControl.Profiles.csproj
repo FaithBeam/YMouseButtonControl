@@ -13,6 +13,8 @@
 
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="System.Text.Json" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,9 @@
-﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using Newtonsoft.Json;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 
+[JsonObject(MemberSerialization.OptOut)]
 public class MouseButtonPressedActionType : ISimulatedKeystrokesType, IEquatable<MouseButtonPressedActionType>
 {
     public int Index { get; } = 0;

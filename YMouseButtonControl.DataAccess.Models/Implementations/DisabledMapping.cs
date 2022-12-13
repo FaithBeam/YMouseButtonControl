@@ -1,7 +1,9 @@
-﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using Newtonsoft.Json;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations;
 
+[JsonObject(MemberSerialization.OptOut)]
 public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
 {
     public int Index { get; } = 1;

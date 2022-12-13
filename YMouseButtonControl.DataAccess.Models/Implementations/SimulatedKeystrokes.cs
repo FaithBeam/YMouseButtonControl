@@ -1,8 +1,10 @@
-﻿using ReactiveUI;
+﻿using Newtonsoft.Json;
+using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.DataAccess.Models.Implementations;
 
+[JsonObject(MemberSerialization.OptOut)]
 public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<SimulatedKeystrokes>
 {
     public int Index => 2;

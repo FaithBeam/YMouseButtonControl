@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
 using Avalonia.Collections;
 using DynamicData;
+using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.UnitOfWork;
@@ -87,12 +85,24 @@ public class ProfilesService : ReactiveObject, IProfilesService
         repository.Add(defaultProfile);
     }
 
+    public Profile CopyProfile(Profile p)
+    {
+        var jsonString = JsonConvert.SerializeObject(p, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        });
+        return JsonConvert.DeserializeObject<Profile>(jsonString, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        });
+    }
+
     public bool IsUnsavedChanges()
     {
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
+        return _profiles.Count == dbProfiles.Count && _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
     
     public IEnumerable<Profile> GetProfiles()

@@ -41,9 +41,12 @@
                     HorizontalContentAlignment="Center"
                     Content="Add" 
                     Command="{Binding AddButtonCommand}"/>
-            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center">
-                Copy
+            <Button Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Copy"
+                    Command="{Binding CopyCommand}">
             </Button>
             <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center">
