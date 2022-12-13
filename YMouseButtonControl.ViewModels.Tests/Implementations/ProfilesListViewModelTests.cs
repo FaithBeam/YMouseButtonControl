@@ -1,9 +1,9 @@
-﻿using Moq;
+﻿using Avalonia.Collections;
+using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 
 namespace YMouseButtonControl.ViewModels.Tests.Implementations;
 
@@ -21,9 +21,11 @@ public class ProfilesListViewModelTests
         var mocker = new AutoMocker();
         var psMock = mocker.GetMock<IProfilesService>();
         psMock.SetupGet(x => x.CurrentProfile).Returns(p1);
+        psMock.SetupGet(x => x.Profiles).Returns(new AvaloniaList<Profile>(p1));
+        psMock.SetupGet(x => x.CurrentProfileIndex).Returns(0);
         mocker.Use(psMock.Object);
         var plvm = mocker.CreateInstance<ProfilesListViewModel>();
-        plvm.RemoveButtonCommand.Execute(null);
+        plvm.RemoveButtonCommand.Execute().Subscribe();
         psMock.Verify(x => x.RemoveProfile(p1), Times.Once);
     }
 
@@ -34,6 +36,8 @@ public class ProfilesListViewModelTests
         var psMock = mocker.GetMock<IProfilesService>();
         var curProf = new Profile { Name = "Test" };
         psMock.SetupGet(x => x.CurrentProfile).Returns(curProf);
+        psMock.SetupGet(x => x.Profiles).Returns(new AvaloniaList<Profile>(curProf));
+        psMock.SetupGet(x => x.CurrentProfileIndex).Returns(0);
         mocker.Use(psMock);
         var plvm = mocker.CreateInstance<ProfilesListViewModel>();
         var newProf = new Profile { Name = "New", Process = "someproc.exe", Description = "some desc"};

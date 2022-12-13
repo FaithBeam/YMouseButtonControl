@@ -26,6 +26,8 @@ public interface IProfilesService
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);
     void ReplaceProfile(Profile oldProfile, Profile newProfile);
+    void MoveProfileUp(Profile p);
+    void MoveProfileDown(Profile p);
     void RemoveProfile(Profile profile);
     void ApplyProfiles();
 }

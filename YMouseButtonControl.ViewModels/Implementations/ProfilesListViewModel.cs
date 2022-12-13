@@ -18,7 +18,9 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 
     public ICommand AddButtonCommand { get; }
     public ReactiveCommand<Unit,Unit> EditButtonCommand { get; }
-    public ICommand RemoveButtonCommand { get; }
+    public ReactiveCommand<Unit,Unit> UpCommand { get; }
+    public ReactiveCommand<Unit,Unit> DownCommand { get; }
+    public ReactiveCommand<Unit,Unit> RemoveButtonCommand { get; }
     public Interaction<ProcessSelectorDialogViewModel, Profile> ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(IProfilesService profilesService, ProcessSelectorDialogViewModel processSelectorDialogViewModel)
@@ -28,6 +30,14 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         var removeCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfile, curProf => curProf.Name != "Default");
         RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked, removeCanExecute);
+        var upCommandCanExecute = this
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)
+            .Select(x => x > 0);
+        UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
+        var downCommandCanExecute = this
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)
+            .Select(x => x + 1 < ProfilesService.Profiles.Count);
+        DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
         ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, Profile>();
         var editCanExecute = this
@@ -44,6 +54,16 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     private void OnRemoveButtonClicked()
     {
         _profilesService.RemoveProfile(_profilesService.CurrentProfile);
+    }
+
+    private void UpButtonClicked()
+    {
+        _profilesService.MoveProfileUp(_profilesService.CurrentProfile);
+    }
+    
+    private void DownButtonClicked()
+    {
+        _profilesService.MoveProfileDown(_profilesService.CurrentProfile);
     }
 
     private async Task EditButtonClickedAsync()

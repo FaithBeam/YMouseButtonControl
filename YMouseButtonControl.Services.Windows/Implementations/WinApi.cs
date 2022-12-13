@@ -145,6 +145,10 @@ public class WinApi
             Directory.CreateDirectory("cache");
         }
         var bitmap = GetBitmapFromPath(sb.ToString());
+        if (bitmap is null)
+        {
+            return string.Empty;
+        }
         var bmp = bitmap.ToBitmap();
         bmp.Save(destination);
 

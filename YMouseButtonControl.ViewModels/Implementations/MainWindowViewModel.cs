@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -36,6 +38,13 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
                 x => x._ps.CurrentProfile.MouseButton5, x => x._ps.Profiles)
             .Select(_ => _ps.IsUnsavedChanges())
             .DistinctUntilChanged();
+        CloseCommand = ReactiveCommand.Create(() =>
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            {
+                lifetime.MainWindow?.Hide();
+            }
+        });
         ApplyCommand = ReactiveCommand.Create(() => _ps.ApplyProfiles(), canApply);
         this
             .WhenAnyValue(x => x._ps.CurrentProfile)
@@ -54,12 +63,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     public ILayerViewModel LayerViewModel { get; }
 
     public ReactiveCommand<Unit, Unit> ApplyCommand { get; }
-
-    public bool CanApply
-    {
-        get => _canApply;
-        set => this.RaiseAndSetIfChanged(ref _canApply, value);
-    }
+    public ReactiveCommand<Unit, Unit> CloseCommand { get; }
 
     public string ProfileName
     {

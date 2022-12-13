@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Avalonia.Animation;
+using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Repositories;
@@ -197,5 +198,34 @@ public class ProfilesServiceTests
         CollectionAssert.DoesNotContain(ps.Profiles, dummyProfile);
         Assert.AreEqual(1, ps.CurrentProfileIndex);
         Assert.AreEqual(newProfile, ps.CurrentProfile);
+    }
+
+    [TestMethod]
+    public void TestMoveProfileUp()
+    {
+        var ps = _mocker.CreateInstance<ProfilesService>();
+        var dummyProfile = new Profile { Name = "Test" };
+        ps.AddProfile(dummyProfile);
+        ps.CurrentProfileIndex = 1;
+        ps.MoveProfileUp(ps.CurrentProfile);
+        CollectionAssert.Contains(ps.Profiles, dummyProfile);
+        Assert.AreEqual(0, ps.CurrentProfileIndex);
+        Assert.AreEqual(0, ps.Profiles.IndexOf(dummyProfile));
+    }
+
+    [TestMethod]
+    public void TestMoveProfileDown()
+    {
+        var ps = _mocker.CreateInstance<ProfilesService>();
+        var dummyProfile = new Profile { Name = "Test" };
+        ps.AddProfile(dummyProfile);
+        ps.CurrentProfileIndex = 0;
+        var defaultProfile = ps.CurrentProfile;
+        ps.MoveProfileDown(defaultProfile);
+        CollectionAssert.Contains(ps.Profiles, dummyProfile);
+        Assert.AreEqual(1, ps.CurrentProfileIndex);
+        Assert.AreEqual(0, ps.Profiles.IndexOf(dummyProfile));
+        CollectionAssert.Contains(ps.Profiles, defaultProfile);
+        Assert.AreEqual(1, ps.Profiles.IndexOf(defaultProfile));
     }
 }

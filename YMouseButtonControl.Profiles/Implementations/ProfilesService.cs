@@ -26,7 +26,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         _currentProfile = this
             .WhenAnyValue(x => x.CurrentProfileIndex)
             .Select(x => _profiles[x])
-            .DistinctUntilChanged()
+            // .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
     }
 
@@ -95,6 +95,31 @@ public class ProfilesService : ReactiveObject, IProfilesService
         // Trigger CurrentProfile to update
         CurrentProfileIndex = 0;
         CurrentProfileIndex = pIndex;
+    }
+
+    public void MoveProfileUp(Profile p)
+    {
+        var index = _profiles.IndexOf(p);
+        if (index < 1) return;
+        _profiles.Remove(p);
+        _profiles.Insert(index - 1, p);
+        CurrentProfileIndex--;
+    }
+    
+    public void MoveProfileDown(Profile p)
+    {
+        var index = _profiles.IndexOf(p);
+        if (index < 0) return;
+        if (_profiles.Count < index + 2)
+        {
+            return;
+        }
+
+        _profiles.Remove(p);
+        _profiles.Insert(index + 1, p);
+        CurrentProfileIndex = 0;
+        this.RaisePropertyChanged(nameof(CurrentProfileIndex));
+        CurrentProfileIndex++;
     }
 
     public void RemoveProfile(Profile profile)
