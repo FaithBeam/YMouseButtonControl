@@ -32,10 +32,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
         var canApply = this
-            .WhenAnyValue(x => x._ps.CurrentProfile, x => x._ps.CurrentProfile.MouseButton1,
-                x => x._ps.CurrentProfile.MouseButton2,
-                x => x._ps.CurrentProfile.MouseButton3, x => x._ps.CurrentProfile.MouseButton4,
-                x => x._ps.CurrentProfile.MouseButton5, x => x._ps.Profiles)
+            .WhenAnyValue(x => x._ps.UnsavedChanges)
             .Select(_ => _ps.IsUnsavedChanges())
             .DistinctUntilChanged();
         CloseCommand = ReactiveCommand.Create(() =>

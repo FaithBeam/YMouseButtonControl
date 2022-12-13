@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using Avalonia.Collections;
 using DynamicData;
 using ReactiveUI;
@@ -17,6 +19,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
     private AvaloniaList<Profile> _profiles;
     private int _currentProfileIndex;
     private readonly ObservableAsPropertyHelper<Profile> _currentProfile;
+    private readonly ObservableAsPropertyHelper<bool> _unsavedChanges;
 
     public ProfilesService(IUnitOfWorkFactory unitOfWorkFactory)
     {
@@ -26,9 +29,24 @@ public class ProfilesService : ReactiveObject, IProfilesService
         _currentProfile = this
             .WhenAnyValue(x => x.CurrentProfileIndex)
             .Select(x => _profiles[x])
-            // .DistinctUntilChanged()
+            .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
+        _unsavedChanges = this
+            .WhenAnyValue(x => x.CurrentProfileIndex, x => x.CurrentProfile, x => x.CurrentProfile.MouseButton1,
+                x => x.CurrentProfile.MouseButton2,
+                x => x.CurrentProfile.MouseButton3, x => x.CurrentProfile.MouseButton4,
+                x => x.CurrentProfile.MouseButton5)
+            .Select(_ => IsUnsavedChanges())
+            .ToProperty(this, x => x.UnsavedChanges);
+        var otherUnsavedChanges = this
+            .WhenAnyValue(x => x.CurrentProfile.MouseWheelUp, x => x.CurrentProfile.MouseWheelDown,
+                x => x.CurrentProfile.MouseWheelLeft, x => x.CurrentProfile.MouseWheelRight,
+                x => x.Profiles)
+            .Select(_ => IsUnsavedChanges())
+            .ToProperty(this, x => x.UnsavedChanges);
     }
+
+    public bool UnsavedChanges => _unsavedChanges.Value;
 
     public AvaloniaList<Profile> Profiles => _profiles;
 
@@ -74,8 +92,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return _profiles.Any(inMemProfile => !dbProfiles.Contains(inMemProfile)) ||
-               dbProfiles.Any(x => !_profiles.Contains(x));
+        return _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
     
     public IEnumerable<Profile> GetProfiles()

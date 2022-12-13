@@ -128,6 +128,25 @@ public class ProfilesServiceTests
 
         _profilesService.CurrentProfile.MouseButton1 = new DisabledMapping();
         Assert.IsTrue(_profilesService.IsUnsavedChanges());
+
+        var defaultProfile = new Profile { Name = "Default" };
+        var otherProfile = new Profile { Name = "Test" };
+        var newMocker = new AutoMocker();
+        var newRepoMock = new Mock<IRepository<Profile>>();
+        newRepoMock
+            .Setup(x => x.GetAll())
+            .Returns(() => new List<Profile> {defaultProfile, otherProfile});
+        var newUowMock = new Mock<IUnitOfWork>();
+        newUowMock
+            .Setup(x => x.GetRepository<Profile>())
+            .Returns(newRepoMock.Object);
+        newMocker
+            .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
+            .Returns(newUowMock.Object);
+        var ps = newMocker.CreateInstance<ProfilesService>();
+        ps.CurrentProfileIndex = 1;
+        ps.MoveProfileUp(ps.CurrentProfile);
+        Assert.IsTrue(ps.IsUnsavedChanges());
     }
 
     [TestMethod]
