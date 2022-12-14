@@ -104,7 +104,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return _profiles.Count == dbProfiles.Count && _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
+        return _profiles.Count != dbProfiles.Count || _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
 
     public void WriteProfileToFile(Profile p, Stream stream)
