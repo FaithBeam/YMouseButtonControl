@@ -107,30 +107,22 @@ public class ProfilesService : ReactiveObject, IProfilesService
         return _profiles.Count != dbProfiles.Count || _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
 
-    public void WriteProfileToFile(Profile p, Stream stream)
+    public void WriteProfileToFile(Profile p, string path)
     {
         var jsonString = JsonConvert.SerializeObject(p, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Auto
         });
-        using var s = new MemoryStream();
-        using var w = new StreamWriter(s);
-        w.Write(jsonString);
-        w.Flush();
-        s.Position = 0;
-        s.CopyTo(stream);
-        stream.Flush();
-        stream.Close();
+        File.WriteAllText(path, jsonString);
     }
 
-    public async Task ImportProfileFromStreamAsync(Stream s)
+    public void ImportProfileFromPath(string path)
     {
-        using var sr = new StreamReader(s);
-        var deserializedProfile = JsonConvert.DeserializeObject<Profile>(await sr.ReadToEndAsync(), new JsonSerializerSettings
+        var f = File.ReadAllText(path);
+        var deserializedProfile = JsonConvert.DeserializeObject<Profile>(f, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Auto
         });
-        s.Close();
         AddProfile(deserializedProfile);
     }
     

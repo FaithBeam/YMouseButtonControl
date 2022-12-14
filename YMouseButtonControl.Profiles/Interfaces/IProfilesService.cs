@@ -26,8 +26,8 @@ public interface IProfilesService
     event PropertyChangedEventHandler PropertyChanged;
     Profile CopyProfile(Profile p);
     bool IsUnsavedChanges();
-    void WriteProfileToFile(Profile p, Stream stream);
-    Task ImportProfileFromStreamAsync(Stream s);
+    void WriteProfileToFile(Profile p, string path);
+    void ImportProfileFromPath(string path);
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);
     void ReplaceProfile(Profile oldProfile, Profile newProfile);

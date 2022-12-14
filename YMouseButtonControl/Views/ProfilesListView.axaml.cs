@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -31,7 +32,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         });
     }
 
-    private async Task ShowImportFileDialog(InteractionContext<Unit, Stream?> interactionContext)
+    private async Task ShowImportFileDialog(InteractionContext<Unit, string> interactionContext)
     {
         var result = await new Window().StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
@@ -39,17 +40,20 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
             AllowMultiple = false,
             FileTypeFilter = new[] { new FilePickerFileType(".json") { Patterns = new[] { "*.json" } } }
         });
-        if (!result.Any())
+        if (result.Any())
         {
-            return;
+            var f = result[0];
+            if (f.TryGetUri(out var uri))
+            {
+                interactionContext.SetOutput(uri.LocalPath);
+                return;
+            }
         }
-
-        var f = result[0];
-        var stream = await f.OpenReadAsync();
-        interactionContext.SetOutput(stream);
+        
+        interactionContext.SetOutput(string.Empty);
     }
 
-    private async Task ShowExportFileDialog(InteractionContext<string, Stream> interactionContext)
+    private async Task ShowExportFileDialog(InteractionContext<string, string> interactionContext)
     {
         var file = await new Window().StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
@@ -58,8 +62,15 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
             SuggestedFileName = $"{interactionContext.Input}.json",
             FileTypeChoices = new[] { new FilePickerFileType("json") { Patterns = new[] { "*.json" } } }
         });
-        var s = await file?.OpenWriteAsync()!;
-        interactionContext.SetOutput(s);
+        if (file is not null)
+        {
+            if (file.TryGetUri(out var uri))
+            {
+                interactionContext.SetOutput(uri.LocalPath);
+                return;
+            }
+        }
+        interactionContext.SetOutput(string.Empty);
     }
 
     private void InitializeComponent()

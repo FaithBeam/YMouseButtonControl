@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -30,8 +31,8 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     {
         ProfilesService = profilesService;
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
-        ShowExportFileDialog = new Interaction<string, Stream>();
-        ShowImportFileDialog = new Interaction<Unit, Stream>();
+        ShowExportFileDialog = new Interaction<string, string>();
+        ShowImportFileDialog = new Interaction<Unit, string>();
         ImportCommand = ReactiveCommand.CreateFromTask(OnImportClickedAsync);
         var exportCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfile, curProf => curProf.Name != "Default");
@@ -55,8 +56,8 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
     }
     
-    public Interaction<string, Stream> ShowExportFileDialog { get; }
-    public Interaction<Unit, Stream> ShowImportFileDialog { get; }
+    public Interaction<string, string> ShowExportFileDialog { get; }
+    public Interaction<Unit, string> ShowImportFileDialog { get; }
     
     public IProfilesService ProfilesService
     {
@@ -67,18 +68,18 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     private async Task OnImportClickedAsync()
     {
         var result = await ShowImportFileDialog.Handle(Unit.Default);
-        if (result is null)
+        if (string.IsNullOrWhiteSpace(result))
         {
             return;
         }
 
-        await _profilesService.ImportProfileFromStreamAsync(result);
+        _profilesService.ImportProfileFromPath(result);
     }
 
     private async Task OnExportClickedAsync()
     {
-        using var result = await ShowExportFileDialog.Handle(_profilesService.CurrentProfile.Name);
-        if (result is null)
+        var result = await ShowExportFileDialog.Handle(_profilesService.CurrentProfile.Name);
+        if (string.IsNullOrWhiteSpace(result))
         {
             return;
         }
