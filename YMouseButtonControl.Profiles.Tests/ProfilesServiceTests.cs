@@ -2,6 +2,7 @@
 using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.Repositories;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.Profiles.Implementations;
@@ -24,7 +25,7 @@ public class ProfilesServiceTests
         _repoMock = new Mock<IRepository<Profile>>();
         _repoMock
             .Setup(x => x.GetAll())
-            .Returns(() => new List<Profile> {new() {Name = "Default"}});
+            .Returns(() => new List<Profile> { new() { Name = "Default" } });
         _uowMock = new Mock<IUnitOfWork>();
         _uowMock
             .Setup(x => x.GetRepository<Profile>())
@@ -59,7 +60,7 @@ public class ProfilesServiceTests
         _profilesService.CurrentProfileIndex = 1;
         Assert.IsTrue(_profilesService.CurrentProfile.MouseButton1 is NothingMapping);
     }
-    
+
     [TestMethod]
     public void TestUpdateMouseButton()
     {
@@ -107,7 +108,7 @@ public class ProfilesServiceTests
         _profilesService!.AddProfile(newProfile);
         _profilesService.CurrentProfileIndex = 1;
         var removedProfile = _profilesService!.CurrentProfile;
-        
+
         _profilesService!.RemoveProfile(_profilesService.CurrentProfile);
         CollectionAssert.DoesNotContain(_profilesService.Profiles, removedProfile);
 
@@ -117,7 +118,8 @@ public class ProfilesServiceTests
     [TestMethod]
     public void TestGetProfiles()
     {
-        CollectionAssert.AreEquivalent(_profilesService!.GetProfiles().ToList(), new List<Profile>{new(){Name = "Default"}});
+        CollectionAssert.AreEquivalent(_profilesService!.GetProfiles().ToList(),
+            new List<Profile> { new() { Name = "Default" } });
     }
 
     [TestMethod]
@@ -135,7 +137,7 @@ public class ProfilesServiceTests
         var newRepoMock = new Mock<IRepository<Profile>>();
         newRepoMock
             .Setup(x => x.GetAll())
-            .Returns(() => new List<Profile> {defaultProfile, otherProfile});
+            .Returns(() => new List<Profile> { defaultProfile, otherProfile });
         var newUowMock = new Mock<IUnitOfWork>();
         newUowMock
             .Setup(x => x.GetRepository<Profile>())
@@ -161,7 +163,7 @@ public class ProfilesServiceTests
     [TestMethod]
     public void TestLoadProfilesFromDb()
     {
-        CollectionAssert.AreEquivalent(_profilesService!.Profiles, new List<Profile> {new() {Name = "Default"}});
+        CollectionAssert.AreEquivalent(_profilesService!.Profiles, new List<Profile> { new() { Name = "Default" } });
     }
 
     [TestMethod]
@@ -170,10 +172,13 @@ public class ProfilesServiceTests
         // Default profile doesn't exist in db, add it
         var newAutoMocker = new AutoMocker();
         var newRepositoryMock = new Mock<IRepository<Profile>>();
+        // WTF? Idk why this is necessary
         newRepositoryMock
             .SetupSequence(x => x.GetAll())
-            .Returns(() => new List<Profile>())
-            .Returns(() => new List<Profile> { new() { Name = "Default" } });
+            .Returns(new List<Profile>())
+            .Returns(new List<Profile> { new() { Name = "Default" } })
+            .Returns(new List<Profile> { new() { Name = "Default" } })
+            .Returns(new List<Profile> { new() { Name = "Default" } });
         var newUowMock = new Mock<IUnitOfWork>();
         newUowMock
             .Setup(x => x.GetRepository<Profile>())
@@ -208,7 +213,7 @@ public class ProfilesServiceTests
         var newProfile = new Profile { Name = "NewProfile" };
         ps.ReplaceProfile(dummyProfile, newProfile);
         CollectionAssert.DoesNotContain(ps.Profiles, dummyProfile);
-        
+
         // Replace a profile that's the current profile
         ps = _mocker.CreateInstance<ProfilesService>();
         ps.AddProfile(dummyProfile);
@@ -246,5 +251,18 @@ public class ProfilesServiceTests
         Assert.AreEqual(0, ps.Profiles.IndexOf(dummyProfile));
         CollectionAssert.Contains(ps.Profiles, defaultProfile);
         Assert.AreEqual(1, ps.Profiles.IndexOf(defaultProfile));
+    }
+
+    [TestMethod]
+    public void TestCopyProfile()
+    {
+        var ps = _mocker.CreateInstance<ProfilesService>();
+        var dummyProfile = new Profile
+        {
+            Name = "Test",
+            MouseButton1 = new SimulatedKeystrokes { SimulatedKeystrokesType = new DuringMouseActionType(), Keys = "q" }
+        };
+        var copiedProfile = ps.CopyProfile(dummyProfile);
+        Assert.AreEqual(dummyProfile, copiedProfile);
     }
 }
