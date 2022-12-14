@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -7,7 +8,6 @@ using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 
@@ -22,12 +22,20 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     public ReactiveCommand<Unit,Unit> DownCommand { get; }
     public ReactiveCommand<Unit,Unit> RemoveButtonCommand { get; }
     public ReactiveCommand<Unit,Unit> CopyCommand { get; }
+    public ReactiveCommand<Unit,Unit> ExportCommand { get; }
+    public ReactiveCommand<Unit,Unit> ImportCommand { get; }
     public Interaction<ProcessSelectorDialogViewModel, Profile> ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(IProfilesService profilesService, ProcessSelectorDialogViewModel processSelectorDialogViewModel)
     {
         ProfilesService = profilesService;
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
+        ShowExportFileDialog = new Interaction<string, Stream>();
+        ShowImportFileDialog = new Interaction<Unit, Stream>();
+        ImportCommand = ReactiveCommand.CreateFromTask(OnImportClickedAsync);
+        var exportCanExecute = this
+            .WhenAnyValue(x => x.ProfilesService.CurrentProfile, curProf => curProf.Name != "Default");
+        ExportCommand = ReactiveCommand.CreateFromTask(OnExportClickedAsync, exportCanExecute);
         var removeCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfile, curProf => curProf.Name != "Default");
         RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked, removeCanExecute);
@@ -37,7 +45,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
         var downCommandCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)
-            .Select(x => x + 1 < ProfilesService.Profiles.Count);
+            .Select(x => x + 1 < ProfilesService.Profiles.Count && ProfilesService.CurrentProfile.Name != "Default");
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
         ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, Profile>();
@@ -47,10 +55,35 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
     }
     
+    public Interaction<string, Stream> ShowExportFileDialog { get; }
+    public Interaction<Unit, Stream> ShowImportFileDialog { get; }
+    
     public IProfilesService ProfilesService
     {
         get => _profilesService;
         set => _profilesService = value;
+    }
+
+    private async Task OnImportClickedAsync()
+    {
+        var result = await ShowImportFileDialog.Handle(Unit.Default);
+        if (result is null)
+        {
+            return;
+        }
+
+        await _profilesService.ImportProfileFromStreamAsync(result);
+    }
+
+    private async Task OnExportClickedAsync()
+    {
+        using var result = await ShowExportFileDialog.Handle(_profilesService.CurrentProfile.Name);
+        if (result is null)
+        {
+            return;
+        }
+
+        _profilesService.WriteProfileToFile(_profilesService.CurrentProfile, result);
     }
 
     private async Task OnCopyClickedAsync()

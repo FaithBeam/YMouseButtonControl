@@ -24,6 +24,7 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
         private string _parentClass = "N/A";
         private string _matchType = "N/A";
         
+        [JsonIgnore]
         public int Id { get; set; }
         public bool Checked { get; set; }
 

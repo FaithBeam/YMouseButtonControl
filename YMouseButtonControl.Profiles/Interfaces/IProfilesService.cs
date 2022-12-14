@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
@@ -22,9 +24,10 @@ public interface IProfilesService
     IDisposable DelayChangeNotifications();
     event PropertyChangingEventHandler PropertyChanging;
     event PropertyChangedEventHandler PropertyChanged;
-    // void UpdateCurrentMouse(IButtonMapping value, MouseButton button);
     Profile CopyProfile(Profile p);
     bool IsUnsavedChanges();
+    void WriteProfileToFile(Profile p, Stream stream);
+    Task ImportProfileFromStreamAsync(Stream s);
     IEnumerable<Profile> GetProfiles();
     void AddProfile(Profile profile);
     void ReplaceProfile(Profile oldProfile, Profile newProfile);

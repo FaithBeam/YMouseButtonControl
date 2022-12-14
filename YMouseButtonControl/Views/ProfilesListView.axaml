@@ -48,9 +48,12 @@
                     Content="Copy"
                     Command="{Binding CopyCommand}">
             </Button>
-            <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center">
-                Export
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Export"
+                    Command="{Binding ExportCommand}">
             </Button>
             <Button Grid.Row="0"
                     Grid.Column="3"
@@ -72,9 +75,12 @@
                     HorizontalContentAlignment="Center"
                     Content="Remove"
                     Command="{Binding RemoveButtonCommand}"/>
-            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center">
-                Import
+            <Button Grid.Row="1"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Import"
+                    Command="{Binding ImportCommand}">
             </Button>
             <Button Grid.Row="1"
                     Grid.Column="3"

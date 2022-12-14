@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using DynamicData;
 using Newtonsoft.Json;
@@ -104,6 +106,33 @@ public class ProfilesService : ReactiveObject, IProfilesService
         var dbProfiles = repository.GetAll().ToList();
         return _profiles.Count == dbProfiles.Count && _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
+
+    public void WriteProfileToFile(Profile p, Stream stream)
+    {
+        var jsonString = JsonConvert.SerializeObject(p, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        });
+        using var s = new MemoryStream();
+        using var w = new StreamWriter(s);
+        w.Write(jsonString);
+        w.Flush();
+        s.Position = 0;
+        s.CopyTo(stream);
+        stream.Flush();
+        stream.Close();
+    }
+
+    public async Task ImportProfileFromStreamAsync(Stream s)
+    {
+        using var sr = new StreamReader(s);
+        var deserializedProfile = JsonConvert.DeserializeObject<Profile>(await sr.ReadToEndAsync(), new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        });
+        s.Close();
+        AddProfile(deserializedProfile);
+    }
     
     public IEnumerable<Profile> GetProfiles()
     {
@@ -112,6 +141,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public void AddProfile(Profile profile)
     {
+        profile.Id = GetNextProfileId();
         _profiles.Add(profile);
     }
 
@@ -168,5 +198,10 @@ public class ProfilesService : ReactiveObject, IProfilesService
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
         _profiles = new AvaloniaList<Profile>(model);
+    }
+
+    private int GetNextProfileId()
+    {
+        return _profiles.Max(x => x.Id) + 1;
     }
 }
