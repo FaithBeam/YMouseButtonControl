@@ -48,6 +48,6 @@ public static class ServicesBootstrapper
 
     private static void RegisterMacOSServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
-        services.RegisterLazySingleton<IProcessMonitorService>(() => new MacOSProcessMonitorService());
+        services.RegisterLazySingleton<IProcessMonitorService>(() => new MacOsProcessMonitorService());
     }
 }

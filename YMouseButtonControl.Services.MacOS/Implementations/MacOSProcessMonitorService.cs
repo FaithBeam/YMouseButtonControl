@@ -8,14 +8,11 @@ using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Services.MacOS.Implementations;
 
-public class MacOSProcessMonitorService : IProcessMonitorService
+public class MacOsProcessMonitorService : IProcessMonitorService
 {
     private readonly object _processLockObject = new();
     
-    public void Dispose()
-    {
-        return;
-    }
+    public void Dispose() {}
 
     public event EventHandler<ProcessChangedEventArgs> OnProcessChangedEventHandler;
     
@@ -29,10 +26,12 @@ public class MacOSProcessMonitorService : IProcessMonitorService
                 .Select(x => new ProcessModel
                 {
                     ProcessId = (uint) x.Id,
-                    ProcessName = x.ProcessName,
+                    ProcessName = x.ProcessName.Trim(),
                     WindowTitle = x.MainWindowTitle
                 })
-                .OrderBy(x => x.ProcessName);       
+                .GroupBy(x => x.ProcessName)
+                .Select(x => x.First())
+                .OrderBy(x => x.ProcessName);
         }
     }
 
