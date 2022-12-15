@@ -172,7 +172,6 @@ public class ProfilesService : ReactiveObject, IProfilesService
     public void RemoveProfile(Profile profile)
     {
         Profiles.Remove(profile);
-        CurrentProfileIndex = 0;
     }
 
     public void ApplyProfiles()
