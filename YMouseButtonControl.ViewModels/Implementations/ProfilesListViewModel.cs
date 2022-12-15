@@ -42,7 +42,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked, removeCanExecute);
         var upCommandCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)
-            .Select(x => x > 0);
+            .Select(x => x > 1);
         UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
         var downCommandCanExecute = this
             .WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)

@@ -152,7 +152,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         if (index < 1) return;
         _profiles.Remove(p);
         _profiles.Insert(index - 1, p);
-        CurrentProfileIndex--;
+        CurrentProfileIndex = index - 1;
     }
     
     public void MoveProfileDown(Profile p)
@@ -166,9 +166,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
         _profiles.Remove(p);
         _profiles.Insert(index + 1, p);
-        CurrentProfileIndex = 0;
-        this.RaisePropertyChanged(nameof(CurrentProfileIndex));
-        CurrentProfileIndex++;
+        CurrentProfileIndex = index + 1;
     }
 
     public void RemoveProfile(Profile profile)
