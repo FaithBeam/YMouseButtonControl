@@ -45,7 +45,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             .ToProperty(this, x => x.CurrentSimulatedKeystrokesType);
         _description = currentMapping?.PriorityDescription ?? string.Empty;
         _customKeys = currentMapping?.Keys ?? string.Empty;
-        _simulatedKeystrokesIndex = currentMapping?.SimulatedKeystrokesType?.Index ?? 0;
+        SimulatedKeystrokesIndex = currentMapping?.SimulatedKeystrokesType?.Index ?? 0;
         _caretIndex = 0;
     }
 

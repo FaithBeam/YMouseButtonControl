@@ -2,6 +2,7 @@ using System.Reactive.Linq;
 using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Factories;
+using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Models;
@@ -56,6 +57,19 @@ public class SimulatedKeystrokesDialogViewModelTests
         Assert.AreEqual("abc123", result.CustomKeys);
         Assert.AreEqual("my description", result.Description);
         Assert.IsInstanceOfType(result.SimulatedKeystrokesType, typeof(ISimulatedKeystrokesType));
+        
+        // Test case where a previous button mapping is passed to the constructor
+        _autoMocker = new AutoMocker();
+        var ibMock = new Mock<IButtonMapping>();
+        ibMock.SetupProperty(x => x.PriorityDescription, "TEST");
+        ibMock.SetupGet(x => x.Keys).Returns("w");
+        ibMock.SetupGet(x => x.SimulatedKeystrokesType).Returns(new StickyHoldActionType());
+        _autoMocker.Use(ibMock);
+        skdvmt = _autoMocker.CreateInstance<SimulatedKeystrokesDialogViewModel>();
+        result = await skdvmt.OkCommand.Execute();
+        Assert.AreEqual("w", result.CustomKeys);
+        Assert.AreEqual("TEST", skdvmt.Description);
+        Assert.IsInstanceOfType(result.SimulatedKeystrokesType, typeof(StickyHoldActionType));
     }
 
     [TestMethod]
