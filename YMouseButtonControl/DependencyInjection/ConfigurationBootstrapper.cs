@@ -12,10 +12,11 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class ConfigurationBootstrapper
 {
-    public static void RegisterConfiguration(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, DataAccessConfiguration dataAccessConfig)
+    public static void RegisterConfiguration(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver,
+        DataAccessConfiguration dataAccessConfig)
     {
         var configuration = BuildConfiguration();
-        
+
         RegisterDatabaseConfiguration(services, resolver, configuration, dataAccessConfig);
     }
 
@@ -23,7 +24,7 @@ public static class ConfigurationBootstrapper
         new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
-    
+
     private static void RegisterDatabaseConfiguration(IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver, IConfiguration configuration, DataAccessConfiguration dataAccessConfig)
     {
@@ -34,7 +35,7 @@ public static class ConfigurationBootstrapper
         };
         services.RegisterConstant(config);
     }
-    
+
     private static string GetDatabaseConnectionString(IConfiguration configuration,
         IReadonlyDependencyResolver resolver)
     {
@@ -43,17 +44,8 @@ public static class ConfigurationBootstrapper
         var connectionString = configuration["DataAccess:ConnectionString"];
 
         string dbDirectory;
-        if (platformService.GetPlatform() == Platform.Linux)
-        {
-            var environmentService = resolver.GetRequiredService<IEnvironmentService>();
-
-            dbDirectory = $"{environmentService.GetEnvironmentVariable("HOME")}/.config/camelot";
-        }
-        else
-        {
-            var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
-            dbDirectory = Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
-        }
+        var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
+        dbDirectory = Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
 
         if (!Directory.Exists(dbDirectory))
         {

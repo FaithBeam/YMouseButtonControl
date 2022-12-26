@@ -39,6 +39,10 @@ public static class ServicesBootstrapper
         {
             RegisterMacOSServices(services, resolver);
         }
+        else if (platform is Platform.Linux)
+        {
+            RegisterMacOSServices(services, resolver);
+        }
     }
 
     private static void RegisterWindowsServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
