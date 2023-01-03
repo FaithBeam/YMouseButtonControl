@@ -9,6 +9,8 @@
         d:DesignHeight="750"
         Width="800"
         Height="700"
+        CanResize="False"
+        SizeToContent="WidthAndHeight"
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
         Icon="/Resources/mouse.png">
@@ -17,7 +19,7 @@
         <implementations:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="Auto,Auto">
         <Grid ColumnDefinitions="Auto,*">
             <views:ProfilesListView DataContext="{Binding ProfilesListViewModel}" />
             <Grid Grid.Column="1" RowDefinitions="Auto,Auto">
