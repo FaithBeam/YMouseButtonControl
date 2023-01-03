@@ -20,21 +20,21 @@
     <Grid RowDefinitions="*,Auto">
         <Grid ColumnDefinitions="Auto,*">
             <views:ProfilesListView DataContext="{Binding ProfilesListViewModel}" />
-            <StackPanel Grid.Column="1">
+            <Grid Grid.Column="1" RowDefinitions="Auto,Auto">
                 <views:LayerView DataContext="{Binding LayerViewModel}" />
-                <views:ProfileInformationView DataContext="{Binding ProfilesInformationViewModel}" />
-            </StackPanel>
+                <views:ProfileInformationView Grid.Row="1" DataContext="{Binding ProfilesInformationViewModel}" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="1"
-              ColumnDefinitions="*,*,*,*,*,*"
-              Margin="5">
-            <Button>Settings</Button>
-            <Button Grid.Column="1">Save Profile</Button>
-            <Button Grid.Column="2">Load Profile</Button>
-            <TextBox Grid.Column="3" Text="{Binding ProfileName}" IsReadOnly="True" />
-            <Button Grid.Column="4" Content="Apply" Command="{Binding ApplyCommand}" />
-            <Button Grid.Column="5" Content="Close" Command="{Binding CloseCommand}" />
+              Margin="5"
+              ColumnDefinitions="*,*,*,*,*,*">
+            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Settings</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Save Profile</Button>
+            <Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Load Profile</Button>
+            <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Text="{Binding ProfileName}" IsReadOnly="True" />
+            <Button Grid.Column="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Apply" Command="{Binding ApplyCommand}" />
+            <Button Grid.Column="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Close" Command="{Binding CloseCommand}" />
         </Grid>
     </Grid>
     
