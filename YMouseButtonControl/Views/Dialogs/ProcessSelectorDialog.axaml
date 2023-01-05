@@ -78,9 +78,9 @@
 
         <!-- Row 6 -->
         <Grid Grid.Row="5" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
-            <Button Content="Specific Window" />
-            <Button Grid.Column="1" x:Name="OkButton" Content="OK" Command="{Binding OkCommand}" />
-            <Button Grid.Column="2" x:Name="CancelButton" Content="Cancel" Click="CancelButton_OnClick" />
+            <Button Content="Specific Window" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" x:Name="OkButton" Content="OK" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding OkCommand}" />
+            <Button Grid.Column="2" x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelButton_OnClick" />
         </Grid>
     </Grid>
 
