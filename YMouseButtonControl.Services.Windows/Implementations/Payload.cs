@@ -32,7 +32,7 @@ public class Payload : IDisposable
 
     public void Dispose()
     {
-        if (_hHook != 0)
+        if (_hHook != IntPtr.Zero)
         {
             if (!WinApi.PostThreadMessage(_threadId, WM_QUIT, 0, 0))
             {
@@ -45,7 +45,7 @@ public class Payload : IDisposable
             }
             _hHook = 0;
         }
-        if (_dllAddr != 0)
+        if (_dllAddr != IntPtr.Zero)
         {
             if (!WinApi.FreeLibrary(_dllAddr))
             {
@@ -58,7 +58,7 @@ public class Payload : IDisposable
     private void Setup()
     {
         _dllAddr = WinApi.LoadLibrary(_dllPath);
-        if (_dllAddr == 0)
+        if (_dllAddr == IntPtr.Zero)
         {
             throw new Exception($"ERROR LOADING LIBRARY: {_dllPath}");
         }
