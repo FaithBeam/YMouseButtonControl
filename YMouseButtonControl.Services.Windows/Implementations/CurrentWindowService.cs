@@ -14,14 +14,13 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
     uint _threadId;
     IntPtr _hEvent;
     private uint WM_QUIT = 0x0012;
-    private string _foregroundWindow = string.Empty;
 
     public CurrentWindowService()
     {
         Run();
     }
     
-    public string ForegroundWindow => _foregroundWindow;
+    public string ForegroundWindow { get; private set; } = string.Empty;
 
     public event EventHandler<ActiveWindowChangedEventArgs> OnActiveWindowChangedEventHandler;
 
@@ -102,7 +101,7 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
 
     private void OnActiveWindowChanged(string moduleFileName)
     {
-        _foregroundWindow = moduleFileName;
+        ForegroundWindow = moduleFileName;
         var args = new ActiveWindowChangedEventArgs(moduleFileName);
         var handler = OnActiveWindowChangedEventHandler;
         handler?.Invoke(this, args);
