@@ -12,6 +12,7 @@ using YMouseButtonControl.DataAccess.Models.Factories;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;

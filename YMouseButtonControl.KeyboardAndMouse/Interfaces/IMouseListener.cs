@@ -1,7 +1,7 @@
 ﻿using System;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
-namespace YMouseButtonControl.KeyboardAndMouse;
+namespace YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 public interface IMouseListener : IDisposable
 {

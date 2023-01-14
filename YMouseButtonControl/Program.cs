@@ -6,6 +6,7 @@ using Splat;
 using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.KeyboardAndMouse;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 
 namespace YMouseButtonControl;

@@ -1,6 +1,6 @@
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 
-namespace YMouseButtonControl.KeyboardAndMouse;
+namespace YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 public interface IKeyboardSimulator
 {

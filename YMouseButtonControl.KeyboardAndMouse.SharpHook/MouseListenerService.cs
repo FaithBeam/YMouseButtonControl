@@ -1,6 +1,7 @@
 ﻿using System;
 using SharpHook;
 using SharpHook.Native;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using MouseButton = YMouseButtonControl.DataAccess.Models.Enums.MouseButton;

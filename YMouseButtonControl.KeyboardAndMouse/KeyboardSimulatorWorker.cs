@@ -6,6 +6,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
@@ -92,6 +93,7 @@ public class KeyboardSimulatorWorker : IDisposable
             return true;
         }
 
+        // If the profile's checkbox is checked in the profiles list
         if (!p.Checked)
         {
             return true;

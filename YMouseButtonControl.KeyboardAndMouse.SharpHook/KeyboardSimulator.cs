@@ -4,6 +4,7 @@ using System.Threading;
 using SharpHook;
 using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Models;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Services;
 
