@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
+﻿using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
