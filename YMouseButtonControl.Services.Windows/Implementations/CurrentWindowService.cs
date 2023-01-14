@@ -11,8 +11,8 @@ namespace YMouseButtonControl.Services.Windows.Implementations;
 
 public class CurrentWindowService : IDisposable, ICurrentWindowService
 {
-    uint _threadId;
-    IntPtr _hEvent;
+    private uint _threadId;
+    private IntPtr _hEvent;
     private uint WM_QUIT = 0x0012;
 
     public CurrentWindowService()
