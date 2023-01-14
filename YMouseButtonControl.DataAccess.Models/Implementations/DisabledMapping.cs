@@ -14,7 +14,8 @@ public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
     public bool State { get; set; }
     public bool CanRaiseDialog { get; } = false;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
-    
+    public bool MouseButtonDisabled { get; set; } = true;
+
     public override string ToString()
     {
         return Description;

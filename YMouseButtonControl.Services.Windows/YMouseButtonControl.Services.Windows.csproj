@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\YMouseButtonControl.Processes\YMouseButtonControl.Processes.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Profiles\YMouseButtonControl.Profiles.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.Abstractions\YMouseButtonControl.Services.Abstractions.csproj" />
     </ItemGroup>
 

@@ -5,9 +5,12 @@ using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Processes.Interfaces;
 
-public interface IProcessMonitorService : IDisposable
+public interface IProcessMonitorService
 {
-    event EventHandler<ProcessChangedEventArgs> OnProcessChangedEventHandler;
+    event EventHandler<ProcessChangedEventArgs> OnProcessCreatedEventHandler;
+    event EventHandler<ProcessChangedEventArgs> OnProcessDeletedEventHandler;
+
+    void Dispose();
     IEnumerable<ProcessModel> GetProcesses();
     bool ProcessRunning(string process);
 }

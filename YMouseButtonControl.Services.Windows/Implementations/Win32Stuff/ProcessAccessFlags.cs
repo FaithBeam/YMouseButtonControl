@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YMouseButtonControl.Services.Windows.Implementations;
+namespace YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 [Flags]
 public enum ProcessAccessFlags : uint

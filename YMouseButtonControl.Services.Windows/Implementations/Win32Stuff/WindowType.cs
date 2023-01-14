@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.Services.Windows.Implementations;
+﻿namespace YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 public enum GetWindowType : uint
 {

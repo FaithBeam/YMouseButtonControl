@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace YMouseButtonControl.Services.Windows.Implementations;
+namespace YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct ICONINFO

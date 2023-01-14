@@ -20,6 +20,7 @@ public class NothingMapping : IButtonMapping, IEquatable<NothingMapping>
     public bool State { get; set; }
     public bool CanRaiseDialog { get; } = false;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
+    public bool MouseButtonDisabled { get; set; } = false;
 
     public bool Equals(NothingMapping? other)
     {

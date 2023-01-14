@@ -5,6 +5,7 @@ using System.Management;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
@@ -30,11 +31,18 @@ public class ProcessMonitorService : IProcessMonitorService
         _deletedEventWatcher.Start();
     }
 
-    public event EventHandler<ProcessChangedEventArgs> OnProcessChangedEventHandler;
+    public event EventHandler<ProcessChangedEventArgs> OnProcessCreatedEventHandler;
+    public event EventHandler<ProcessChangedEventArgs> OnProcessDeletedEventHandler;
 
-    private void OnProcessChanged(ProcessChangedEventArgs e)
+    private void OnProcessCreated(ProcessChangedEventArgs e)
     {
-        var handler = OnProcessChangedEventHandler;
+        var handler = OnProcessCreatedEventHandler;
+        handler?.Invoke(this, e);
+    }
+
+    private void OnProcessDeleted(ProcessChangedEventArgs e)
+    {
+        var handler = OnProcessDeletedEventHandler;
         handler?.Invoke(this, e);
     }
 
@@ -49,7 +57,7 @@ public class ProcessMonitorService : IProcessMonitorService
                 ProcessName = (string)process.Properties["Name"].Value
             };
             _runningProcesses.Remove(pm.ProcessId);
-            OnProcessChanged(new ProcessChangedEventArgs(pm));
+            OnProcessDeleted(new ProcessChangedEventArgs(pm));
         }
     }
 
@@ -59,7 +67,8 @@ public class ProcessMonitorService : IProcessMonitorService
         {
             var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
             var pId = (uint)process.Properties["ProcessId"].Value;
-            var hWnd = _winApi.GetHWndFromProcessId(pId);
+            pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
+            var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
             if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
             {
                 windowTitle = (string)process.Properties["Description"].Value;
@@ -76,7 +85,7 @@ public class ProcessMonitorService : IProcessMonitorService
                 return;
             }
             _runningProcesses.TryAdd(pm.ProcessId, pm);
-            OnProcessChanged(new ProcessChangedEventArgs(pm));
+            OnProcessCreated(new ProcessChangedEventArgs(pm));
         }
     }
 
@@ -104,14 +113,15 @@ public class ProcessMonitorService : IProcessMonitorService
             foreach (var i in _searcher.Get())
             {
                 var pId = (uint)i.Properties["ProcessId"].Value;
-                var hWnd = _winApi.GetHWndFromProcessId(pId);
+                pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
+                var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
                 if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
                 {
                     windowTitle = (string)i.Properties["Description"].Value;
                 }
                 var pm = new ProcessModel()
                 {
-                    ProcessId = (uint)i.Properties["ProcessId"].Value,
+                    ProcessId = pId,
                     ProcessName = (string)i.Properties["Name"].Value,
                     WindowTitle = windowTitle,
                     BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)

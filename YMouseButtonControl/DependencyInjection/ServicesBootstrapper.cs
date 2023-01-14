@@ -25,29 +25,38 @@ public static class ServicesBootstrapper
             resolver.GetRequiredService<IUnitOfWorkFactory>()
         ));
     }
-    
-    private static void RegisterPlatformSpecificServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+
+    private static void RegisterPlatformSpecificServices(IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver)
     {
         var platformService = resolver.GetRequiredService<IPlatformService>();
         var platform = platformService.GetPlatform();
 
-        if (platform is Platform.Windows)
+        switch (platform)
         {
-            RegisterWindowsServices(services, resolver);
-        }
-        else if (platform is Platform.MacOs)
-        {
-            RegisterMacOSServices(services, resolver);
-        }
-        else if (platform is Platform.Linux)
-        {
-            RegisterMacOSServices(services, resolver);
+            case Platform.Windows:
+                RegisterWindowsServices(services, resolver);
+                break;
+            case Platform.MacOs:
+            case Platform.Linux:
+                RegisterMacOSServices(services, resolver);
+                break;
         }
     }
 
-    private static void RegisterWindowsServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    private static void RegisterWindowsServices(IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IProcessMonitorService>(() => new ProcessMonitorService());
+        services.RegisterLazySingleton<ICurrentWindowService>(() => new CurrentWindowService());
+        services.RegisterLazySingleton<ILowLevelMouseHookService>(() => new LowLevelMouseHookService(
+            resolver.GetRequiredService<IProfilesService>(),
+            resolver.GetRequiredService<ICurrentWindowService>()
+        ));
+        //services.RegisterLazySingleton<IPayloadInjectorService>(() => new PayloadInjectorService(
+        //    resolver.GetRequiredService<IProfilesService>(),
+        //    resolver.GetRequiredService<IProcessMonitorService>()
+        //));
     }
 
     private static void RegisterMacOSServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)

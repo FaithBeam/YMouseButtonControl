@@ -14,8 +14,9 @@ public class MacOsProcessMonitorService : IProcessMonitorService
     
     public void Dispose() {}
 
-    public event EventHandler<ProcessChangedEventArgs> OnProcessChangedEventHandler;
-    
+    public event EventHandler<ProcessChangedEventArgs> OnProcessCreatedEventHandler;
+    public event EventHandler<ProcessChangedEventArgs> OnProcessDeletedEventHandler;
+
     public IEnumerable<ProcessModel> GetProcesses()
     {
         lock (_processLockObject)

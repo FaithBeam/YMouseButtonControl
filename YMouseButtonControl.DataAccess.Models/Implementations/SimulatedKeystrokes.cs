@@ -16,6 +16,7 @@ public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<Si
 
     public bool CanRaiseDialog { get; } = true;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
+    public bool MouseButtonDisabled { get; set; } = true;
 
     public override string ToString()
     {
