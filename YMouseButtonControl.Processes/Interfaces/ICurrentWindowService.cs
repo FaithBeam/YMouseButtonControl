@@ -7,5 +7,5 @@ public interface ICurrentWindowService
 {
     event EventHandler<ActiveWindowChangedEventArgs> OnActiveWindowChangedEventHandler;
     void Dispose();
-    void Run();
+    public string ForegroundWindow { get; }
 }

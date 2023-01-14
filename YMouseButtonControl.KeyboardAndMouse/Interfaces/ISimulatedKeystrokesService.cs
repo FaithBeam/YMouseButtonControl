@@ -1,8 +1,8 @@
-using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
-public interface IKeyboardSimulator
+public interface ISimulatedKeystrokesService
 {
     void SimulatedKeystrokes(IButtonMapping buttonMapping, bool pressed);
 }

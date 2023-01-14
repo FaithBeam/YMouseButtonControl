@@ -1,6 +1,6 @@
-﻿using YMouseButtonControl.KeyboardAndMouse.SharpHook.Services;
+﻿using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
-namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests.Services;
+namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests;
 
 [TestClass]
 public class ParseKeysServiceTests

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Services;
+namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
 public static class ParseKeysService
 {

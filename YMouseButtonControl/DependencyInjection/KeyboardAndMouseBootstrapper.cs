@@ -3,6 +3,7 @@ using Splat;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook;
+using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 
@@ -16,13 +17,26 @@ public static class KeyboardAndMouseBootstrapper
         services.RegisterLazySingleton<IMouseListener>(() => new MouseListener(
             new TaskPoolGlobalHook()
         ));
-        services.RegisterLazySingleton<IKeyboardSimulator>(() => new KeyboardSimulator(new EventSimulator()));
+        services.RegisterLazySingleton<ISimulateKeyService>(() => new SimulateKeyService(
+            new EventSimulator()
+        ));
+        services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
+            resolver.GetRequiredService<ISimulateKeyService>()
+        ));
+        services.RegisterLazySingleton<IRouteButtonMappingService>(() => new RouteButtonMappingService(
+            resolver.GetRequiredService<ISimulatedKeystrokesService>()
+        ));
+        services.RegisterLazySingleton<IRouteMouseButtonService>(() => new RouteMouseButtonService(
+            resolver.GetRequiredService<IRouteButtonMappingService>()
+        ));
+        services.RegisterLazySingleton<ISkipProfileService>(() => new SkipProfileService(
+            resolver.GetRequiredService<ICurrentWindowService>()
+        ));
         services.RegisterLazySingleton(() => new KeyboardSimulatorWorker(
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<IMouseListener>(),
-            resolver.GetRequiredService<IKeyboardSimulator>(),
-            resolver.GetRequiredService<IProcessMonitorService>(),
-            resolver.GetRequiredService<ICurrentWindowService>()
+            resolver.GetRequiredService<IRouteMouseButtonService>(),
+            resolver.GetRequiredService<ISkipProfileService>()
         ));
     }
 }
