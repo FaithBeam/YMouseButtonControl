@@ -18,15 +18,15 @@ public class RouteMouseButtonServiceTests
         {
             return new[]
             {
-                new object[] { MouseButton.MouseButton1, new NothingMapping() },
-                new object[] { MouseButton.MouseButton2, new NothingMapping() },
-                new object[] { MouseButton.MouseButton3, new NothingMapping() },
-                new object[] { MouseButton.MouseButton4, new NothingMapping() },
-                new object[] { MouseButton.MouseButton5, new NothingMapping() },
-                new object[] { MouseButton.MouseWheelUp, new NothingMapping() },
-                new object[] { MouseButton.MouseWheelLeft, new NothingMapping() },
-                new object[] { MouseButton.MouseWheelRight, new NothingMapping() },
-                new object[] { MouseButton.MouseWheelDown, new NothingMapping() },
+                new object[] { MouseButton.MouseButton1, new DisabledMapping() },
+                new object[] { MouseButton.MouseButton2, new DisabledMapping() },
+                new object[] { MouseButton.MouseButton3, new DisabledMapping() },
+                new object[] { MouseButton.MouseButton4, new DisabledMapping() },
+                new object[] { MouseButton.MouseButton5, new DisabledMapping() },
+                new object[] { MouseButton.MouseWheelUp, new DisabledMapping() },
+                new object[] { MouseButton.MouseWheelLeft, new DisabledMapping() },
+                new object[] { MouseButton.MouseWheelRight, new DisabledMapping() },
+                new object[] { MouseButton.MouseWheelDown, new DisabledMapping() },
             };
         }
     }
@@ -43,7 +43,40 @@ public class RouteMouseButtonServiceTests
     {
         _autoMocker.Setup<IRouteButtonMappingService>(x => x.Route(mapping, true)).Verifiable();
         var rbms = _autoMocker.CreateInstance<RouteMouseButtonService>();
-        rbms.Route(button, new Profile{MouseButton1 = mapping});
+        var p = new Profile();
+        switch (button)
+        {
+            case MouseButton.MouseButton1:
+                p.MouseButton1 = mapping;
+                break;
+            case MouseButton.MouseButton2:
+                p.MouseButton2 = mapping;
+                break;
+            case MouseButton.MouseButton3:
+                p.MouseButton3 = mapping;
+                break;
+            case MouseButton.MouseButton4:
+                p.MouseButton4 = mapping;
+                break;
+            case MouseButton.MouseButton5:
+                p.MouseButton5 = mapping;
+                break;
+            case MouseButton.MouseWheelUp:
+                p.MouseWheelUp = mapping;
+                break;
+            case MouseButton.MouseWheelDown:
+                p.MouseWheelDown = mapping;
+                break;
+            case MouseButton.MouseWheelLeft:
+                p.MouseWheelLeft = mapping;
+                break;
+            case MouseButton.MouseWheelRight:
+                p.MouseWheelRight = mapping;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(button), button, null);
+        }
+        rbms.Route(button, p);
         _autoMocker.VerifyAll();
     }
 }
