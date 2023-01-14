@@ -64,13 +64,13 @@ public class Payload : IDisposable
         }
 
         _functionCallbackAddr = WinApi.GetProcAddress(_dllAddr, "start_callback");
-        if (_functionCallbackAddr == 0)
+        if (_functionCallbackAddr == IntPtr.Zero)
         {
             throw new Exception($"ERROR FINDING ADDRESS: {_dllAddr}");
         }
 
         _functionUpdateDisabledKeysAddr = WinApi.GetProcAddress(_dllAddr, "update_disabled_keys");
-        if (_functionUpdateDisabledKeysAddr == 0)
+        if (_functionUpdateDisabledKeysAddr == IntPtr.Zero)
         {
             throw new Exception($"ERROR FINDING ADDRESS FOR UPDATE_DISABLED_KEYS");
         }
