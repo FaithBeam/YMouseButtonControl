@@ -29,7 +29,6 @@ public class KeyboardSimulatorWorker : IDisposable
     public void Dispose()
     {
         UnsubscribeFromEvents();
-        _mouseListener?.Dispose();
     }
 
     private void SubscribeToEvents()

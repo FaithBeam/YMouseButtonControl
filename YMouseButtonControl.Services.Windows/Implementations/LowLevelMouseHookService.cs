@@ -23,6 +23,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
     private readonly IProfilesService _profilesService;
     private readonly ICurrentWindowService _currentWindowService;
     private string _foregroundWindow = string.Empty;
+    private Thread _thread;
     private readonly object _lockObj = new();
 
     private readonly ConcurrentDictionary<uint, bool> _buttonDisabledDict = new(
@@ -47,7 +48,6 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
             .WhenAnyValue(x => x._profilesService.Profiles)
             .Subscribe(OnProfilesChanged);
         UpdateDisabledButtons();
-        Run();
     }
 
     private void OnForegroundWindowChanged(object sender, ActiveWindowChangedEventArgs e)
@@ -133,9 +133,9 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         }
     }
 
-    private void Run()
+    public void Run()
     {
-        var lowLevelMsgPumpThread = new Thread(() =>
+        _thread = new Thread(() =>
         {
             _threadId = WinApi.GetCurrentThreadId();
 
@@ -154,7 +154,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
                 }
             }
         });
-        lowLevelMsgPumpThread.Start();
+        _thread.Start();
     }
 
     private nint HandleButton(uint button, int nCode, nint wParam, nint lParam)
@@ -228,5 +228,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         _currentWindowService.OnActiveWindowChangedEventHandler -= OnForegroundWindowChanged;
         
         _hHook = IntPtr.Zero;
+
+        _thread.Join();
     }
 }

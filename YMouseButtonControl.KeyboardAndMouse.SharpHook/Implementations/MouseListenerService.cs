@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using SharpHook;
 using SharpHook.Native;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
@@ -11,6 +12,7 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 public class MouseListener : IMouseListener
 {
     private readonly IGlobalHook _hook;
+    private Thread _thread;
 
     public MouseListener(IGlobalHook hook)
     {
@@ -22,8 +24,15 @@ public class MouseListener : IMouseListener
     public event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
     public event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;
     public event EventHandler<NewMouseWheelEventArgs> OnMouseWheelEventHandler;
-    
-    public void Run() => _hook.Run();
+
+    public void Run()
+    {
+        _thread = new Thread(() =>
+        {
+            _hook.Run();
+        });
+        _thread.Start();
+    } 
 
     private void ConvertMouseWheelEvent(object sender, MouseWheelHookEventArgs e)
     {
@@ -99,5 +108,7 @@ public class MouseListener : IMouseListener
         UnsubscribeFromEvents();
         
         _hook.Dispose();
+        
+        _thread.Join();
     }
 }

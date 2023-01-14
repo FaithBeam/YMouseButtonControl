@@ -14,12 +14,8 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
     private uint _threadId;
     private IntPtr _hEvent;
     private uint WM_QUIT = 0x0012;
+    private Thread _thread;
 
-    public CurrentWindowService()
-    {
-        Run();
-    }
-    
     public string ForegroundWindow { get; private set; } = string.Empty;
 
     public event EventHandler<ActiveWindowChangedEventArgs> OnActiveWindowChangedEventHandler;
@@ -37,13 +33,15 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
         }
 
         _hEvent = IntPtr.Zero;
+
+        _thread.Join();
     }
 
-    private void Run()
+    public void Run()
     {
         var winEvenCallbackDelegate = new WinApi.WinEventDelegate(WinEvenProcCallback);
 
-        var winEventMsgPumpThread = new Thread(() =>
+        _thread = new Thread(() =>
         {
             _threadId = WinApi.GetCurrentThreadId();
 
@@ -72,7 +70,7 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
             //    throw new Exception("ERROR UNHOOKING WIN EVENT");
             //}
         });
-        winEventMsgPumpThread.Start();
+        _thread.Start();
     }
 
     private void WinEvenProcCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
