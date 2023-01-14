@@ -75,14 +75,29 @@ public class KeyboardSimulatorWorker : IDisposable
     {
         foreach (var p in _profilesService.Profiles)
         {
-            // Skip profiles that are not default and do not match the current foreground window
-            if (p.Process != "*" && !_currentWindow.Contains(p.Process))
+            if (ShouldSkipProfile(p))
             {
                 continue;
             }
             
             RouteMouseButton(e.Button, p);
         }
+    }
+
+    // Returns whether or not this profile should be skipped on mouse events
+    private bool ShouldSkipProfile(Profile p)
+    {
+        if (p.Process != "*" && !_currentWindow.Contains(p.Process))
+        {
+            return true;
+        }
+
+        if (!p.Checked)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void RouteMouseButton(MouseButton button, Profile p)
