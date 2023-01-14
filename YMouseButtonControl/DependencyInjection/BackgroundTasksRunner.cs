@@ -29,14 +29,9 @@ public static class BackgroundTasksRunner
 
     public static void Stop()
     {
-        Trace.WriteLine("Stopping cws");
         _currentWindowService.Dispose();
-        Trace.WriteLine("Stopping llmhs");
         _lowLevelMouseHookService.Dispose();
-        Trace.WriteLine("Stopping ksw");
         _keyboardSimulatorWorker.Dispose();
-        Trace.WriteLine("Stopping ml");
         _mouseListener?.Dispose();
-        Trace.WriteLine("Stopped all?");
     }
 }
