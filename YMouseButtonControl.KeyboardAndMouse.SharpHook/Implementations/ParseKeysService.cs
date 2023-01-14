@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
-public static class ParseKeysService
+public class ParseKeysService : IParseKeysService
 {
-    public static List<string> ParseKeys(string keys)
+    public List<string> ParseKeys(string keys)
     {
         var newKeys = new List<string>();
         var i = 0;

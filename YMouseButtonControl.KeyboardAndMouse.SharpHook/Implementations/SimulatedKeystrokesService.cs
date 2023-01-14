@@ -9,10 +9,12 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 public class SimulatedKeystrokesService : ISimulatedKeystrokesService
 {
     private readonly ISimulateKeyService _simulateKeyService;
+    private readonly IParseKeysService _parseKeysService;
 
-    public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService)
+    public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService)
     {
         _simulateKeyService = simulateKeyService;
+        _parseKeysService = parseKeysService;
     }
 
     public void SimulatedKeystrokes(IButtonMapping buttonMapping, bool pressed)
@@ -31,12 +33,12 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
 
         if (mapping.State)
         {
-            StickyHoldRelease(ParseKeysService.ParseKeys(mapping.Keys));
+            StickyHoldRelease(_parseKeysService.ParseKeys(mapping.Keys));
             mapping.State = false;
         }
         else
         {
-            StickyHoldPress(ParseKeysService.ParseKeys(mapping.Keys));
+            StickyHoldPress(_parseKeysService.ParseKeys(mapping.Keys));
             mapping.State = true;
         }
     }

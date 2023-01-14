@@ -6,9 +6,9 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
 public class SimulateKeyService : ISimulateKeyService
 {
-    private readonly EventSimulator _keyboardSimulator;
+    private readonly IEventSimulator _keyboardSimulator;
 
-    public SimulateKeyService(EventSimulator keyboardSimulator)
+    public SimulateKeyService(IEventSimulator keyboardSimulator)
     {
         _keyboardSimulator = keyboardSimulator;
     }

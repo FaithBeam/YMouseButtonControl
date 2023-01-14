@@ -19,8 +19,10 @@ public static class KeyboardAndMouseBootstrapper
         services.RegisterLazySingleton<ISimulateKeyService>(() => new SimulateKeyService(
             new EventSimulator()
         ));
+        services.RegisterLazySingleton<IParseKeysService>(() => new ParseKeysService());
         services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
-            resolver.GetRequiredService<ISimulateKeyService>()
+            resolver.GetRequiredService<ISimulateKeyService>(),
+            resolver.GetRequiredService<IParseKeysService>()
         ));
         services.RegisterLazySingleton<IRouteButtonMappingService>(() => new RouteButtonMappingService(
             resolver.GetRequiredService<ISimulatedKeystrokesService>()

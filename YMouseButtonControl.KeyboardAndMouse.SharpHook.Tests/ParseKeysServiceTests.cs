@@ -6,22 +6,14 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests;
 public class ParseKeysServiceTests
 {
     [TestMethod]
-    public void TestParseKeys()
+    [DataRow("abc", "a", "b", "c")]
+    [DataRow("{shift}w", "shift", "w")]
+    [DataRow("{SHIFT}W", "shift", "w")]
+    [DataRow("w", "w")]
+    public void TestParseKeys(string keys, params string[] expected)
     {
-        var keys = "abc";
-        var expected = new List<string> { "a", "b", "c" };
-        CollectionAssert.AreEqual(ParseKeysService.ParseKeys(keys), expected);
-
-        keys = "{shift}w";
-        expected = new List<string>{ "shift", "w" };
-        CollectionAssert.AreEqual(ParseKeysService.ParseKeys(keys), expected);
+        var pks = new ParseKeysService();
         
-        keys = "{SHIFT}W";
-        expected = new List<string>{ "shift", "w" };
-        CollectionAssert.AreEqual(ParseKeysService.ParseKeys(keys), expected);
-        
-        keys = "w";
-        expected = new List<string>{ "w" };
-        CollectionAssert.AreEqual(ParseKeysService.ParseKeys(keys), expected);
+        CollectionAssert.AreEqual(expected, pks.ParseKeys(keys));
     }
 }
