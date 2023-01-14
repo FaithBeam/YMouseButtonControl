@@ -3,6 +3,7 @@ using Splat;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
+using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 
@@ -20,9 +21,14 @@ public static class KeyboardAndMouseBootstrapper
             new EventSimulator()
         ));
         services.RegisterLazySingleton<IParseKeysService>(() => new ParseKeysService());
-        services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
+        services.RegisterLazySingleton<IStickyHoldService>(() => new StickyHoldService(
             resolver.GetRequiredService<ISimulateKeyService>(),
             resolver.GetRequiredService<IParseKeysService>()
+        ));
+        services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
+            resolver.GetRequiredService<ISimulateKeyService>(),
+            resolver.GetRequiredService<IParseKeysService>(),
+            resolver.GetRequiredService<IStickyHoldService>()
         ));
         services.RegisterLazySingleton<IRouteButtonMappingService>(() => new RouteButtonMappingService(
             resolver.GetRequiredService<ISimulatedKeystrokesService>()

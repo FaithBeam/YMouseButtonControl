@@ -10,11 +10,14 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
 {
     private readonly ISimulateKeyService _simulateKeyService;
     private readonly IParseKeysService _parseKeysService;
+    private readonly IStickyHoldService _stickyHoldService;
 
-    public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService)
+    public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService,
+        IStickyHoldService stickyHoldService)
     {
         _simulateKeyService = simulateKeyService;
         _parseKeysService = parseKeysService;
+        _stickyHoldService = stickyHoldService;
     }
 
     public void SimulatedKeystrokes(IButtonMapping buttonMapping, bool pressed)
@@ -22,40 +25,8 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
         switch (buttonMapping.SimulatedKeystrokesType)
         {
             case StickyHoldActionType:
-                StickyHold(buttonMapping, pressed);
+                _stickyHoldService.StickyHold(buttonMapping, pressed);
                 break;
-        }
-    }
-
-    private void StickyHold(IButtonMapping mapping, bool pressed)
-    {
-        if (!pressed) return;
-
-        if (mapping.State)
-        {
-            StickyHoldRelease(_parseKeysService.ParseKeys(mapping.Keys));
-            mapping.State = false;
-        }
-        else
-        {
-            StickyHoldPress(_parseKeysService.ParseKeys(mapping.Keys));
-            mapping.State = true;
-        }
-    }
-        
-    private void StickyHoldPress(IEnumerable<string> keys)
-    {
-        foreach (var c in keys)
-        {
-            _simulateKeyService.SimulateKeyPress(c);
-        }
-    }
-
-    private void StickyHoldRelease(IEnumerable<string> keys)
-    {
-        foreach (var c in keys.Reverse())
-        {
-            _simulateKeyService.SimulateKeyRelease(c);
         }
     }
 }
