@@ -94,7 +94,7 @@ public class Payload : IDisposable
             _threadId = WinApi.GetCurrentThreadId();
             Trace.WriteLine(_targetpid);
             _hHook = WinApi.SetWindowsHookEx(HookType.WH_MOUSE, _functionCallbackAddr, _dllAddr, _targetpid);
-            if (_hHook == 0)
+            if (_hHook == IntPtr.Zero)
             {
                 var lastError = Marshal.GetLastWin32Error();
                 throw new Exception($"ERROR SETTING WINDOWS HOOK: {lastError}");
