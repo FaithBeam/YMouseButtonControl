@@ -5,6 +5,13 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
 public class ParseKeysService : IParseKeysService
 {
+    /// <summary>
+    /// Splits a string of characters into a list of strings. Words surrounded by {} will be added as the whole word.
+    /// For example, {shift} will be "shift" in the list.
+    /// "{SHIFT}abc" -> "shift", "a", "b", "c"
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <returns></returns>
     public List<string> ParseKeys(string keys)
     {
         var newKeys = new List<string>();

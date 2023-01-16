@@ -22,29 +22,13 @@ public class StickyHoldService : IStickyHoldService
 
         if (mapping.State)
         {
-            StickyHoldRelease(_parseKeysService.ParseKeys(mapping.Keys));
+            _simulateKeyService.ReleaseKeys(_parseKeysService.ParseKeys(mapping.Keys));
             mapping.State = false;
         }
         else
         {
-            StickyHoldPress(_parseKeysService.ParseKeys(mapping.Keys));
+            _simulateKeyService.PressKeys(_parseKeysService.ParseKeys(mapping.Keys));
             mapping.State = true;
-        }
-    }
-        
-    private void StickyHoldPress(IEnumerable<string> keys)
-    {
-        foreach (var c in keys)
-        {
-            _simulateKeyService.SimulateKeyPress(c);
-        }
-    }
-
-    private void StickyHoldRelease(IEnumerable<string> keys)
-    {
-        foreach (var c in keys.Reverse())
-        {
-            _simulateKeyService.SimulateKeyRelease(c);
         }
     }
 }
