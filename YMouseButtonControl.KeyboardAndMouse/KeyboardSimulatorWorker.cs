@@ -1,4 +1,5 @@
 ﻿using System;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
@@ -54,12 +55,21 @@ public class KeyboardSimulatorWorker : IDisposable
                 continue;
             }
             
-            _routeMouseButtonService.Route(e.Button, p);
+            _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Pressed);
         }
     }
 
     private void OnMouseReleased(object sender, NewMouseHookEventArgs e)
     {
+        foreach (var p in _profilesService.Profiles)
+        {
+            if (_skipProfileService.ShouldSkipProfile(p))
+            {
+                continue;
+            }
+            
+            _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Released);
+        }
     }
 
     private void OnMouseWheel(object sender, NewMouseWheelEventArgs e)

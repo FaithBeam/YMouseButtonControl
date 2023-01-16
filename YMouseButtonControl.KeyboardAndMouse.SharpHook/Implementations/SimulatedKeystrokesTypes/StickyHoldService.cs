@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using YMouseButtonControl.DataAccess.Models.Interfaces;
+﻿using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
@@ -8,26 +7,27 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.Simulat
 public class StickyHoldService : IStickyHoldService
 {
     private readonly ISimulateKeyService _simulateKeyService;
-    private readonly IParseKeysService _parseKeysService;
 
-    public StickyHoldService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService)
+    public StickyHoldService(ISimulateKeyService simulateKeyService)
     {
         _simulateKeyService = simulateKeyService;
-        _parseKeysService = parseKeysService;
     }
 
-    public void StickyHold(IButtonMapping mapping, bool pressed)
+    public void StickyHold(IButtonMapping mapping, MouseButtonState state)
     {
-        if (!pressed) return;
+        if (state != MouseButtonState.Pressed)
+        {
+            return;
+        }
 
         if (mapping.State)
         {
-            _simulateKeyService.ReleaseKeys(_parseKeysService.ParseKeys(mapping.Keys));
+            _simulateKeyService.ReleaseKeys(mapping.Keys);
             mapping.State = false;
         }
         else
         {
-            _simulateKeyService.PressKeys(_parseKeysService.ParseKeys(mapping.Keys));
+            _simulateKeyService.PressKeys(mapping.Keys);
             mapping.State = true;
         }
     }

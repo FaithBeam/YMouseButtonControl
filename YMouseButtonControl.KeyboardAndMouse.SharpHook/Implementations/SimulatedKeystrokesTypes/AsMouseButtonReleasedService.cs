@@ -4,18 +4,18 @@ using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class AsMouseButtonPressedService : IAsMouseButtonPressedService
+public class AsMouseButtonReleasedService : IAsMouseButtonReleasedService
 {
     private readonly ISimulateKeyService _simulateKeyService;
 
-    public AsMouseButtonPressedService(ISimulateKeyService simulateKeyService)
+    public AsMouseButtonReleasedService(ISimulateKeyService simulateKeyService)
     {
         _simulateKeyService = simulateKeyService;
     }
 
-    public void AsMouseButtonPressed(IButtonMapping mapping, MouseButtonState state)
+    public void AsMouseButtonReleased(IButtonMapping mapping, MouseButtonState state)
     {
-        if (state != MouseButtonState.Pressed)
+        if (state != MouseButtonState.Released)
         {
             return;
         }

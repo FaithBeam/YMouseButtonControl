@@ -1,5 +1,6 @@
 ﻿using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations
@@ -13,12 +14,12 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations
             _simulatedKeystrokesService = simulatedKeystrokesService;
         }
 
-        public void Route(IButtonMapping mapping, bool pressed)
+        public void Route(IButtonMapping mapping, MouseButtonState state)
         {
             switch (mapping)
             {
                 case SimulatedKeystrokes:
-                    _simulatedKeystrokesService.SimulatedKeystrokes(mapping, pressed);
+                    _simulatedKeystrokesService.SimulatedKeystrokes(mapping, state);
                     break;
             }
         }

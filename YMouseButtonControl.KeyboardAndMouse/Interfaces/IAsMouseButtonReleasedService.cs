@@ -3,7 +3,7 @@ using YMouseButtonControl.KeyboardAndMouse.Enums;
 
 namespace YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
-public interface ISimulatedKeystrokesService
+public interface IAsMouseButtonReleasedService
 {
-    void SimulatedKeystrokes(IButtonMapping buttonMapping, MouseButtonState state);
+    void AsMouseButtonReleased(IButtonMapping mapping, MouseButtonState state);
 }

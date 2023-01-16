@@ -59,7 +59,7 @@ public class SimulateKeyServiceTests
         var args = new List<KeyCode>();
         _autoMocker.Setup<IEventSimulator, UioHookResult>(x => x.SimulateKeyPress(Capture.In(args)))
             .Returns(UioHookResult.Success);
-        var keys = new List<string> { "a", "b", "c" };
+        var keys = "abc";
         var expected = GetExpected(keys);
         var sks = _autoMocker.CreateInstance<SimulateKeyService>();
         sks.PressKeys(keys);
@@ -72,7 +72,7 @@ public class SimulateKeyServiceTests
         var args = new List<KeyCode>();
         _autoMocker.Setup<IEventSimulator, UioHookResult>(x => x.SimulateKeyRelease(Capture.In(args)))
             .Returns(UioHookResult.Success);
-        var keys = new List<string> { "a", "b", "c" };
+        var keys = "abc";
         var expected = GetExpected(keys);
         expected.Reverse();
         var sks = _autoMocker.CreateInstance<SimulateKeyService>();
@@ -85,8 +85,8 @@ public class SimulateKeyServiceTests
         return KeyCodeMappings.KeyCodes[k];
     }
 
-    private List<KeyCode> GetExpected(IEnumerable<string> keys)
+    private List<KeyCode> GetExpected(string keys)
     {
-        return keys.Select(GetKeyCode).ToList();
+        return keys.Select(x => GetKeyCode(x.ToString())).ToList();
     }
 }

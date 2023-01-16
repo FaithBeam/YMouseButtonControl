@@ -2,6 +2,7 @@
 using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
@@ -41,7 +42,7 @@ public class RouteMouseButtonServiceTests
     [DynamicData(nameof(Data))]
     public void Route(MouseButton button, IButtonMapping mapping)
     {
-        _autoMocker.Setup<IRouteButtonMappingService>(x => x.Route(mapping, true)).Verifiable();
+        _autoMocker.Setup<IRouteButtonMappingService>(x => x.Route(mapping, MouseButtonState.Pressed)).Verifiable();
         var rbms = _autoMocker.CreateInstance<RouteMouseButtonService>();
         var p = new Profile();
         switch (button)
@@ -76,7 +77,7 @@ public class RouteMouseButtonServiceTests
             default:
                 throw new ArgumentOutOfRangeException(nameof(button), button, null);
         }
-        rbms.Route(button, p);
+        rbms.Route(button, p, MouseButtonState.Pressed);
         _autoMocker.VerifyAll();
     }
 }

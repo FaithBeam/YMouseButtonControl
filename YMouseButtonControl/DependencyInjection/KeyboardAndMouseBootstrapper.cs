@@ -17,23 +17,26 @@ public static class KeyboardAndMouseBootstrapper
         services.RegisterLazySingleton<IMouseListener>(() => new MouseListener(
             new TaskPoolGlobalHook()
         ));
-        services.RegisterLazySingleton<ISimulateKeyService>(() => new SimulateKeyService(
-            new EventSimulator()
-        ));
         services.RegisterLazySingleton<IParseKeysService>(() => new ParseKeysService());
-        services.RegisterLazySingleton<IStickyHoldService>(() => new StickyHoldService(
-            resolver.GetRequiredService<ISimulateKeyService>(),
+        services.RegisterLazySingleton<ISimulateKeyService>(() => new SimulateKeyService(
+            new EventSimulator(),
             resolver.GetRequiredService<IParseKeysService>()
+        ));
+        services.RegisterLazySingleton<IStickyHoldService>(() => new StickyHoldService(
+            resolver.GetRequiredService<ISimulateKeyService>()
         ));
         services.RegisterLazySingleton<IAsMouseButtonPressedService>(() => new AsMouseButtonPressedService(
-            resolver.GetRequiredService<ISimulateKeyService>(),
-            resolver.GetRequiredService<IParseKeysService>()
+            resolver.GetRequiredService<ISimulateKeyService>()
+        ));
+        services.RegisterLazySingleton<IAsMouseButtonReleasedService>(() => new AsMouseButtonReleasedService(
+            resolver.GetRequiredService<ISimulateKeyService>()
         ));
         services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
             resolver.GetRequiredService<ISimulateKeyService>(),
             resolver.GetRequiredService<IParseKeysService>(),
             resolver.GetRequiredService<IStickyHoldService>(),
-            resolver.GetRequiredService<IAsMouseButtonPressedService>()
+            resolver.GetRequiredService<IAsMouseButtonPressedService>(),
+            resolver.GetRequiredService<IAsMouseButtonReleasedService>()
         ));
         services.RegisterLazySingleton<IRouteButtonMappingService>(() => new RouteButtonMappingService(
             resolver.GetRequiredService<ISimulatedKeystrokesService>()

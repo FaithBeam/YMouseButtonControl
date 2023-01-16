@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SharpHook;
+﻿using SharpHook;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Models;
 
@@ -9,10 +7,12 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 public class SimulateKeyService : ISimulateKeyService
 {
     private readonly IEventSimulator _keyboardSimulator;
+    private readonly IParseKeysService _parseKeysService;
 
-    public SimulateKeyService(IEventSimulator keyboardSimulator)
+    public SimulateKeyService(IEventSimulator keyboardSimulator, IParseKeysService parseKeysService)
     {
         _keyboardSimulator = keyboardSimulator;
+        _parseKeysService = parseKeysService;
     }
     
     public SimulateKeyboardResult SimulateKeyPress(string key) => new()
@@ -38,9 +38,9 @@ public class SimulateKeyService : ISimulateKeyService
     /// Keys to be pressed in order.
     /// </summary>
     /// <param name="keys">Keys to be pressed</param>
-    public void PressKeys(IEnumerable<string> keys)
+    public void PressKeys(string keys)
     {
-        foreach (var c in keys)
+        foreach (var c in _parseKeysService.ParseKeys(keys))
         {
             SimulateKeyPress(c);
         }
@@ -51,17 +51,19 @@ public class SimulateKeyService : ISimulateKeyService
     /// in that order.
     /// </summary>
     /// <param name="keys">Keys to be released</param>
-    public void ReleaseKeys(IEnumerable<string> keys)
+    public void ReleaseKeys(string keys)
     {
-        foreach (var c in keys.Reverse())
+        var parsed = _parseKeysService.ParseKeys(keys);
+        parsed.Reverse();
+        foreach (var c in parsed)
         {
             SimulateKeyRelease(c);
         }
     }
 
-    public void TapKeys(IEnumerable<string> keys)
+    public void TapKeys(string keys)
     {
-        foreach (var k in keys)
+        foreach (var k in _parseKeysService.ParseKeys(keys))
         {
             SimulateKeyTap(k);
         }

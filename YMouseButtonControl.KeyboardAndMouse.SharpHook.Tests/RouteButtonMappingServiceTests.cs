@@ -1,5 +1,6 @@
 ﻿using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
@@ -20,9 +21,9 @@ public class RouteButtonMappingServiceTests
     public void Route()
     {
         var mapping = new SimulatedKeystrokes();
-        _autoMocker.Setup<ISimulatedKeystrokesService>(x => x.SimulatedKeystrokes(mapping, true)).Verifiable();
+        _autoMocker.Setup<ISimulatedKeystrokesService>(x => x.SimulatedKeystrokes(mapping, MouseButtonState.Pressed)).Verifiable();
         var rbms = _autoMocker.CreateInstance<RouteButtonMappingService>();
-        rbms.Route(mapping, true);
+        rbms.Route(mapping, MouseButtonState.Pressed);
         _autoMocker.VerifyAll();
     }
 }

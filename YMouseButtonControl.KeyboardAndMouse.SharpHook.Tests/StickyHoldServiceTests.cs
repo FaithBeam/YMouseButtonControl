@@ -1,7 +1,7 @@
 ﻿using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests;
@@ -22,19 +22,14 @@ public class StickyHoldServiceTests
     {
         var keys = "abc";
         var state = false;
-        var pressed = true;
+        var pressed = MouseButtonState.Pressed;
         var mapping = new SimulatedKeystrokes
         {
             Keys = keys,
             State = state
         };
-        var pks = _autoMocker.CreateInstance<ParseKeysService>();
-        var pksReturn = pks.ParseKeys(keys);
         _autoMocker
-            .Setup<IParseKeysService, List<string>>(x => x.ParseKeys(keys))
-            .Returns(pksReturn);
-        _autoMocker
-            .Setup<ISimulateKeyService>(x => x.PressKeys(pksReturn))
+            .Setup<ISimulateKeyService>(x => x.PressKeys(keys))
             .Verifiable();
         var shs = _autoMocker.CreateInstance<StickyHoldService>();
         shs.StickyHold(mapping, pressed);
@@ -47,19 +42,14 @@ public class StickyHoldServiceTests
     {
         var keys = "abc";
         var state = true;
-        var pressed = true;
+        var pressed = MouseButtonState.Pressed;
         var mapping = new SimulatedKeystrokes
         {
             Keys = keys,
             State = state
         };
-        var pks = _autoMocker.CreateInstance<ParseKeysService>();
-        var pksReturn = pks.ParseKeys(keys);
         _autoMocker
-            .Setup<IParseKeysService, List<string>>(x => x.ParseKeys(keys))
-            .Returns(pksReturn);
-        _autoMocker
-            .Setup<ISimulateKeyService>(x => x.ReleaseKeys(pksReturn))
+            .Setup<ISimulateKeyService>(x => x.ReleaseKeys(keys))
             .Verifiable();
         var shs = _autoMocker.CreateInstance<StickyHoldService>();
         shs.StickyHold(mapping, pressed);

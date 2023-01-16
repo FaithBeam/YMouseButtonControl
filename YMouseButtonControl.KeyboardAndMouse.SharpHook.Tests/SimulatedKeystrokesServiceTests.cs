@@ -2,6 +2,7 @@
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
+using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
@@ -25,7 +26,7 @@ public class SimulatedKeystrokesServiceTests
         {
             SimulatedKeystrokesType = new StickyHoldActionType()
         };
-        var pressed = true;
+        var pressed = MouseButtonState.Pressed;
         _autoMocker.Setup<IStickyHoldService>(x => x.StickyHold(mapping, pressed)).Verifiable();
         var sks = _autoMocker.CreateInstance<SimulatedKeystrokesService>();
         sks.SimulatedKeystrokes(mapping, pressed);

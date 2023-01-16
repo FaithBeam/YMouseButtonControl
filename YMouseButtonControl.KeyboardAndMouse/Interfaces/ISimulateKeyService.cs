@@ -19,14 +19,14 @@ public interface ISimulateKeyService
     /// Keys to be pressed in order.
     /// </summary>
     /// <param name="keys">Keys to be pressed</param>
-    void PressKeys(IEnumerable<string> keys);
+    void PressKeys(string keys);
 
     /// <summary>
     /// Keys will be released in the reversed order they come. For example, sending abc to this method will release cba
     /// in that order.
     /// </summary>
     /// <param name="keys">Keys to be released</param>
-    void ReleaseKeys(IEnumerable<string> keys);
+    void ReleaseKeys(string keys);
 
-    void TapKeys(IEnumerable<string> keys);
+    void TapKeys(string keys);
 }
