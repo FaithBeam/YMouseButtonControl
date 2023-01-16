@@ -14,11 +14,13 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
     private readonly IAsMouseButtonPressedService _asMouseButtonPressedService;
     private readonly IAsMouseButtonReleasedService _asMouseButtonReleasedService;
     private readonly IDuringMousePressAndReleaseService _duringMousePressAndReleaseService;
+    private readonly IRepeatedWhileButtonDownService _repeatedWhileButtonDownService;
 
     public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService,
         IStickyHoldService stickyHoldService, IAsMouseButtonPressedService asMouseButtonPressedService,
         IAsMouseButtonReleasedService asMouseButtonReleasedService,
-        IDuringMousePressAndReleaseService duringMousePressAndReleaseService)
+        IDuringMousePressAndReleaseService duringMousePressAndReleaseService,
+        IRepeatedWhileButtonDownService repeatedWhileButtonDownService)
     {
         _simulateKeyService = simulateKeyService;
         _parseKeysService = parseKeysService;
@@ -26,6 +28,7 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
         _asMouseButtonPressedService = asMouseButtonPressedService;
         _asMouseButtonReleasedService = asMouseButtonReleasedService;
         _duringMousePressAndReleaseService = duringMousePressAndReleaseService;
+        _repeatedWhileButtonDownService = repeatedWhileButtonDownService;
     }
 
     public void SimulatedKeystrokes(IButtonMapping buttonMapping, MouseButtonState state)
@@ -40,6 +43,9 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
                 break;
             case DuringMouseActionType:
                 _duringMousePressAndReleaseService.DuringMousePressAndRelease(buttonMapping, state);
+                break;
+            case RepeatedlyWhileButtonDownActionType:
+                _repeatedWhileButtonDownService.RepeatWhileDown(buttonMapping, state);
                 break;
             case StickyHoldActionType:
                 _stickyHoldService.StickyHold(buttonMapping, state);
