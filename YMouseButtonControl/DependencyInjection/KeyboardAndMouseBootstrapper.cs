@@ -31,12 +31,16 @@ public static class KeyboardAndMouseBootstrapper
         services.RegisterLazySingleton<IAsMouseButtonReleasedService>(() => new AsMouseButtonReleasedService(
             resolver.GetRequiredService<ISimulateKeyService>()
         ));
+        services.RegisterLazySingleton<IDuringMousePressAndReleaseService>(() => new DuringMousePressAndReleaseService(
+            resolver.GetRequiredService<ISimulateKeyService>()
+        ));
         services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
             resolver.GetRequiredService<ISimulateKeyService>(),
             resolver.GetRequiredService<IParseKeysService>(),
             resolver.GetRequiredService<IStickyHoldService>(),
             resolver.GetRequiredService<IAsMouseButtonPressedService>(),
-            resolver.GetRequiredService<IAsMouseButtonReleasedService>()
+            resolver.GetRequiredService<IAsMouseButtonReleasedService>(),
+            resolver.GetRequiredService<IDuringMousePressAndReleaseService>()
         ));
         services.RegisterLazySingleton<IRouteButtonMappingService>(() => new RouteButtonMappingService(
             resolver.GetRequiredService<ISimulatedKeystrokesService>()
