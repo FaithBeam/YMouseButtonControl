@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Enums;
@@ -13,7 +12,7 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
     private Thread _thread;
     private bool _shouldStop;
     private object _lock = new ();
-    private const int _repeatRateMs = 50;
+    private const int _repeatRateMs = 33;
 
     public RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyService)
     {

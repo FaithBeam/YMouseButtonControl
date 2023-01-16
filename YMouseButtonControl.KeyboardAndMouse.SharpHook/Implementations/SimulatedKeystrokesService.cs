@@ -15,12 +15,13 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
     private readonly IAsMouseButtonReleasedService _asMouseButtonReleasedService;
     private readonly IDuringMousePressAndReleaseService _duringMousePressAndReleaseService;
     private readonly IRepeatedWhileButtonDownService _repeatedWhileButtonDownService;
+    private readonly IStickyRepeatService _stickyRepeatService;
 
     public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService,
         IStickyHoldService stickyHoldService, IAsMouseButtonPressedService asMouseButtonPressedService,
         IAsMouseButtonReleasedService asMouseButtonReleasedService,
         IDuringMousePressAndReleaseService duringMousePressAndReleaseService,
-        IRepeatedWhileButtonDownService repeatedWhileButtonDownService)
+        IRepeatedWhileButtonDownService repeatedWhileButtonDownService, IStickyRepeatService stickyRepeatService)
     {
         _simulateKeyService = simulateKeyService;
         _parseKeysService = parseKeysService;
@@ -29,6 +30,7 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
         _asMouseButtonReleasedService = asMouseButtonReleasedService;
         _duringMousePressAndReleaseService = duringMousePressAndReleaseService;
         _repeatedWhileButtonDownService = repeatedWhileButtonDownService;
+        _stickyRepeatService = stickyRepeatService;
     }
 
     public void SimulatedKeystrokes(IButtonMapping buttonMapping, MouseButtonState state)
@@ -46,6 +48,9 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
                 break;
             case RepeatedlyWhileButtonDownActionType:
                 _repeatedWhileButtonDownService.RepeatWhileDown(buttonMapping, state);
+                break;
+            case StickyRepeatActionType:
+                _stickyRepeatService.StickyRepeat(buttonMapping, state);
                 break;
             case StickyHoldActionType:
                 _stickyHoldService.StickyHold(buttonMapping, state);

@@ -37,6 +37,9 @@ public static class KeyboardAndMouseBootstrapper
         services.RegisterLazySingleton<IRepeatedWhileButtonDownService>(() => new RepeatedWhileButtonDownService(
             resolver.GetRequiredService<ISimulateKeyService>()
         ));
+        services.RegisterLazySingleton<IStickyRepeatService>(() => new StickyRepeatService(
+            resolver.GetRequiredService<ISimulateKeyService>()
+        ));
         services.RegisterLazySingleton<ISimulatedKeystrokesService>(() => new SimulatedKeystrokesService(
             resolver.GetRequiredService<ISimulateKeyService>(),
             resolver.GetRequiredService<IParseKeysService>(),
@@ -44,7 +47,8 @@ public static class KeyboardAndMouseBootstrapper
             resolver.GetRequiredService<IAsMouseButtonPressedService>(),
             resolver.GetRequiredService<IAsMouseButtonReleasedService>(),
             resolver.GetRequiredService<IDuringMousePressAndReleaseService>(),
-            resolver.GetRequiredService<IRepeatedWhileButtonDownService>()
+            resolver.GetRequiredService<IRepeatedWhileButtonDownService>(),
+            resolver.GetRequiredService<IStickyRepeatService>()
         ));
         services.RegisterLazySingleton<IRouteButtonMappingService>(() => new RouteButtonMappingService(
             resolver.GetRequiredService<ISimulatedKeystrokesService>()
