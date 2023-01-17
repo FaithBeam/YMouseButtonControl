@@ -2,6 +2,7 @@
 using Moq.AutoMock;
 using SharpHook;
 using SharpHook.Native;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests;
@@ -34,7 +35,7 @@ public class SimulateKeyServiceTests
     {
         var key = "a";
         var keyCode = KeyCodeMappings.KeyCodes[key];
-
+        _autoMocker.Use<IParseKeysService>(new ParseKeysService());
         _autoMocker.Use<IEventSimulator>(x => x.SimulateKeyRelease(keyCode) == UioHookResult.Success);
         var sks = _autoMocker.CreateInstance<SimulateKeyService>();
         sks.SimulateKeyRelease(key);
@@ -57,6 +58,7 @@ public class SimulateKeyServiceTests
     public void PressKeys()
     {
         var args = new List<KeyCode>();
+        _autoMocker.Use<IParseKeysService>(new ParseKeysService());
         _autoMocker.Setup<IEventSimulator, UioHookResult>(x => x.SimulateKeyPress(Capture.In(args)))
             .Returns(UioHookResult.Success);
         var keys = "abc";
@@ -70,6 +72,7 @@ public class SimulateKeyServiceTests
     public void ReleaseKeys()
     {
         var args = new List<KeyCode>();
+        _autoMocker.Use<IParseKeysService>(new ParseKeysService());
         _autoMocker.Setup<IEventSimulator, UioHookResult>(x => x.SimulateKeyRelease(Capture.In(args)))
             .Returns(UioHookResult.Success);
         var keys = "abc";

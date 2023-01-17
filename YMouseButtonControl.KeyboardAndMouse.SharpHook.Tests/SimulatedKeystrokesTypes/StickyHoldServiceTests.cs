@@ -4,7 +4,7 @@ using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests;
+namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests.SimulatedKeystrokesTypes;
 
 [TestClass]
 public class StickyHoldServiceTests
