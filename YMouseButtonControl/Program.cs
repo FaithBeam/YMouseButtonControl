@@ -1,8 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
 using Splat;
+using YMouseButtonControl.BackgroundTasks.Interfaces;
 using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DependencyInjection;
+using YMouseButtonControl.Services.Windows.Implementations;
 
 namespace YMouseButtonControl;
 
@@ -15,13 +17,14 @@ internal static class Program
             UseInMemoryDatabase = false
         };
         RegisterDependencies(dataAccessConfig);
-        
-        BackgroundTasksRunner.Start(Locator.Current);
+
+        var backgroundTasksRunner = Locator.Current.GetRequiredService<IBackgroundTasksRunner>();
+        backgroundTasksRunner.Start();
         
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
         
-        BackgroundTasksRunner.Stop();
+        backgroundTasksRunner.Stop();
     }
 
     private static AppBuilder BuildAvaloniaApp()

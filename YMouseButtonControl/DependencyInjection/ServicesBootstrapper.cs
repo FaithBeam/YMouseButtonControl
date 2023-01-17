@@ -1,5 +1,8 @@
 ﻿using Splat;
+using YMouseButtonControl.BackgroundTasks.Interfaces;
 using YMouseButtonControl.DataAccess.UnitOfWork;
+using YMouseButtonControl.KeyboardAndMouse;
+using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -48,11 +51,19 @@ public static class ServicesBootstrapper
         IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IProcessMonitorService>(() => new ProcessMonitorService());
-        services.RegisterLazySingleton<ICurrentWindowService>(() => new CurrentWindowService());
+        services.RegisterLazySingleton<ICurrentWindowService>(() =>
+            new Services.Windows.Implementations.CurrentWindowService());
         services.RegisterLazySingleton<ILowLevelMouseHookService>(() => new LowLevelMouseHookService(
             resolver.GetRequiredService<IProfilesService>(),
             resolver.GetRequiredService<ICurrentWindowService>()
         ));
+        services.RegisterLazySingleton<IBackgroundTasksRunner>(() =>
+            new Services.Windows.Implementations.BackgroundTasksRunner(
+                resolver.GetRequiredService<IMouseListener>(),
+                resolver.GetRequiredService<KeyboardSimulatorWorker>(),
+                resolver.GetRequiredService<ILowLevelMouseHookService>(),
+                resolver.GetRequiredService<ICurrentWindowService>()
+            ));
         //services.RegisterLazySingleton<IPayloadInjectorService>(() => new PayloadInjectorService(
         //    resolver.GetRequiredService<IProfilesService>(),
         //    resolver.GetRequiredService<IProcessMonitorService>()
@@ -62,5 +73,13 @@ public static class ServicesBootstrapper
     private static void RegisterMacOSServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IProcessMonitorService>(() => new MacOsProcessMonitorService());
+        services.RegisterLazySingleton<ICurrentWindowService>(() =>
+            new Services.MacOS.Implementations.CurrentWindowService()
+        );
+        services.RegisterLazySingleton<IBackgroundTasksRunner>(() =>
+            new Services.MacOS.Implementations.BackgroundTasksRunner(
+                resolver.GetRequiredService<IMouseListener>(),
+                resolver.GetRequiredService<KeyboardSimulatorWorker>()
+            ));
     }
 }

@@ -44,6 +44,7 @@
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.BackgroundTasks\YMouseButtonControl.BackgroundTasks.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse.SharpHook\YMouseButtonControl.KeyboardAndMouse.SharpHook.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj" />
