@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using YMouseButtonControl.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 public interface IParseKeysService
 {
-    List<string> ParseKeys(string keys);
+    List<ParsedKey> ParseKeys(string keys);
 }

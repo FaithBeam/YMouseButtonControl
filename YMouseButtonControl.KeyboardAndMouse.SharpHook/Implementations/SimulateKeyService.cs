@@ -1,4 +1,5 @@
-﻿using SharpHook;
+﻿using System.Collections.Generic;
+using SharpHook;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Models;
 
@@ -40,9 +41,9 @@ public class SimulateKeyService : ISimulateKeyService
     /// <param name="keys">Keys to be pressed</param>
     public void PressKeys(string keys)
     {
-        foreach (var c in _parseKeysService.ParseKeys(keys))
+        foreach (var pk in _parseKeysService.ParseKeys(keys))
         {
-            SimulateKeyPress(c);
+            SimulateKeyPress(pk.Key);
         }
     }
 
@@ -55,17 +56,36 @@ public class SimulateKeyService : ISimulateKeyService
     {
         var parsed = _parseKeysService.ParseKeys(keys);
         parsed.Reverse();
-        foreach (var c in parsed)
+        foreach (var pk in parsed)
         {
-            SimulateKeyRelease(c);
+            SimulateKeyRelease(pk.Key);
         }
     }
 
     public void TapKeys(string keys)
     {
-        foreach (var k in _parseKeysService.ParseKeys(keys))
+        var parsed = _parseKeysService.ParseKeys(keys);
+        var stack = new Stack<ParsedKey>();
+        
+        foreach (var pk in parsed)
         {
-            SimulateKeyTap(k);
+            if (stack.Count > 0 && !stack.Peek().IsModifier)
+            {
+                // Pop all items in stack
+                while (stack.TryPop(out var poppedPk))
+                {
+                    SimulateKeyRelease(poppedPk.Key);
+                }
+            }
+            
+            stack.Push(pk);
+            SimulateKeyPress(pk.Key);
+        }
+        
+        // Pop all items in stack
+        while (stack.TryPop(out var poppedPk))
+        {
+            SimulateKeyRelease(poppedPk.Key);
         }
     }
 }

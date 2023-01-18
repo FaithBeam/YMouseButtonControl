@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
@@ -12,9 +13,9 @@ public class ParseKeysService : IParseKeysService
     /// </summary>
     /// <param name="keys"></param>
     /// <returns></returns>
-    public List<string> ParseKeys(string keys)
+    public List<ParsedKey> ParseKeys(string keys)
     {
-        var newKeys = new List<string>();
+        var newKeys = new List<ParsedKey>();
         var i = 0;
         while (i < keys.Length)
         {
@@ -23,7 +24,7 @@ public class ParseKeysService : IParseKeysService
                 for (var j = i; j < keys.Length; j++)
                 {
                     if (keys[j] != '}') continue;
-                    newKeys.Add(keys.Substring(i + 1, j - 1).ToLower());
+                    newKeys.Add(new ParsedKey{Key = keys.Substring(i + 1, j - i - 1).ToLower(), IsModifier = true} );
                     i = j;
                     break;
                 }
@@ -32,7 +33,7 @@ public class ParseKeysService : IParseKeysService
             }
             else
             {
-                newKeys.Add(keys[i].ToString().ToLower());
+                newKeys.Add(new ParsedKey{Key = keys[i].ToString().ToLower(), IsModifier = false} );
                 i++;
             }
         }

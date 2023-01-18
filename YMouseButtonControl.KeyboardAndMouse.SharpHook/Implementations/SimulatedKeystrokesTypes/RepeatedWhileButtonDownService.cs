@@ -30,8 +30,15 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
 
             _thread = new Thread(() =>
             {
-                while (!_shouldStop)
+                while (true)
                 {
+                    lock (_lock)
+                    {
+                        if (_shouldStop)
+                        {
+                            break;
+                        }
+                    }
                     Thread.Sleep(_repeatRateMs);
                     _simulateKeyService.TapKeys(mapping.Keys);
                 }
@@ -41,9 +48,15 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
         }
         else if (state == MouseButtonState.Released)
         {
-            _shouldStop = true;
+            lock (_lock)
+            {
+                _shouldStop = true;
+            }
             _thread.Join();
-            _shouldStop = false;
+            lock (_lock)
+            {
+                _shouldStop = false;
+            }
         }
     }
 }
