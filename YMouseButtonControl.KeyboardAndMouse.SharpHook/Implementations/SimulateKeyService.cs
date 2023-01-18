@@ -62,6 +62,10 @@ public class SimulateKeyService : ISimulateKeyService
         }
     }
 
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="keys"></param>
     public void TapKeys(string keys)
     {
         var parsed = _parseKeysService.ParseKeys(keys);
@@ -69,9 +73,9 @@ public class SimulateKeyService : ISimulateKeyService
         
         foreach (var pk in parsed)
         {
-            if (stack.Count > 0 && !stack.Peek().IsModifier)
+            // Pop the entire stack if the last key pressed is a normal key
+            if (stack.TryPeek(out var peekPk) && !peekPk.IsModifier)
             {
-                // Pop all items in stack
                 while (stack.TryPop(out var poppedPk))
                 {
                     SimulateKeyRelease(poppedPk.Key);
@@ -82,7 +86,7 @@ public class SimulateKeyService : ISimulateKeyService
             SimulateKeyPress(pk.Key);
         }
         
-        // Pop all items in stack
+        // Release any remaining keys in the stack
         while (stack.TryPop(out var poppedPk))
         {
             SimulateKeyRelease(poppedPk.Key);
