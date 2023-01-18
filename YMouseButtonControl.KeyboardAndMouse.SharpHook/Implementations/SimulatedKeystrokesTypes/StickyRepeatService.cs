@@ -10,7 +10,7 @@ public class StickyRepeatService : IStickyRepeatService
     private readonly ISimulateKeyService _simulateKeyService;
     private Thread _thread;
     private bool _shouldStop;
-    private object _lock = new ();
+    private readonly object _lock = new ();
     private const int _repeatRateMs = 33;
 
     public StickyRepeatService(ISimulateKeyService simulateKeyService)
@@ -31,9 +31,15 @@ public class StickyRepeatService : IStickyRepeatService
         }
         else if (_thread.IsAlive)
         {
-            _shouldStop = true;
+            lock (_lock)
+            {
+                _shouldStop = true;
+            }
             _thread.Join();
-            _shouldStop = false;
+            lock (_lock)
+            {
+                _shouldStop = false;
+            }
         }
         else
         {
@@ -45,8 +51,16 @@ public class StickyRepeatService : IStickyRepeatService
     {
         _thread = new Thread(() =>
         {
-            while (!_shouldStop)
+            while (true)
             {
+                lock (_lock)
+                {
+                    if (_shouldStop)
+                    {
+                        break;
+                    }
+                }
+                
                 Thread.Sleep(_repeatRateMs);
                 _simulateKeyService.TapKeys(mapping.Keys);
             }
