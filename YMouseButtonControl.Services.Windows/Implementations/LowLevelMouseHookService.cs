@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Avalonia.Collections;
+using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Processes.Interfaces;
@@ -44,8 +48,9 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         _profilesService = profilesService;
         _currentWindowService = currentWindowService;
         _currentWindowService.OnActiveWindowChangedEventHandler += OnForegroundWindowChanged;
-        this
-            .WhenAnyValue(x => x._profilesService.Profiles)
+        _profilesService.Profiles
+            .ToObservableChangeSet(x => x)
+            .ToCollection()
             .Subscribe(OnProfilesChanged);
         UpdateDisabledButtons();
     }
@@ -66,8 +71,9 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         UpdateDisabledButtons();
     }
     
-    private void OnProfilesChanged(AvaloniaList<Profile> profiles)
+    private void OnProfilesChanged(IReadOnlyCollection<Profile> profiles)
     {
+        Trace.WriteLine("UPDATE DISABLED BUTTONS");
         UpdateDisabledButtons();
     }
 

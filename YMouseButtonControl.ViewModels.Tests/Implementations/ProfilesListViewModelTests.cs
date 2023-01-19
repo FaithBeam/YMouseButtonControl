@@ -1,4 +1,5 @@
-﻿using Avalonia.Collections;
+﻿using System.Collections.ObjectModel;
+using Avalonia.Collections;
 using Moq;
 using Moq.AutoMock;
 using YMouseButtonControl.DataAccess.Models.Implementations;
@@ -21,7 +22,7 @@ public class ProfilesListViewModelTests
         var mocker = new AutoMocker();
         var psMock = mocker.GetMock<IProfilesService>();
         psMock.SetupGet(x => x.CurrentProfile).Returns(p1);
-        psMock.SetupGet(x => x.Profiles).Returns(new AvaloniaList<Profile>(p1));
+        psMock.SetupGet(x => x.Profiles).Returns(new ObservableCollection<Profile>(){p1});
         psMock.SetupGet(x => x.CurrentProfileIndex).Returns(0);
         mocker.Use(psMock.Object);
         var plvm = mocker.CreateInstance<ProfilesListViewModel>();
@@ -36,7 +37,7 @@ public class ProfilesListViewModelTests
         var psMock = mocker.GetMock<IProfilesService>();
         var curProf = new Profile { Name = "Test" };
         psMock.SetupGet(x => x.CurrentProfile).Returns(curProf);
-        psMock.SetupGet(x => x.Profiles).Returns(new AvaloniaList<Profile>(curProf));
+        psMock.SetupGet(x => x.Profiles).Returns(new ObservableCollection<Profile>(){curProf});
         psMock.SetupGet(x => x.CurrentProfileIndex).Returns(0);
         mocker.Use(psMock);
         var plvm = mocker.CreateInstance<ProfilesListViewModel>();

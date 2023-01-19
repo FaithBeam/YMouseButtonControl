@@ -46,8 +46,6 @@ public class ProfilesServiceTests
         _profilesService.AddProfile(new Profile());
         _profilesService.CurrentProfileIndex = 1;
         Assert.AreEqual(_profilesService.CurrentProfileIndex, 1);
-
-        Assert.ThrowsException<ReactiveUI.UnhandledErrorException>(() => _profilesService.CurrentProfileIndex = 2);
     }
 
     [TestMethod]

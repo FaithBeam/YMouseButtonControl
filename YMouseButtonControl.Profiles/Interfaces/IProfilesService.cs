@@ -16,7 +16,7 @@ public interface IProfilesService
     IObservable<IReactivePropertyChangedEventArgs<IReactiveObject>> Changed { get; }
     IObservable<Exception> ThrownExceptions { get; }
     bool UnsavedChanges { get; }
-    AvaloniaList<Profile> Profiles { get; }
+    ObservableCollection<Profile> Profiles { get; }
     int CurrentProfileIndex { get; set; }
     Profile CurrentProfile { get; }
     IDisposable SuppressChangeNotifications();

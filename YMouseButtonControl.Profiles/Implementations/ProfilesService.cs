@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -16,7 +17,6 @@ namespace YMouseButtonControl.Profiles.Implementations;
 public class ProfilesService : ReactiveObject, IProfilesService
 {
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
-    private AvaloniaList<Profile> _profiles;
     private int _currentProfileIndex;
     private readonly ObservableAsPropertyHelper<Profile> _currentProfile;
     private readonly ObservableAsPropertyHelper<bool> _unsavedChanges;
@@ -28,7 +28,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         LoadProfilesFromDb();
         _currentProfile = this
             .WhenAnyValue(x => x.CurrentProfileIndex)
-            .Select(x => _profiles[x])
+            .Select(x => Profiles[x])
             .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
         _unsavedChanges = this
@@ -48,7 +48,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public bool UnsavedChanges => _unsavedChanges.Value;
 
-    public AvaloniaList<Profile> Profiles => _profiles;
+    public ObservableCollection<Profile> Profiles { get; private set; }
 
     public int CurrentProfileIndex
     {
@@ -104,7 +104,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return _profiles.Count != dbProfiles.Count || _profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
+        return Profiles.Count != dbProfiles.Count || Profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
 
     public void WriteProfileToFile(Profile p, string path)
@@ -128,19 +128,19 @@ public class ProfilesService : ReactiveObject, IProfilesService
     
     public IEnumerable<Profile> GetProfiles()
     {
-        return _profiles;
+        return Profiles;
     }
 
     public void AddProfile(Profile profile)
     {
         profile.Id = GetNextProfileId();
-        _profiles.Add(profile);
+        Profiles.Add(profile);
     }
 
     public void ReplaceProfile(Profile oldProfile, Profile newProfile)
     {
-        var pIndex = _profiles.IndexOf(oldProfile);
-        _profiles.Replace(oldProfile, newProfile);
+        var pIndex = Profiles.IndexOf(oldProfile);
+        Profiles.Replace(oldProfile, newProfile);
         // Trigger CurrentProfile to update
         CurrentProfileIndex = 0;
         CurrentProfileIndex = pIndex;
@@ -148,29 +148,30 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public void MoveProfileUp(Profile p)
     {
-        var index = _profiles.IndexOf(p);
+        var index = Profiles.IndexOf(p);
         if (index < 1) return;
-        _profiles.Remove(p);
-        _profiles.Insert(index - 1, p);
+        Profiles.Remove(p);
+        Profiles.Insert(index - 1, p);
         CurrentProfileIndex = index - 1;
     }
     
     public void MoveProfileDown(Profile p)
     {
-        var index = _profiles.IndexOf(p);
+        var index = Profiles.IndexOf(p);
         if (index < 0) return;
-        if (_profiles.Count < index + 2)
+        if (Profiles.Count < index + 2)
         {
             return;
         }
 
-        _profiles.Remove(p);
-        _profiles.Insert(index + 1, p);
+        Profiles.Remove(p);
+        Profiles.Insert(index + 1, p);
         CurrentProfileIndex = index + 1;
     }
 
     public void RemoveProfile(Profile profile)
     {
+        CurrentProfileIndex--;
         Profiles.Remove(profile);
     }
 
@@ -178,7 +179,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
     {
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
-        repository.ApplyAction(_profiles);
+        repository.ApplyAction(Profiles);
     }
 
     private void LoadProfilesFromDb()
@@ -186,11 +187,11 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
-        _profiles = new AvaloniaList<Profile>(model);
+        Profiles = new ObservableCollection<Profile>(model);
     }
 
     private int GetNextProfileId()
     {
-        return _profiles.Max(x => x.Id) + 1;
+        return Profiles.Max(x => x.Id) + 1;
     }
 }
