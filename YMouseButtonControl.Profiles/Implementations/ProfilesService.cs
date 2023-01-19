@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using DynamicData;
+using DynamicData.Binding;
 using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
@@ -31,18 +32,11 @@ public class ProfilesService : ReactiveObject, IProfilesService
             .Select(x => Profiles[x])
             .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
-        _unsavedChanges = this
-            .WhenAnyValue(x => x.CurrentProfileIndex, x => x.CurrentProfile, x => x.CurrentProfile.MouseButton1,
-                x => x.CurrentProfile.MouseButton2,
-                x => x.CurrentProfile.MouseButton3, x => x.CurrentProfile.MouseButton4,
-                x => x.CurrentProfile.MouseButton5)
-            .Select(_ => IsUnsavedChanges())
-            .ToProperty(this, x => x.UnsavedChanges);
-        var otherUnsavedChanges = this
-            .WhenAnyValue(x => x.CurrentProfile.MouseWheelUp, x => x.CurrentProfile.MouseWheelDown,
-                x => x.CurrentProfile.MouseWheelLeft, x => x.CurrentProfile.MouseWheelRight,
-                x => x.Profiles)
-            .Select(_ => IsUnsavedChanges())
+        _unsavedChanges = Profiles
+            .ToObservableChangeSet()
+            .AutoRefresh()
+            .ToCollection()
+            .Select(x => IsUnsavedChanges())
             .ToProperty(this, x => x.UnsavedChanges);
     }
 

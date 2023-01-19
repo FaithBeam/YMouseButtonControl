@@ -73,7 +73,6 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
     
     private void OnProfilesChanged(IReadOnlyCollection<Profile> profiles)
     {
-        Trace.WriteLine("UPDATE DISABLED BUTTONS");
         UpdateDisabledButtons();
     }
 
