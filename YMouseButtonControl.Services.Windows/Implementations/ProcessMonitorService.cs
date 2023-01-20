@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
 public class ProcessMonitorService : IProcessMonitorService
 {
-    private List<ProcessModel> _runningProcesses;
     private readonly object _lock = new();
     private readonly ManagementEventWatcher _createdEventWatcher;
     private readonly ManagementEventWatcher _deletedEventWatcher;
@@ -32,22 +28,13 @@ public class ProcessMonitorService : IProcessMonitorService
         _deletedEventWatcher.Start();
     }
 
-    public event EventHandler<ProcessChangedEventArgs> OnProcessCreatedEventHandler;
-    public event EventHandler<ProcessChangedEventArgs> OnProcessDeletedEventHandler;
-
-    public IEnumerable<ProcessModel> GetProcesses()
-    {
-        lock (_lock)
-        {
-            return _runningProcesses;
-        }
-    }
+    public ObservableCollection<ProcessModel> RunningProcesses { get; private set; }
 
     public bool ProcessRunning(string process)
     {
         lock (_lock)
         {
-            return _runningProcesses.Any(x => x.ProcessName == process);
+            return RunningProcesses.Any(x => x.ProcessName == process);
         }
     }
     
@@ -57,18 +44,6 @@ public class ProcessMonitorService : IProcessMonitorService
         _createdEventWatcher?.Dispose();
         _deletedEventWatcher.EventArrived -= OnDeletedProcess;
         _deletedEventWatcher?.Dispose();
-    }
-    
-    private void OnProcessCreated(ProcessChangedEventArgs e)
-    {
-        var handler = OnProcessCreatedEventHandler;
-        handler?.Invoke(this, e);
-    }
-
-    private void OnProcessDeleted(ProcessChangedEventArgs e)
-    {
-        var handler = OnProcessDeletedEventHandler;
-        handler?.Invoke(this, e);
     }
 
     private void OnDeletedProcess(object sender, EventArrivedEventArgs e)
@@ -82,9 +57,13 @@ public class ProcessMonitorService : IProcessMonitorService
 
         lock (_lock)
         {
-            _runningProcesses.RemoveAll(x => x.ProcessName == pm.ProcessName);
+            for (var i = 0; i < RunningProcesses.Count; i++)
+            {
+                if (RunningProcesses[i].ProcessName != pm.ProcessName) continue;
+                RunningProcesses.RemoveAt(i);
+                break;
+            }
         }
-        OnProcessDeleted(new ProcessChangedEventArgs(pm));
     }
 
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
@@ -108,20 +87,18 @@ public class ProcessMonitorService : IProcessMonitorService
 
         lock (_lock)
         {
-            if (_runningProcesses.Any(x => x.ProcessName == pm.ProcessName))
+            if (RunningProcesses.Any(x => x.ProcessName == pm.ProcessName))
             {
                 return;
             }
 
-            _runningProcesses.Add(pm);
+            RunningProcesses.Add(pm);
         }
-
-        OnProcessCreated(new ProcessChangedEventArgs(pm));
     }
 
     private void PopulateRunningProcesses()
     {
-        _runningProcesses = new List<ProcessModel>();
+        RunningProcesses = new ObservableCollection<ProcessModel>();
 
         foreach (var i in _searcher.Get())
         {
@@ -143,12 +120,12 @@ public class ProcessMonitorService : IProcessMonitorService
                 BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
             };
 
-            if (_runningProcesses.Any(x => x.ProcessName == pm.ProcessName))
+            if (RunningProcesses.Any(x => x.ProcessName == pm.ProcessName))
             {
                 continue;
             }
 
-            _runningProcesses.Add(pm);
+            RunningProcesses.Add(pm);
         }
     }
 }

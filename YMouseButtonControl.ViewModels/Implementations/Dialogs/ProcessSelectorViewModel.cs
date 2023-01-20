@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
@@ -17,77 +16,32 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
     private readonly IProcessMonitorService _processMonitorService;
     [CanBeNull] private ProcessModel _processModel;
 
-    public ICommand RefreshButtonCommand { get; }
-
-    public ReactiveCommand<Unit, Profile> OkCommand { get; }
-
     public ProcessSelectorDialogViewModel(IProcessMonitorService processMonitorService)
     {
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
         OkCommand = ReactiveCommand.Create(() => new Profile
         {
-            Name = ProcessName,
-            Description = WindowTitle,
-            Process = ProcessName
+            Name = SelectedProcessModel?.ProcessName ?? string.Empty,
+            Description = SelectedProcessModel?.WindowTitle ?? string.Empty,
+            Process = SelectedProcessModel?.ProcessName ?? string.Empty
         });
-        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
+        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.OrderBy(x => x.ProcessName));
     }
 
+    public ICommand RefreshButtonCommand { get; }
+    public ReactiveCommand<Unit, Profile> OkCommand { get; }
     public ObservableCollection<ProcessModel> Processes { get; private set; }
 
     [CanBeNull]
     public ProcessModel SelectedProcessModel
     {
         get => _processModel;
-        set
-        {
-            _processModel = value;
-            this.RaisePropertyChanged(nameof(ProcessName));
-            this.RaisePropertyChanged(nameof(WindowTitle));
-            this.RaisePropertyChanged(nameof(BitmapPath));
-        }
-    }
-
-    public string ProcessName
-    {
-        get => SelectedProcessModel?.ProcessName;
-        set
-        {
-            if (SelectedProcessModel is null) return;
-            SelectedProcessModel.ProcessName = value;
-        }
-    }
-
-    public string WindowTitle
-    {
-        get => SelectedProcessModel?.WindowTitle;
-        set
-        {
-            if (SelectedProcessModel is null) return;
-            SelectedProcessModel.WindowTitle = value;
-        }
-    }
-    
-    [CanBeNull]
-    public string BitmapPath
-    {
-        get => SelectedProcessModel?.BitmapPath;
-        set
-        {
-            if (SelectedProcessModel is null) return;
-            SelectedProcessModel.BitmapPath = value;
-        }
+        set => this.RaiseAndSetIfChanged(ref _processModel, value);
     }
 
     private void OnRefreshButtonClicked()
     {
-        var tmp = _processMonitorService.GetProcesses().OrderBy(x => x.ProcessName);
-        foreach (var pm in tmp)
-        {
-            Trace.WriteLine(pm.ProcessName);
-        }
-        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
-        this.RaisePropertyChanged(nameof(Processes));
+        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.OrderBy(x => x.ProcessName));
     }
 }

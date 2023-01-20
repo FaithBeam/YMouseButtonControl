@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
@@ -7,10 +8,7 @@ namespace YMouseButtonControl.Processes.Interfaces;
 
 public interface IProcessMonitorService
 {
-    event EventHandler<ProcessChangedEventArgs> OnProcessCreatedEventHandler;
-    event EventHandler<ProcessChangedEventArgs> OnProcessDeletedEventHandler;
-
-    void Dispose();
-    IEnumerable<ProcessModel> GetProcesses();
+    ObservableCollection<ProcessModel> RunningProcesses { get; }
     bool ProcessRunning(string process);
+    void Dispose();
 }

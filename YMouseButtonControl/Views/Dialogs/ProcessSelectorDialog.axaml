@@ -66,14 +66,14 @@
         <!-- Row 4 -->
         <Grid Grid.Row="3" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
             <Label Content="Application" />
-            <TextBox Grid.Column="1" Text="{Binding ProcessName}" />
+            <TextBox Grid.Column="1" Text="{Binding SelectedProcessModel.ProcessName}" />
             <Button Grid.Column="2" Content="..." />
         </Grid>
 
         <!-- Row 5 -->
         <Grid Grid.Row="4" ColumnDefinitions="*,*" VerticalAlignment="Top">
             <Label Content="Description" />
-            <TextBox Grid.Column="1" VerticalContentAlignment="Center" Text="{Binding WindowTitle}" />
+            <TextBox Grid.Column="1" VerticalContentAlignment="Center" Text="{Binding SelectedProcessModel.WindowTitle}" />
         </Grid>
 
         <!-- Row 6 -->

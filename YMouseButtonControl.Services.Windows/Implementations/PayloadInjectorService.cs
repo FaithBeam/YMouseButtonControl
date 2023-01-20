@@ -17,14 +17,14 @@ public class PayloadInjectorService : IDisposable, IPayloadInjectorService
     {
         _profilesService = profilesService;
         _processMonitorService = processMonitorService;
-        _processMonitorService.OnProcessCreatedEventHandler += OnProcessCreated;
-        _processMonitorService.OnProcessDeletedEventHandler += OnProcessDeleted;
+        // _processMonitorService.OnProcessCreatedEventHandler += OnProcessCreated;
+        // _processMonitorService.OnProcessDeletedEventHandler += OnProcessDeleted;
     }
 
     public void Dispose()
     {
-        _processMonitorService.OnProcessCreatedEventHandler -= OnProcessCreated;
-        _processMonitorService.OnProcessDeletedEventHandler -= OnProcessDeleted;
+        // _processMonitorService.OnProcessCreatedEventHandler -= OnProcessCreated;
+        // _processMonitorService.OnProcessDeletedEventHandler -= OnProcessDeleted;
     }
 
     private void OnProcessCreated(object sender, ProcessChangedEventArgs e)

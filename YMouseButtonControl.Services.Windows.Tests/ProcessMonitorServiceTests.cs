@@ -16,8 +16,8 @@ public class ProcessMonitorServiceTests
     [TestMethod]
     public void TestGetProcesses()
     {
-        var vm = _autoMocker.CreateInstance<ProcessMonitorService>();
-        var procs = vm.GetProcesses();
+        var pms = _autoMocker.CreateInstance<ProcessMonitorService>();
+        var procs = pms.RunningProcesses;
         Assert.IsTrue(procs.Any());
         foreach (var p in procs)
         {
