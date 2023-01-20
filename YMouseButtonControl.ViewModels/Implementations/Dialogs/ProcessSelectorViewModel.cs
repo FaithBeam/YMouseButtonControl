@@ -13,25 +13,31 @@ namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
 public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
 {
+    private ObservableCollection<ProcessModel> _processes;
     private readonly IProcessMonitorService _processMonitorService;
     [CanBeNull] private ProcessModel _processModel;
 
     public ProcessSelectorDialogViewModel(IProcessMonitorService processMonitorService)
     {
         _processMonitorService = processMonitorService;
-        RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
+        RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
         OkCommand = ReactiveCommand.Create(() => new Profile
         {
             Name = SelectedProcessModel?.ProcessName ?? string.Empty,
             Description = SelectedProcessModel?.WindowTitle ?? string.Empty,
             Process = SelectedProcessModel?.ProcessName ?? string.Empty
         });
-        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.OrderBy(x => x.ProcessName));
+        RefreshProcessList();
     }
 
     public ICommand RefreshButtonCommand { get; }
     public ReactiveCommand<Unit, Profile> OkCommand { get; }
-    public ObservableCollection<ProcessModel> Processes { get; private set; }
+
+    public ObservableCollection<ProcessModel> Processes
+    {
+        get => _processes;
+        private set => this.RaiseAndSetIfChanged(ref _processes, value);
+    }
 
     [CanBeNull]
     public ProcessModel SelectedProcessModel
@@ -40,7 +46,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         set => this.RaiseAndSetIfChanged(ref _processModel, value);
     }
 
-    private void OnRefreshButtonClicked()
+    private void RefreshProcessList()
     {
         Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.OrderBy(x => x.ProcessName));
     }
