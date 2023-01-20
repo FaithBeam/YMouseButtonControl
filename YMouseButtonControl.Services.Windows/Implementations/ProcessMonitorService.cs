@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using YMouseButtonControl.Processes.Interfaces;
@@ -11,11 +12,11 @@ namespace YMouseButtonControl.Services.Windows.Implementations;
 
 public class ProcessMonitorService : IProcessMonitorService
 {
-    private Dictionary<uint, ProcessModel> _runningProcesses;
+    private List<ProcessModel> _runningProcesses;
+    private readonly object _lock = new();
     private readonly ManagementEventWatcher _createdEventWatcher;
     private readonly ManagementEventWatcher _deletedEventWatcher;
     private readonly ManagementObjectSearcher _searcher = new("SELECT * FROM WIN32_PROCESS");
-    private readonly object _processLockObject = new();
     private readonly WinApi _winApi = new();
 
     public ProcessMonitorService()
@@ -48,90 +49,100 @@ public class ProcessMonitorService : IProcessMonitorService
 
     private void OnDeletedProcess(object sender, EventArrivedEventArgs e)
     {
-        lock (_processLockObject)
+        var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
+        var pm = new ProcessModel
         {
-            var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
-            var pm = new ProcessModel
-            {
-                ProcessId = (uint)process.Properties["ProcessId"].Value,
-                ProcessName = (string)process.Properties["Name"].Value
-            };
-            _runningProcesses.Remove(pm.ProcessId);
-            OnProcessDeleted(new ProcessChangedEventArgs(pm));
+            ProcessId = (uint)process.Properties["ProcessId"].Value,
+            ProcessName = (string)process.Properties["Name"].Value
+        };
+        Trace.WriteLine($"DELETE {pm.ProcessId},{pm.ProcessName}");
+
+        lock (_lock)
+        {
+            _runningProcesses.RemoveAll(x => x.ProcessName == pm.ProcessName);
         }
+        OnProcessDeleted(new ProcessChangedEventArgs(pm));
     }
 
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
-        lock (_processLockObject)
+        var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
+        var pId = (uint)process.Properties["ProcessId"].Value;
+        pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
+        var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
+        if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
         {
-            var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
-            var pId = (uint)process.Properties["ProcessId"].Value;
-            pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
-            var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
-            if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
-            {
-                windowTitle = (string)process.Properties["Description"].Value;
-            }
-            var pm = new ProcessModel
-            {
-                ProcessId = pId,
-                ProcessName = (string)process.Properties["Name"].Value,
-                WindowTitle = windowTitle,
-                BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
-            };
-            if (_runningProcesses.Values.Any(x => x.ProcessName == pm.ProcessName))
+            windowTitle = (string)process.Properties["Description"].Value;
+        }
+
+        var pm = new ProcessModel
+        {
+            ProcessId = pId,
+            ProcessName = (string)process.Properties["Name"].Value,
+            WindowTitle = windowTitle,
+            BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
+        };
+
+        lock (_lock)
+        {
+            if (_runningProcesses.Any(x => x.ProcessName == pm.ProcessName))
             {
                 return;
             }
-            _runningProcesses.TryAdd(pm.ProcessId, pm);
-            OnProcessCreated(new ProcessChangedEventArgs(pm));
+
+            _runningProcesses.Add(pm);
         }
+
+        OnProcessCreated(new ProcessChangedEventArgs(pm));
     }
 
     public IEnumerable<ProcessModel> GetProcesses()
     {
-        lock (_processLockObject)
+        Trace.WriteLine("GET PROCESSES ================================");
+        lock (_lock)
         {
-            return _runningProcesses.Values.ToList();
+            return _runningProcesses;
         }
     }
 
     public bool ProcessRunning(string process)
     {
-        lock (_processLockObject)
+        lock (_lock)
         {
-            return _runningProcesses.Select(x => x.Value).Any(x => x.ProcessName == process);
+            return _runningProcesses.Any(x => x.ProcessName == process);
         }
     }
 
     private void PopulateRunningProcesses()
     {
-        lock (_processLockObject)
+        _runningProcesses = new List<ProcessModel>();
+
+        foreach (var i in _searcher.Get())
         {
-            _runningProcesses = new Dictionary<uint, ProcessModel>();
-            foreach (var i in _searcher.Get())
+            var pId = (uint)i.Properties["ProcessId"].Value;
+            pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
+
+            var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
+
+            if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
             {
-                var pId = (uint)i.Properties["ProcessId"].Value;
-                pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
-                var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
-                if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
-                {
-                    windowTitle = (string)i.Properties["Description"].Value;
-                }
-                var pm = new ProcessModel()
-                {
-                    ProcessId = pId,
-                    ProcessName = (string)i.Properties["Name"].Value,
-                    WindowTitle = windowTitle,
-                    BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
-                };
-                if (_runningProcesses.Values.Any(x => x.ProcessName == pm.ProcessName))
-                {
-                    continue;
-                }
-                _runningProcesses.TryAdd(pm.ProcessId, pm);
+                windowTitle = (string)i.Properties["Description"].Value;
             }
+
+            var pm = new ProcessModel
+            {
+                ProcessId = pId,
+                ProcessName = (string)i.Properties["Name"].Value,
+                WindowTitle = windowTitle,
+                BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
+            };
+
+            if (_runningProcesses.Any(x => x.ProcessName == pm.ProcessName))
+            {
+                continue;
+            }
+
+            _runningProcesses.Add(pm);
         }
     }
 

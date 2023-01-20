@@ -35,8 +35,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         _unsavedChanges = Profiles
             .ToObservableChangeSet()
             .AutoRefresh()
-            .ToCollection()
-            .Select(x => IsUnsavedChanges())
+            .Select(_ => IsUnsavedChanges())
             .ToProperty(this, x => x.UnsavedChanges);
     }
 

@@ -1,8 +1,8 @@
-﻿using System.Drawing;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
-using Avalonia.Collections;
 using JetBrains.Annotations;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
@@ -26,11 +26,15 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(OnRefreshButtonClicked);
         OkCommand = ReactiveCommand.Create(() => new Profile
-            { Name = ProcessName, Description = WindowTitle, Process = ProcessName });
-        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
+        {
+            Name = ProcessName,
+            Description = WindowTitle,
+            Process = ProcessName
+        });
+        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
     }
 
-    public AvaloniaList<ProcessModel> Processes { get; private set; }
+    public ObservableCollection<ProcessModel> Processes { get; private set; }
 
     [CanBeNull]
     public ProcessModel SelectedProcessModel
@@ -78,7 +82,12 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     private void OnRefreshButtonClicked()
     {
-        Processes = new AvaloniaList<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
+        var tmp = _processMonitorService.GetProcesses().OrderBy(x => x.ProcessName);
+        foreach (var pm in tmp)
+        {
+            Trace.WriteLine(pm.ProcessName);
+        }
+        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.GetProcesses().OrderBy(x => x.ProcessName));
         this.RaisePropertyChanged(nameof(Processes));
     }
 }
