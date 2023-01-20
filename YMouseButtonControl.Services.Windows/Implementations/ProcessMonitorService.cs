@@ -55,7 +55,6 @@ public class ProcessMonitorService : IProcessMonitorService
             ProcessId = (uint)process.Properties["ProcessId"].Value,
             ProcessName = (string)process.Properties["Name"].Value
         };
-        Trace.WriteLine($"DELETE {pm.ProcessId},{pm.ProcessName}");
 
         lock (_lock)
         {
@@ -98,7 +97,6 @@ public class ProcessMonitorService : IProcessMonitorService
 
     public IEnumerable<ProcessModel> GetProcesses()
     {
-        Trace.WriteLine("GET PROCESSES ================================");
         lock (_lock)
         {
             return _runningProcesses;
