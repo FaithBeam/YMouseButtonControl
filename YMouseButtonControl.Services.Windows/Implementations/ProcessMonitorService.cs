@@ -35,6 +35,30 @@ public class ProcessMonitorService : IProcessMonitorService
     public event EventHandler<ProcessChangedEventArgs> OnProcessCreatedEventHandler;
     public event EventHandler<ProcessChangedEventArgs> OnProcessDeletedEventHandler;
 
+    public IEnumerable<ProcessModel> GetProcesses()
+    {
+        lock (_lock)
+        {
+            return _runningProcesses;
+        }
+    }
+
+    public bool ProcessRunning(string process)
+    {
+        lock (_lock)
+        {
+            return _runningProcesses.Any(x => x.ProcessName == process);
+        }
+    }
+    
+    public void Dispose()
+    {
+        _createdEventWatcher.EventArrived -= OnCreatedProcess;
+        _createdEventWatcher?.Dispose();
+        _deletedEventWatcher.EventArrived -= OnDeletedProcess;
+        _deletedEventWatcher?.Dispose();
+    }
+    
     private void OnProcessCreated(ProcessChangedEventArgs e)
     {
         var handler = OnProcessCreatedEventHandler;
@@ -95,22 +119,6 @@ public class ProcessMonitorService : IProcessMonitorService
         OnProcessCreated(new ProcessChangedEventArgs(pm));
     }
 
-    public IEnumerable<ProcessModel> GetProcesses()
-    {
-        lock (_lock)
-        {
-            return _runningProcesses;
-        }
-    }
-
-    public bool ProcessRunning(string process)
-    {
-        lock (_lock)
-        {
-            return _runningProcesses.Any(x => x.ProcessName == process);
-        }
-    }
-
     private void PopulateRunningProcesses()
     {
         _runningProcesses = new List<ProcessModel>();
@@ -142,13 +150,5 @@ public class ProcessMonitorService : IProcessMonitorService
 
             _runningProcesses.Add(pm);
         }
-    }
-
-    public void Dispose()
-    {
-        _createdEventWatcher.EventArrived -= OnCreatedProcess;
-        _createdEventWatcher?.Dispose();
-        _deletedEventWatcher.EventArrived -= OnDeletedProcess;
-        _deletedEventWatcher?.Dispose();
     }
 }
