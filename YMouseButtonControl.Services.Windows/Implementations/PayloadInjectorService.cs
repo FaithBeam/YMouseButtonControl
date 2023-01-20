@@ -27,34 +27,34 @@ public class PayloadInjectorService : IDisposable, IPayloadInjectorService
         // _processMonitorService.OnProcessDeletedEventHandler -= OnProcessDeleted;
     }
 
-    private void OnProcessCreated(object sender, ProcessChangedEventArgs e)
-    {
-        foreach (var p in _profilesService.Profiles)
-        {
-            if (p.Process == e.ProcessModel.ProcessName)
-            {
-                var payload = new Payload(e.ProcessModel.ProcessId, p);
-                if (_activePayloads.TryAdd(e.ProcessModel.ProcessId, payload))
-                {
-                    payload.Run();
-                }
-                else
-                {
-                    throw new Exception($"Couldn't add new payload: {e.ProcessModel.ProcessName} {e.ProcessModel.ProcessId}");
-                }
-            }
-        }
-    }
-
-    private void OnProcessDeleted(object sender, ProcessChangedEventArgs e)
-    {
-        if (_activePayloads.TryGetValue(e.ProcessModel.ProcessId, out var payload))
-        {
-            payload.Dispose();
-            if (!_activePayloads.Remove(e.ProcessModel.ProcessId))
-            {
-                throw new Exception($"Error removing {e.ProcessModel.ProcessId} from active payloads");
-            }
-        }
-    }
+    // private void OnProcessCreated(object sender, ProcessChangedEventArgs e)
+    // {
+    //     foreach (var p in _profilesService.Profiles)
+    //     {
+    //         if (p.Process == e.ProcessModel.ProcessName)
+    //         {
+    //             var payload = new Payload(e.ProcessModel.ProcessId, p);
+    //             if (_activePayloads.TryAdd(e.ProcessModel.ProcessId, payload))
+    //             {
+    //                 payload.Run();
+    //             }
+    //             else
+    //             {
+    //                 throw new Exception($"Couldn't add new payload: {e.ProcessModel.ProcessName} {e.ProcessModel.ProcessId}");
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // private void OnProcessDeleted(object sender, ProcessChangedEventArgs e)
+    // {
+    //     if (_activePayloads.TryGetValue(e.ProcessModel.ProcessId, out var payload))
+    //     {
+    //         payload.Dispose();
+    //         if (!_activePayloads.Remove(e.ProcessModel.ProcessId))
+    //         {
+    //             throw new Exception($"Error removing {e.ProcessModel.ProcessId} from active payloads");
+    //         }
+    //     }
+    // }
 }

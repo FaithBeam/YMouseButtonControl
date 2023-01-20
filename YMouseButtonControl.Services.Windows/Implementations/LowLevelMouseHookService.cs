@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Avalonia.Collections;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
@@ -47,7 +44,10 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
     {
         _profilesService = profilesService;
         _currentWindowService = currentWindowService;
-        _currentWindowService.OnActiveWindowChangedEventHandler += OnForegroundWindowChanged;
+        this
+            .WhenAnyValue(x => x._currentWindowService.ForegroundWindow)
+            .DistinctUntilChanged()
+            .Subscribe(OnForegroundWindowChanged);
         _profilesService.Profiles
             .ToObservableChangeSet(x => x)
             .ToCollection()
@@ -55,13 +55,59 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         UpdateDisabledButtons();
     }
 
-    private void OnForegroundWindowChanged(object sender, ActiveWindowChangedEventArgs e)
+    public void Run()
+    {
+        _thread = new Thread(() =>
+        {
+            _threadId = WinApi.GetCurrentThreadId();
+
+            _hHook = WinApi.SetWindowsHookEx(HookType.WH_MOUSE_LL, LowLevelMouseCallback, IntPtr.Zero, 0);
+            if (_hHook == IntPtr.Zero)
+            {
+                throw new Exception("ERROR SETTING WINDOWS HOOK");
+            }
+
+            int bRet;
+            while ((bRet = WinApi.GetMessage(out MSG msg, 0,0,0)) != 0)
+            {
+                if (bRet == -1)
+                {
+                    return;
+                }
+            }
+        });
+        _thread.Start();
+    }
+    
+    public void Dispose()
+    {
+        if (_hHook == IntPtr.Zero)
+        {
+            return;
+        }
+
+        if (!WinApi.UnhookWindowsHookEx(_hHook))
+        {
+            throw new Exception("ERROR UNHOOKING WINDOWS HOOK");
+        }
+
+        if (!WinApi.PostThreadMessage(_threadId, WM_QUIT, 0, 0))
+        {
+            throw new Exception($"ERROR POSTING WM_QUIT TO {_threadId}");
+        }
+
+        _hHook = IntPtr.Zero;
+
+        _thread.Join();
+    }
+    
+    private void OnForegroundWindowChanged(string foregroundWindow)
     {
         lock (_lockObj)
         {
-            _foregroundWindow = e.ActiveWindow;
+            _foregroundWindow = foregroundWindow;
         }
-
+        
         // Reset mouse buttons back to non blocking state when foreground window changes
         foreach (var k in _buttonDisabledDict.Keys)
         {
@@ -138,30 +184,6 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         }
     }
 
-    public void Run()
-    {
-        _thread = new Thread(() =>
-        {
-            _threadId = WinApi.GetCurrentThreadId();
-
-            _hHook = WinApi.SetWindowsHookEx(HookType.WH_MOUSE_LL, LowLevelMouseCallback, IntPtr.Zero, 0);
-            if (_hHook == IntPtr.Zero)
-            {
-                throw new Exception("ERROR SETTING WINDOWS HOOK");
-            }
-
-            int bRet;
-            while ((bRet = WinApi.GetMessage(out MSG msg, 0,0,0)) != 0)
-            {
-                if (bRet == -1)
-                {
-                    return;
-                }
-            }
-        });
-        _thread.Start();
-    }
-
     private nint HandleButton(uint button, int nCode, nint wParam, nint lParam)
     {
         if (_buttonDisabledDict[button])
@@ -211,29 +233,5 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
     private int HiWord(int num)
     {
         return num >> 16;
-    }
-
-    public void Dispose()
-    {
-        if (_hHook == IntPtr.Zero)
-        {
-            return;
-        }
-
-        if (!WinApi.UnhookWindowsHookEx(_hHook))
-        {
-            throw new Exception("ERROR UNHOOKING WINDOWS HOOK");
-        }
-
-        if (!WinApi.PostThreadMessage(_threadId, WM_QUIT, 0, 0))
-        {
-            throw new Exception($"ERROR POSTING WM_QUIT TO {_threadId}");
-        }
-
-        _currentWindowService.OnActiveWindowChangedEventHandler -= OnForegroundWindowChanged;
-        
-        _hHook = IntPtr.Zero;
-
-        _thread.Join();
     }
 }

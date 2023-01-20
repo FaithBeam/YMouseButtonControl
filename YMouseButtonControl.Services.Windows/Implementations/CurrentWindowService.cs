@@ -3,22 +3,26 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using ReactiveUI;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
-public class CurrentWindowService : IDisposable, ICurrentWindowService
+public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowService
 {
     private uint _threadId;
     private IntPtr _hEvent;
     private uint WM_QUIT = 0x0012;
     private Thread _thread;
+    private string _foregroundWindow = string.Empty;
 
-    public string ForegroundWindow { get; private set; } = string.Empty;
-
-    public event EventHandler<ActiveWindowChangedEventArgs> OnActiveWindowChangedEventHandler;
+    public string ForegroundWindow
+    {
+        get => _foregroundWindow;
+        private set => this.RaiseAndSetIfChanged(ref _foregroundWindow, value);
+    }
 
     public void Dispose()
     {
@@ -52,7 +56,7 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
             }
 
             int bRet;
-            while ((bRet = WinApi.GetMessage(out MSG msg, 0, 0, 0)) != 0)
+            while ((bRet = WinApi.GetMessage(out var msg, 0, 0, 0)) != 0)
             {
                 if (bRet == -1)
                 {
@@ -83,7 +87,7 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
                 var hProc = WinApi.OpenProcess((uint)(ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead), false, pId);
                 var sb = new StringBuilder(1024);
                 result = WinApi.GetModuleFileNameEx(hProc, IntPtr.Zero, sb, sb.Capacity);
-                OnActiveWindowChanged(sb.ToString());
+                ForegroundWindow = sb.ToString();
                 break;
             case WinEvents.EVENT_SYSTEM_MINIMIZEEND:
                 result = WinApi.GetWindowThreadProcessId(hwnd, out pId);
@@ -95,13 +99,5 @@ public class CurrentWindowService : IDisposable, ICurrentWindowService
             default:
                 break;
         }
-    }
-
-    private void OnActiveWindowChanged(string moduleFileName)
-    {
-        ForegroundWindow = moduleFileName;
-        var args = new ActiveWindowChangedEventArgs(moduleFileName);
-        var handler = OnActiveWindowChangedEventHandler;
-        handler?.Invoke(this, args);
     }
 }

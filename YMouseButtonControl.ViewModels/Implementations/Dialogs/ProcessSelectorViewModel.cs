@@ -31,6 +31,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
     }
 
     public ICommand RefreshButtonCommand { get; }
+    
     public ReactiveCommand<Unit, Profile> OkCommand { get; }
 
     public ObservableCollection<ProcessModel> Processes
