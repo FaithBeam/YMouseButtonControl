@@ -39,14 +39,14 @@ public static class EnumWindowsService
         public IntPtr HWnd;
     }
 
-    public static uint GetPidAssociatedWithWindowFromPid(uint pId)
+    public static uint GetTidAssociatedWithWindowFromPid(uint pId)
     {
-        var hWnd = GetHWndFromProcessId(pId);
+        var hWnd = GetHWndFromThreadId(pId);
         var tid = WinApi.GetWindowThreadProcessId(hWnd, out var proc);
         return tid;
     }
 
-    public static IntPtr GetHWndFromProcessId(int pId)
+    public static IntPtr GetHWndFromThreadId(int pId)
     {
         var data = new EnumWindowData
         {
@@ -56,7 +56,7 @@ public static class EnumWindowsService
         return data.HWnd;
     }
 
-    public static IntPtr GetHWndFromProcessId(uint pId)
+    public static IntPtr GetHWndFromThreadId(uint pId)
     {
         var data = new EnumWindowData
         {

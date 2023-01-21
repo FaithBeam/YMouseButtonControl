@@ -69,9 +69,12 @@ public class ProcessMonitorService : IProcessMonitorService
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
         var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
+        
         var pId = (uint)process.Properties["ProcessId"].Value;
-        pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
-        var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
+        
+        var tId = EnumWindowsService.GetTidAssociatedWithWindowFromPid(pId);
+        
+        var hWnd = EnumWindowsService.GetHWndFromThreadId(tId);
         if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
         {
             windowTitle = (string)process.Properties["Description"].Value;
@@ -103,10 +106,9 @@ public class ProcessMonitorService : IProcessMonitorService
         foreach (var i in _searcher.Get())
         {
             var pId = (uint)i.Properties["ProcessId"].Value;
-            pId = EnumWindowsService.GetPidAssociatedWithWindowFromPid(pId);
-
-            var hWnd = EnumWindowsService.GetHWndFromProcessId(pId);
-
+            
+            var tId = EnumWindowsService.GetTidAssociatedWithWindowFromPid(pId);
+            var hWnd = EnumWindowsService.GetHWndFromThreadId(tId);
             if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
             {
                 windowTitle = (string)i.Properties["Description"].Value;
