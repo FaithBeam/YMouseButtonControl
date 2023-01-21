@@ -40,7 +40,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
                 lifetime.MainWindow?.Hide();
             }
         });
-        ApplyCommand = ReactiveCommand.Create(ApplyProfileHelper, canApply);
+        ApplyCommand = ReactiveCommand.Create(() => _ps.ApplyProfiles(), canApply);
+        ApplyCommand.Subscribe(_ => { _ps.UnsavedChanges = false; });
         this
             .WhenAnyValue(x => x._ps.CurrentProfile)
             .Subscribe(OnProfileChanged);
@@ -71,11 +72,5 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     private void OnProfileChanged(Profile profile)
     {
         ProfileName = profile.Name;
-    }
-
-    private void ApplyProfileHelper()
-    {
-        _ps.ApplyProfiles();
-        _ps.UnsavedChanges = false;
     }
 }
