@@ -39,11 +39,6 @@ public class ProfilesService : ReactiveObject, IProfilesService
             .Subscribe(UnsavedChangesHelper);
     }
 
-    private void UnsavedChangesHelper(bool next)
-    {
-        UnsavedChanges = next;
-    }
-
     public bool UnsavedChanges
     {
         get => _unsavedChanges;
@@ -195,5 +190,10 @@ public class ProfilesService : ReactiveObject, IProfilesService
     private int GetNextProfileId()
     {
         return Profiles.Max(x => x.Id) + 1;
+    }
+    
+    private void UnsavedChangesHelper(bool next)
+    {
+        UnsavedChanges = next;
     }
 }
