@@ -9,7 +9,11 @@ public class BitmapConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not string bmpPath) return null;
+        if (value is not string bmpPath)
+        {
+            return null;
+        }
+        
         return string.IsNullOrWhiteSpace(bmpPath) ? null : new Bitmap(bmpPath);
     }
 

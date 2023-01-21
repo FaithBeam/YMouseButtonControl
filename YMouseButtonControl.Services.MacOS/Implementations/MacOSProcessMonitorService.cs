@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using DynamicData;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
 
@@ -13,25 +14,23 @@ public class MacOsProcessMonitorService : IProcessMonitorService
     {
     }
 
-    public ObservableCollection<ProcessModel> RunningProcesses => (ObservableCollection<ProcessModel>)GetProcesses();
+    public IObservableCache<ProcessModel, int> RunningProcesses => GetProcesses();
 
     public bool ProcessRunning(string process)
     {
         return Process.GetProcessesByName(process).Any();
     }
     
-    private IEnumerable<ProcessModel> GetProcesses()
+    private SourceCache<ProcessModel, int> GetProcesses()
     {
-        return Process
+        var oc = new SourceCache<ProcessModel, int>(x => x.Process.Id);
+        var procs = Process
             .GetProcesses()
             .Where(x => !string.IsNullOrWhiteSpace(x.ProcessName))
-            .Select(x => new ProcessModel
-            {
-                ProcessId = (uint)x.Id,
-                ProcessName = x.ProcessName.Trim(),
-                WindowTitle = x.MainWindowTitle
-            })
-            .GroupBy(x => x.ProcessName)
+            .Select(x => new ProcessModel(x))
+            .GroupBy(x => x.Process.ProcessName)
             .Select(x => x.First());
+        oc.Edit(x => x.AddOrUpdate(procs));
+        return oc;
     }
 }

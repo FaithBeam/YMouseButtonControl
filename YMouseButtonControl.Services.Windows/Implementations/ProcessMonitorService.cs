@@ -1,6 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using DynamicData;
+using DynamicData.Binding;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
@@ -11,30 +16,32 @@ public class ProcessMonitorService : IProcessMonitorService
 {
     private readonly object _lock = new();
     private readonly ManagementEventWatcher _createdEventWatcher;
-    private readonly ManagementEventWatcher _deletedEventWatcher;
     private readonly ManagementObjectSearcher _searcher = new("SELECT * FROM WIN32_PROCESS");
     private readonly WinApi _winApi = new();
+    private readonly SourceCache<ProcessModel,int> _runningProcesses;
 
     public ProcessMonitorService()
     {
+        _runningProcesses = new SourceCache<ProcessModel, int>(x => x.Process.Id);
         PopulateRunningProcesses();
         _createdEventWatcher = new ManagementEventWatcher("root\\CimV2",
             "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
         _createdEventWatcher.EventArrived += OnCreatedProcess;
         _createdEventWatcher.Start();
-        _deletedEventWatcher = new ManagementEventWatcher("root\\CimV2",
-            "SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
-        _deletedEventWatcher.EventArrived += OnDeletedProcess;
-        _deletedEventWatcher.Start();
+        var someBs = _runningProcesses
+            .Connect()
+            .Filter(x => x.HasExited)
+            .WhenPropertyChanged(x => x.HasExited)
+            .Subscribe(OnProcessHasExited);
     }
 
-    public ObservableCollection<ProcessModel> RunningProcesses { get; private set; }
+    public IObservableCache<ProcessModel, int> RunningProcesses => _runningProcesses.AsObservableCache();
 
     public bool ProcessRunning(string process)
     {
         lock (_lock)
         {
-            return RunningProcesses.Any(x => x.ProcessName == process);
+            return RunningProcesses.Items.Any(x => x.Process.ProcessName == process);
         }
     }
     
@@ -42,92 +49,77 @@ public class ProcessMonitorService : IProcessMonitorService
     {
         _createdEventWatcher.EventArrived -= OnCreatedProcess;
         _createdEventWatcher?.Dispose();
-        _deletedEventWatcher.EventArrived -= OnDeletedProcess;
-        _deletedEventWatcher?.Dispose();
-    }
-
-    private void OnDeletedProcess(object sender, EventArrivedEventArgs e)
-    {
-        var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
-        var pm = new ProcessModel
-        {
-            ProcessId = (uint)process.Properties["ProcessId"].Value,
-            ProcessName = (string)process.Properties["Name"].Value
-        };
-
-        lock (_lock)
-        {
-            for (var i = 0; i < RunningProcesses.Count; i++)
-            {
-                if (RunningProcesses[i].ProcessName != pm.ProcessName) continue;
-                RunningProcesses.RemoveAt(i);
-                break;
-            }
-        }
     }
 
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
         var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
         
-        var pId = (uint)process.Properties["ProcessId"].Value;
+        var pId = int.Parse(process.Properties["ProcessId"].Value.ToString());
         
-        var tId = EnumWindowsService.GetTidAssociatedWithWindowFromPid(pId);
+        var proc = Process.GetProcessById(pId);
         
-        var hWnd = EnumWindowsService.GetHWndFromThreadId(tId);
-        if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
+        // Skip processes we have no access to. Better way than this?
+        try
         {
-            windowTitle = (string)process.Properties["Description"].Value;
+            var safeHandle = proc.SafeHandle;
+        }
+        catch (Win32Exception _)
+        {
+            return;
         }
 
-        var pm = new ProcessModel
+        var pm = new ProcessModel(proc)
         {
-            ProcessId = pId,
-            ProcessName = (string)process.Properties["Name"].Value,
-            WindowTitle = windowTitle,
-            BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
+            BitmapPath = _winApi.GetBitmapFromPath(proc.MainModule?.FileName) ?? string.Empty
         };
 
         lock (_lock)
         {
-            if (RunningProcesses.Any(x => x.ProcessName == pm.ProcessName))
+            if (RunningProcesses.Items.Any(x => x.Process.ProcessName == pm.Process.ProcessName))
             {
                 return;
             }
 
-            RunningProcesses.Add(pm);
+            _runningProcesses.Edit(x => x.AddOrUpdate(pm));
         }
     }
 
     private void PopulateRunningProcesses()
     {
-        RunningProcesses = new ObservableCollection<ProcessModel>();
-
         foreach (var i in _searcher.Get())
         {
-            var pId = (uint)i.Properties["ProcessId"].Value;
-            
-            var tId = EnumWindowsService.GetTidAssociatedWithWindowFromPid(pId);
-            var hWnd = EnumWindowsService.GetHWndFromThreadId(tId);
-            if (!_winApi.GetWindowTitleFromHwnd(hWnd, out var windowTitle))
+            var pId = int.Parse(i.Properties["ProcessId"].Value.ToString());
+
+            var proc = Process.GetProcessById(pId);
+
+            // Skip processes we have no access to. Better way than this?
+            try
             {
-                windowTitle = (string)i.Properties["Description"].Value;
+                var safeHandle = proc.SafeHandle;
             }
-
-            var pm = new ProcessModel
-            {
-                ProcessId = pId,
-                ProcessName = (string)i.Properties["Name"].Value,
-                WindowTitle = windowTitle,
-                BitmapPath = _winApi.GetBitmapPathFromProcessId(pId)
-            };
-
-            if (RunningProcesses.Any(x => x.ProcessName == pm.ProcessName))
+            catch (Win32Exception e)
             {
                 continue;
             }
 
-            RunningProcesses.Add(pm);
+            var pm = new ProcessModel(proc)
+            {
+                BitmapPath = _winApi.GetBitmapFromPath(proc.MainModule?.FileName) ?? string.Empty
+            };
+
+            if (_runningProcesses.Items.Any(x => x.Process.ProcessName == pm.Process.ProcessName))
+            {
+                continue;
+            }
+
+            _runningProcesses.Edit(x => x.AddOrUpdate(pm));
         }
+    }
+    
+    private void OnProcessHasExited(PropertyValue<ProcessModel, bool> propertyValue)
+    {
+        _runningProcesses.Edit(x => x.Remove(propertyValue.Sender));
+        propertyValue.Sender.Dispose();
     }
 }

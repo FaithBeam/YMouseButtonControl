@@ -23,9 +23,9 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
         OkCommand = ReactiveCommand.Create(() => new Profile
         {
-            Name = SelectedProcessModel?.ProcessName ?? string.Empty,
-            Description = SelectedProcessModel?.WindowTitle ?? string.Empty,
-            Process = SelectedProcessModel?.ProcessName ?? string.Empty
+            Name = SelectedProcessModel?.Process?.MainModule?.ModuleName ?? string.Empty,
+            Description = SelectedProcessModel?.Process?.MainWindowTitle ?? string.Empty,
+            Process = SelectedProcessModel?.Process?.MainModule?.ModuleName ?? string.Empty
         });
         RefreshProcessList();
     }
@@ -49,6 +49,6 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     private void RefreshProcessList()
     {
-        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.OrderBy(x => x.ProcessName));
+        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.Items.OrderBy(x => x.Process.ProcessName));
     }
 }

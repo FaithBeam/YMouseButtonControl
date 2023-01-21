@@ -110,48 +110,33 @@ public class WinApi
         windowTitle = sb.ToString();
         return sb.Length > 0;
     }
-    
-    public Icon GetBitmapFromPath(string pathToExe)
+
+    public string GetBitmapFromPath(string path)
     {
-        if (pathToExe == "/" || !File.Exists(pathToExe))
+        var destination = Path.Join("cache", Path.GetFileName(path + ".ico"));
+        if (File.Exists(destination))
         {
-            return null;
+            return destination;
         }
-        return Icon.ExtractAssociatedIcon(pathToExe);
-    }
-    
-    public string GetBitmapPathFromProcessId(string pId)
-    {
-        if (pId == "0")
-        {
-            return string.Empty;
-        }
-        var handle = GetHandleFromProcessId(pId);
-        if (handle == IntPtr.Zero)
-        {
-            return string.Empty;
-        }
-        var sb = new StringBuilder(1024);
-        var result = GetModuleFileNameEx(handle, IntPtr.Zero, sb, sb.Capacity);
-        var destination = Path.Join("cache", Path.GetFileName(sb + ".ico"));
-        if (File.Exists(destination)) return destination;
+        
         if (!Directory.Exists("cache"))
         {
             Directory.CreateDirectory("cache");
         }
-        var bitmap = GetBitmapFromPath(sb.ToString());
-        if (bitmap is null)
+
+        if (path == "/")
         {
             return string.Empty;
         }
-        var bmp = bitmap.ToBitmap();
+        var icon = Icon.ExtractAssociatedIcon(path);
+        if (icon is null)
+        {
+            return string.Empty;
+        }
+        
+        var bmp = icon.ToBitmap();
         bmp.Save(destination);
 
         return destination;
-    }
-    
-    public string GetBitmapPathFromProcessId(uint pId)
-    {
-        return GetBitmapPathFromProcessId(pId.ToString());
     }
 }

@@ -1,9 +1,29 @@
-﻿namespace YMouseButtonControl.Services.Abstractions.Models;
+﻿using System.Diagnostics;
+using ReactiveUI;
 
-public class ProcessModel
+namespace YMouseButtonControl.Services.Abstractions.Models;
+
+public class ProcessModel : ReactiveObject, IDisposable
 {
-    public string? ProcessName { get; set; }
-    public string? WindowTitle { get; set; }
-    public uint ProcessId { get; set; }
+    private bool _hasExited;
+
+    public ProcessModel(Process process)
+    {
+        Process = process;
+        Process.EnableRaisingEvents = true;
+        Process.Exited += (_, _) => HasExited = true;
+    }
+
+    public Process Process { get; }
     public string? BitmapPath { get; set; }
+    public bool HasExited 
+    { 
+        get => _hasExited;
+        set => this.RaiseAndSetIfChanged(ref _hasExited, value);
+    }
+
+    public void Dispose()
+    {
+        Process.Dispose();
+    }
 }
