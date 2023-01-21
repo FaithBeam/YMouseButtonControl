@@ -19,7 +19,7 @@ public class ProcessModel : ReactiveObject, IDisposable
     public bool HasExited 
     { 
         get => _hasExited;
-        set => this.RaiseAndSetIfChanged(ref _hasExited, value);
+        private set => this.RaiseAndSetIfChanged(ref _hasExited, value);
     }
 
     public void Dispose()
