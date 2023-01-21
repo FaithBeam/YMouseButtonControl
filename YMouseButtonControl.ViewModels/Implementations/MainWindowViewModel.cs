@@ -16,7 +16,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     private readonly IProfilesService _ps;
     private readonly IProfilesListViewModel _profilesListViewModel;
-    private bool _canApply;
     private string _profileName;
 
     #endregion
@@ -33,7 +32,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         ProfilesInformationViewModel = profilesInformationViewModel;
         var canApply = this
             .WhenAnyValue(x => x._ps.UnsavedChanges)
-            .Select(_ => _ps.IsUnsavedChanges())
             .DistinctUntilChanged();
         CloseCommand = ReactiveCommand.Create(() =>
         {
