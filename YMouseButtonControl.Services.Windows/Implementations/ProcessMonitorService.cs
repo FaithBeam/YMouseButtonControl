@@ -30,7 +30,6 @@ public class ProcessMonitorService : IProcessMonitorService
         _createdEventWatcher.Start();
         var someBs = _runningProcesses
             .Connect()
-            .Filter(x => x.HasExited)
             .WhenPropertyChanged(x => x.HasExited)
             .Subscribe(OnProcessHasExited);
     }
@@ -119,6 +118,10 @@ public class ProcessMonitorService : IProcessMonitorService
     
     private void OnProcessHasExited(PropertyValue<ProcessModel, bool> propertyValue)
     {
+        if (!propertyValue.Value)
+        {
+            return;
+        }
         _runningProcesses.Edit(x => x.Remove(propertyValue.Sender));
         propertyValue.Sender.Dispose();
     }
