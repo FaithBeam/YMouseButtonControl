@@ -15,7 +15,7 @@ public interface IProfilesService
     IObservable<IReactivePropertyChangedEventArgs<IReactiveObject>> Changing { get; }
     IObservable<IReactivePropertyChangedEventArgs<IReactiveObject>> Changed { get; }
     IObservable<Exception> ThrownExceptions { get; }
-    bool UnsavedChanges { get; }
+    bool UnsavedChanges { get; set; }
     ObservableCollection<Profile> Profiles { get; }
     int CurrentProfileIndex { get; set; }
     Profile CurrentProfile { get; }

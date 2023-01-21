@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
     private int _currentProfileIndex;
     private readonly ObservableAsPropertyHelper<Profile> _currentProfile;
-    private readonly ObservableAsPropertyHelper<bool> _unsavedChanges;
+    private bool _unsavedChanges;
 
     public ProfilesService(IUnitOfWorkFactory unitOfWorkFactory)
     {
@@ -30,14 +31,24 @@ public class ProfilesService : ReactiveObject, IProfilesService
             .Select(x => Profiles[x])
             .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
-        _unsavedChanges = Profiles
+
+        var unsavedChanges = Profiles
             .ToObservableChangeSet()
             .AutoRefresh()
             .Select(_ => IsUnsavedChanges())
-            .ToProperty(this, x => x.UnsavedChanges);
+            .Subscribe(UnsavedChangesHelper);
     }
 
-    public bool UnsavedChanges => _unsavedChanges.Value;
+    private void UnsavedChangesHelper(bool next)
+    {
+        UnsavedChanges = next;
+    }
+
+    public bool UnsavedChanges
+    {
+        get => _unsavedChanges;
+        set => this.RaiseAndSetIfChanged(ref _unsavedChanges, value);
+    }
 
     public ObservableCollection<Profile> Profiles { get; private set; }
 
