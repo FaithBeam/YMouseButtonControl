@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -55,15 +54,24 @@ public class ProcessMonitorService : IProcessMonitorService
         var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
         
         var pId = int.Parse(process.Properties["ProcessId"].Value.ToString());
-        
-        var proc = Process.GetProcessById(pId);
-        
+
+        Process proc;
+        // Process may have already exited
+        try
+        {
+            proc = Process.GetProcessById(pId);
+        }
+        catch (ArgumentException)
+        {
+            return;
+        }
+
         // Skip processes we have no access to. Better way than this?
         try
         {
-            var safeHandle = proc.SafeHandle;
+            _ = proc.SafeHandle;
         }
-        catch (Win32Exception _)
+        catch (Win32Exception)
         {
             return;
         }
@@ -90,12 +98,21 @@ public class ProcessMonitorService : IProcessMonitorService
         {
             var pId = int.Parse(i.Properties["ProcessId"].Value.ToString());
 
-            var proc = Process.GetProcessById(pId);
+            Process proc;
+            // Process may have already exited
+            try
+            {
+                proc = Process.GetProcessById(pId);
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
 
             // Skip processes we have no access to. Better way than this?
             try
             {
-                var safeHandle = proc.SafeHandle;
+                _ = proc.SafeHandle;
             }
             catch (Win32Exception e)
             {
