@@ -164,14 +164,14 @@ public static class KeyCodeMappings
         
         {"mediaplay", KeyCode.VcMediaPlay},
         {"mediastop", KeyCode.VcMediaStop},
-        {"mediaprevious", KeyCode.VcMediaPrevious},
+        {"mediaprev", KeyCode.VcMediaPrevious},
         {"medianext", KeyCode.VcMediaNext},
         {"mediaselect", KeyCode.VcMediaSelect},
         {"mediaeject", KeyCode.VcMediaEject},
         
-        {"volumemute", KeyCode.VcVolumeMute},
-        {"volumeup", KeyCode.VcVolumeUp},
-        {"volumedown", KeyCode.VcVolumeDown},
+        {"mute", KeyCode.VcVolumeMute},
+        {"vol+", KeyCode.VcVolumeUp},
+        {"vol-", KeyCode.VcVolumeDown},
         
         {"appmail", KeyCode.VcAppMail},
         {"appcalculator", KeyCode.VcAppCalculator},

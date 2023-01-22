@@ -58,6 +58,12 @@
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Media Keys" 
+                                  Items="{Binding MediaKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
                     </MenuFlyout>
                 </SplitButton.Flyout>
             </SplitButton>
