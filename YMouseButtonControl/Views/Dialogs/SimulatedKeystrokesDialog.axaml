@@ -33,8 +33,13 @@
                                   Items="{Binding ModifierKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
-                                  CommandParameter="{Binding CurrentKey}">
-                        </MenuItem>
+                                  CommandParameter="{Binding CurrentKey}" />
+                        
+                        <MenuItem Header="Standard Keys" 
+                                  Items="{Binding StandardKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
                     </MenuFlyout>
                 </SplitButton.Flyout>
             </SplitButton>

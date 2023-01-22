@@ -7,7 +7,7 @@ public static class KeyCodeMappings
 {
     public static readonly Dictionary<string, KeyCode> KeyCodes = new()
     {
-        { "escape", KeyCode.VcEscape },
+        { "esc", KeyCode.VcEscape },
             
         {"f1", KeyCode.VcF1},
         {"f2", KeyCode.VcF2},
@@ -88,26 +88,27 @@ public static class KeyCodeMappings
         
         {";", KeyCode.VcSemicolon},
         {"\"", KeyCode.VcQuote},
-        {"enter", KeyCode.VcEnter},
+        {"return", KeyCode.VcEnter},
         
         {",", KeyCode.VcComma},
         {".", KeyCode.VcPeriod},
         {"/", KeyCode.VcSlash},
         
+        {"space", KeyCode.VcSpace},
         {" ", KeyCode.VcSpace},
         
-        {"printscreen", KeyCode.VcPrintScreen},
+        {"prtscn", KeyCode.VcPrintScreen},
         {"scrolllock", KeyCode.VcScrollLock},
         {"pause", KeyCode.VcPause},
         
         {"<", KeyCode.VcLesserGreater},
         
-        {"insert", KeyCode.VcInsert},
-        {"delete", KeyCode.VcDelete},
+        {"ins", KeyCode.VcInsert},
+        {"del", KeyCode.VcDelete},
         {"home", KeyCode.VcHome},
         {"end", KeyCode.VcEnd},
-        {"pageup", KeyCode.VcPageUp},
-        {"pagedown", KeyCode.VcPageDown},
+        {"pgup", KeyCode.VcPageUp},
+        {"pgdn", KeyCode.VcPageDown},
         
         {"up", KeyCode.VcUp},
         {"left", KeyCode.VcLeft},
@@ -148,14 +149,14 @@ public static class KeyCodeMappings
         {"numpaddelete", KeyCode.VcNumPadDelete},
         
         {"shift", KeyCode.VcLeftShift},
-        {"rightshift", KeyCode.VcRightShift},
-        {"leftcontrol", KeyCode.VcLeftControl},
-        {"rightcontrol", KeyCode.VcRightControl},
-        {"leftalt", KeyCode.VcLeftAlt},
-        {"rightalt", KeyCode.VcRightAlt},
-        {"leftmeta", KeyCode.VcLeftMeta},
-        {"rightmeta", KeyCode.VcRightMeta},
-        {"contextmenu", KeyCode.VcContextMenu},
+        {"rshift", KeyCode.VcRightShift},
+        {"ctrl", KeyCode.VcLeftControl},
+        {"rctrl", KeyCode.VcRightControl},
+        {"alt", KeyCode.VcLeftAlt},
+        {"ralt", KeyCode.VcRightAlt},
+        {"lwin", KeyCode.VcLeftMeta},
+        {"rwin", KeyCode.VcRightMeta},
+        {"apps", KeyCode.VcContextMenu},
         
         {"power", KeyCode.VcPower},
         {"sleep", KeyCode.VcSleep},
