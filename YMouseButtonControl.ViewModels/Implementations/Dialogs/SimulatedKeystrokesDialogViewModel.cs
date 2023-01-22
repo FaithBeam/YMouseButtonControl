@@ -13,6 +13,10 @@ namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
 public class SimulatedKeystrokesDialogViewModel : DialogBase
 {
+    private static readonly Dictionary<string, string> CombinedKeyDict = ModifierKeys
+        .Concat(StandardKeys)
+        .ToDictionary(x => x.Key, x => x.Value);
+    
     private string _customKeys;
     private string _currentKey;
     private string _description;
@@ -37,7 +41,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         {
             if (insertString != "{}")
             {
-                insertString = _combinedKeyDict[insertString];
+                insertString = CombinedKeyDict[insertString];
             }
 
             CustomKeys = CustomKeys.Insert(CaretIndex, insertString);
@@ -113,10 +117,6 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         { "CAPS Lock Toggle", "{CAPS}" },
         { "Scroll Lock Toggle", "{SCROLLLOCK}" },
     };
-
-    private static Dictionary<string, string> _combinedKeyDict = ModifierKeys
-        .Concat(StandardKeys)
-        .ToDictionary(x => x.Key, x => x.Value);
 
     public string CurrentKey
     {
