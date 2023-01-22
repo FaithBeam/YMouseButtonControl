@@ -16,6 +16,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         .Concat(StandardKeys)
         .Concat(DirectionKeys)
         .Concat(FunctionKeys)
+        .Concat(NumericKeypadKeys)
         .ToDictionary(x => x.Key, x => x.Value);
     
     private string _customKeys;
@@ -54,6 +55,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             .DistinctUntilChanged()
             .Select(x => SimulatedKeystrokesTypes[x])
             .ToProperty(this, x => x.CurrentSimulatedKeystrokesType);
+        
         _description = currentMapping?.PriorityDescription ?? string.Empty;
         _customKeys = currentMapping?.Keys ?? string.Empty;
         SimulatedKeystrokesIndex = currentMapping?.SimulatedKeystrokesType?.Index ?? 0;
@@ -153,6 +155,39 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         {"F22", "{F22}"},
         {"F23", "{F23}"},
         {"F24", "{F24}"}
+    };
+
+    private static Dictionary<string, string> NumericKeypadKeys => new()
+    {
+        {"Num Lock Toggle", "{NUMLOCK}"},
+        {"Divide", "{NUM/}"},
+        {"Multiply", "{NUM*}"},
+        {"Subtract", "{NUM-}"},
+        {"Add", "{NUM+}"},
+        {"Decimal", "{NUM.}"},
+        {"Equals", "{NUM=}"},
+        {"Enter", "{NUMENTER}"},
+        {"Num 0", "{NUM0}"},
+        {"Num 1", "{NUM1}"},
+        {"Num 2", "{NUM2}"},
+        {"Num 3", "{NUM3}"},
+        {"Num 4", "{NUM4}"},
+        {"Num 5", "{NUM5}"},
+        {"Num 6", "{NUM6}"},
+        {"Num 7", "{NUM7}"},
+        {"Num 8", "{NUM8}"},
+        {"Num 9", "{NUM9}"},
+        {"Num End", "{NUMEND}"},
+        {"Num Up", "{NUMUP}"},
+        {"Num Down", "{NUMDOWN}"},
+        {"Num Left", "{NUMLEFT}"},
+        {"Num Right", "{NUMRIGHT}"},
+        {"Num Page Up", "{NUMPGUP}"},
+        {"Num Page Down", "{NUMPGDN}"},
+        {"Num Clear", "{NUMCLEAR}"},
+        {"Num Home", "{NUMHOME}"},
+        {"Num Insert", "{NUMINS}"},
+        {"Num Delete", "{NUMDEL}"},
     };
 
     public string CurrentKey

@@ -52,6 +52,12 @@
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Numeric Keypad" 
+                                  Items="{Binding NumericKeypadKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
                     </MenuFlyout>
                 </SplitButton.Flyout>
             </SplitButton>
