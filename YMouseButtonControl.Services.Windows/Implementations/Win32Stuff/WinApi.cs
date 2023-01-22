@@ -113,6 +113,11 @@ public class WinApi
 
     public string GetBitmapFromPath(string path)
     {
+        if (path is null or "/")
+        {
+            return string.Empty;
+        }
+        
         var destination = Path.Join("cache", Path.GetFileName(path + ".ico"));
         if (File.Exists(destination))
         {
@@ -124,10 +129,6 @@ public class WinApi
             Directory.CreateDirectory("cache");
         }
 
-        if (path == "/")
-        {
-            return string.Empty;
-        }
         var icon = Icon.ExtractAssociatedIcon(path);
         if (icon is null)
         {

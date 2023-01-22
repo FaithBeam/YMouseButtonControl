@@ -17,14 +17,15 @@ public class ProcessMonitorService : IProcessMonitorService
     private readonly ManagementEventWatcher _createdEventWatcher;
     private readonly ManagementObjectSearcher _searcher = new("SELECT * FROM WIN32_PROCESS");
     private readonly WinApi _winApi = new();
-    private readonly SourceCache<ProcessModel,int> _runningProcesses;
+    private readonly SourceCache<ProcessModel, int> _runningProcesses;
+    private const string CreatedEventWatcherScope = "root\\CimV2";
+    private const string CreatedEventWatcherQuery = "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 
     public ProcessMonitorService()
     {
         _runningProcesses = new SourceCache<ProcessModel, int>(x => x.Process.Id);
         PopulateRunningProcesses();
-        _createdEventWatcher = new ManagementEventWatcher("root\\CimV2",
-            "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
+        _createdEventWatcher = new ManagementEventWatcher(CreatedEventWatcherScope, CreatedEventWatcherQuery);
         _createdEventWatcher.EventArrived += OnCreatedProcess;
         _createdEventWatcher.Start();
         var someBs = _runningProcesses
@@ -33,16 +34,25 @@ public class ProcessMonitorService : IProcessMonitorService
             .Subscribe(OnProcessHasExited);
     }
 
-    public IObservableCache<ProcessModel, int> RunningProcesses => _runningProcesses.AsObservableCache();
+    public IObservableCache<ProcessModel, int> RunningProcesses
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _runningProcesses.AsObservableCache();
+            }
+        }
+    }
 
     public bool ProcessRunning(string process)
     {
         lock (_lock)
         {
-            return RunningProcesses.Items.Any(x => x.Process.ProcessName == process);
+            return _runningProcesses.Items.Any(x => x.Process.ProcessName == process);
         }
     }
-    
+
     public void Dispose()
     {
         _createdEventWatcher.EventArrived -= OnCreatedProcess;
@@ -52,7 +62,7 @@ public class ProcessMonitorService : IProcessMonitorService
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
         var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
-        
+
         var pId = int.Parse(process.Properties["ProcessId"].Value.ToString());
 
         Process proc;
@@ -124,22 +134,29 @@ public class ProcessMonitorService : IProcessMonitorService
                 BitmapPath = _winApi.GetBitmapFromPath(proc.MainModule?.FileName) ?? string.Empty
             };
 
-            if (_runningProcesses.Items.Any(x => x.Process.ProcessName == pm.Process.ProcessName))
+            lock (_lock)
             {
-                continue;
-            }
+                if (_runningProcesses.Items.Any(x => x.Process.ProcessName == pm.Process.ProcessName))
+                {
+                    continue;
+                }
 
-            _runningProcesses.Edit(x => x.AddOrUpdate(pm));
+                _runningProcesses.Edit(x => x.AddOrUpdate(pm));
+            }
         }
     }
-    
+
     private void OnProcessHasExited(PropertyValue<ProcessModel, bool> propertyValue)
     {
         if (!propertyValue.Value)
         {
             return;
         }
-        _runningProcesses.Edit(x => x.Remove(propertyValue.Sender));
+
+        lock (_lock)
+        {
+            _runningProcesses.Edit(x => x.Remove(propertyValue.Sender));
+        }
         propertyValue.Sender.Dispose();
     }
 }
