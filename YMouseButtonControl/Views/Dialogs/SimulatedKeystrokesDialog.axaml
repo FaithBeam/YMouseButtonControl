@@ -64,6 +64,12 @@
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Browser Keys" 
+                                  Items="{Binding BrowserKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
                     </MenuFlyout>
                 </SplitButton.Flyout>
             </SplitButton>

@@ -18,6 +18,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         .Concat(FunctionKeys)
         .Concat(NumericKeypadKeys)
         .Concat(MediaKeys)
+        .Concat(BrowserKeys)
         .ToDictionary(x => x.Key, x => x.Value);
 
     private string _customKeys;
@@ -202,6 +203,17 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         { "Previous Track", "{MEDIAPREV}" },
         { "Select Track", "{MEDIASELECT}" },
         { "Eject Media", "{MEDIAEJECT}" }
+    };
+
+    public static Dictionary<string, string> BrowserKeys => new()
+    {
+        {"Web Home", "{WEBHOME}"},
+        {"Web Back", "{BACK}"},
+        {"Web Forward", "{FORWARD}"},
+        {"Web Favorites", "{FAVORITES}"},
+        {"Web Refresh", "{REFRESH}"},
+        {"Web Search", "{SEARCH}"},
+        {"Web Stop", "{STOP}"},
     };
 
     public string CurrentKey
