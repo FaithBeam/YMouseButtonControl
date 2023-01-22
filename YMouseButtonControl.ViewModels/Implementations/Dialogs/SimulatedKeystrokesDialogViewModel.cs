@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -15,6 +14,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
 {
     private static readonly Dictionary<string, string> CombinedKeyDict = ModifierKeys
         .Concat(StandardKeys)
+        .Concat(DirectionKeys)
         .ToDictionary(x => x.Key, x => x.Value);
     
     private string _customKeys;
@@ -116,6 +116,14 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         { "Pause", "{PAUSE}" },
         { "CAPS Lock Toggle", "{CAPS}" },
         { "Scroll Lock Toggle", "{SCROLLLOCK}" },
+    };
+
+    public static Dictionary<string, string> DirectionKeys => new()
+    {
+        { "Up", "{UP}" },
+        { "Down", "{DOWN}" },
+        { "Left", "{LEFT}" },
+        { "Right", "{RIGHT}" },
     };
 
     public string CurrentKey
