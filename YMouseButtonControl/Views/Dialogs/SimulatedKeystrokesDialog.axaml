@@ -1,0 +1,107 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
+        xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        x:Class="YMouseButtonControl.Views.Dialogs.SimulatedKeystrokesDialog"
+        Title="SimulatedKeystrokesDialog">
+    <Design.DataContext>
+        <vm:SimulatedKeystrokesDialogViewModel />
+    </Design.DataContext>
+    
+    <Window.Resources>
+        <converters:SimulatedKeystrokesDialogKeyConverter x:Key="DialogKeyConverter" />
+    </Window.Resources>
+    
+    <Grid RowDefinitions="*,*,*,*,*">
+        <Label HorizontalAlignment="Left" Content="Enter the custom key(s)" />
+        
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding CustomKeys}"
+                     CaretIndex="{Binding CaretIndex, Mode=TwoWay}"/>
+            <SplitButton Grid.Column="1"
+                         Content="\{\}"
+                         Command="{Binding SplitButtonCommand}"
+                         CommandParameter="\{\}">
+                <SplitButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuItem Header="Modifier Keys"
+                                  ItemsSource="{Binding ModifierKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}" />
+                        
+                        <MenuItem Header="Standard Keys" 
+                                  ItemsSource="{Binding StandardKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Direction Keys" 
+                                  ItemsSource="{Binding DirectionKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Function Keys" 
+                                  ItemsSource="{Binding FunctionKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Numeric Keypad" 
+                                  ItemsSource="{Binding NumericKeypadKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Media Keys" 
+                                  ItemsSource="{Binding MediaKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Browser Keys" 
+                                  ItemsSource="{Binding BrowserKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Mouse Buttons" 
+                                  ItemsSource="{Binding MouseButtons, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                        
+                        <MenuItem Header="Movement Tags" 
+                                  ItemsSource="{Binding MovementTagButtons, Converter={StaticResource DialogKeyConverter}}"
+                                  SelectedItem="{Binding CurrentKey}"
+                                  Command="{Binding SplitButtonCommand}"
+                                  CommandParameter="{Binding CurrentKey}"/>
+                    </MenuFlyout>
+                </SplitButton.Flyout>
+            </SplitButton>
+        </Grid>
+        
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
+            <Label HorizontalAlignment="Left" Content="How to send the simulated key strokes:" />
+            <ComboBox Grid.Column="1" 
+                      ItemsSource="{Binding SimulatedKeystrokesTypes}"
+                      SelectedIndex="{Binding SimulatedKeystrokesIndex}" />
+        </Grid>
+        
+        <Grid Grid.Row="3" ColumnDefinitions="Auto,Auto">
+            <Label Content="Description (to show in the button drop-down)" />
+            <TextBox Grid.Column="1" Text="{Binding Description}"></TextBox>
+        </Grid>
+        
+        <Grid Grid.Row="4" ColumnDefinitions="Auto,Auto">
+            <Button Content="OK" Command="{Binding OkCommand}" />
+            <Button Grid.Column="1" Content="Cancel" Click="Button_OnClick"></Button>
+        </Grid>
+    </Grid>
+</Window>

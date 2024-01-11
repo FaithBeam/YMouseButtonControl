@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations;assembly=YMouseButtonControl.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             MaxWidth="450"
+             MaxHeight="600"
+             x:Class="YMouseButtonControl.Views.ProfilesListView">
+
+    <Design.DataContext>
+        <vm:ProfilesListViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto">
+        <DataGrid Name="ProfilesDataGrid"
+                  ItemsSource="{Binding ProfilesService.Profiles}"
+                  AutoGenerateColumns="False"
+                  HeadersVisibility="None"
+                  Margin="5"
+                  Height="300"
+                  SelectedIndex="{Binding ProfilesService.CurrentProfileIndex}"
+                  VerticalAlignment="Top">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />
+                <DataGridTextColumn Binding="{Binding Description}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1" RowDefinitions="*,*" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" SharedSizeGroup="button" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0"
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Add" 
+                    Command="{Binding AddButtonCommand}"/>
+            <Button Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Copy"
+                    Command="{Binding CopyCommand}">
+            </Button>
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Export"
+                    Command="{Binding ExportCommand}">
+            </Button>
+            <Button Grid.Row="0"
+                    Grid.Column="3"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Up"
+                    Command="{Binding UpCommand}">
+            </Button>
+            <Button Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Edit"
+                    Command="{Binding EditButtonCommand}">
+            </Button>
+            <Button Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Remove"
+                    Command="{Binding RemoveButtonCommand}"/>
+            <Button Grid.Row="1"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Import"
+                    Command="{Binding ImportCommand}">
+            </Button>
+            <Button Grid.Row="1"
+                    Grid.Column="3"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="Down"
+                    Command="{Binding DownCommand}">
+            </Button>
+        </Grid>
+    </Grid>
+        
+</UserControl>

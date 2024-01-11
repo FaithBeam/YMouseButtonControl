@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+        <TrimMode>copyused</TrimMode>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <LangVersion>default</LangVersion>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+        <None Remove=".gitignore" />
+        <None Update="appsettings.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Remove="Resources\gear_icon1.png" />
+        <AvaloniaResource Include="Resources\gear_icon1.png" />
+        <None Remove="Resources\mouse.png" />
+        <AvaloniaResource Include="Resources\mouse.png" />
+    </ItemGroup>
+    <ItemGroup>
+        <!--This helps with theme dll-s trimming.
+        If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+        https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+        <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+        <TrimmableAssembly Include="Avalonia.Themes.Default" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.5" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.5" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+        <PackageReference Include="ORMi" Version="3.2.0.1" />
+        <PackageReference Include="System.Management" Version="8.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.BackgroundTasks\YMouseButtonControl.BackgroundTasks.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse.SharpHook\YMouseButtonControl.KeyboardAndMouse.SharpHook.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.ViewModels\YMouseButtonControl.ViewModels.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Environment\YMouseButtonControl.Services.Environment.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="App.axaml.cs">
+        <DependentUpon>App.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <AdditionalFiles Include="Views\MainWindow.axaml" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Resources\gear_icon.png" />
+    </ItemGroup>
+</Project>

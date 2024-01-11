@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse.Models\YMouseButtonControl.KeyboardAndMouse.Models.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Abstractions\YMouseButtonControl.Services.Abstractions.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SharpHook" Version="5.1.1" />
+      <PackageReference Include="SharpHook.Reactive" Version="5.1.1" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.BackgroundTasks\YMouseButtonControl.BackgroundTasks.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Processes\YMouseButtonControl.Processes.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Profiles\YMouseButtonControl.Profiles.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Abstractions\YMouseButtonControl.Services.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ReactiveUI" Version="19.5.1" />
+      <PackageReference Include="System.Management" Version="8.0.0" />
+    </ItemGroup>
+
+</Project>

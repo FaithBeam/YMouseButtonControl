@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="11.0.5" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="ReactiveUI" Version="19.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.Avalonia\YMouseButtonControl.Avalonia.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.DataAccess.LiteDb\YMouseButtonControl.DataAccess.LiteDb.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.DataAccess.Models\YMouseButtonControl.DataAccess.Models.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.DataAccess\YMouseButtonControl.DataAccess.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Processes\YMouseButtonControl.Processes.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Profiles\YMouseButtonControl.Profiles.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Abstractions\YMouseButtonControl.Services.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

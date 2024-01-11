@@ -1,0 +1,87 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
+        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
+        xmlns:vm2="clr-namespace:YMouseButtonControl.Services.Abstractions.Models;assembly=YMouseButtonControl.Services.Abstractions"
+        mc:Ignorable="d"
+        d:DesignWidth="400"
+        d:DesignHeight="600"
+        Width="500"
+        Height="600"
+        MaxWidth="500"
+        MaxHeight="600"
+        WindowStartupLocation="CenterOwner"
+        x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
+        Title="Choose Application">
+
+    <Design.DataContext>
+        <vm:ProcessSelectorDialogViewModel />
+    </Design.DataContext>
+    
+    <Window.Resources>
+        <converters:BitmapConverter x:Key="BitmapConverter" />
+    </Window.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto">
+        <!-- Row 1 -->
+        <Grid ColumnDefinitions="Auto,Auto" VerticalAlignment="Top">
+            <Label Content="Select from the list of running applications:" />
+            <Button Grid.Column="1"
+                    Content="Refresh"
+                    Command="{Binding RefreshButtonCommand}"
+                    HorizontalAlignment="Right"/>
+        </Grid>
+
+        <!-- Row 2 -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Processes}"
+                  SelectedItem="{Binding SelectedProcessModel}"
+                  AutoGenerateColumns="False"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  IsReadOnly="True"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch" Margin="0">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="12" CanUserResize="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="12" Stretch="Uniform" Source="{Binding BitmapPath, Converter={StaticResource BitmapConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Process" Binding="{Binding Process.MainModule.ModuleName}" />
+                <DataGridTextColumn Header="Window Title" Binding="{Binding Process.MainWindowTitle}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Row 3 -->
+        <Label Grid.Row="2" VerticalAlignment="Top"
+               Content="Or type in/browse to the application executable (.EXE) file" />
+
+        <!-- Row 4 -->
+        <Grid Grid.Row="3" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
+            <Label Content="Application" />
+            <TextBox Grid.Column="1" Text="{Binding SelectedProcessModel.Process.MainModule.ModuleName}" />
+            <Button Grid.Column="2" Content="..." />
+        </Grid>
+
+        <!-- Row 5 -->
+        <Grid Grid.Row="4" ColumnDefinitions="*,*" VerticalAlignment="Top">
+            <Label Content="Description" />
+            <TextBox Grid.Column="1" VerticalContentAlignment="Center" Text="{Binding SelectedProcessModel.Process.MainWindowTitle}" />
+        </Grid>
+
+        <!-- Row 6 -->
+        <Grid Grid.Row="5" ColumnDefinitions="*,*,*" VerticalAlignment="Top">
+            <Button Content="Specific Window" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" x:Name="OkButton" Content="OK" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding OkCommand}" />
+            <Button Grid.Column="2" x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelButton_OnClick" />
+        </Grid>
+    </Grid>
+
+</Window>
