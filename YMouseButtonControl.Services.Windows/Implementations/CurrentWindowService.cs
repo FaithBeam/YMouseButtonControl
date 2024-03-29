@@ -7,7 +7,6 @@ using ReactiveUI;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.Threading;
-using Windows.Win32.UI.Accessibility;
 using YMouseButtonControl.Processes.Interfaces;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
@@ -53,13 +52,13 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
                 PInvoke.EVENT_SYSTEM_FOREGROUND,
                 PInvoke.EVENT_SYSTEM_MINIMIZEEND,
                 null,
-                (hook, eventType, hwnd, idObject, child, thread, time) =>
+                (_, eventType, hWnd, _, _, _, _) =>
                 {
                     switch (eventType)
                     {
                         case PInvoke.EVENT_SYSTEM_FOREGROUND:
                             uint pId;
-                            var res = PInvoke.GetWindowThreadProcessId(hwnd, &pId);
+                            var res = PInvoke.GetWindowThreadProcessId(hWnd, &pId);
                             if (res == 0)
                             {
                                 throw new Win32Exception(Marshal.GetLastWin32Error());

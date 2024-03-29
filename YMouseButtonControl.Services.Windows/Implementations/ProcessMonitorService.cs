@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.Versioning;
 using DynamicData;
 using DynamicData.Binding;
 using YMouseButtonControl.Processes.Interfaces;
@@ -12,6 +13,7 @@ using YMouseButtonControl.Services.Abstractions.Models;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
+[SupportedOSPlatform("windows5.1.2600")]
 public class ProcessMonitorService : IProcessMonitorService, IDisposable
 {
     private readonly object _lock = new();
@@ -25,11 +27,6 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
     public ProcessMonitorService()
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new Exception("Attempted to run Windows specific code on non-Windows system");
-        }
-
         _searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_PROCESS");
         _runningProcesses = new SourceCache<ProcessModel, int>(x => x.Process.Id);
         PopulateRunningProcesses();
@@ -66,22 +63,12 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
     public void Dispose()
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new Exception("Attempted to run Windows specific code on non-Windows system");
-        }
-
         _createdEventWatcher.EventArrived -= OnCreatedProcess;
         _createdEventWatcher.Dispose();
     }
 
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new Exception("Attempted to run Windows specific code on non-Windows system");
-        }
-
         if (e.NewEvent.GetPropertyValue("TargetInstance") is not ManagementBaseObject process)
         {
             return;
@@ -134,11 +121,6 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
     private void PopulateRunningProcesses()
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new Exception("Attempted to run Windows specific code on non-Windows system");
-        }
-
         foreach (var i in _searcher.Get())
         {
             var processId = i.Properties["ProcessId"].Value.ToString();
@@ -212,15 +194,6 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
     private static string GetBitmapFromPath(string path)
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new Exception("Windows specific code attempted to be ran from non-Windows OS");
-        }
-
-        if (!OperatingSystem.IsWindowsVersionAtLeast(6, 1))
-        {
-            throw new Exception("Windows version less than 6.1");
-        }
         if (path is null or "/")
         {
             return string.Empty;
