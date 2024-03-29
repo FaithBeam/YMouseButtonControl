@@ -9,6 +9,4 @@ public partial class ProfileInformationView : UserControl
     {
         InitializeComponent();
     }
-
-    
 }

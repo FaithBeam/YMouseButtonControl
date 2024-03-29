@@ -27,29 +27,33 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
     private Thread _thread;
     private readonly object _lockObj = new();
 
-    private readonly ConcurrentDictionary<uint, bool> _buttonDisabledDict = new(
-        new Dictionary<uint, bool>
-    {
-        { (uint)WM.LBUTTONDOWN, false },
-        { (uint)WM.LBUTTONUP, false },
-        { (uint)WM.RBUTTONDOWN, false },
-        { (uint)WM.RBUTTONUP, false },
-        { (uint)WM.MBUTTONDOWN, false },
-        { (uint)WM.MBUTTONUP, false },
-        { XBUTTON1, false },
-        { XBUTTON2, false }
-    });
+    private readonly ConcurrentDictionary<uint, bool> _buttonDisabledDict =
+        new(
+            new Dictionary<uint, bool>
+            {
+                { (uint)WM.LBUTTONDOWN, false },
+                { (uint)WM.LBUTTONUP, false },
+                { (uint)WM.RBUTTONDOWN, false },
+                { (uint)WM.RBUTTONUP, false },
+                { (uint)WM.MBUTTONDOWN, false },
+                { (uint)WM.MBUTTONUP, false },
+                { XBUTTON1, false },
+                { XBUTTON2, false }
+            }
+        );
 
-    public LowLevelMouseHookService(IProfilesService profilesService, ICurrentWindowService currentWindowService)
+    public LowLevelMouseHookService(
+        IProfilesService profilesService,
+        ICurrentWindowService currentWindowService
+    )
     {
         _profilesService = profilesService;
         _currentWindowService = currentWindowService;
-        this
-            .WhenAnyValue(x => x._currentWindowService.ForegroundWindow)
+        this.WhenAnyValue(x => x._currentWindowService.ForegroundWindow)
             .DistinctUntilChanged()
             .Subscribe(OnForegroundWindowChanged);
-        _profilesService.Profiles
-            .ToObservableChangeSet(x => x)
+        _profilesService
+            .Profiles.ToObservableChangeSet(x => x)
             .ToCollection()
             .Subscribe(OnProfilesChanged);
         UpdateDisabledButtons();
@@ -61,14 +65,19 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         {
             _threadId = WinApi.GetCurrentThreadId();
 
-            _hHook = WinApi.SetWindowsHookEx(HookType.WH_MOUSE_LL, LowLevelMouseCallback, IntPtr.Zero, 0);
+            _hHook = WinApi.SetWindowsHookEx(
+                HookType.WH_MOUSE_LL,
+                LowLevelMouseCallback,
+                IntPtr.Zero,
+                0
+            );
             if (_hHook == IntPtr.Zero)
             {
                 throw new Exception("ERROR SETTING WINDOWS HOOK");
             }
 
             int bRet;
-            while ((bRet = WinApi.GetMessage(out MSG msg, 0,0,0)) != 0)
+            while ((bRet = WinApi.GetMessage(out MSG msg, 0, 0, 0)) != 0)
             {
                 if (bRet == -1)
                 {
@@ -78,7 +87,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         });
         _thread.Start();
     }
-    
+
     public void Dispose()
     {
         if (_hHook == IntPtr.Zero)
@@ -100,23 +109,23 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
 
         _thread.Join();
     }
-    
+
     private void OnForegroundWindowChanged(string foregroundWindow)
     {
         lock (_lockObj)
         {
             _foregroundWindow = foregroundWindow;
         }
-        
+
         // Reset mouse buttons back to non blocking state when foreground window changes
         foreach (var k in _buttonDisabledDict.Keys)
         {
             _buttonDisabledDict[k] = false;
         }
-        
+
         UpdateDisabledButtons();
     }
-    
+
     private void OnProfilesChanged(IReadOnlyCollection<Profile> profiles)
     {
         UpdateDisabledButtons();
@@ -130,7 +139,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
             {
                 continue;
             }
-            
+
             if (p.MouseButton1.MouseButtonDisabled)
             {
                 _buttonDisabledDict[(uint)WM.LBUTTONDOWN] = true;
@@ -141,7 +150,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
                 _buttonDisabledDict[(uint)WM.LBUTTONDOWN] = false;
                 _buttonDisabledDict[(uint)WM.LBUTTONUP] = false;
             }
-            
+
             if (p.MouseButton2.MouseButtonDisabled)
             {
                 _buttonDisabledDict[(uint)WM.RBUTTONDOWN] = true;
@@ -152,7 +161,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
                 _buttonDisabledDict[(uint)WM.RBUTTONDOWN] = false;
                 _buttonDisabledDict[(uint)WM.RBUTTONUP] = false;
             }
-            
+
             if (p.MouseButton3.MouseButtonDisabled)
             {
                 _buttonDisabledDict[(uint)WM.MBUTTONDOWN] = true;
@@ -163,7 +172,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
                 _buttonDisabledDict[(uint)WM.MBUTTONDOWN] = false;
                 _buttonDisabledDict[(uint)WM.MBUTTONUP] = false;
             }
-            
+
             if (p.MouseButton4.MouseButtonDisabled)
             {
                 _buttonDisabledDict[XBUTTON1] = true;
@@ -172,7 +181,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
             {
                 _buttonDisabledDict[XBUTTON1] = false;
             }
-            
+
             if (p.MouseButton5.MouseButtonDisabled)
             {
                 _buttonDisabledDict[XBUTTON2] = true;

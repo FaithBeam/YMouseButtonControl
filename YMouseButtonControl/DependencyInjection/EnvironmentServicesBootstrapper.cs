@@ -6,8 +6,10 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class EnvironmentServicesBootstrapper
 {
-    public static void RegisterEnvironmentServices(IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver)
+    public static void RegisterEnvironmentServices(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
         RegisterCommonServices(services);
     }

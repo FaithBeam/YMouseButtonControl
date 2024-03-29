@@ -34,10 +34,7 @@ public class AsMouseButtonReleasedTests
     public void AsMouseButtonRelease_Released()
     {
         var keys = "abc";
-        var mapping = new SimulatedKeystrokes()
-        {
-            Keys = keys
-        };
+        var mapping = new SimulatedKeystrokes() { Keys = keys };
         var state = MouseButtonState.Released;
         _autoMocker.Setup<ISimulateKeyService>(x => x.TapKeys(keys)).Verifiable();
         var ambps = _autoMocker.CreateInstance<AsMouseButtonReleasedService>();

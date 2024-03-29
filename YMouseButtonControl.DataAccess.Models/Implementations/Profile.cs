@@ -23,7 +23,7 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
         private string _windowClass = "N/A";
         private string _parentClass = "N/A";
         private string _matchType = "N/A";
-        
+
         [JsonIgnore]
         public int Id { get; set; }
         public bool Checked { get; set; }
@@ -129,16 +129,37 @@ namespace YMouseButtonControl.DataAccess.Models.Implementations
 
         public bool Equals(Profile? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Checked == other.Checked && Name == other.Name && MouseButton1.Equals(other.MouseButton1) && MouseButton2.Equals(other.MouseButton2) && MouseButton3.Equals(other.MouseButton3) && MouseButton4.Equals(other.MouseButton4) && MouseButton5.Equals(other.MouseButton5) && MouseWheelUp.Equals(other.MouseWheelUp) && MouseWheelDown.Equals(other.MouseWheelDown) && MouseWheelLeft.Equals(other.MouseWheelLeft) && MouseWheelRight.Equals(other.MouseWheelRight) && Description == other.Description && WindowCaption == other.WindowCaption && Process == other.Process && WindowClass == other.WindowClass && ParentClass == other.ParentClass && MatchType == other.MatchType;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            return Checked == other.Checked
+                && Name == other.Name
+                && MouseButton1.Equals(other.MouseButton1)
+                && MouseButton2.Equals(other.MouseButton2)
+                && MouseButton3.Equals(other.MouseButton3)
+                && MouseButton4.Equals(other.MouseButton4)
+                && MouseButton5.Equals(other.MouseButton5)
+                && MouseWheelUp.Equals(other.MouseWheelUp)
+                && MouseWheelDown.Equals(other.MouseWheelDown)
+                && MouseWheelLeft.Equals(other.MouseWheelLeft)
+                && MouseWheelRight.Equals(other.MouseWheelRight)
+                && Description == other.Description
+                && WindowCaption == other.WindowCaption
+                && Process == other.Process
+                && WindowClass == other.WindowClass
+                && ParentClass == other.ParentClass
+                && MatchType == other.MatchType;
         }
 
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != this.GetType())
+                return false;
             return Equals((Profile)obj);
         }
 

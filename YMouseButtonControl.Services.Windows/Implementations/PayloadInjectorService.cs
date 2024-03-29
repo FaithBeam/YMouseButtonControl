@@ -13,7 +13,10 @@ public class PayloadInjectorService : IDisposable, IPayloadInjectorService
     private IProcessMonitorService _processMonitorService;
     private Dictionary<uint, Payload> _activePayloads = new();
 
-    public PayloadInjectorService(IProfilesService profilesService, IProcessMonitorService processMonitorService)
+    public PayloadInjectorService(
+        IProfilesService profilesService,
+        IProcessMonitorService processMonitorService
+    )
     {
         _profilesService = profilesService;
         _processMonitorService = processMonitorService;

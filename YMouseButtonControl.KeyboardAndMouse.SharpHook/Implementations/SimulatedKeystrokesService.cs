@@ -17,11 +17,16 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
     private readonly IRepeatedWhileButtonDownService _repeatedWhileButtonDownService;
     private readonly IStickyRepeatService _stickyRepeatService;
 
-    public SimulatedKeystrokesService(ISimulateKeyService simulateKeyService, IParseKeysService parseKeysService,
-        IStickyHoldService stickyHoldService, IAsMouseButtonPressedService asMouseButtonPressedService,
+    public SimulatedKeystrokesService(
+        ISimulateKeyService simulateKeyService,
+        IParseKeysService parseKeysService,
+        IStickyHoldService stickyHoldService,
+        IAsMouseButtonPressedService asMouseButtonPressedService,
         IAsMouseButtonReleasedService asMouseButtonReleasedService,
         IDuringMousePressAndReleaseService duringMousePressAndReleaseService,
-        IRepeatedWhileButtonDownService repeatedWhileButtonDownService, IStickyRepeatService stickyRepeatService)
+        IRepeatedWhileButtonDownService repeatedWhileButtonDownService,
+        IStickyRepeatService stickyRepeatService
+    )
     {
         _simulateKeyService = simulateKeyService;
         _parseKeysService = parseKeysService;

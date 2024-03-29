@@ -48,20 +48,14 @@ public static class EnumWindowsService
 
     public static IntPtr GetHWndFromThreadId(int pId)
     {
-        var data = new EnumWindowData
-        {
-            ProcessId = (uint)pId
-        };
+        var data = new EnumWindowData { ProcessId = (uint)pId };
         EnumWindows(EnumWindowsProcCallback, ref data);
         return data.HWnd;
     }
 
     public static IntPtr GetHWndFromThreadId(uint pId)
     {
-        var data = new EnumWindowData
-        {
-            ProcessId = pId
-        };
+        var data = new EnumWindowData { ProcessId = pId };
         EnumWindows(EnumWindowsProcCallback, ref data);
         return data.HWnd;
     }

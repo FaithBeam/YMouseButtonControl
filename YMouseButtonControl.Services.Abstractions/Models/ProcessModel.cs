@@ -16,8 +16,8 @@ public class ProcessModel : ReactiveObject, IDisposable
 
     public Process Process { get; }
     public string? BitmapPath { get; set; }
-    public bool HasExited 
-    { 
+    public bool HasExited
+    {
         get => _hasExited;
         private set => this.RaiseAndSetIfChanged(ref _hasExited, value);
     }

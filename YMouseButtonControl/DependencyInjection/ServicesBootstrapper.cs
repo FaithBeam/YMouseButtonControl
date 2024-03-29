@@ -15,22 +15,29 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class ServicesBootstrapper
 {
-    public static void RegisterServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    public static void RegisterServices(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
         RegisterCommonServices(services, resolver);
         RegisterPlatformSpecificServices(services, resolver);
     }
 
-    private static void RegisterCommonServices(IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver)
+    private static void RegisterCommonServices(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
-        services.RegisterLazySingleton<IProfilesService>(() => new ProfilesService(
-            resolver.GetRequiredService<IUnitOfWorkFactory>()
-        ));
+        services.RegisterLazySingleton<IProfilesService>(
+            () => new ProfilesService(resolver.GetRequiredService<IUnitOfWorkFactory>())
+        );
     }
 
-    private static void RegisterPlatformSpecificServices(IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver)
+    private static void RegisterPlatformSpecificServices(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
         var platformService = resolver.GetRequiredService<IPlatformService>();
         var platform = platformService.GetPlatform();
@@ -47,39 +54,54 @@ public static class ServicesBootstrapper
         }
     }
 
-    private static void RegisterWindowsServices(IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver)
+    private static void RegisterWindowsServices(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
         services.RegisterLazySingleton<IProcessMonitorService>(() => new ProcessMonitorService());
-        services.RegisterLazySingleton<ICurrentWindowService>(() =>
-            new Services.Windows.Implementations.CurrentWindowService());
-        services.RegisterLazySingleton<ILowLevelMouseHookService>(() => new LowLevelMouseHookService(
-            resolver.GetRequiredService<IProfilesService>(),
-            resolver.GetRequiredService<ICurrentWindowService>()
-        ));
-        services.RegisterLazySingleton<IBackgroundTasksRunner>(() =>
-            new Services.Windows.Implementations.BackgroundTasksRunner(
-                resolver.GetRequiredService<IMouseListener>(),
-                resolver.GetRequiredService<KeyboardSimulatorWorker>(),
-                resolver.GetRequiredService<ILowLevelMouseHookService>(),
-                resolver.GetRequiredService<ICurrentWindowService>()
-            ));
+        services.RegisterLazySingleton<ICurrentWindowService>(
+            () => new Services.Windows.Implementations.CurrentWindowService()
+        );
+        services.RegisterLazySingleton<ILowLevelMouseHookService>(
+            () =>
+                new LowLevelMouseHookService(
+                    resolver.GetRequiredService<IProfilesService>(),
+                    resolver.GetRequiredService<ICurrentWindowService>()
+                )
+        );
+        services.RegisterLazySingleton<IBackgroundTasksRunner>(
+            () =>
+                new Services.Windows.Implementations.BackgroundTasksRunner(
+                    resolver.GetRequiredService<IMouseListener>(),
+                    resolver.GetRequiredService<KeyboardSimulatorWorker>(),
+                    resolver.GetRequiredService<ILowLevelMouseHookService>(),
+                    resolver.GetRequiredService<ICurrentWindowService>()
+                )
+        );
         //services.RegisterLazySingleton<IPayloadInjectorService>(() => new PayloadInjectorService(
         //    resolver.GetRequiredService<IProfilesService>(),
         //    resolver.GetRequiredService<IProcessMonitorService>()
         //));
     }
 
-    private static void RegisterMacOSServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    private static void RegisterMacOSServices(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
-        services.RegisterLazySingleton<IProcessMonitorService>(() => new MacOsProcessMonitorService());
-        services.RegisterLazySingleton<ICurrentWindowService>(() =>
-            new Services.MacOS.Implementations.CurrentWindowService()
+        services.RegisterLazySingleton<IProcessMonitorService>(
+            () => new MacOsProcessMonitorService()
         );
-        services.RegisterLazySingleton<IBackgroundTasksRunner>(() =>
-            new Services.MacOS.Implementations.BackgroundTasksRunner(
-                resolver.GetRequiredService<IMouseListener>(),
-                resolver.GetRequiredService<KeyboardSimulatorWorker>()
-            ));
+        services.RegisterLazySingleton<ICurrentWindowService>(
+            () => new Services.MacOS.Implementations.CurrentWindowService()
+        );
+        services.RegisterLazySingleton<IBackgroundTasksRunner>(
+            () =>
+                new Services.MacOS.Implementations.BackgroundTasksRunner(
+                    resolver.GetRequiredService<IMouseListener>(),
+                    resolver.GetRequiredService<KeyboardSimulatorWorker>()
+                )
+        );
     }
 }

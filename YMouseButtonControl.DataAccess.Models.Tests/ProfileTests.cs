@@ -9,15 +9,9 @@ public class ProfileTests
     [TestMethod]
     public void TestProfile()
     {
-        var p1 = new Profile
-        {
-            Name = "MyName"
-        };
-        var p2 = new Profile
-        {
-            Name = "MyName"
-        };
-        
+        var p1 = new Profile { Name = "MyName" };
+        var p2 = new Profile { Name = "MyName" };
+
         Assert.AreEqual(p1, p2);
 
         p2.Name = "New Name";
@@ -37,7 +31,7 @@ public class ProfileTests
             SimulatedKeystrokesType = new StickyHoldActionType()
         };
         Assert.AreNotEqual(p1, p2);
-        
+
         p2.MouseButton2 = new SimulatedKeystrokes
         {
             Keys = "w",

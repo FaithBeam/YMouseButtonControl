@@ -9,7 +9,10 @@ namespace YMouseButtonControl.ViewModels;
 
 public interface IShowSimulatedKeystrokesDialogService
 {
-    Interaction<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel> ShowSimulatedKeystrokesPickerInteraction { get; }
+    Interaction<
+        SimulatedKeystrokesDialogViewModel,
+        SimulatedKeystrokesDialogModel
+    > ShowSimulatedKeystrokesPickerInteraction { get; }
     Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog();
     Task<SimulatedKeystrokes> ShowSimulatedKeystrokesDialog(IButtonMapping mapping);
 }

@@ -13,8 +13,12 @@ public class KeyboardSimulatorWorker : IDisposable
     private readonly IRouteMouseButtonService _routeMouseButtonService;
     private readonly ISkipProfileService _skipProfileService;
 
-    public KeyboardSimulatorWorker(IProfilesService profilesService, IMouseListener mouseListener,
-        IRouteMouseButtonService routeMouseButtonService, ISkipProfileService skipProfileService)
+    public KeyboardSimulatorWorker(
+        IProfilesService profilesService,
+        IMouseListener mouseListener,
+        IRouteMouseButtonService routeMouseButtonService,
+        ISkipProfileService skipProfileService
+    )
     {
         _profilesService = profilesService;
         _mouseListener = mouseListener;
@@ -54,7 +58,7 @@ public class KeyboardSimulatorWorker : IDisposable
             {
                 continue;
             }
-            
+
             _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Pressed);
         }
     }
@@ -67,12 +71,10 @@ public class KeyboardSimulatorWorker : IDisposable
             {
                 continue;
             }
-            
+
             _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Released);
         }
     }
 
-    private void OnMouseWheel(object sender, NewMouseWheelEventArgs e)
-    {
-    }
+    private void OnMouseWheel(object sender, NewMouseWheelEventArgs e) { }
 }

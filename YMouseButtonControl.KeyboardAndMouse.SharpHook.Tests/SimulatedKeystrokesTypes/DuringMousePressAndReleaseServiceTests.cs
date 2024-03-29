@@ -28,7 +28,7 @@ public class DuringMousePressAndReleaseServiceTests
         dmpars.DuringMousePressAndRelease(mapping, state);
         _autoMocker.VerifyAll();
     }
-    
+
     [TestMethod]
     public void DuringMousePressAndRelease_Release()
     {

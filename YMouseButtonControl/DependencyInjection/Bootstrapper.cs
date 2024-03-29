@@ -5,8 +5,11 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class Bootstrapper
 {
-    public static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver,
-        DataAccessConfiguration dataAccessConfig)
+    public static void Register(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver,
+        DataAccessConfiguration dataAccessConfig
+    )
     {
         EnvironmentServicesBootstrapper.RegisterEnvironmentServices(services, resolver);
         ServicesBootstrapper.RegisterServices(services, resolver);

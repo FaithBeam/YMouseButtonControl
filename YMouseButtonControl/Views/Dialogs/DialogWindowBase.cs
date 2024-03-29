@@ -1,6 +1,3 @@
 ﻿namespace YMouseButtonControl.Views.Dialogs;
 
-public class DialogWindowBase
-{
-    
-}
+public class DialogWindowBase { }

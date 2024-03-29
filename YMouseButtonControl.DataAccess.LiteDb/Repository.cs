@@ -5,7 +5,8 @@ using YMouseButtonControl.DataAccess.Repositories;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T> : IRepository<T>
+    where T : class
 {
     private readonly ILiteCollection<T> _collection;
 

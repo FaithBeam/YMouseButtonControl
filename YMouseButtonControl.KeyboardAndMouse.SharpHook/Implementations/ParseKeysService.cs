@@ -23,8 +23,15 @@ public class ParseKeysService : IParseKeysService
             {
                 for (var j = i; j < keys.Length; j++)
                 {
-                    if (keys[j] != '}') continue;
-                    newKeys.Add(new ParsedKey{Key = keys.Substring(i + 1, j - i - 1).ToLower(), IsModifier = true} );
+                    if (keys[j] != '}')
+                        continue;
+                    newKeys.Add(
+                        new ParsedKey
+                        {
+                            Key = keys.Substring(i + 1, j - i - 1).ToLower(),
+                            IsModifier = true
+                        }
+                    );
                     i = j;
                     break;
                 }
@@ -33,7 +40,9 @@ public class ParseKeysService : IParseKeysService
             }
             else
             {
-                newKeys.Add(new ParsedKey{Key = keys[i].ToString().ToLower(), IsModifier = false} );
+                newKeys.Add(
+                    new ParsedKey { Key = keys[i].ToString().ToLower(), IsModifier = false }
+                );
                 i++;
             }
         }

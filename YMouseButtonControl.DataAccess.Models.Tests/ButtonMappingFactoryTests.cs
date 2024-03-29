@@ -11,19 +11,30 @@ public class ButtonMappingFactoryTests
     [TestMethod]
     public void TestGetButtonMappings()
     {
-        CollectionAssert.AllItemsAreInstancesOfType(ButtonMappingFactory.GetButtonMappings().ToList(), typeof(IButtonMapping));
+        CollectionAssert.AllItemsAreInstancesOfType(
+            ButtonMappingFactory.GetButtonMappings().ToList(),
+            typeof(IButtonMapping)
+        );
     }
 
     [TestMethod]
     public void TestGetButtonMappingDescriptions()
     {
-        CollectionAssert.AllItemsAreNotNull(ButtonMappingFactory.GetButtonMappingDescriptions().ToList());
+        CollectionAssert.AllItemsAreNotNull(
+            ButtonMappingFactory.GetButtonMappingDescriptions().ToList()
+        );
     }
 
     [TestMethod]
     public void TestCreate()
     {
-        Assert.IsInstanceOfType(ButtonMappingFactory.Create(ButtonMappings.Nothing), typeof(NothingMapping));
-        Assert.IsInstanceOfType(ButtonMappingFactory.Create(ButtonMappings.SimulatedKeystrokes), typeof(SimulatedKeystrokes));
+        Assert.IsInstanceOfType(
+            ButtonMappingFactory.Create(ButtonMappings.Nothing),
+            typeof(NothingMapping)
+        );
+        Assert.IsInstanceOfType(
+            ButtonMappingFactory.Create(ButtonMappings.SimulatedKeystrokes),
+            typeof(SimulatedKeystrokes)
+        );
     }
 }

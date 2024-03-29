@@ -15,8 +15,12 @@ public class BackgroundTasksRunner : IBackgroundTasksRunner
     private readonly ILowLevelMouseHookService _lowLevelMouseHookService;
     private readonly ICurrentWindowService _currentWindowService;
 
-    public BackgroundTasksRunner(IMouseListener mouseListener, KeyboardSimulatorWorker keyboardSimulatorWorker,
-        ILowLevelMouseHookService lowLevelMouseHookService, ICurrentWindowService currentWindowService)
+    public BackgroundTasksRunner(
+        IMouseListener mouseListener,
+        KeyboardSimulatorWorker keyboardSimulatorWorker,
+        ILowLevelMouseHookService lowLevelMouseHookService,
+        ICurrentWindowService currentWindowService
+    )
     {
         _mouseListener = mouseListener;
         _keyboardSimulatorWorker = keyboardSimulatorWorker;

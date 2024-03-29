@@ -17,7 +17,7 @@ public class MouseListener : IMouseListener
     public MouseListener(IGlobalHook hook)
     {
         _hook = hook;
-        
+
         SubscribeToEvents();
     }
 
@@ -32,7 +32,7 @@ public class MouseListener : IMouseListener
             _hook.Run();
         });
         _thread.Start();
-    } 
+    }
 
     private void ConvertMouseWheelEvent(object sender, MouseWheelHookEventArgs e)
     {
@@ -61,13 +61,13 @@ public class MouseListener : IMouseListener
 
     private void ConvertMousePressedEvent(object sender, MouseHookEventArgs e)
     {
-        var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button-1));
+        var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button - 1));
         OnMousePressed(args);
     }
 
     private void ConvertMouseReleasedEvent(object sender, MouseHookEventArgs e)
     {
-        var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button-1));
+        var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button - 1));
         OnMouseReleased(args);
     }
 
@@ -82,7 +82,7 @@ public class MouseListener : IMouseListener
         var handler = OnMousePressedEventHandler;
         handler?.Invoke(this, e);
     }
-    
+
     private void OnMouseWheel(NewMouseWheelEventArgs e)
     {
         var handler = OnMouseWheelEventHandler;
@@ -95,20 +95,20 @@ public class MouseListener : IMouseListener
         _hook.MouseReleased += ConvertMouseReleasedEvent;
         _hook.MouseWheel += ConvertMouseWheelEvent;
     }
-    
+
     private void UnsubscribeFromEvents()
     {
         _hook.MousePressed -= ConvertMousePressedEvent;
         _hook.MouseReleased -= ConvertMouseReleasedEvent;
         _hook.MouseWheel -= ConvertMouseWheelEvent;
     }
-    
+
     public void Dispose()
     {
         UnsubscribeFromEvents();
-        
+
         _hook.Dispose();
-        
+
         _thread.Join();
     }
 }

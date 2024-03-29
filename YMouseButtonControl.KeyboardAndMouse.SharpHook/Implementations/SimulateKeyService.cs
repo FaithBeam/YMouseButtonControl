@@ -15,12 +15,18 @@ public class SimulateKeyService : ISimulateKeyService
         _keyboardSimulator = keyboardSimulator;
         _parseKeysService = parseKeysService;
     }
-    
-    public SimulateKeyboardResult SimulateKeyPress(string key) => new()
-        { Result = _keyboardSimulator.SimulateKeyPress(KeyCodeMappings.KeyCodes[key]).ToString() };
-        
-    public SimulateKeyboardResult SimulateKeyRelease(string key) => new()
-        { Result = _keyboardSimulator.SimulateKeyRelease(KeyCodeMappings.KeyCodes[key]).ToString() };
+
+    public SimulateKeyboardResult SimulateKeyPress(string key) =>
+        new()
+        {
+            Result = _keyboardSimulator.SimulateKeyPress(KeyCodeMappings.KeyCodes[key]).ToString()
+        };
+
+    public SimulateKeyboardResult SimulateKeyRelease(string key) =>
+        new()
+        {
+            Result = _keyboardSimulator.SimulateKeyRelease(KeyCodeMappings.KeyCodes[key]).ToString()
+        };
 
     /// <summary>
     /// Press then release
@@ -34,7 +40,7 @@ public class SimulateKeyService : ISimulateKeyService
         _keyboardSimulator.SimulateKeyRelease(keyCode);
         return new SimulateKeyboardResult { Result = "Success" };
     }
-    
+
     /// <summary>
     /// Keys to be pressed in order.
     /// </summary>
@@ -70,7 +76,7 @@ public class SimulateKeyService : ISimulateKeyService
     {
         var parsed = _parseKeysService.ParseKeys(keys);
         var stack = new Stack<ParsedKey>();
-        
+
         foreach (var pk in parsed)
         {
             // Pop the entire stack if the last key pressed is a normal key
@@ -81,11 +87,11 @@ public class SimulateKeyService : ISimulateKeyService
                     SimulateKeyRelease(poppedPk.Key);
                 }
             }
-            
+
             stack.Push(pk);
             SimulateKeyPress(pk.Key);
         }
-        
+
         // Release any remaining keys in the stack
         while (stack.TryPop(out var poppedPk))
         {

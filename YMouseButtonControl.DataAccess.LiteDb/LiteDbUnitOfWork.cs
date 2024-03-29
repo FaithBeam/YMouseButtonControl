@@ -13,7 +13,8 @@ public class LiteDbUnitOfWork : IUnitOfWork
         _database = database;
     }
 
-    public IRepository<T> GetRepository<T>() where T : class
+    public IRepository<T> GetRepository<T>()
+        where T : class
     {
         var collection = _database.GetCollection<T>();
 

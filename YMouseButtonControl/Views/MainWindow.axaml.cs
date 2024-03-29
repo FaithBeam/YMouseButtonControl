@@ -22,9 +22,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 #if DEBUG
         this.AttachDevTools();
 #endif
-        
-        
     }
-
-    
 }

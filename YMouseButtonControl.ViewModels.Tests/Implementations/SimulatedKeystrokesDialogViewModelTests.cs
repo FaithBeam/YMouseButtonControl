@@ -13,19 +13,19 @@ namespace YMouseButtonControl.ViewModels.Tests.Implementations;
 public class SimulatedKeystrokesDialogViewModelTests
 {
     private AutoMocker _autoMocker;
-    
+
     [TestInitialize]
     public void TestInitialize()
     {
         _autoMocker = new AutoMocker();
     }
-    
+
     [TestMethod]
     public void TestSplitButtonCommand()
     {
         var skdvmt = _autoMocker.CreateInstance<SimulatedKeystrokesDialogViewModel>();
         Assert.AreEqual("", skdvmt.CustomKeys);
-        
+
         skdvmt.SplitButtonCommand.Execute(@"{}").Subscribe();
         Assert.AreEqual(@"{}", skdvmt.CustomKeys);
         Assert.AreEqual(2, skdvmt.CaretIndex);
@@ -47,7 +47,7 @@ public class SimulatedKeystrokesDialogViewModelTests
         Assert.AreEqual(string.Empty, result.CustomKeys);
         Assert.IsInstanceOfType(result.SimulatedKeystrokesType, typeof(ISimulatedKeystrokesType));
         Assert.AreEqual(string.Empty, result.Description);
-        
+
         // Test more interesting case
         skdvmt = _autoMocker.CreateInstance<SimulatedKeystrokesDialogViewModel>();
         skdvmt.CustomKeys = "abc123";
@@ -57,7 +57,7 @@ public class SimulatedKeystrokesDialogViewModelTests
         Assert.AreEqual("abc123", result.CustomKeys);
         Assert.AreEqual("my description", result.Description);
         Assert.IsInstanceOfType(result.SimulatedKeystrokesType, typeof(ISimulatedKeystrokesType));
-        
+
         // Test case where a previous button mapping is passed to the constructor
         _autoMocker = new AutoMocker();
         var ibMock = new Mock<IButtonMapping>();

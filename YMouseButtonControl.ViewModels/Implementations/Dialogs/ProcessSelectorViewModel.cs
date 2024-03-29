@@ -3,11 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
-using YMouseButtonControl.Services.Abstractions.Models;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Processes.Interfaces;
+using YMouseButtonControl.Services.Abstractions.Models;
+using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 
 namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
@@ -22,12 +22,15 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         _processes = new ObservableCollection<ProcessModel>();
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
-        OkCommand = ReactiveCommand.Create(() => new Profile
-        {
-            Name = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty,
-            Description = SelectedProcessModel?.Process.MainWindowTitle ?? string.Empty,
-            Process = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty
-        });
+        OkCommand = ReactiveCommand.Create(
+            () =>
+                new Profile
+                {
+                    Name = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty,
+                    Description = SelectedProcessModel?.Process.MainWindowTitle ?? string.Empty,
+                    Process = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty
+                }
+        );
         RefreshProcessList();
     }
 
@@ -50,6 +53,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
     private void RefreshProcessList()
     {
         Processes = new ObservableCollection<ProcessModel>(
-            _processMonitorService.RunningProcesses.Items.OrderBy(x => x.Process.ProcessName));
+            _processMonitorService.RunningProcesses.Items.OrderBy(x => x.Process.ProcessName)
+        );
     }
 }

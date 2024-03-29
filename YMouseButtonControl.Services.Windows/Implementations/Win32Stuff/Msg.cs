@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 namespace YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 [StructLayout(LayoutKind.Sequential)]
-
 public struct MSG
 {
     public IntPtr hwnd;

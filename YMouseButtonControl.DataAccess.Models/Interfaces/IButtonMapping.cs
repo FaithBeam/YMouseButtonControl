@@ -10,6 +10,6 @@ public interface IButtonMapping
     public bool State { get; set; }
     public bool CanRaiseDialog { get; }
     public bool MouseButtonDisabled { get; set; }
-    
+
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 }

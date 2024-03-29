@@ -11,7 +11,8 @@ namespace YMouseButtonControl.Services.Windows.Implementations;
 public class Payload : IDisposable
 {
     private readonly uint _targetpid;
-    private readonly string _dllPath = @"C:\Users\Tech\RiderProjects\YMouseButtonControl\x64\Debug\YMouseButtonControl.Services.Windows.ProcessPayload.dll";
+    private readonly string _dllPath =
+        @"C:\Users\Tech\RiderProjects\YMouseButtonControl\x64\Debug\YMouseButtonControl.Services.Windows.ProcessPayload.dll";
     private nint _dllAddr;
     private nint _functionCallbackAddr;
     private nint _functionUpdateDisabledKeysAddr;
@@ -38,7 +39,7 @@ public class Payload : IDisposable
             {
                 throw new Exception($"ERROR POSTING WM_CLOSE TO {_threadId}");
             }
-            
+
             if (!WinApi.UnhookWindowsHookEx(_hHook))
             {
                 throw new Exception($"ERROR UNHOOKING WINDOWS HOOK: {_hHook}");
@@ -75,7 +76,9 @@ public class Payload : IDisposable
             throw new Exception($"ERROR FINDING ADDRESS FOR UPDATE_DISABLED_KEYS");
         }
 
-        var updateDisabledKeys = Marshal.GetDelegateForFunctionPointer<UpdateDisabledKeys>(_functionUpdateDisabledKeysAddr);
+        var updateDisabledKeys = Marshal.GetDelegateForFunctionPointer<UpdateDisabledKeys>(
+            _functionUpdateDisabledKeysAddr
+        );
 
         Trace.WriteLine(Convert.ToUInt32(_profile.MouseButton4.MouseButtonDisabled));
 
@@ -93,7 +96,12 @@ public class Payload : IDisposable
         {
             _threadId = WinApi.GetCurrentThreadId();
             Trace.WriteLine(_targetpid);
-            _hHook = WinApi.SetWindowsHookEx(HookType.WH_MOUSE, _functionCallbackAddr, _dllAddr, _targetpid);
+            _hHook = WinApi.SetWindowsHookEx(
+                HookType.WH_MOUSE,
+                _functionCallbackAddr,
+                _dllAddr,
+                _targetpid
+            );
             if (_hHook == IntPtr.Zero)
             {
                 var lastError = Marshal.GetLastWin32Error();

@@ -7,10 +7,13 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class DataAccessBootstrapper
 {
-    public static void RegisterDataAccess(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    public static void RegisterDataAccess(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver
+    )
     {
-        services.RegisterLazySingleton<IUnitOfWorkFactory>(() => new LiteDbUnitOfWorkFactory(
-            resolver.GetRequiredService<DatabaseConfiguration>()
-        ));
-    }    
+        services.RegisterLazySingleton<IUnitOfWorkFactory>(
+            () => new LiteDbUnitOfWorkFactory(resolver.GetRequiredService<DatabaseConfiguration>())
+        );
+    }
 }

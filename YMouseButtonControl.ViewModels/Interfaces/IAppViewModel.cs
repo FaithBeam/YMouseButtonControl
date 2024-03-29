@@ -1,6 +1,3 @@
 ﻿namespace YMouseButtonControl.ViewModels.Interfaces;
 
-public interface IAppViewModel
-{
-    
-}
+public interface IAppViewModel { }

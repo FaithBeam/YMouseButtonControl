@@ -10,7 +10,10 @@ public class BackgroundTasksRunner : IBackgroundTasksRunner
 
     private readonly KeyboardSimulatorWorker _keyboardSimulatorWorker;
 
-    public BackgroundTasksRunner(IMouseListener mouseListener, KeyboardSimulatorWorker keyboardSimulatorWorker)
+    public BackgroundTasksRunner(
+        IMouseListener mouseListener,
+        KeyboardSimulatorWorker keyboardSimulatorWorker
+    )
     {
         _mouseListener = mouseListener;
         _keyboardSimulatorWorker = keyboardSimulatorWorker;

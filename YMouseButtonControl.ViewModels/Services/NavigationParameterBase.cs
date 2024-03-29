@@ -1,6 +1,3 @@
 ﻿namespace YMouseButtonControl.ViewModels.Services;
 
-public class NavigationParameterBase
-{
-
-}
+public class NavigationParameterBase { }

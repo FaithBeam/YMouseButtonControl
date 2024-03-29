@@ -10,7 +10,9 @@ public static class ReadOnlyDependencyResolverExtensions
         var service = resolver.GetService<TService>();
         if (service is null)
         {
-            throw new InvalidOperationException($"Failed to resolve object of type {typeof(TService)}");
+            throw new InvalidOperationException(
+                $"Failed to resolve object of type {typeof(TService)}"
+            );
         }
 
         return service;

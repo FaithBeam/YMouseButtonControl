@@ -19,13 +19,17 @@ public class ProcessMonitorService : IProcessMonitorService
     private readonly WinApi _winApi = new();
     private readonly SourceCache<ProcessModel, int> _runningProcesses;
     private const string CreatedEventWatcherScope = "root\\CimV2";
-    private const string CreatedEventWatcherQuery = "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
+    private const string CreatedEventWatcherQuery =
+        "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 
     public ProcessMonitorService()
     {
         _runningProcesses = new SourceCache<ProcessModel, int>(x => x.Process.Id);
         PopulateRunningProcesses();
-        _createdEventWatcher = new ManagementEventWatcher(CreatedEventWatcherScope, CreatedEventWatcherQuery);
+        _createdEventWatcher = new ManagementEventWatcher(
+            CreatedEventWatcherScope,
+            CreatedEventWatcherQuery
+        );
         _createdEventWatcher.EventArrived += OnCreatedProcess;
         _createdEventWatcher.Start();
         var someBs = _runningProcesses
@@ -136,7 +140,11 @@ public class ProcessMonitorService : IProcessMonitorService
 
             lock (_lock)
             {
-                if (_runningProcesses.Items.Any(x => x.Process.ProcessName == pm.Process.ProcessName))
+                if (
+                    _runningProcesses.Items.Any(x =>
+                        x.Process.ProcessName == pm.Process.ProcessName
+                    )
+                )
                 {
                     continue;
                 }

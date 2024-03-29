@@ -11,7 +11,7 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
     private readonly ISimulateKeyService _simulateKeyService;
     private Thread _thread;
     private bool _shouldStop;
-    private object _lock = new ();
+    private object _lock = new();
     private const int _repeatRateMs = 33;
 
     public RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyService)
@@ -43,7 +43,7 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
                     _simulateKeyService.TapKeys(mapping.Keys);
                 }
             });
-            
+
             _thread.Start();
         }
         else if (state == MouseButtonState.Released)

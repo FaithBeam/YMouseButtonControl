@@ -2,7 +2,4 @@
 
 namespace YMouseButtonControl.ViewModels.Implementations.Dialogs;
 
-public class DialogBase : ReactiveObject
-{
-    
-}
+public class DialogBase : ReactiveObject { }

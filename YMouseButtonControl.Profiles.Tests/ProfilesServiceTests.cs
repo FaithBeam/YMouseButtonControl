@@ -27,12 +27,8 @@ public class ProfilesServiceTests
             .Setup(x => x.GetAll())
             .Returns(() => new List<Profile> { new() { Name = "Default" } });
         _uowMock = new Mock<IUnitOfWork>();
-        _uowMock
-            .Setup(x => x.GetRepository<Profile>())
-            .Returns(_repoMock.Object);
-        _mocker
-            .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
-            .Returns(_uowMock.Object);
+        _uowMock.Setup(x => x.GetRepository<Profile>()).Returns(_repoMock.Object);
+        _mocker.Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create()).Returns(_uowMock.Object);
         _profilesService = _mocker.CreateInstance<ProfilesService>();
     }
 
@@ -116,8 +112,10 @@ public class ProfilesServiceTests
     [TestMethod]
     public void TestGetProfiles()
     {
-        CollectionAssert.AreEquivalent(_profilesService!.GetProfiles().ToList(),
-            new List<Profile> { new() { Name = "Default" } });
+        CollectionAssert.AreEquivalent(
+            _profilesService!.GetProfiles().ToList(),
+            new List<Profile> { new() { Name = "Default" } }
+        );
     }
 
     [TestMethod]
@@ -137,9 +135,7 @@ public class ProfilesServiceTests
             .Setup(x => x.GetAll())
             .Returns(() => new List<Profile> { defaultProfile, otherProfile });
         var newUowMock = new Mock<IUnitOfWork>();
-        newUowMock
-            .Setup(x => x.GetRepository<Profile>())
-            .Returns(newRepoMock.Object);
+        newUowMock.Setup(x => x.GetRepository<Profile>()).Returns(newRepoMock.Object);
         newMocker
             .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
             .Returns(newUowMock.Object);
@@ -161,7 +157,10 @@ public class ProfilesServiceTests
     [TestMethod]
     public void TestLoadProfilesFromDb()
     {
-        CollectionAssert.AreEquivalent(_profilesService!.Profiles, new List<Profile> { new() { Name = "Default" } });
+        CollectionAssert.AreEquivalent(
+            _profilesService!.Profiles,
+            new List<Profile> { new() { Name = "Default" } }
+        );
     }
 
     [TestMethod]
@@ -178,9 +177,7 @@ public class ProfilesServiceTests
             .Returns(new List<Profile> { new() { Name = "Default" } })
             .Returns(new List<Profile> { new() { Name = "Default" } });
         var newUowMock = new Mock<IUnitOfWork>();
-        newUowMock
-            .Setup(x => x.GetRepository<Profile>())
-            .Returns(newRepositoryMock.Object);
+        newUowMock.Setup(x => x.GetRepository<Profile>()).Returns(newRepositoryMock.Object);
         newAutoMocker
             .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
             .Returns(newUowMock.Object);
@@ -192,9 +189,7 @@ public class ProfilesServiceTests
         newRepositoryMock
             .Setup(x => x.GetAll())
             .Returns(() => new List<Profile> { new() { Name = "Default" } });
-        newUowMock
-            .Setup(x => x.GetRepository<Profile>())
-            .Returns(newRepositoryMock.Object);
+        newUowMock.Setup(x => x.GetRepository<Profile>()).Returns(newRepositoryMock.Object);
         newAutoMocker
             .Setup<IUnitOfWorkFactory, IUnitOfWork>(x => x.Create())
             .Returns(newUowMock.Object);
@@ -258,7 +253,11 @@ public class ProfilesServiceTests
         var dummyProfile = new Profile
         {
             Name = "Test",
-            MouseButton1 = new SimulatedKeystrokes { SimulatedKeystrokesType = new DuringMouseActionType(), Keys = "q" }
+            MouseButton1 = new SimulatedKeystrokes
+            {
+                SimulatedKeystrokesType = new DuringMouseActionType(),
+                Keys = "q"
+            }
         };
         var copiedProfile = ps.CopyProfile(dummyProfile);
         Assert.AreEqual(dummyProfile, copiedProfile);

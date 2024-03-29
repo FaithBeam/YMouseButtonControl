@@ -26,8 +26,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
         _unitOfWorkFactory = unitOfWorkFactory;
         CheckDefaultProfile();
         LoadProfilesFromDb();
-        _currentProfile = this
-            .WhenAnyValue(x => x.CurrentProfileIndex)
+        _currentProfile = this.WhenAnyValue(x => x.CurrentProfileIndex)
             .Select(x => Profiles[x])
             .DistinctUntilChanged()
             .ToProperty(this, x => x.CurrentProfile);
@@ -54,13 +53,14 @@ public class ProfilesService : ReactiveObject, IProfilesService
     }
 
     public Profile CurrentProfile => _currentProfile.Value;
-    
+
     private void CheckDefaultProfile()
     {
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
-        if (model.Any(x => x.Name == "Default")) return;
+        if (model.Any(x => x.Name == "Default"))
+            return;
         var defaultProfile = new Profile
         {
             Checked = true,
@@ -86,14 +86,14 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public Profile CopyProfile(Profile p)
     {
-        var jsonString = JsonConvert.SerializeObject(p, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Auto
-        });
-        return JsonConvert.DeserializeObject<Profile>(jsonString, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Auto
-        });
+        var jsonString = JsonConvert.SerializeObject(
+            p,
+            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+        );
+        return JsonConvert.DeserializeObject<Profile>(
+            jsonString,
+            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+        );
     }
 
     public bool IsUnsavedChanges()
@@ -101,28 +101,29 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return Profiles.Count != dbProfiles.Count || Profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
+        return Profiles.Count != dbProfiles.Count
+            || Profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
 
     public void WriteProfileToFile(Profile p, string path)
     {
-        var jsonString = JsonConvert.SerializeObject(p, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Auto
-        });
+        var jsonString = JsonConvert.SerializeObject(
+            p,
+            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+        );
         File.WriteAllText(path, jsonString);
     }
 
     public void ImportProfileFromPath(string path)
     {
         var f = File.ReadAllText(path);
-        var deserializedProfile = JsonConvert.DeserializeObject<Profile>(f, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Auto
-        });
+        var deserializedProfile = JsonConvert.DeserializeObject<Profile>(
+            f,
+            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+        );
         AddProfile(deserializedProfile);
     }
-    
+
     public IEnumerable<Profile> GetProfiles()
     {
         return Profiles;
@@ -146,16 +147,18 @@ public class ProfilesService : ReactiveObject, IProfilesService
     public void MoveProfileUp(Profile p)
     {
         var index = Profiles.IndexOf(p);
-        if (index < 1) return;
+        if (index < 1)
+            return;
         Profiles.Remove(p);
         Profiles.Insert(index - 1, p);
         CurrentProfileIndex = index - 1;
     }
-    
+
     public void MoveProfileDown(Profile p)
     {
         var index = Profiles.IndexOf(p);
-        if (index < 0) return;
+        if (index < 0)
+            return;
         if (Profiles.Count < index + 2)
         {
             return;
@@ -191,7 +194,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
     {
         return Profiles.Max(x => x.Id) + 1;
     }
-    
+
     private void UnsavedChangesHelper(bool next)
     {
         UnsavedChanges = next;

@@ -8,30 +8,55 @@ namespace YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 public class WinApi
 {
-    public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+    public delegate void WinEventDelegate(
+        IntPtr hWinEventHook,
+        uint eventType,
+        IntPtr hwnd,
+        int idObject,
+        int idChild,
+        uint dwEventThread,
+        uint dwmsEventTime
+    );
 
     [DllImport("user32.dll")]
-    public static extern IntPtr SetWinEventHook(WinEvents eventMin, WinEvents eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, WinEventFlags dwFlags);
+    public static extern IntPtr SetWinEventHook(
+        WinEvents eventMin,
+        WinEvents eventMax,
+        IntPtr hmodWinEventProc,
+        WinEventDelegate lpfnWinEventProc,
+        uint idProcess,
+        uint idThread,
+        WinEventFlags dwFlags
+    );
 
     [DllImport("psapi.dll")]
-    public static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In][MarshalAs(UnmanagedType.U4)] int nSize);
+    public static extern uint GetModuleFileNameEx(
+        IntPtr hProcess,
+        IntPtr hModule,
+        [Out] StringBuilder lpBaseName,
+        [In] [MarshalAs(UnmanagedType.U4)] int nSize
+    );
 
     [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, uint processId);
+    public static extern IntPtr OpenProcess(
+        uint processAccess,
+        bool bInheritHandle,
+        uint processId
+    );
 
     [DllImport("user32.dll")]
-    public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam,IntPtr lParam);
-    
-    [DllImport("user32.dll", SetLastError=true)]
+    public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll", SetLastError = true)]
     public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-    
+
     [DllImport("user32.dll", SetLastError = true)]
     public static extern IntPtr GetWindow(IntPtr hWnd, GetWindowType uCmd);
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool IsWindowVisible(IntPtr hWnd);
-    
+
     [DllImport("kernel32", SetLastError = true)]
     public static extern nint LoadLibrary(string lpFileName);
 
@@ -49,15 +74,30 @@ public class WinApi
     public static extern uint GetCurrentThreadId();
 
     [DllImport("user32.dll", SetLastError = true)]
-    public static extern nint SetWindowsHookEx(HookType hookType, nint lpfn, nint hMod, uint dwThreadId);
-    
+    public static extern nint SetWindowsHookEx(
+        HookType hookType,
+        nint lpfn,
+        nint hMod,
+        uint dwThreadId
+    );
+
     public delegate IntPtr HookProc(int code, nint wParam, nint lParam);
 
     [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+    public static extern IntPtr SetWindowsHookEx(
+        HookType hookType,
+        HookProc lpfn,
+        IntPtr hMod,
+        uint dwThreadId
+    );
 
     [DllImport("user32.dll")]
-    public static extern int GetMessage(out MSG lpMsg, nint hWnd, uint wMsgFilterMin, uint wMsgFilterMax);
+    public static extern int GetMessage(
+        out MSG lpMsg,
+        nint hWnd,
+        uint wMsgFilterMin,
+        uint wMsgFilterMax
+    );
 
     [DllImport("user32.dll")]
     public static extern bool TranslateMessage([In] ref MSG lpMsg);
@@ -75,13 +115,13 @@ public class WinApi
         {
             return string.Empty;
         }
-        
+
         var destination = Path.Join("cache", Path.GetFileName(path + ".ico"));
         if (File.Exists(destination))
         {
             return destination;
         }
-        
+
         if (!Directory.Exists("cache"))
         {
             Directory.CreateDirectory("cache");
@@ -92,7 +132,7 @@ public class WinApi
         {
             return string.Empty;
         }
-        
+
         var bmp = icon.ToBitmap();
         bmp.Save(destination);
 

@@ -21,7 +21,11 @@ public class RouteButtonMappingServiceTests
     public void Route()
     {
         var mapping = new SimulatedKeystrokes();
-        _autoMocker.Setup<ISimulatedKeystrokesService>(x => x.SimulatedKeystrokes(mapping, MouseButtonState.Pressed)).Verifiable();
+        _autoMocker
+            .Setup<ISimulatedKeystrokesService>(x =>
+                x.SimulatedKeystrokes(mapping, MouseButtonState.Pressed)
+            )
+            .Verifiable();
         var rbms = _autoMocker.CreateInstance<RouteButtonMappingService>();
         rbms.Route(mapping, MouseButtonState.Pressed);
         _autoMocker.VerifyAll();

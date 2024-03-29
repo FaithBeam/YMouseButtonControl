@@ -9,7 +9,8 @@ public static class MainWindowProvider
 {
     public static Window GetMainWindow()
     {
-        var lifetime = (IClassicDesktopStyleApplicationLifetime) Application.Current?.ApplicationLifetime;
+        var lifetime = (IClassicDesktopStyleApplicationLifetime)
+            Application.Current?.ApplicationLifetime;
 
         return lifetime?.MainWindow;
     }

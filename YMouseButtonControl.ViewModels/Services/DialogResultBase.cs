@@ -1,6 +1,3 @@
 ﻿namespace YMouseButtonControl.ViewModels.Services;
 
-public class DialogResultBase
-{
-    
-}
+public class DialogResultBase { }

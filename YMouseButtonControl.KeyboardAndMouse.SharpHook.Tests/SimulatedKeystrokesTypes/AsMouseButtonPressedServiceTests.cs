@@ -34,10 +34,7 @@ public class AsMouseButtonPressedServiceTests
     public void AsMouseButtonPressed_Pressed()
     {
         var keys = "abc";
-        var mapping = new SimulatedKeystrokes()
-        {
-            Keys = keys
-        };
+        var mapping = new SimulatedKeystrokes() { Keys = keys };
         var state = MouseButtonState.Pressed;
         _autoMocker.Setup<ISimulateKeyService>(x => x.TapKeys(keys)).Verifiable();
         var ambps = _autoMocker.CreateInstance<AsMouseButtonPressedService>();

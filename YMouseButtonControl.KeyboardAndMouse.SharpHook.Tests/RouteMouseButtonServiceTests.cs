@@ -31,7 +31,7 @@ public class RouteMouseButtonServiceTests
             };
         }
     }
-    
+
     [TestInitialize]
     public void TestInitialize()
     {
@@ -42,7 +42,9 @@ public class RouteMouseButtonServiceTests
     [DynamicData(nameof(Data))]
     public void Route(MouseButton button, IButtonMapping mapping)
     {
-        _autoMocker.Setup<IRouteButtonMappingService>(x => x.Route(mapping, MouseButtonState.Pressed)).Verifiable();
+        _autoMocker
+            .Setup<IRouteButtonMappingService>(x => x.Route(mapping, MouseButtonState.Pressed))
+            .Verifiable();
         var rbms = _autoMocker.CreateInstance<RouteMouseButtonService>();
         var p = new Profile();
         switch (button)

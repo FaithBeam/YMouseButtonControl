@@ -10,9 +10,7 @@ namespace YMouseButtonControl.Services.MacOS.Implementations;
 
 public class MacOsProcessMonitorService : IProcessMonitorService
 {
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
 
     public IObservableCache<ProcessModel, int> RunningProcesses => GetProcesses();
 
@@ -20,7 +18,7 @@ public class MacOsProcessMonitorService : IProcessMonitorService
     {
         return Process.GetProcessesByName(process).Any();
     }
-    
+
     private SourceCache<ProcessModel, int> GetProcesses()
     {
         var oc = new SourceCache<ProcessModel, int>(x => x.Process.Id);

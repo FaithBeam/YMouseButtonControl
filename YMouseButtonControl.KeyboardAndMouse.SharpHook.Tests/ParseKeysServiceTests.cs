@@ -14,7 +14,8 @@ public class ParseKeysServiceTests
             {
                 new object[]
                 {
-                    "abc", new List<ParsedKey>
+                    "abc",
+                    new List<ParsedKey>
                     {
                         new() { Key = "a", IsModifier = false },
                         new() { Key = "b", IsModifier = false },
@@ -23,7 +24,8 @@ public class ParseKeysServiceTests
                 },
                 new object[]
                 {
-                    "{shift}w", new List<ParsedKey>
+                    "{shift}w",
+                    new List<ParsedKey>
                     {
                         new() { Key = "shift", IsModifier = true },
                         new() { Key = "w", IsModifier = false }
@@ -31,7 +33,8 @@ public class ParseKeysServiceTests
                 },
                 new object[]
                 {
-                    "{shift}w{shift}e", new List<ParsedKey>()
+                    "{shift}w{shift}e",
+                    new List<ParsedKey>()
                     {
                         new() { Key = "shift", IsModifier = true },
                         new() { Key = "w", IsModifier = false },
@@ -41,7 +44,8 @@ public class ParseKeysServiceTests
                 },
                 new object[]
                 {
-                    "{SHIFT}W", new List<ParsedKey>()
+                    "{SHIFT}W",
+                    new List<ParsedKey>()
                     {
                         new() { Key = "shift", IsModifier = true },
                         new() { Key = "w", IsModifier = false },
@@ -49,7 +53,8 @@ public class ParseKeysServiceTests
                 },
                 new object[]
                 {
-                    "w", new List<ParsedKey>()
+                    "w",
+                    new List<ParsedKey>()
                     {
                         new() { Key = "w", IsModifier = false },
                     }
@@ -57,7 +62,7 @@ public class ParseKeysServiceTests
             };
         }
     }
-    
+
     [TestMethod]
     [DynamicData(nameof(Data))]
     public void TestParseKeys(string keys, List<ParsedKey> expected)

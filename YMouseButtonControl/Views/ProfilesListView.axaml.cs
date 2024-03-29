@@ -24,9 +24,13 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
 
         this.WhenActivated(d =>
         {
-            if (ViewModel is null) return;
-            d(ViewModel.ShowProcessSelectorInteraction.RegisterHandler(async x =>
-                await ShowProcessSelectorDialogAsync(x)));
+            if (ViewModel is null)
+                return;
+            d(
+                ViewModel.ShowProcessSelectorInteraction.RegisterHandler(async x =>
+                    await ShowProcessSelectorDialogAsync(x)
+                )
+            );
             d(ViewModel.ShowExportFileDialog.RegisterHandler(ShowExportFileDialog));
             d(ViewModel.ShowImportFileDialog.RegisterHandler(ShowImportFileDialog));
         });
@@ -34,16 +38,23 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
 
     private async Task ShowImportFileDialog(IInteractionContext<Unit, string> interactionContext)
     {
-        var result = await new Window().StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            Title = "Open",
-            AllowMultiple = false,
-            FileTypeFilter = new[] { new FilePickerFileType(".json") { Patterns = new[] { "*.json" } } }
-        });
+        var result = await new Window().StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "Open",
+                AllowMultiple = false,
+                FileTypeFilter = new[]
+                {
+                    new FilePickerFileType(".json") { Patterns = new[] { "*.json" } }
+                }
+            }
+        );
         if (result.Any())
         {
             var f = result[0];
-            interactionContext.SetOutput(f.TryGetLocalPath() ?? throw new Exception("Error retrieving chosen path"));
+            interactionContext.SetOutput(
+                f.TryGetLocalPath() ?? throw new Exception("Error retrieving chosen path")
+            );
             return;
         }
 
@@ -52,33 +63,35 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
 
     private async Task ShowExportFileDialog(IInteractionContext<string, string> interactionContext)
     {
-        var file = await new Window().StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-        {
-            Title = "Save As",
-            DefaultExtension = ".json",
-            SuggestedFileName = $"{interactionContext.Input}.json",
-            FileTypeChoices = new[] { new FilePickerFileType("json") { Patterns = new[] { "*.json" } } }
-        });
+        var file = await new Window().StorageProvider.SaveFilePickerAsync(
+            new FilePickerSaveOptions
+            {
+                Title = "Save As",
+                DefaultExtension = ".json",
+                SuggestedFileName = $"{interactionContext.Input}.json",
+                FileTypeChoices = new[]
+                {
+                    new FilePickerFileType("json") { Patterns = new[] { "*.json" } }
+                }
+            }
+        );
         if (file is not null)
         {
-            interactionContext.SetOutput(file.TryGetLocalPath() ?? throw new Exception("Error retrieving chosen path"));
+            interactionContext.SetOutput(
+                file.TryGetLocalPath() ?? throw new Exception("Error retrieving chosen path")
+            );
             return;
         }
 
         interactionContext.SetOutput(string.Empty);
     }
 
-    
-
     private async Task ShowProcessSelectorDialogAsync(
         IInteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
     )
     {
         interaction.Input.RefreshButtonCommand.Execute(null);
-        var dialog = new ProcessSelectorDialog
-        {
-            DataContext = interaction.Input
-        };
+        var dialog = new ProcessSelectorDialog { DataContext = interaction.Input };
         var result = await dialog.ShowDialog<Profile?>(MainWindowProvider.GetMainWindow());
         interaction.SetOutput(result);
     }

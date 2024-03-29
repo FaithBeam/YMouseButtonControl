@@ -12,7 +12,7 @@ public class ParsedKey
             return false;
         }
 
-        var pk = (ParsedKey) obj;
+        var pk = (ParsedKey)obj;
         return (Key == pk.Key) && (IsModifier == pk.IsModifier);
     }
 

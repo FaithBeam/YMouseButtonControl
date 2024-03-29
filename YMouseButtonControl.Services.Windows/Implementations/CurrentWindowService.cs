@@ -49,7 +49,15 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
         {
             _threadId = WinApi.GetCurrentThreadId();
 
-            _hEvent = WinApi.SetWinEventHook(WinEvents.EVENT_SYSTEM_FOREGROUND, WinEvents.EVENT_SYSTEM_MINIMIZEEND, IntPtr.Zero, winEvenCallbackDelegate, 0, 0, WinEventFlags.WINEVENT_OUTOFCONTEXT | WinEventFlags.WINEVENT_SKIPOWNPROCESS);
+            _hEvent = WinApi.SetWinEventHook(
+                WinEvents.EVENT_SYSTEM_FOREGROUND,
+                WinEvents.EVENT_SYSTEM_MINIMIZEEND,
+                IntPtr.Zero,
+                winEvenCallbackDelegate,
+                0,
+                0,
+                WinEventFlags.WINEVENT_OUTOFCONTEXT | WinEventFlags.WINEVENT_SKIPOWNPROCESS
+            );
             if (_hEvent == IntPtr.Zero)
             {
                 Console.WriteLine("ERROR SETTING WINDOWS EVENT HOOK");
@@ -77,21 +85,41 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
         _thread.Start();
     }
 
-    private void WinEvenProcCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+    private void WinEvenProcCallback(
+        IntPtr hWinEventHook,
+        uint eventType,
+        IntPtr hwnd,
+        int idObject,
+        int idChild,
+        uint dwEventThread,
+        uint dwmsEventTime
+    )
     {
         uint pId;
         switch ((WinEvents)eventType)
         {
             case WinEvents.EVENT_SYSTEM_FOREGROUND:
                 var result = WinApi.GetWindowThreadProcessId(hwnd, out pId);
-                var hProc = WinApi.OpenProcess((uint)(ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead), false, pId);
+                var hProc = WinApi.OpenProcess(
+                    (uint)(
+                        ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead
+                    ),
+                    false,
+                    pId
+                );
                 var sb = new StringBuilder(1024);
                 result = WinApi.GetModuleFileNameEx(hProc, IntPtr.Zero, sb, sb.Capacity);
                 ForegroundWindow = sb.ToString();
                 break;
             case WinEvents.EVENT_SYSTEM_MINIMIZEEND:
                 result = WinApi.GetWindowThreadProcessId(hwnd, out pId);
-                hProc = WinApi.OpenProcess((uint)(ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead), false, pId);
+                hProc = WinApi.OpenProcess(
+                    (uint)(
+                        ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead
+                    ),
+                    false,
+                    pId
+                );
                 sb = new StringBuilder(1024);
                 result = WinApi.GetModuleFileNameEx(hProc, IntPtr.Zero, sb, sb.Capacity);
                 //activeProc = sb.ToString();

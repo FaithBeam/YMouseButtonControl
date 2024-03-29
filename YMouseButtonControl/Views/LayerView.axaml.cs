@@ -20,20 +20,26 @@ public partial class LayerView : ReactiveUserControl<LayerViewModel>
 
         this.WhenActivated(d =>
         {
-            d(ViewModel.ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesPickerInteraction.RegisterHandler(ShowSimulateKeystrokesPicker));
+            d(
+                ViewModel.ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesPickerInteraction.RegisterHandler(
+                    ShowSimulateKeystrokesPicker
+                )
+            );
         });
     }
 
-    private async Task ShowSimulateKeystrokesPicker(IInteractionContext<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel?> context)
+    private async Task ShowSimulateKeystrokesPicker(
+        IInteractionContext<
+            SimulatedKeystrokesDialogViewModel,
+            SimulatedKeystrokesDialogModel?
+        > context
+    )
     {
-        var dialog = new SimulatedKeystrokesDialog
-        {
-            DataContext = context.Input
-        };
+        var dialog = new SimulatedKeystrokesDialog { DataContext = context.Input };
 
-        var result = await dialog.ShowDialog<SimulatedKeystrokesDialogModel?>(MainWindowProvider.GetMainWindow());
+        var result = await dialog.ShowDialog<SimulatedKeystrokesDialogModel?>(
+            MainWindowProvider.GetMainWindow()
+        );
         context.SetOutput(result);
     }
-
-    
 }

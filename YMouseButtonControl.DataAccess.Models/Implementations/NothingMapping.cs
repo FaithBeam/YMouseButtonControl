@@ -24,16 +24,27 @@ public class NothingMapping : IButtonMapping, IEquatable<NothingMapping>
 
     public bool Equals(NothingMapping? other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Index == other.Index && Enabled == other.Enabled && Description == other.Description && CanRaiseDialog == other.CanRaiseDialog && Keys == other.Keys && State == other.State && Equals(SimulatedKeystrokesType, other.SimulatedKeystrokesType);
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return Index == other.Index
+            && Enabled == other.Enabled
+            && Description == other.Description
+            && CanRaiseDialog == other.CanRaiseDialog
+            && Keys == other.Keys
+            && State == other.State
+            && Equals(SimulatedKeystrokesType, other.SimulatedKeystrokesType);
     }
 
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != this.GetType())
+            return false;
         return Equals((NothingMapping)obj);
     }
 
@@ -47,7 +58,9 @@ public class NothingMapping : IButtonMapping, IEquatable<NothingMapping>
             hashCode = (hashCode * 397) ^ CanRaiseDialog.GetHashCode();
             hashCode = (hashCode * 397) ^ (Keys != null ? Keys.GetHashCode() : 0);
             hashCode = (hashCode * 397) ^ State.GetHashCode();
-            hashCode = (hashCode * 397) ^ (SimulatedKeystrokesType != null ? SimulatedKeystrokesType.GetHashCode() : 0);
+            hashCode =
+                (hashCode * 397)
+                ^ (SimulatedKeystrokesType != null ? SimulatedKeystrokesType.GetHashCode() : 0);
             return hashCode;
         }
     }

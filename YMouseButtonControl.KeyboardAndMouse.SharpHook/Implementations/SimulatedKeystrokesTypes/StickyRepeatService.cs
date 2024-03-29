@@ -10,7 +10,7 @@ public class StickyRepeatService : IStickyRepeatService
     private readonly ISimulateKeyService _simulateKeyService;
     private Thread _thread;
     private bool _shouldStop;
-    private readonly object _lock = new ();
+    private readonly object _lock = new();
     private const int _repeatRateMs = 33;
 
     public StickyRepeatService(ISimulateKeyService simulateKeyService)
@@ -60,12 +60,12 @@ public class StickyRepeatService : IStickyRepeatService
                         break;
                     }
                 }
-                
+
                 Thread.Sleep(_repeatRateMs);
                 _simulateKeyService.TapKeys(mapping.Keys);
             }
         });
-            
+
         _thread.Start();
     }
 }

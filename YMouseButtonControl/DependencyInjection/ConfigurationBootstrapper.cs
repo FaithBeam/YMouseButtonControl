@@ -12,8 +12,11 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class ConfigurationBootstrapper
 {
-    public static void RegisterConfiguration(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver,
-        DataAccessConfiguration dataAccessConfig)
+    public static void RegisterConfiguration(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver,
+        DataAccessConfiguration dataAccessConfig
+    )
     {
         var configuration = BuildConfiguration();
 
@@ -21,12 +24,14 @@ public static class ConfigurationBootstrapper
     }
 
     private static IConfiguration BuildConfiguration() =>
-        new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
+        new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-    private static void RegisterDatabaseConfiguration(IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver, IConfiguration configuration, DataAccessConfiguration dataAccessConfig)
+    private static void RegisterDatabaseConfiguration(
+        IMutableDependencyResolver services,
+        IReadonlyDependencyResolver resolver,
+        IConfiguration configuration,
+        DataAccessConfiguration dataAccessConfig
+    )
     {
         var config = new DatabaseConfiguration
         {
@@ -36,8 +41,10 @@ public static class ConfigurationBootstrapper
         services.RegisterConstant(config);
     }
 
-    private static string GetDatabaseConnectionString(IConfiguration configuration,
-        IReadonlyDependencyResolver resolver)
+    private static string GetDatabaseConnectionString(
+        IConfiguration configuration,
+        IReadonlyDependencyResolver resolver
+    )
     {
         var platformService = resolver.GetRequiredService<IPlatformService>();
         var databaseName = configuration["DataAccess:DatabaseName"];
@@ -45,7 +52,8 @@ public static class ConfigurationBootstrapper
 
         string dbDirectory;
         var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
-        dbDirectory = Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
+        dbDirectory =
+            Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
 
         if (!Directory.Exists(dbDirectory))
         {

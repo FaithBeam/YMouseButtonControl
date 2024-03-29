@@ -13,11 +13,16 @@ public class BitmapConverter : IValueConverter
         {
             return null;
         }
-        
+
         return string.IsNullOrWhiteSpace(bmpPath) ? null : new Bitmap(bmpPath);
     }
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture
+    )
     {
         throw new NotImplementedException();
     }

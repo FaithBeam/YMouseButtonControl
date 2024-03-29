@@ -16,10 +16,10 @@ public partial class ProcessSelectorDialog : ReactiveWindow<ProcessSelectorDialo
 
         this.WhenActivated(d =>
         {
-            if (ViewModel != null) d(ViewModel!.OkCommand.Subscribe(Close));
+            if (ViewModel != null)
+                d(ViewModel!.OkCommand.Subscribe(Close));
         });
     }
-   
 
     private void CancelButton_OnClick(object? sender, RoutedEventArgs e)
     {

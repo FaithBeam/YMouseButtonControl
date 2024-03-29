@@ -17,13 +17,13 @@ public partial class SimulatedKeystrokesDialog : ReactiveWindow<SimulatedKeystro
 #if DEBUG
         this.AttachDevTools();
 #endif
-        this.WhenActivated(delegate(Action<IDisposable> action)
-        {
-            action(ViewModel!.OkCommand.Subscribe(Close));
-        });
+        this.WhenActivated(
+            delegate(Action<IDisposable> action)
+            {
+                action(ViewModel!.OkCommand.Subscribe(Close));
+            }
+        );
     }
-
-    
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {

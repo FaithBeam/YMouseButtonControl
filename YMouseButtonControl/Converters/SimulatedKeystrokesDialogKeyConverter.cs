@@ -21,11 +21,16 @@ public class SimulatedKeystrokesDialogKeyConverter : IValueConverter
         {
             return dict.Keys.Select(x => x);
         }
-        
+
         return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
     }
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture
+    )
     {
         throw new NotImplementedException();
     }

@@ -12,14 +12,20 @@ public class AppViewModel : ViewModelBase, IAppViewModel
     {
         ExitCommand = ReactiveCommand.Create(() =>
         {
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            if (
+                Application.Current?.ApplicationLifetime
+                is IClassicDesktopStyleApplicationLifetime lifetime
+            )
             {
                 lifetime.Shutdown();
             }
         });
         SetupCommand = ReactiveCommand.Create(() =>
         {
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            if (
+                Application.Current?.ApplicationLifetime
+                is IClassicDesktopStyleApplicationLifetime lifetime
+            )
             {
                 lifetime.MainWindow?.Show();
             }
@@ -27,7 +33,7 @@ public class AppViewModel : ViewModelBase, IAppViewModel
     }
 
     public string ToolTipText => $"YMouseButtonControl v{GetType().Assembly.GetName().Version}";
-    
+
     public ReactiveCommand<Unit, Unit> ExitCommand { get; }
     public ReactiveCommand<Unit, Unit> SetupCommand { get; }
 }

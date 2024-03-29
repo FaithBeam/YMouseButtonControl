@@ -16,7 +16,7 @@ public class App : Application
     {
         DataContext = new AppViewModel();
     }
-    
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

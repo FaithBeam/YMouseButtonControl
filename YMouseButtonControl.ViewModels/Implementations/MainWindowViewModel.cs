@@ -22,29 +22,34 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     #region Constructor
 
-    public MainWindowViewModel(IProfilesService ps,
-        ILayerViewModel layerViewModel, IProfilesListViewModel profilesListViewModel,
-        IProfilesInformationViewModel profilesInformationViewModel)
+    public MainWindowViewModel(
+        IProfilesService ps,
+        ILayerViewModel layerViewModel,
+        IProfilesListViewModel profilesListViewModel,
+        IProfilesInformationViewModel profilesInformationViewModel
+    )
     {
         _profilesListViewModel = profilesListViewModel;
         _ps = ps;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
-        var canApply = this
-            .WhenAnyValue(x => x._ps.UnsavedChanges)
-            .DistinctUntilChanged();
+        var canApply = this.WhenAnyValue(x => x._ps.UnsavedChanges).DistinctUntilChanged();
         CloseCommand = ReactiveCommand.Create(() =>
         {
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            if (
+                Application.Current?.ApplicationLifetime
+                is IClassicDesktopStyleApplicationLifetime lifetime
+            )
             {
                 lifetime.MainWindow?.Hide();
             }
         });
         ApplyCommand = ReactiveCommand.Create(() => _ps.ApplyProfiles(), canApply);
-        ApplyCommand.Subscribe(_ => { _ps.UnsavedChanges = false; });
-        this
-            .WhenAnyValue(x => x._ps.CurrentProfile)
-            .Subscribe(OnProfileChanged);
+        ApplyCommand.Subscribe(_ =>
+        {
+            _ps.UnsavedChanges = false;
+        });
+        this.WhenAnyValue(x => x._ps.CurrentProfile).Subscribe(OnProfileChanged);
         ProfileName = _ps.CurrentProfile.Name;
     }
 
