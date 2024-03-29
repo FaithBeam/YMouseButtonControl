@@ -26,8 +26,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    
 }

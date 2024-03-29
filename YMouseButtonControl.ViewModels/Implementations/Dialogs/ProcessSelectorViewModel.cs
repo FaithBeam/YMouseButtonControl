@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿#nullable enable
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
-using JetBrains.Annotations;
 using YMouseButtonControl.Services.Abstractions.Models;
 using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using ReactiveUI;
@@ -15,23 +15,24 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 {
     private ObservableCollection<ProcessModel> _processes;
     private readonly IProcessMonitorService _processMonitorService;
-    [CanBeNull] private ProcessModel _processModel;
+    private ProcessModel? _processModel;
 
     public ProcessSelectorDialogViewModel(IProcessMonitorService processMonitorService)
     {
+        _processes = new ObservableCollection<ProcessModel>();
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
         OkCommand = ReactiveCommand.Create(() => new Profile
         {
-            Name = SelectedProcessModel?.Process?.MainModule?.ModuleName ?? string.Empty,
-            Description = SelectedProcessModel?.Process?.MainWindowTitle ?? string.Empty,
-            Process = SelectedProcessModel?.Process?.MainModule?.ModuleName ?? string.Empty
+            Name = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty,
+            Description = SelectedProcessModel?.Process.MainWindowTitle ?? string.Empty,
+            Process = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty
         });
         RefreshProcessList();
     }
 
     public ICommand RefreshButtonCommand { get; }
-    
+
     public ReactiveCommand<Unit, Profile> OkCommand { get; }
 
     public ObservableCollection<ProcessModel> Processes
@@ -40,8 +41,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         private set => this.RaiseAndSetIfChanged(ref _processes, value);
     }
 
-    [CanBeNull]
-    public ProcessModel SelectedProcessModel
+    public ProcessModel? SelectedProcessModel
     {
         get => _processModel;
         set => this.RaiseAndSetIfChanged(ref _processModel, value);
@@ -49,6 +49,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     private void RefreshProcessList()
     {
-        Processes = new ObservableCollection<ProcessModel>(_processMonitorService.RunningProcesses.Items.OrderBy(x => x.Process.ProcessName));
+        Processes = new ObservableCollection<ProcessModel>(
+            _processMonitorService.RunningProcesses.Items.OrderBy(x => x.Process.ProcessName));
     }
 }

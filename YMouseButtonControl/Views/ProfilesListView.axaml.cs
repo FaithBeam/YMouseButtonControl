@@ -32,7 +32,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         });
     }
 
-    private async Task ShowImportFileDialog(InteractionContext<Unit, string> interactionContext)
+    private async Task ShowImportFileDialog(IInteractionContext<Unit, string> interactionContext)
     {
         var result = await new Window().StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
@@ -43,17 +43,14 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         if (result.Any())
         {
             var f = result[0];
-            if (f.TryGetUri(out var uri))
-            {
-                interactionContext.SetOutput(uri.LocalPath);
-                return;
-            }
+            interactionContext.SetOutput(f.TryGetLocalPath() ?? throw new Exception("Error retrieving chosen path"));
+            return;
         }
-        
+
         interactionContext.SetOutput(string.Empty);
     }
 
-    private async Task ShowExportFileDialog(InteractionContext<string, string> interactionContext)
+    private async Task ShowExportFileDialog(IInteractionContext<string, string> interactionContext)
     {
         var file = await new Window().StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
@@ -64,22 +61,17 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         });
         if (file is not null)
         {
-            if (file.TryGetUri(out var uri))
-            {
-                interactionContext.SetOutput(uri.LocalPath);
-                return;
-            }
+            interactionContext.SetOutput(file.TryGetLocalPath() ?? throw new Exception("Error retrieving chosen path"));
+            return;
         }
+
         interactionContext.SetOutput(string.Empty);
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    
 
     private async Task ShowProcessSelectorDialogAsync(
-        InteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
+        IInteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
     )
     {
         interaction.Input.RefreshButtonCommand.Execute(null);

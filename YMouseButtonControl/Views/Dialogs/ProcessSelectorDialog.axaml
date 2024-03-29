@@ -36,7 +36,7 @@
 
         <!-- Row 2 -->
         <DataGrid Grid.Row="1"
-                  Items="{Binding Processes}"
+                  ItemsSource="{Binding Processes}"
                   SelectedItem="{Binding SelectedProcessModel}"
                   AutoGenerateColumns="False"
                   CanUserResizeColumns="True"

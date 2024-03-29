@@ -30,43 +30,43 @@
                 <SplitButton.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuItem Header="Modifier Keys"
-                                  Items="{Binding ModifierKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding ModifierKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}" />
                         
                         <MenuItem Header="Standard Keys" 
-                                  Items="{Binding StandardKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding StandardKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
                         
                         <MenuItem Header="Direction Keys" 
-                                  Items="{Binding DirectionKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding DirectionKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
                         
                         <MenuItem Header="Function Keys" 
-                                  Items="{Binding FunctionKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding FunctionKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
                         
                         <MenuItem Header="Numeric Keypad" 
-                                  Items="{Binding NumericKeypadKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding NumericKeypadKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
                         
                         <MenuItem Header="Media Keys" 
-                                  Items="{Binding MediaKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding MediaKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
                         
                         <MenuItem Header="Browser Keys" 
-                                  Items="{Binding BrowserKeys, Converter={StaticResource DialogKeyConverter}}"
+                                  ItemsSource="{Binding BrowserKeys, Converter={StaticResource DialogKeyConverter}}"
                                   SelectedItem="{Binding CurrentKey}"
                                   Command="{Binding SplitButtonCommand}"
                                   CommandParameter="{Binding CurrentKey}"/>
@@ -78,7 +78,7 @@
         <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
             <Label HorizontalAlignment="Left" Content="How to send the simulated key strokes:" />
             <ComboBox Grid.Column="1" 
-                      Items="{Binding SimulatedKeystrokesTypes}"
+                      ItemsSource="{Binding SimulatedKeystrokesTypes}"
                       SelectedIndex="{Binding SimulatedKeystrokesIndex}" />
         </Grid>
         

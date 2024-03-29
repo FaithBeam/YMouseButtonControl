@@ -1,6 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
+using YMouseButtonControl.ViewModels.Interfaces;
 
 namespace YMouseButtonControl.Views;
 
@@ -11,8 +10,5 @@ public partial class ProfileInformationView : UserControl
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    
 }

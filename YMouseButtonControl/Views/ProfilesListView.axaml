@@ -16,7 +16,7 @@
 
     <Grid RowDefinitions="*,Auto">
         <DataGrid Name="ProfilesDataGrid"
-                  Items="{Binding ProfilesService.Profiles}"
+                  ItemsSource="{Binding ProfilesService.Profiles}"
                   AutoGenerateColumns="False"
                   HeadersVisibility="None"
                   Margin="5"

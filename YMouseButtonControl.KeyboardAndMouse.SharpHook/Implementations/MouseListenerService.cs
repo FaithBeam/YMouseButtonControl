@@ -38,21 +38,21 @@ public class MouseListener : IMouseListener
     {
         switch (e.Data.Direction)
         {
-            case MouseWheelScrollDirection.VerticalDirection when e.Data.Rotation > 0:
+            case MouseWheelScrollDirection.Vertical when e.Data.Rotation > 0:
                 OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalUp));
                 break;
-            case MouseWheelScrollDirection.VerticalDirection when e.Data.Rotation < 0:
+            case MouseWheelScrollDirection.Vertical when e.Data.Rotation < 0:
                 OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalDown));
                 break;
-            case MouseWheelScrollDirection.VerticalDirection:
+            case MouseWheelScrollDirection.Vertical:
                 throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
-            case MouseWheelScrollDirection.HorizontalDirection when e.Data.Rotation > 0:
+            case MouseWheelScrollDirection.Horizontal when e.Data.Rotation > 0:
                 OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalRight));
                 break;
-            case MouseWheelScrollDirection.HorizontalDirection when e.Data.Rotation < 0:
+            case MouseWheelScrollDirection.Horizontal when e.Data.Rotation < 0:
                 OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalLeft));
                 break;
-            case MouseWheelScrollDirection.HorizontalDirection:
+            case MouseWheelScrollDirection.Horizontal:
                 throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
             default:
                 throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");

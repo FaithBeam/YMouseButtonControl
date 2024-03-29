@@ -23,10 +23,7 @@ public partial class SimulatedKeystrokesDialog : ReactiveWindow<SimulatedKeystro
         });
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {

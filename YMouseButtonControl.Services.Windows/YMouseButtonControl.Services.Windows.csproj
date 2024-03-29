@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
@@ -14,8 +14,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="ReactiveUI" Version="18.4.1" />
-      <PackageReference Include="System.Management" Version="7.0.0" />
+      <PackageReference Include="ReactiveUI" Version="19.6.1" />
+      <PackageReference Include="System.Management" Version="8.0.0" />
     </ItemGroup>
 
 </Project>

@@ -24,7 +24,7 @@ public partial class LayerView : ReactiveUserControl<LayerViewModel>
         });
     }
 
-    private async Task ShowSimulateKeystrokesPicker(InteractionContext<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel?> context)
+    private async Task ShowSimulateKeystrokesPicker(IInteractionContext<SimulatedKeystrokesDialogViewModel, SimulatedKeystrokesDialogModel?> context)
     {
         var dialog = new SimulatedKeystrokesDialog
         {
@@ -35,8 +35,5 @@ public partial class LayerView : ReactiveUserControl<LayerViewModel>
         context.SetOutput(result);
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    
 }

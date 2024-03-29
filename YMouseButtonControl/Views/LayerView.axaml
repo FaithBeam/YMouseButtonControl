@@ -23,7 +23,7 @@
                     <Label Content="Left Button" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseButton1Combo}"
+                              ItemsSource="{Binding MouseButton1Combo}"
                               SelectedIndex="{Binding Mb1Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -37,7 +37,7 @@
                     <Label Content="Right Button" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseButton2Combo}"
+                              ItemsSource="{Binding MouseButton2Combo}"
                               SelectedIndex="{Binding Mb2Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -50,7 +50,7 @@
                     <Label Content="Middle Button" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2" 
-                              Items="{Binding MouseButton3Combo}"
+                              ItemsSource="{Binding MouseButton3Combo}"
                               SelectedIndex="{Binding Mb3Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -63,7 +63,7 @@
                     <Label Content="Mouse Button 4" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseButton4Combo}"
+                              ItemsSource="{Binding MouseButton4Combo}"
                               SelectedIndex="{Binding Mb4Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -76,7 +76,7 @@
                     <Label Content="Mouse Button 5" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseButton5Combo}"
+                              ItemsSource="{Binding MouseButton5Combo}"
                               SelectedIndex="{Binding Mb5Index}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -89,7 +89,7 @@
                     <Label Content="Wheel Up" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseWheelUpCombo}"
+                              ItemsSource="{Binding MouseWheelUpCombo}"
                               SelectedIndex="{Binding MwuIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -102,7 +102,7 @@
                     <Label Content="Wheel Down" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseWheelDownCombo}"
+                              ItemsSource="{Binding MouseWheelDownCombo}"
                               SelectedIndex="{Binding MwdIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -115,7 +115,7 @@
                     <Label Content="Tilt Wheel Left" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseWheelLeftCombo}"
+                              ItemsSource="{Binding MouseWheelLeftCombo}"
                               SelectedIndex="{Binding MwlIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
@@ -128,7 +128,7 @@
                     <Label Content="Tilt Wheel Right" />
                     <Button Grid.Column="1" IsVisible="False" />
                     <ComboBox Grid.Column="2"
-                              Items="{Binding MouseWheelRightCombo}"
+                              ItemsSource="{Binding MouseWheelRightCombo}"
                               SelectedIndex="{Binding MwrIndex}"
                               HorizontalAlignment="Stretch"
                               Width="275"
