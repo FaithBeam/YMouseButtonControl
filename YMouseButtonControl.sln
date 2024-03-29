@@ -25,23 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Keyboar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.KeyboardAndMouse.Models", "YMouseButtonControl.KeyboardAndMouse.Models\YMouseButtonControl.KeyboardAndMouse.Models.csproj", "{10AF332C-453D-4D1A-AC60-6E0101CEEC30}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.ViewModels.Tests", "YMouseButtonControl.ViewModels.Tests\YMouseButtonControl.ViewModels.Tests.csproj", "{E86C6444-1893-4EE9-8E6E-8D506CAACD10}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Processes", "YMouseButtonControl.Processes\YMouseButtonControl.Processes.csproj", "{74D9519F-46D0-4747-907D-ADBD1F3901B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Profiles", "YMouseButtonControl.Profiles\YMouseButtonControl.Profiles.csproj", "{CD7D9796-7E28-430B-856D-0EC9BFEC5680}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests", "YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests\YMouseButtonControl.KeyboardAndMouse.SharpHook.Tests.csproj", "{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Services.Windows", "YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj", "{E9873196-0683-4609-9197-6CDF5FD6BCF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Services.Windows.Tests", "YMouseButtonControl.Services.Windows.Tests\YMouseButtonControl.Services.Windows.Tests.csproj", "{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.DataAccess.Models.Tests", "YMouseButtonControl.DataAccess.Models.Tests\YMouseButtonControl.DataAccess.Models.Tests.csproj", "{E251AD42-C42E-4801-BF82-086D3CB18E39}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Services.MacOS", "YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj", "{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Profiles.Tests", "YMouseButtonControl.Profiles.Tests\YMouseButtonControl.Profiles.Tests.csproj", "{2262F020-D5F8-452E-8317-0649EBCBFC74}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YMouseButtonControl.Services.Windows.ProcessPayload", "YMouseButtonControl.Services.Windows.ProcessPayload\YMouseButtonControl.Services.Windows.ProcessPayload.vcxproj", "{C3CBCC01-952A-4381-81B2-16E4D45E12C3}"
 EndProject
@@ -97,10 +87,6 @@ Global
 		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10AF332C-453D-4D1A-AC60-6E0101CEEC30}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E86C6444-1893-4EE9-8E6E-8D506CAACD10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74D9519F-46D0-4747-907D-ADBD1F3901B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -109,30 +95,14 @@ Global
 		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD7D9796-7E28-430B-856D-0EC9BFEC5680}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBB6D7E1-E816-4D4E-89DE-0091B76F1C25}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9873196-0683-4609-9197-6CDF5FD6BCF1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2119BFB-3A74-48CD-BDDB-3629D0F67B6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E251AD42-C42E-4801-BF82-086D3CB18E39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FEFC613-E1F9-42E3-B375-5540BEE95D0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2262F020-D5F8-452E-8317-0649EBCBFC74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2262F020-D5F8-452E-8317-0649EBCBFC74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2262F020-D5F8-452E-8317-0649EBCBFC74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2262F020-D5F8-452E-8317-0649EBCBFC74}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3CBCC01-952A-4381-81B2-16E4D45E12C3}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{C3CBCC01-952A-4381-81B2-16E4D45E12C3}.Debug|Any CPU.Build.0 = Debug|x64
 		{C3CBCC01-952A-4381-81B2-16E4D45E12C3}.Release|Any CPU.ActiveCfg = Release|Win32

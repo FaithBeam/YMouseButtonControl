@@ -8,8 +8,8 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
 public class SimulatedKeystrokesService : ISimulatedKeystrokesService
 {
-    private readonly ISimulateKeyService _simulateKeyService;
-    private readonly IParseKeysService _parseKeysService;
+    // private readonly ISimulateKeyService _simulateKeyService;
+    // private readonly IParseKeysService _parseKeysService;
     private readonly IStickyHoldService _stickyHoldService;
     private readonly IAsMouseButtonPressedService _asMouseButtonPressedService;
     private readonly IAsMouseButtonReleasedService _asMouseButtonReleasedService;
@@ -18,8 +18,8 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
     private readonly IStickyRepeatService _stickyRepeatService;
 
     public SimulatedKeystrokesService(
-        ISimulateKeyService simulateKeyService,
-        IParseKeysService parseKeysService,
+        // ISimulateKeyService simulateKeyService,
+        // IParseKeysService parseKeysService,
         IStickyHoldService stickyHoldService,
         IAsMouseButtonPressedService asMouseButtonPressedService,
         IAsMouseButtonReleasedService asMouseButtonReleasedService,
@@ -28,8 +28,8 @@ public class SimulatedKeystrokesService : ISimulatedKeystrokesService
         IStickyRepeatService stickyRepeatService
     )
     {
-        _simulateKeyService = simulateKeyService;
-        _parseKeysService = parseKeysService;
+        // _simulateKeyService = simulateKeyService;
+        // _parseKeysService = parseKeysService;
         _stickyHoldService = stickyHoldService;
         _asMouseButtonPressedService = asMouseButtonPressedService;
         _asMouseButtonReleasedService = asMouseButtonReleasedService;
