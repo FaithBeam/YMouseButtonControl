@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -99,9 +100,9 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
 
         _hHook.Close();
 
-        if (PInvoke.PostThreadMessage(_threadId, PInvoke.WM_QUIT, 0, 0))
+        if (!PInvoke.PostThreadMessage(_threadId, PInvoke.WM_QUIT, 0, 0))
         {
-            throw new Exception($"ERROR POSTING WM_QUIT TO {_threadId}");
+            throw new Win32Exception(Marshal.GetLastWin32Error());
         }
 
         _thread?.Join();
