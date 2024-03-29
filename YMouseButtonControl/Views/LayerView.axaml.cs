@@ -32,9 +32,9 @@ public partial class LayerView : ReactiveUserControl<LayerViewModel>
         });
     }
 
-    private async Task ShowSimulateKeystrokesPicker(
+    private static async Task ShowSimulateKeystrokesPicker(
         IInteractionContext<
-            SimulatedKeystrokesDialogViewModel,
+            SimulatedKeystrokesDialogViewModel?,
             SimulatedKeystrokesDialogModel?
         > context
     )

@@ -11,7 +11,6 @@ using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Factories;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
@@ -125,10 +124,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             return;
         }
         var mapping = list[index];
-        if (mapping is null)
-        {
-            return;
-        }
         var newMapping = mapping;
         if (
             mapping is SimulatedKeystrokes
@@ -148,12 +143,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         setMouseMapping(newMapping);
     }
 
-    private bool CanClickGearButton(IButtonMapping mapping)
-    {
-        return mapping is not null
-            && mapping.CanRaiseDialog
-            && !string.IsNullOrWhiteSpace(mapping.Keys);
-    }
+    private static bool CanClickGearButton(IButtonMapping? mapping) =>
+        mapping is not null && mapping.CanRaiseDialog && !string.IsNullOrWhiteSpace(mapping.Keys);
 
     public LayerViewModel(
         IProfilesService profilesService,
@@ -161,7 +152,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService
     )
     {
-        ProfilesService = profilesService;
+        _profilesService = profilesService;
         this.WhenAnyValue(x => x._profilesService.CurrentProfile)
             .WhereNotNull()
             .DistinctUntilChanged()
@@ -657,7 +648,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         MwrIndex = newProfile.MouseWheelRight.Index;
     }
 
-    private void OnWheelScroll(object sender, NewMouseWheelEventArgs e)
+    private void OnWheelScroll(object? sender, NewMouseWheelEventArgs e)
     {
         switch (e.Direction)
         {
@@ -698,7 +689,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         }
     }
 
-    private void OnMouseReleased(object sender, NewMouseHookEventArgs e)
+    private void OnMouseReleased(object? sender, NewMouseHookEventArgs e)
     {
         switch (e.Button)
         {
@@ -717,12 +708,20 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             case MouseButton.MouseButton5:
                 MouseButton5BackgroundColor = Brushes.White;
                 break;
+            case MouseButton.MouseWheelUp:
+                break;
+            case MouseButton.MouseWheelDown:
+                break;
+            case MouseButton.MouseWheelLeft:
+                break;
+            case MouseButton.MouseWheelRight:
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    private void OnMouseClicked(object sender, NewMouseHookEventArgs e)
+    private void OnMouseClicked(object? sender, NewMouseHookEventArgs e)
     {
         switch (e.Button)
         {
@@ -740,6 +739,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 break;
             case MouseButton.MouseButton5:
                 MouseButton5BackgroundColor = Brushes.Yellow;
+                break;
+            case MouseButton.MouseWheelUp:
+                break;
+            case MouseButton.MouseWheelDown:
+                break;
+            case MouseButton.MouseWheelLeft:
+                break;
+            case MouseButton.MouseWheelRight:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

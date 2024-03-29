@@ -4,7 +4,7 @@ namespace YMouseButtonControl.ViewModels.Models;
 
 public class SimulatedKeystrokesDialogModel
 {
-    public string CustomKeys { get; set; }
-    public ISimulatedKeystrokesType SimulatedKeystrokesType { get; set; }
-    public string Description { get; set; }
+    public string? CustomKeys { get; set; }
+    public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
+    public string? Description { get; set; }
 }

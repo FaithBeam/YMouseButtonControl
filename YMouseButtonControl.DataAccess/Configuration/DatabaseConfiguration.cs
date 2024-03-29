@@ -2,7 +2,7 @@
 
 public class DatabaseConfiguration
 {
-    public string ConnectionString { get; set; }
+    public string? ConnectionString { get; set; }
 
     public bool UseInMemoryDatabase { get; set; }
 }

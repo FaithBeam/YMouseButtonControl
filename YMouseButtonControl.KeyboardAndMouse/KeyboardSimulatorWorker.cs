@@ -50,7 +50,7 @@ public class KeyboardSimulatorWorker : IDisposable
         _mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
     }
 
-    private void OnMousePressed(object sender, NewMouseHookEventArgs e)
+    private void OnMousePressed(object? sender, NewMouseHookEventArgs e)
     {
         foreach (var p in _profilesService.Profiles)
         {
@@ -63,7 +63,7 @@ public class KeyboardSimulatorWorker : IDisposable
         }
     }
 
-    private void OnMouseReleased(object sender, NewMouseHookEventArgs e)
+    private void OnMouseReleased(object? sender, NewMouseHookEventArgs e)
     {
         foreach (var p in _profilesService.Profiles)
         {
@@ -76,5 +76,5 @@ public class KeyboardSimulatorWorker : IDisposable
         }
     }
 
-    private void OnMouseWheel(object sender, NewMouseWheelEventArgs e) { }
+    private void OnMouseWheel(object? sender, NewMouseWheelEventArgs e) { }
 }

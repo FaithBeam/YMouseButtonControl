@@ -2,10 +2,10 @@
 
 public class ParsedKey
 {
-    public string Key { get; set; }
+    public string? Key { get; set; }
     public bool IsModifier { get; set; }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null || GetType() != obj.GetType())
         {

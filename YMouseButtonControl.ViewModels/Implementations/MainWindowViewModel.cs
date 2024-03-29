@@ -16,7 +16,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     private readonly IProfilesService _ps;
     private readonly IProfilesListViewModel _profilesListViewModel;
-    private string _profileName;
+    private string? _profileName;
 
     #endregion
 
@@ -66,7 +66,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     public ReactiveCommand<Unit, Unit> ApplyCommand { get; }
     public ReactiveCommand<Unit, Unit> CloseCommand { get; }
 
-    public string ProfileName
+    public string? ProfileName
     {
         get => _profileName;
         set => this.RaiseAndSetIfChanged(ref _profileName, value);

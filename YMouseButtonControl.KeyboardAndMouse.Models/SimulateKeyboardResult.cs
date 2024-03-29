@@ -2,6 +2,6 @@
 {
     public class SimulateKeyboardResult : ISimulateKeyboardResult
     {
-        public string Result { get; set; }
+        public string? Result { get; set; }
     }
 }

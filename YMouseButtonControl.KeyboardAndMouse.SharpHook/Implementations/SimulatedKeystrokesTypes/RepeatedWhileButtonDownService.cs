@@ -9,10 +9,10 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.Simulat
 public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
 {
     private readonly ISimulateKeyService _simulateKeyService;
-    private Thread _thread;
+    private Thread? _thread;
     private bool _shouldStop;
-    private object _lock = new();
-    private const int _repeatRateMs = 33;
+    private readonly object _lock = new();
+    private const int RepeatRateMs = 33;
 
     public RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyService)
     {
@@ -21,41 +21,42 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
 
     public void RepeatWhileDown(IButtonMapping mapping, MouseButtonState state)
     {
-        if (state == MouseButtonState.Pressed)
+        switch (state)
         {
-            if (_thread is not null && _thread.IsAlive)
-            {
+            case MouseButtonState.Pressed when _thread is not null && _thread.IsAlive:
                 throw new Exception("Thread entered bad state");
-            }
-
-            _thread = new Thread(() =>
-            {
-                while (true)
+            case MouseButtonState.Pressed:
+                _thread = new Thread(() =>
                 {
-                    lock (_lock)
+                    while (true)
                     {
-                        if (_shouldStop)
+                        lock (_lock)
                         {
-                            break;
+                            if (_shouldStop)
+                            {
+                                break;
+                            }
                         }
+                        Thread.Sleep(RepeatRateMs);
+                        _simulateKeyService.TapKeys(mapping.Keys);
                     }
-                    Thread.Sleep(_repeatRateMs);
-                    _simulateKeyService.TapKeys(mapping.Keys);
-                }
-            });
+                });
 
-            _thread.Start();
-        }
-        else if (state == MouseButtonState.Released)
-        {
-            lock (_lock)
+                _thread.Start();
+                break;
+            case MouseButtonState.Released:
             {
-                _shouldStop = true;
-            }
-            _thread.Join();
-            lock (_lock)
-            {
-                _shouldStop = false;
+                lock (_lock)
+                {
+                    _shouldStop = true;
+                }
+                _thread?.Join();
+                lock (_lock)
+                {
+                    _shouldStop = false;
+                }
+
+                break;
             }
         }
     }

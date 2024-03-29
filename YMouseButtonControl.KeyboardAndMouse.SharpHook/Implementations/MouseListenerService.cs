@@ -12,7 +12,7 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 public class MouseListener : IMouseListener
 {
     private readonly IGlobalHook _hook;
-    private Thread _thread;
+    private Thread? _thread;
 
     public MouseListener(IGlobalHook hook)
     {
@@ -21,9 +21,9 @@ public class MouseListener : IMouseListener
         SubscribeToEvents();
     }
 
-    public event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
-    public event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;
-    public event EventHandler<NewMouseWheelEventArgs> OnMouseWheelEventHandler;
+    public event EventHandler<NewMouseHookEventArgs>? OnMousePressedEventHandler;
+    public event EventHandler<NewMouseHookEventArgs>? OnMouseReleasedEventHandler;
+    public event EventHandler<NewMouseWheelEventArgs>? OnMouseWheelEventHandler;
 
     public void Run()
     {
@@ -34,7 +34,7 @@ public class MouseListener : IMouseListener
         _thread.Start();
     }
 
-    private void ConvertMouseWheelEvent(object sender, MouseWheelHookEventArgs e)
+    private void ConvertMouseWheelEvent(object? sender, MouseWheelHookEventArgs e)
     {
         switch (e.Data.Direction)
         {
@@ -59,13 +59,13 @@ public class MouseListener : IMouseListener
         }
     }
 
-    private void ConvertMousePressedEvent(object sender, MouseHookEventArgs e)
+    private void ConvertMousePressedEvent(object? sender, MouseHookEventArgs e)
     {
         var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button - 1));
         OnMousePressed(args);
     }
 
-    private void ConvertMouseReleasedEvent(object sender, MouseHookEventArgs e)
+    private void ConvertMouseReleasedEvent(object? sender, MouseHookEventArgs e)
     {
         var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button - 1));
         OnMouseReleased(args);
@@ -109,6 +109,6 @@ public class MouseListener : IMouseListener
 
         _hook.Dispose();
 
-        _thread.Join();
+        _thread?.Join();
     }
 }

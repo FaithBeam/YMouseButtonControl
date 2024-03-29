@@ -8,10 +8,10 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.Simulat
 public class StickyRepeatService : IStickyRepeatService
 {
     private readonly ISimulateKeyService _simulateKeyService;
-    private Thread _thread;
+    private Thread? _thread;
     private bool _shouldStop;
     private readonly object _lock = new();
-    private const int _repeatRateMs = 33;
+    private const int RepeatRateMs = 33;
 
     public StickyRepeatService(ISimulateKeyService simulateKeyService)
     {
@@ -61,7 +61,7 @@ public class StickyRepeatService : IStickyRepeatService
                     }
                 }
 
-                Thread.Sleep(_repeatRateMs);
+                Thread.Sleep(RepeatRateMs);
                 _simulateKeyService.TapKeys(mapping.Keys);
             }
         });

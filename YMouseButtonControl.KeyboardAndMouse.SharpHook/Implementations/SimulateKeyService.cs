@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SharpHook;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Models;
@@ -16,16 +17,24 @@ public class SimulateKeyService : ISimulateKeyService
         _parseKeysService = parseKeysService;
     }
 
-    public SimulateKeyboardResult SimulateKeyPress(string key) =>
+    public SimulateKeyboardResult SimulateKeyPress(string? key) =>
         new()
         {
-            Result = _keyboardSimulator.SimulateKeyPress(KeyCodeMappings.KeyCodes[key]).ToString()
+            Result = _keyboardSimulator
+                .SimulateKeyPress(
+                    KeyCodeMappings.KeyCodes[key ?? throw new NullReferenceException(key)]
+                )
+                .ToString()
         };
 
-    public SimulateKeyboardResult SimulateKeyRelease(string key) =>
+    public SimulateKeyboardResult SimulateKeyRelease(string? key) =>
         new()
         {
-            Result = _keyboardSimulator.SimulateKeyRelease(KeyCodeMappings.KeyCodes[key]).ToString()
+            Result = _keyboardSimulator
+                .SimulateKeyRelease(
+                    KeyCodeMappings.KeyCodes[key ?? throw new NullReferenceException(key)]
+                )
+                .ToString()
         };
 
     /// <summary>
@@ -33,9 +42,9 @@ public class SimulateKeyService : ISimulateKeyService
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public SimulateKeyboardResult SimulateKeyTap(string key)
+    public SimulateKeyboardResult SimulateKeyTap(string? key)
     {
-        var keyCode = KeyCodeMappings.KeyCodes[key];
+        var keyCode = KeyCodeMappings.KeyCodes[key ?? throw new NullReferenceException(key)];
         _keyboardSimulator.SimulateKeyPress(keyCode);
         _keyboardSimulator.SimulateKeyRelease(keyCode);
         return new SimulateKeyboardResult { Result = "Success" };
@@ -45,7 +54,7 @@ public class SimulateKeyService : ISimulateKeyService
     /// Keys to be pressed in order.
     /// </summary>
     /// <param name="keys">Keys to be pressed</param>
-    public void PressKeys(string keys)
+    public void PressKeys(string? keys)
     {
         foreach (var pk in _parseKeysService.ParseKeys(keys))
         {
@@ -58,7 +67,7 @@ public class SimulateKeyService : ISimulateKeyService
     /// in that order.
     /// </summary>
     /// <param name="keys">Keys to be released</param>
-    public void ReleaseKeys(string keys)
+    public void ReleaseKeys(string? keys)
     {
         var parsed = _parseKeysService.ParseKeys(keys);
         parsed.Reverse();
@@ -72,7 +81,7 @@ public class SimulateKeyService : ISimulateKeyService
     /// TODO
     /// </summary>
     /// <param name="keys"></param>
-    public void TapKeys(string keys)
+    public void TapKeys(string? keys)
     {
         var parsed = _parseKeysService.ParseKeys(keys);
         var stack = new Stack<ParsedKey>();

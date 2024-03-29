@@ -23,6 +23,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public ProfilesService(IUnitOfWorkFactory unitOfWorkFactory)
     {
+        Profiles = new ObservableCollection<Profile>();
         _unitOfWorkFactory = unitOfWorkFactory;
         CheckDefaultProfile();
         LoadProfilesFromDb();
@@ -91,9 +92,9 @@ public class ProfilesService : ReactiveObject, IProfilesService
             new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
         );
         return JsonConvert.DeserializeObject<Profile>(
-            jsonString,
-            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
-        );
+                jsonString,
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+            ) ?? throw new JsonSerializationException("Error deserializing profile");
     }
 
     public bool IsUnsavedChanges()
@@ -117,10 +118,11 @@ public class ProfilesService : ReactiveObject, IProfilesService
     public void ImportProfileFromPath(string path)
     {
         var f = File.ReadAllText(path);
-        var deserializedProfile = JsonConvert.DeserializeObject<Profile>(
-            f,
-            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
-        );
+        var deserializedProfile =
+            JsonConvert.DeserializeObject<Profile>(
+                f,
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+            ) ?? throw new JsonSerializationException("Error deserializing profile");
         AddProfile(deserializedProfile);
     }
 

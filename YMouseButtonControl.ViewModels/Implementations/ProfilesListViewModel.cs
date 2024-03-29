@@ -1,9 +1,7 @@
-using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -27,7 +25,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     public ReactiveCommand<Unit, Unit> ImportCommand { get; }
     public Interaction<
         ProcessSelectorDialogViewModel,
-        Profile
+        Profile?
     > ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(
@@ -35,7 +33,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         ProcessSelectorDialogViewModel processSelectorDialogViewModel
     )
     {
-        ProfilesService = profilesService;
+        _profilesService = profilesService;
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
         ShowExportFileDialog = new Interaction<string, string>();
         ShowImportFileDialog = new Interaction<Unit, string>();
@@ -60,7 +58,8 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             );
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
-        ShowProcessSelectorInteraction = new Interaction<ProcessSelectorDialogViewModel, Profile>();
+        ShowProcessSelectorInteraction =
+            new Interaction<ProcessSelectorDialogViewModel, Profile?>();
         var editCanExecute = this.WhenAnyValue(
             x => x.ProfilesService.CurrentProfile,
             curProf => curProf.Name != "Default"

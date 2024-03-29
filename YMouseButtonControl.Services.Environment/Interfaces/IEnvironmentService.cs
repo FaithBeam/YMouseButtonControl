@@ -6,5 +6,5 @@ public interface IEnvironmentService
 
     bool Is64BitProcess { get; }
 
-    string GetEnvironmentVariable(string variableName);
+    string? GetEnvironmentVariable(string variableName);
 }

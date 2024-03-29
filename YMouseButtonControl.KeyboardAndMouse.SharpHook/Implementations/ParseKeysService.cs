@@ -13,11 +13,11 @@ public class ParseKeysService : IParseKeysService
     /// </summary>
     /// <param name="keys"></param>
     /// <returns></returns>
-    public List<ParsedKey> ParseKeys(string keys)
+    public List<ParsedKey> ParseKeys(string? keys)
     {
         var newKeys = new List<ParsedKey>();
         var i = 0;
-        while (i < keys.Length)
+        while (i < keys?.Length)
         {
             if (keys[i] == '{')
             {

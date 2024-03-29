@@ -5,5 +5,5 @@ namespace YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 public interface IParseKeysService
 {
-    List<ParsedKey> ParseKeys(string keys);
+    List<ParsedKey> ParseKeys(string? keys);
 }

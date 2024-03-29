@@ -1,7 +1,7 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using YMouseButtonControl.Avalonia.Interfaces;
 
 namespace YMouseButtonControl.Avalonia.Implementations;
 
@@ -9,9 +9,15 @@ public static class MainWindowProvider
 {
     public static Window GetMainWindow()
     {
-        var lifetime = (IClassicDesktopStyleApplicationLifetime)
-            Application.Current?.ApplicationLifetime;
+        var lifetime = (IClassicDesktopStyleApplicationLifetime)(
+            Application.Current?.ApplicationLifetime
+            ?? throw new Exception("Error retrieving application lifetime")
+        );
+        if (lifetime.MainWindow is null)
+        {
+            throw new Exception("Error retrieving application lifetime");
+        }
 
-        return lifetime?.MainWindow;
+        return lifetime.MainWindow;
     }
 }

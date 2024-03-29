@@ -1,10 +1,8 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -36,7 +34,9 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         });
     }
 
-    private async Task ShowImportFileDialog(IInteractionContext<Unit, string> interactionContext)
+    private static async Task ShowImportFileDialog(
+        IInteractionContext<Unit, string> interactionContext
+    )
     {
         var result = await new Window().StorageProvider.OpenFilePickerAsync(
             new FilePickerOpenOptions
@@ -61,7 +61,9 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         interactionContext.SetOutput(string.Empty);
     }
 
-    private async Task ShowExportFileDialog(IInteractionContext<string, string> interactionContext)
+    private static async Task ShowExportFileDialog(
+        IInteractionContext<string, string> interactionContext
+    )
     {
         var file = await new Window().StorageProvider.SaveFilePickerAsync(
             new FilePickerSaveOptions
@@ -86,7 +88,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         interactionContext.SetOutput(string.Empty);
     }
 
-    private async Task ShowProcessSelectorDialogAsync(
+    private static async Task ShowProcessSelectorDialogAsync(
         IInteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
     )
     {

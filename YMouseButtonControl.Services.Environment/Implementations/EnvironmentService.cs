@@ -8,6 +8,6 @@ public class EnvironmentService : IEnvironmentService
 
     public bool Is64BitProcess => System.Environment.Is64BitProcess;
 
-    public string GetEnvironmentVariable(string variableName) =>
+    public string? GetEnvironmentVariable(string variableName) =>
         System.Environment.GetEnvironmentVariable(variableName);
 }

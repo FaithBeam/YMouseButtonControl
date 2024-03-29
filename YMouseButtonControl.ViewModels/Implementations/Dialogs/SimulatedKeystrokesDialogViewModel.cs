@@ -22,7 +22,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         .ToDictionary(x => x.Key, x => x.Value);
 
     private string _customKeys;
-    private string _currentKey;
+    private string? _currentKey;
     private string _description;
     private int _simulatedKeystrokesIndex;
     private int _caretIndex;
@@ -31,7 +31,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     public SimulatedKeystrokesDialogViewModel()
         : this(null) { }
 
-    public SimulatedKeystrokesDialogViewModel(IButtonMapping currentMapping)
+    public SimulatedKeystrokesDialogViewModel(IButtonMapping? currentMapping)
     {
         OkCommand = ReactiveCommand.Create(
             () =>
@@ -225,7 +225,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             { "Web Stop", "{STOP}" },
         };
 
-    public string CurrentKey
+    public string? CurrentKey
     {
         get => _currentKey;
         set => this.RaiseAndSetIfChanged(ref _currentKey, value);
