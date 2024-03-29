@@ -145,7 +145,7 @@ public static class KeyCodeMappings
             { "apps", KeyCode.VcContextMenu },
             { "power", KeyCode.VcPower },
             { "sleep", KeyCode.VcSleep },
-            { "wake", KeyCode.VcWake },
+            // { "wake", KeyCode.VcWake },
             { "mediaplay", KeyCode.VcMediaPlay },
             { "mediastop", KeyCode.VcMediaStop },
             { "mediaprev", KeyCode.VcMediaPrevious },

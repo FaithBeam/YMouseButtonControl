@@ -24,7 +24,7 @@ public static class ButtonMappingFactory
 
     public static IEnumerable<string> GetButtonMappingDescriptions()
     {
-        return GetButtonMappings().Select(x => x.Description);
+        return GetButtonMappings().Select(x => x.Description ?? string.Empty);
     }
 
     public static IButtonMapping Create(ButtonMappings key)

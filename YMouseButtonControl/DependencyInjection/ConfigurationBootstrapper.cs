@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
@@ -47,19 +48,16 @@ public static class ConfigurationBootstrapper
     )
     {
         var platformService = resolver.GetRequiredService<IPlatformService>();
-        var databaseName = configuration["DataAccess:DatabaseName"];
-        var connectionString = configuration["DataAccess:ConnectionString"];
+        var databaseName = configuration["DataAccess:DatabaseName"] ?? throw new Exception("DatabaseName empty");
+        var connectionString = configuration["DataAccess:ConnectionString"] ?? throw new Exception("Connection empty");
 
-        string dbDirectory;
         var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
-        dbDirectory =
-            Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
-
+        var dbDirectory = Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
         if (!Directory.Exists(dbDirectory))
         {
             Directory.CreateDirectory(dbDirectory);
         }
-
+        
         return string.Format(connectionString, Path.Combine(dbDirectory, databaseName));
     }
 }

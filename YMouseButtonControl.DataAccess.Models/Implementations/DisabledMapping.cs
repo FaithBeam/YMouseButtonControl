@@ -9,8 +9,8 @@ public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
     public int Index { get; } = 1;
     public bool Enabled { get; }
     public string Description { get; } = "Disabled";
-    public string PriorityDescription { get; set; }
-    public string Keys { get; }
+    public string? PriorityDescription { get; set; }
+    public string? Keys { get; }
     public bool State { get; set; }
     public bool CanRaiseDialog { get; } = false;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
@@ -55,7 +55,10 @@ public class DisabledMapping : IButtonMapping, IEquatable<DisabledMapping>
             hashCode = (hashCode * 397) ^ Enabled.GetHashCode();
             hashCode = (hashCode * 397) ^ Description.GetHashCode();
             hashCode = (hashCode * 397) ^ CanRaiseDialog.GetHashCode();
-            hashCode = (hashCode * 397) ^ Keys.GetHashCode();
+            if (!string.IsNullOrWhiteSpace(Keys))
+            {
+                hashCode = (hashCode * 397) ^ Keys.GetHashCode();
+            }
             hashCode = (hashCode * 397) ^ State.GetHashCode();
             hashCode =
                 (hashCode * 397)

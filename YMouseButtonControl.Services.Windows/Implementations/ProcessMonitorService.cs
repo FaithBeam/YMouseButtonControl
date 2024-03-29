@@ -1,29 +1,36 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Management;
 using DynamicData;
 using DynamicData.Binding;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
-using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
-public class ProcessMonitorService : IProcessMonitorService
+public class ProcessMonitorService : IProcessMonitorService, IDisposable
 {
     private readonly object _lock = new();
     private readonly ManagementEventWatcher _createdEventWatcher;
-    private readonly ManagementObjectSearcher _searcher = new("SELECT * FROM WIN32_PROCESS");
-    private readonly WinApi _winApi = new();
+    private readonly ManagementObjectSearcher _searcher;
     private readonly SourceCache<ProcessModel, int> _runningProcesses;
     private const string CreatedEventWatcherScope = "root\\CimV2";
+
     private const string CreatedEventWatcherQuery =
         "SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 
     public ProcessMonitorService()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new Exception("Attempted to run Windows specific code on non-Windows system");
+        }
+
+        _searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_PROCESS");
         _runningProcesses = new SourceCache<ProcessModel, int>(x => x.Process.Id);
         PopulateRunningProcesses();
         _createdEventWatcher = new ManagementEventWatcher(
@@ -32,7 +39,7 @@ public class ProcessMonitorService : IProcessMonitorService
         );
         _createdEventWatcher.EventArrived += OnCreatedProcess;
         _createdEventWatcher.Start();
-        var someBs = _runningProcesses
+        _runningProcesses
             .Connect()
             .WhenPropertyChanged(x => x.HasExited)
             .Subscribe(OnProcessHasExited);
@@ -59,15 +66,34 @@ public class ProcessMonitorService : IProcessMonitorService
 
     public void Dispose()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new Exception("Attempted to run Windows specific code on non-Windows system");
+        }
+
         _createdEventWatcher.EventArrived -= OnCreatedProcess;
-        _createdEventWatcher?.Dispose();
+        _createdEventWatcher.Dispose();
     }
 
     private void OnCreatedProcess(object sender, EventArrivedEventArgs e)
     {
-        var process = e.NewEvent.GetPropertyValue("TargetInstance") as ManagementBaseObject;
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new Exception("Attempted to run Windows specific code on non-Windows system");
+        }
 
-        var pId = int.Parse(process.Properties["ProcessId"].Value.ToString());
+        if (e.NewEvent.GetPropertyValue("TargetInstance") is not ManagementBaseObject process)
+        {
+            return;
+        }
+
+        var processId = process.Properties["ProcessId"].Value.ToString();
+        if (string.IsNullOrWhiteSpace(processId))
+        {
+            return;
+        }
+
+        var pId = int.Parse(processId);
 
         Process proc;
         // Process may have already exited
@@ -92,7 +118,7 @@ public class ProcessMonitorService : IProcessMonitorService
 
         var pm = new ProcessModel(proc)
         {
-            BitmapPath = _winApi.GetBitmapFromPath(proc.MainModule?.FileName) ?? string.Empty
+            BitmapPath = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
         };
 
         lock (_lock)
@@ -108,9 +134,20 @@ public class ProcessMonitorService : IProcessMonitorService
 
     private void PopulateRunningProcesses()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new Exception("Attempted to run Windows specific code on non-Windows system");
+        }
+
         foreach (var i in _searcher.Get())
         {
-            var pId = int.Parse(i.Properties["ProcessId"].Value.ToString());
+            var processId = i.Properties["ProcessId"].Value.ToString();
+            if (string.IsNullOrWhiteSpace(processId))
+            {
+                return;
+            }
+
+            var pId = int.Parse(processId);
 
             Process proc;
             // Process may have already exited
@@ -128,14 +165,14 @@ public class ProcessMonitorService : IProcessMonitorService
             {
                 _ = proc.SafeHandle;
             }
-            catch (Win32Exception e)
+            catch (Win32Exception)
             {
                 continue;
             }
 
             var pm = new ProcessModel(proc)
             {
-                BitmapPath = _winApi.GetBitmapFromPath(proc.MainModule?.FileName) ?? string.Empty
+                BitmapPath = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
             };
 
             lock (_lock)
@@ -163,8 +200,52 @@ public class ProcessMonitorService : IProcessMonitorService
 
         lock (_lock)
         {
-            _runningProcesses.Edit(x => x.Remove(propertyValue.Sender));
+            _runningProcesses.Edit(x =>
+            {
+                if (propertyValue.Sender != null)
+                    x.Remove(propertyValue.Sender);
+            });
         }
+
         propertyValue.Sender.Dispose();
+    }
+
+    private static string GetBitmapFromPath(string path)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new Exception("Windows specific code attempted to be ran from non-Windows OS");
+        }
+
+        if (!OperatingSystem.IsWindowsVersionAtLeast(6, 1))
+        {
+            throw new Exception("Windows version less than 6.1");
+        }
+        if (path is null or "/")
+        {
+            return string.Empty;
+        }
+
+        var destination = Path.Join("cache", Path.GetFileName(path + ".ico"));
+        if (File.Exists(destination))
+        {
+            return destination;
+        }
+
+        if (!Directory.Exists("cache"))
+        {
+            Directory.CreateDirectory("cache");
+        }
+
+        var icon = Icon.ExtractAssociatedIcon(path);
+        if (icon is null)
+        {
+            return string.Empty;
+        }
+
+        var bmp = icon.ToBitmap();
+        bmp.Save(destination);
+
+        return destination;
     }
 }

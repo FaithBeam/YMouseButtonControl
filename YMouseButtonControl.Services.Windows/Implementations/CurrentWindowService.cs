@@ -1,21 +1,23 @@
 ﻿using System;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Runtime.Versioning;
 using System.Threading;
 using ReactiveUI;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.System.Threading;
+using Windows.Win32.UI.Accessibility;
 using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
-using YMouseButtonControl.Services.Windows.Implementations.Win32Stuff;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
+[SupportedOSPlatform("windows5.1.2600")]
 public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowService
 {
     private uint _threadId;
-    private IntPtr _hEvent;
-    private uint WM_QUIT = 0x0012;
-    private Thread _thread;
+    private UnhookWinEventSafeHandle? _hEvent;
+    private Thread? _thread;
     private string _foregroundWindow = string.Empty;
 
     public string ForegroundWindow
@@ -26,106 +28,95 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
 
     public void Dispose()
     {
-        if (_hEvent == IntPtr.Zero)
+        if (_hEvent is null)
         {
-            return;
+            throw new Exception("Win event null");
         }
 
-        if (!WinApi.PostThreadMessage(_threadId, WM_QUIT, 0, 0))
+        if (!PInvoke.PostThreadMessage(_threadId, PInvoke.WM_QUIT, 0, 0))
         {
             throw new Exception($"ERROR POSTING WM_QUIT TO {_threadId}");
         }
 
-        _hEvent = IntPtr.Zero;
+        _hEvent.Dispose();
 
-        _thread.Join();
+        _thread?.Join();
     }
 
-    public void Run()
+    public unsafe void Run()
     {
-        var winEvenCallbackDelegate = new WinApi.WinEventDelegate(WinEvenProcCallback);
-
         _thread = new Thread(() =>
         {
-            _threadId = WinApi.GetCurrentThreadId();
+            _threadId = PInvoke.GetCurrentThreadId();
 
-            _hEvent = WinApi.SetWinEventHook(
-                WinEvents.EVENT_SYSTEM_FOREGROUND,
-                WinEvents.EVENT_SYSTEM_MINIMIZEEND,
-                IntPtr.Zero,
-                winEvenCallbackDelegate,
+            _hEvent = PInvoke.SetWinEventHook(
+                PInvoke.EVENT_SYSTEM_FOREGROUND,
+                PInvoke.EVENT_SYSTEM_MINIMIZEEND,
+                null,
+                (hook, eventType, hwnd, idObject, child, thread, time) =>
+                {
+                    switch (eventType)
+                    {
+                        case PInvoke.EVENT_SYSTEM_FOREGROUND:
+                            uint pId;
+                            var res = PInvoke.GetWindowThreadProcessId(hwnd, &pId);
+                            if (res == 0)
+                            {
+                                throw new Win32Exception(Marshal.GetLastWin32Error());
+                            }
+
+                            var hProc = PInvoke.OpenProcess_SafeHandle(
+                                PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_INFORMATION
+                                    | PROCESS_ACCESS_RIGHTS.PROCESS_VM_READ,
+                                false,
+                                pId
+                            );
+                            if (hProc is null || hProc.IsInvalid)
+                            {
+                                throw new Win32Exception(Marshal.GetLastWin32Error());
+                            }
+                            fixed (char* pText = new char[1024])
+                            {
+                                var lenCopied = PInvoke.GetModuleFileNameEx(
+                                    hProc,
+                                    null,
+                                    pText,
+                                    1024
+                                );
+                                if (lenCopied == 0)
+                                {
+                                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                                }
+
+                                ForegroundWindow = new string(pText);
+                            }
+
+                            break;
+                    }
+                },
                 0,
                 0,
-                WinEventFlags.WINEVENT_OUTOFCONTEXT | WinEventFlags.WINEVENT_SKIPOWNPROCESS
+                PInvoke.WINEVENT_OUTOFCONTEXT | PInvoke.WINEVENT_SKIPOWNPROCESS
             );
-            if (_hEvent == IntPtr.Zero)
+
+            if (_hEvent.IsInvalid)
             {
-                Console.WriteLine("ERROR SETTING WINDOWS EVENT HOOK");
+                throw new Win32Exception("Unable to set win event hook");
             }
 
             int bRet;
-            while ((bRet = WinApi.GetMessage(out var msg, 0, 0, 0)) != 0)
+            while ((bRet = PInvoke.GetMessage(out var msg, HWND.Null, 0, 0)) != 0)
             {
                 if (bRet == -1)
                 {
                     return;
                 }
 
-                WinApi.TranslateMessage(ref msg);
+                PInvoke.TranslateMessage(msg);
 
-                WinApi.DispatchMessage(ref msg);
+                PInvoke.DispatchMessage(msg);
             }
-
-            // Unsuccessful when attempting unhook. Is this necessary since we post WM_QUIT to this thread? Commented for now.
-            //if (!WinApi.UnhookWinEvent(_hEvent))
-            //{
-            //    throw new Exception("ERROR UNHOOKING WIN EVENT");
-            //}
         });
         _thread.Start();
-    }
-
-    private void WinEvenProcCallback(
-        IntPtr hWinEventHook,
-        uint eventType,
-        IntPtr hwnd,
-        int idObject,
-        int idChild,
-        uint dwEventThread,
-        uint dwmsEventTime
-    )
-    {
-        uint pId;
-        switch ((WinEvents)eventType)
-        {
-            case WinEvents.EVENT_SYSTEM_FOREGROUND:
-                var result = WinApi.GetWindowThreadProcessId(hwnd, out pId);
-                var hProc = WinApi.OpenProcess(
-                    (uint)(
-                        ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead
-                    ),
-                    false,
-                    pId
-                );
-                var sb = new StringBuilder(1024);
-                result = WinApi.GetModuleFileNameEx(hProc, IntPtr.Zero, sb, sb.Capacity);
-                ForegroundWindow = sb.ToString();
-                break;
-            case WinEvents.EVENT_SYSTEM_MINIMIZEEND:
-                result = WinApi.GetWindowThreadProcessId(hwnd, out pId);
-                hProc = WinApi.OpenProcess(
-                    (uint)(
-                        ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead
-                    ),
-                    false,
-                    pId
-                );
-                sb = new StringBuilder(1024);
-                result = WinApi.GetModuleFileNameEx(hProc, IntPtr.Zero, sb, sb.Capacity);
-                //activeProc = sb.ToString();
-                break;
-            default:
-                break;
-        }
     }
 }

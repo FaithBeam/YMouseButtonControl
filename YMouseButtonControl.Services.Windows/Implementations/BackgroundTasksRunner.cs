@@ -38,9 +38,9 @@ public class BackgroundTasksRunner : IBackgroundTasksRunner
 
     public void Stop()
     {
-        _currentWindowService?.Dispose();
-        _lowLevelMouseHookService?.Dispose();
-        _keyboardSimulatorWorker?.Dispose();
-        _mouseListener?.Dispose();
+        _currentWindowService.Dispose();
+        _lowLevelMouseHookService.Dispose();
+        _keyboardSimulatorWorker.Dispose();
+        _mouseListener.Dispose();
     }
 }

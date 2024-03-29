@@ -1,4 +1,6 @@
-﻿using Splat;
+﻿using System;
+using System.Runtime.Versioning;
+using Splat;
 using YMouseButtonControl.BackgroundTasks.Interfaces;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 using YMouseButtonControl.KeyboardAndMouse;
@@ -39,21 +41,21 @@ public static class ServicesBootstrapper
         IReadonlyDependencyResolver resolver
     )
     {
-        var platformService = resolver.GetRequiredService<IPlatformService>();
-        var platform = platformService.GetPlatform();
-
-        switch (platform)
+        if (OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600))
         {
-            case Platform.Windows:
-                RegisterWindowsServices(services, resolver);
-                break;
-            case Platform.MacOs:
-            case Platform.Linux:
-                RegisterMacOSServices(services, resolver);
-                break;
+            RegisterWindowsServices(services, resolver);
+        }
+        else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
+        {
+            RegisterMacOsServices(services, resolver);
+        }
+        else
+        {
+            throw new Exception("Unsupported operating system");
         }
     }
 
+    [SupportedOSPlatform("windows5.1.2600")]
     private static void RegisterWindowsServices(
         IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver
@@ -85,7 +87,7 @@ public static class ServicesBootstrapper
         //));
     }
 
-    private static void RegisterMacOSServices(
+    private static void RegisterMacOsServices(
         IMutableDependencyResolver services,
         IReadonlyDependencyResolver resolver
     )
