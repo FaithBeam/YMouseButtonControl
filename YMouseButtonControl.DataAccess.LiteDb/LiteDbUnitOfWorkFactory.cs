@@ -14,19 +14,16 @@ public class LiteDbUnitOfWorkFactory : IUnitOfWorkFactory
         _databaseConfiguration = databaseConfiguration;
     }
 
-    public IUnitOfWork Create()
-    {
-        var database = _databaseConfiguration.UseInMemoryDatabase
-            ? CreateInMemoryDatabase()
-            : CreateDatabaseFromConnectionString();
+    public IUnitOfWork Create() =>
+        new LiteDbUnitOfWork(
+            _databaseConfiguration.UseInMemoryDatabase
+                ? CreateInMemoryDatabase()
+                : CreateDatabaseFromConnectionString()
+        );
 
-        return new LiteDbUnitOfWork(database);
-    }
+    private static LiteDatabase CreateInMemoryDatabase() =>
+        new("Filename=:memory:;Connection=shared");
 
-    private static LiteDatabase CreateInMemoryDatabase() => new(new MemoryStream());
-
-    private LiteDatabase CreateDatabaseFromConnectionString()
-    {
-        return new LiteDatabase(_databaseConfiguration.ConnectionString);
-    }
+    private LiteDatabase CreateDatabaseFromConnectionString() =>
+        new(_databaseConfiguration.ConnectionString);
 }

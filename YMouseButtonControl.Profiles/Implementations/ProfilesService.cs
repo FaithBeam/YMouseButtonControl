@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.UnitOfWork;
+using YMouseButtonControl.Profiles.Exceptions;
 using YMouseButtonControl.Profiles.Interfaces;
 
 namespace YMouseButtonControl.Profiles.Implementations;
@@ -135,10 +136,15 @@ public class ProfilesService : ReactiveObject, IProfilesService
     {
         profile.Id = GetNextProfileId();
         Profiles.Add(profile);
+        CurrentProfileIndex = Profiles.IndexOf(profile);
     }
 
     public void ReplaceProfile(Profile oldProfile, Profile newProfile)
     {
+        if (oldProfile.Id == 1)
+        {
+            throw new InvalidReplaceException("Cannot replace the default profile");
+        }
         var pIndex = Profiles.IndexOf(oldProfile);
         Profiles.Replace(oldProfile, newProfile);
         // Trigger CurrentProfile to update
@@ -148,9 +154,19 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public void MoveProfileUp(Profile p)
     {
+        if (p.Id == 1)
+        {
+            throw new InvalidMoveException("Cannot move the default profile");
+        }
         var index = Profiles.IndexOf(p);
-        if (index < 1)
-            return;
+        switch (index)
+        {
+            case < 1:
+                throw new InvalidMoveException($"Index is less than 1: {index}");
+            case 1:
+                throw new InvalidMoveException("Cannot move profile above default profile");
+        }
+
         Profiles.Remove(p);
         Profiles.Insert(index - 1, p);
         CurrentProfileIndex = index - 1;
@@ -158,9 +174,15 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public void MoveProfileDown(Profile p)
     {
+        if (p.Id == 1)
+        {
+            throw new InvalidMoveException("Cannot move the default profile");
+        }
         var index = Profiles.IndexOf(p);
         if (index < 0)
-            return;
+        {
+            throw new InvalidMoveException($"Index is less than 0: {index}");
+        }
         if (Profiles.Count < index + 2)
         {
             return;
@@ -173,6 +195,10 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
     public void RemoveProfile(Profile profile)
     {
+        if (profile.Name == "Default")
+        {
+            throw new Exception("Attempted to remove default profile");
+        }
         CurrentProfileIndex--;
         Profiles.Remove(profile);
     }
