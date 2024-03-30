@@ -65,8 +65,7 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
                             }
 
                             var hProc = PInvoke.OpenProcess_SafeHandle(
-                                PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_INFORMATION
-                                    | PROCESS_ACCESS_RIGHTS.PROCESS_VM_READ,
+                                PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION,
                                 false,
                                 pId
                             );
