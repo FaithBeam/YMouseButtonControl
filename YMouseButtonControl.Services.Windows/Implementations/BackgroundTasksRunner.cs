@@ -9,32 +9,26 @@ public class BackgroundTasksRunner : IBackgroundTasksRunner
 {
     private readonly IMouseListener _mouseListener;
     private readonly KeyboardSimulatorWorker _keyboardSimulatorWorker;
-
-    // private readonly ILowLevelMouseHookService _lowLevelMouseHookService;
     private readonly ICurrentWindowService _currentWindowService;
 
     public BackgroundTasksRunner(
         IMouseListener mouseListener,
         KeyboardSimulatorWorker keyboardSimulatorWorker,
-        // ILowLevelMouseHookService lowLevelMouseHookService,
         ICurrentWindowService currentWindowService
     )
     {
         _mouseListener = mouseListener;
         _keyboardSimulatorWorker = keyboardSimulatorWorker;
-        // _lowLevelMouseHookService = lowLevelMouseHookService;
         _currentWindowService = currentWindowService;
 
         _mouseListener.Run();
         _keyboardSimulatorWorker.Run();
-        // _lowLevelMouseHookService.Run();
         _currentWindowService.Run();
     }
 
     public void Dispose()
     {
         _currentWindowService.Dispose();
-        // _lowLevelMouseHookService.Dispose();
         _keyboardSimulatorWorker.Dispose();
         _mouseListener.Dispose();
     }
