@@ -6,6 +6,7 @@ using SharpHook;
 using SharpHook.Native;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
@@ -21,13 +22,19 @@ public class MouseListener : IMouseListener
 {
     private readonly IGlobalHook _hook;
     private readonly IProfilesService _profilesService;
+    private readonly ICurrentWindowService _currentWindowService;
     private readonly ILogger _log = Log.Logger.ForContext<MouseListener>();
     private Thread? _thread;
 
-    public MouseListener(IGlobalHook hook, IProfilesService profilesService)
+    public MouseListener(
+        IGlobalHook hook,
+        IProfilesService profilesService,
+        ICurrentWindowService currentWindowService
+    )
     {
         _hook = hook;
         _profilesService = profilesService;
+        _currentWindowService = currentWindowService;
 
         SubscribeToEvents();
     }
@@ -119,38 +126,47 @@ public class MouseListener : IMouseListener
             MouseButton.MouseButton1
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton1.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseButton2
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton2.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseButton3
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton3.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseButton4
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton4.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseButton5
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton5.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseWheelUp
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelUp.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseWheelDown
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelDown.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseWheelLeft
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelLeft.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             MouseButton.MouseWheelRight
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelRight.MouseButtonDisabled: true }
+                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
                 ),
             _ => throw new ArgumentOutOfRangeException()
         };
