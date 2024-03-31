@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Backgro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Profiles.Tests", "YMouseButtonControl.Profiles.Tests\YMouseButtonControl.Profiles.Tests.csproj", "{A3A6A2CF-39FC-4A0F-8371-4D894CD183CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.ViewModels.Tests", "YMouseButtonControl.ViewModels.Tests\YMouseButtonControl.ViewModels.Tests.csproj", "{3568CE4C-607E-4DB7-B724-CCA418B7D32A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{A3A6A2CF-39FC-4A0F-8371-4D894CD183CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3A6A2CF-39FC-4A0F-8371-4D894CD183CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3A6A2CF-39FC-4A0F-8371-4D894CD183CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3568CE4C-607E-4DB7-B724-CCA418B7D32A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3568CE4C-607E-4DB7-B724-CCA418B7D32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3568CE4C-607E-4DB7-B724-CCA418B7D32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3568CE4C-607E-4DB7-B724-CCA418B7D32A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

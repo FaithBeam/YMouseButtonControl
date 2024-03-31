@@ -10,6 +10,7 @@ using YMouseButtonControl.Avalonia.Implementations;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Views.Dialogs;
 
 namespace YMouseButtonControl.Views;
@@ -89,7 +90,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
     }
 
     private static async Task ShowProcessSelectorDialogAsync(
-        IInteractionContext<ProcessSelectorDialogViewModel, Profile?> interaction
+        IInteractionContext<IProcessSelectorDialogViewModel, Profile?> interaction
     )
     {
         interaction.Input.RefreshButtonCommand.Execute(null);

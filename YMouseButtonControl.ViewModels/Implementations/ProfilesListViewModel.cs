@@ -5,15 +5,15 @@ using System.Windows.Input;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
+using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
     private IProfilesService _profilesService;
-    private readonly ProcessSelectorDialogViewModel _processSelectorDialogViewModel;
+    private readonly IProcessSelectorDialogViewModel _processSelectorDialogViewModel;
 
     public ICommand AddButtonCommand { get; }
     public ReactiveCommand<Unit, Unit> EditButtonCommand { get; }
@@ -24,19 +24,19 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     public ReactiveCommand<Unit, Unit> ExportCommand { get; }
     public ReactiveCommand<Unit, Unit> ImportCommand { get; }
     public Interaction<
-        ProcessSelectorDialogViewModel,
+        IProcessSelectorDialogViewModel,
         Profile?
     > ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(
         IProfilesService profilesService,
-        ProcessSelectorDialogViewModel processSelectorDialogViewModel
+        IProcessSelectorDialogViewModel processSelectorDialogViewModel
     )
     {
         _profilesService = profilesService;
         AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
         ShowExportFileDialog = new Interaction<string, string>();
-        ShowImportFileDialog = new Interaction<Unit, string>();
+        ShowImportFileDialog = new Interaction<Unit, string?>();
         ImportCommand = ReactiveCommand.CreateFromTask(OnImportClickedAsync);
         var exportCanExecute = this.WhenAnyValue(
             x => x.ProfilesService.CurrentProfile,
@@ -59,7 +59,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
         ShowProcessSelectorInteraction =
-            new Interaction<ProcessSelectorDialogViewModel, Profile?>();
+            new Interaction<IProcessSelectorDialogViewModel, Profile?>();
         var editCanExecute = this.WhenAnyValue(
             x => x.ProfilesService.CurrentProfile,
             curProf => curProf.Name != "Default"
@@ -69,7 +69,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     }
 
     public Interaction<string, string> ShowExportFileDialog { get; }
-    public Interaction<Unit, string> ShowImportFileDialog { get; }
+    public Interaction<Unit, string?> ShowImportFileDialog { get; }
 
     public IProfilesService ProfilesService
     {
@@ -144,7 +144,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             return;
         }
 
-        var newProfile = _profilesService.CurrentProfile;
+        var newProfile = _profilesService.CopyProfile(_profilesService.CurrentProfile);
         newProfile.Process = result.Process;
         newProfile.Name = result.Name;
         newProfile.Description = result.Description;

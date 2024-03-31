@@ -3,6 +3,7 @@ using YMouseButtonControl.ViewModels;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.ViewModels.Interfaces;
+using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.ViewModels.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
@@ -16,7 +17,7 @@ public static class ViewModelsBootstrapper
 
     private static void RegisterCommonViewModels(IServiceCollection services)
     {
-        services.AddTransient<ProcessSelectorDialogViewModel>();
+        services.AddTransient<IProcessSelectorDialogViewModel, ProcessSelectorDialogViewModel>();
         services.AddSingleton<IProfilesInformationViewModel, ProfilesInformationViewModel>();
         services.AddSingleton<
             IShowSimulatedKeystrokesDialogService,

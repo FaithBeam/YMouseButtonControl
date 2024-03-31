@@ -1,3 +1,8 @@
-﻿namespace YMouseButtonControl.ViewModels.Interfaces.Dialogs;
+﻿using System.Windows.Input;
 
-public interface IProcessSelectorDialogViewModel { }
+namespace YMouseButtonControl.ViewModels.Interfaces.Dialogs;
+
+public interface IProcessSelectorDialogViewModel
+{
+    ICommand RefreshButtonCommand { get; }
+}
