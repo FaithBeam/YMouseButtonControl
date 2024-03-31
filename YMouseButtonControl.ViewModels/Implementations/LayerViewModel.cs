@@ -5,7 +5,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using Avalonia;
 using Avalonia.Media;
+using Avalonia.Styling;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Factories;
@@ -34,15 +36,20 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private int _mwlIndex;
     private int _mwrIndex;
 
-    private IBrush _mouseButton1BackgroundColor = Brushes.White;
-    private IBrush _mouseButton2BackgroundColor = Brushes.White;
-    private IBrush _mouseButton3BackgroundColor = Brushes.White;
-    private IBrush _mouseButton4BackgroundColor = Brushes.White;
-    private IBrush _mouseButton5BackgroundColor = Brushes.White;
-    private IBrush _wheelUpBackgroundColor = Brushes.White;
-    private IBrush _wheelDownBackgroundColor = Brushes.White;
-    private IBrush _wheelRightBackgroundColor = Brushes.White;
-    private IBrush _wheelLeftBackgroundColor = Brushes.White;
+    private static readonly IBrush Highlight = Brushes.Yellow;
+    private static readonly IBrush BackgroundDark = Brushes.Black;
+    private static readonly IBrush BackgroundLight = Brushes.White;
+    private IBrush _curBackground;
+
+    private IBrush _mouseButton1BackgroundColor;
+    private IBrush _mouseButton2BackgroundColor;
+    private IBrush _mouseButton3BackgroundColor;
+    private IBrush _mouseButton4BackgroundColor;
+    private IBrush _mouseButton5BackgroundColor;
+    private IBrush _wheelUpBackgroundColor;
+    private IBrush _wheelDownBackgroundColor;
+    private IBrush _wheelRightBackgroundColor;
+    private IBrush _wheelLeftBackgroundColor;
 
     private readonly Timer _wheelUpTimer = new() { Interval = 200, AutoReset = false };
     private readonly Timer _wheelDownTimer = new() { Interval = 200, AutoReset = false };
@@ -152,6 +159,17 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService
     )
     {
+        _curBackground = GetCurrentThemeBackground();
+        _mouseButton1BackgroundColor = _curBackground;
+        _mouseButton2BackgroundColor = _curBackground;
+        _mouseButton3BackgroundColor = _curBackground;
+        _mouseButton4BackgroundColor = _curBackground;
+        _mouseButton5BackgroundColor = _curBackground;
+        _wheelDownBackgroundColor = _curBackground;
+        _wheelUpBackgroundColor = _curBackground;
+        _wheelLeftBackgroundColor = _curBackground;
+        _wheelRightBackgroundColor = _curBackground;
+
         _profilesService = profilesService;
         this.WhenAnyValue(x => x._profilesService.CurrentProfile)
             .WhereNotNull()
@@ -163,19 +181,19 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         _mouseListener.OnMouseWheelEventHandler += OnWheelScroll;
         _wheelUpTimer.Elapsed += delegate
         {
-            WheelUpBackgroundColor = Brushes.White;
+            WheelUpBackgroundColor = _curBackground;
         };
         _wheelDownTimer.Elapsed += delegate
         {
-            WheelDownBackgroundColor = Brushes.White;
+            WheelDownBackgroundColor = _curBackground;
         };
         _wheelLeftTimer.Elapsed += delegate
         {
-            WheelLeftBackgroundColor = Brushes.White;
+            WheelLeftBackgroundColor = _curBackground;
         };
         _wheelRightTimer.Elapsed += delegate
         {
-            WheelRightBackgroundColor = Brushes.White;
+            WheelRightBackgroundColor = _curBackground;
         };
         ShowSimulatedKeystrokesDialogService = showSimulatedKeystrokesDialogService;
 
@@ -491,6 +509,21 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         );
     }
 
+    private static IBrush GetCurrentThemeBackground()
+    {
+        if (Application.Current?.ActualThemeVariant == ThemeVariant.Light)
+        {
+            return BackgroundLight;
+        }
+
+        if (Application.Current?.ActualThemeVariant == ThemeVariant.Dark)
+        {
+            return BackgroundDark;
+        }
+
+        throw new Exception("Unknown theme");
+    }
+
     public ReactiveCommand<Unit, Unit> MouseButton1ComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseButton2ComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseButton3ComboSettingCommand { get; }
@@ -653,7 +686,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         switch (e.Direction)
         {
             case WheelScrollDirection.VerticalUp:
-                WheelUpBackgroundColor = Brushes.Yellow;
+                WheelUpBackgroundColor = Highlight;
                 if (!_wheelUpTimer.Enabled)
                 {
                     _wheelUpTimer.Start();
@@ -661,7 +694,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
                 break;
             case WheelScrollDirection.VerticalDown:
-                WheelDownBackgroundColor = Brushes.Yellow;
+                WheelDownBackgroundColor = Highlight;
                 if (!_wheelDownTimer.Enabled)
                 {
                     _wheelDownTimer.Start();
@@ -669,7 +702,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
                 break;
             case WheelScrollDirection.HorizontalLeft:
-                WheelLeftBackgroundColor = Brushes.Yellow;
+                WheelLeftBackgroundColor = Highlight;
                 if (!_wheelLeftTimer.Enabled)
                 {
                     _wheelLeftTimer.Start();
@@ -677,7 +710,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
                 break;
             case WheelScrollDirection.HorizontalRight:
-                WheelRightBackgroundColor = Brushes.Yellow;
+                WheelRightBackgroundColor = Highlight;
                 if (!_wheelRightTimer.Enabled)
                 {
                     _wheelRightTimer.Start();
@@ -694,19 +727,19 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         switch (e.Button)
         {
             case MouseButton.MouseButton1:
-                MouseButton1BackgroundColor = Brushes.White;
+                MouseButton1BackgroundColor = _curBackground;
                 break;
             case MouseButton.MouseButton2:
-                MouseButton2BackgroundColor = Brushes.White;
+                MouseButton2BackgroundColor = _curBackground;
                 break;
             case MouseButton.MouseButton3:
-                MouseButton3BackgroundColor = Brushes.White;
+                MouseButton3BackgroundColor = _curBackground;
                 break;
             case MouseButton.MouseButton4:
-                MouseButton4BackgroundColor = Brushes.White;
+                MouseButton4BackgroundColor = _curBackground;
                 break;
             case MouseButton.MouseButton5:
-                MouseButton5BackgroundColor = Brushes.White;
+                MouseButton5BackgroundColor = _curBackground;
                 break;
             case MouseButton.MouseWheelUp:
                 break;
@@ -726,19 +759,19 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         switch (e.Button)
         {
             case MouseButton.MouseButton1:
-                MouseButton1BackgroundColor = Brushes.Yellow;
+                MouseButton1BackgroundColor = Highlight;
                 break;
             case MouseButton.MouseButton2:
-                MouseButton2BackgroundColor = Brushes.Yellow;
+                MouseButton2BackgroundColor = Highlight;
                 break;
             case MouseButton.MouseButton3:
-                MouseButton3BackgroundColor = Brushes.Yellow;
+                MouseButton3BackgroundColor = Highlight;
                 break;
             case MouseButton.MouseButton4:
-                MouseButton4BackgroundColor = Brushes.Yellow;
+                MouseButton4BackgroundColor = Highlight;
                 break;
             case MouseButton.MouseButton5:
-                MouseButton5BackgroundColor = Brushes.Yellow;
+                MouseButton5BackgroundColor = Highlight;
                 break;
             case MouseButton.MouseWheelUp:
                 break;
