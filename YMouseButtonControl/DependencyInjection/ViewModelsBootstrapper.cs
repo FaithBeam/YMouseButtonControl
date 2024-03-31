@@ -1,8 +1,4 @@
-using Splat;
-using YMouseButtonControl.KeyboardAndMouse;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Profiles.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.ViewModels;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Implementations.Dialogs;
@@ -13,55 +9,22 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class ViewModelsBootstrapper
 {
-    public static void RegisterViewModels(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    public static void RegisterViewModels(IServiceCollection services)
     {
-        RegisterCommonViewModels(services, resolver);
+        RegisterCommonViewModels(services);
     }
 
-    private static void RegisterCommonViewModels(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    private static void RegisterCommonViewModels(IServiceCollection services)
     {
-        services.Register(
-            () =>
-                new ProcessSelectorDialogViewModel(
-                    resolver.GetRequiredService<IProcessMonitorService>()
-                )
-        );
-        services.RegisterLazySingleton<IProfilesInformationViewModel>(
-            () => new ProfilesInformationViewModel(resolver.GetRequiredService<IProfilesService>())
-        );
-        services.RegisterLazySingleton<IShowSimulatedKeystrokesDialogService>(
-            () => new ShowSimulatedKeystrokesDialogService()
-        );
-        services.RegisterLazySingleton<ILayerViewModel>(
-            () =>
-                new LayerViewModel(
-                    resolver.GetRequiredService<IProfilesService>(),
-                    resolver.GetRequiredService<IMouseListener>(),
-                    resolver.GetRequiredService<IShowSimulatedKeystrokesDialogService>()
-                )
-        );
-        services.RegisterLazySingleton<IProfilesListViewModel>(
-            () =>
-                new ProfilesListViewModel(
-                    resolver.GetRequiredService<IProfilesService>(),
-                    resolver.GetRequiredService<ProcessSelectorDialogViewModel>()
-                )
-        );
-        services.RegisterLazySingleton<IMainWindowViewModel>(
-            () =>
-                new MainWindowViewModel(
-                    resolver.GetRequiredService<IProfilesService>(),
-                    resolver.GetRequiredService<ILayerViewModel>(),
-                    resolver.GetRequiredService<IProfilesListViewModel>(),
-                    resolver.GetRequiredService<IProfilesInformationViewModel>()
-                )
-        );
-        services.RegisterLazySingleton<IAppViewModel>(() => new AppViewModel());
+        services.AddTransient<ProcessSelectorDialogViewModel>();
+        services.AddSingleton<IProfilesInformationViewModel, ProfilesInformationViewModel>();
+        services.AddSingleton<
+            IShowSimulatedKeystrokesDialogService,
+            ShowSimulatedKeystrokesDialogService
+        >();
+        services.AddSingleton<ILayerViewModel, LayerViewModel>();
+        services.AddSingleton<IProfilesListViewModel, ProfilesListViewModel>();
+        services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
+        services.AddSingleton<IAppViewModel, AppViewModel>();
     }
 }

@@ -1,12 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
 using Serilog;
-using Serilog.Templates;
-using Splat;
-using YMouseButtonControl.BackgroundTasks.Interfaces;
-using YMouseButtonControl.Configuration;
-using YMouseButtonControl.DependencyInjection;
-using YMouseButtonControl.Services.Windows.Implementations;
 
 namespace YMouseButtonControl;
 
@@ -22,18 +16,14 @@ internal static class Program
             .CreateLogger();
         Log.Logger = log;
 
-        var dataAccessConfig = new DataAccessConfiguration { UseInMemoryDatabase = false };
-        RegisterDependencies(dataAccessConfig);
-
-        using var backgroundTasksRunner =
-            Locator.Current.GetRequiredService<IBackgroundTasksRunner>();
-
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
     private static AppBuilder BuildAvaloniaApp() =>
-        AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace().UseReactiveUI();
-
-    private static void RegisterDependencies(DataAccessConfiguration dataAccessConfiguration) =>
-        Bootstrapper.Register(Locator.CurrentMutable, Locator.Current, dataAccessConfiguration);
+        AppBuilder
+            .Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace()
+            .UseReactiveUI();
 }

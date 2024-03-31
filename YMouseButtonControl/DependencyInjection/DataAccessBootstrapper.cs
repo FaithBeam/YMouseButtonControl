@@ -1,5 +1,4 @@
-﻿using Splat;
-using YMouseButtonControl.DataAccess.Configuration;
+﻿using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.DataAccess.LiteDb;
 using YMouseButtonControl.DataAccess.UnitOfWork;
 
@@ -7,13 +6,8 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class DataAccessBootstrapper
 {
-    public static void RegisterDataAccess(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    public static void RegisterDataAccess(IServiceCollection services)
     {
-        services.RegisterLazySingleton<IUnitOfWorkFactory>(
-            () => new LiteDbUnitOfWorkFactory(resolver.GetRequiredService<DatabaseConfiguration>())
-        );
+        services.AddSingleton<IUnitOfWorkFactory, LiteDbUnitOfWorkFactory>();
     }
 }

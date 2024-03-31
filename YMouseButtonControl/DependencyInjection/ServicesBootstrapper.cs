@@ -1,51 +1,36 @@
 ﻿using System;
 using System.Runtime.Versioning;
-using Splat;
+using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.BackgroundTasks.Interfaces;
-using YMouseButtonControl.DataAccess.UnitOfWork;
-using YMouseButtonControl.KeyboardAndMouse;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.MacOS.Implementations;
 using YMouseButtonControl.Services.Windows.Implementations;
 
 namespace YMouseButtonControl.DependencyInjection;
 
 public static class ServicesBootstrapper
 {
-    public static void RegisterServices(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    public static void RegisterServices(IServiceCollection services)
     {
-        RegisterCommonServices(services, resolver);
-        RegisterPlatformSpecificServices(services, resolver);
+        RegisterCommonServices(services);
+        RegisterPlatformSpecificServices(services);
     }
 
-    private static void RegisterCommonServices(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    private static void RegisterCommonServices(IServiceCollection services)
     {
-        services.RegisterLazySingleton<IProfilesService>(
-            () => new ProfilesService(resolver.GetRequiredService<IUnitOfWorkFactory>())
-        );
+        services.AddSingleton<IProfilesService, ProfilesService>();
     }
 
-    private static void RegisterPlatformSpecificServices(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    private static void RegisterPlatformSpecificServices(IServiceCollection services)
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600))
         {
-            RegisterWindowsServices(services, resolver);
+            RegisterWindowsServices(services);
         }
         else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
         {
-            RegisterMacOsServices(services, resolver);
+            RegisterMacOsServices(services);
         }
         else
         {
@@ -54,42 +39,32 @@ public static class ServicesBootstrapper
     }
 
     [SupportedOSPlatform("windows5.1.2600")]
-    private static void RegisterWindowsServices(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    private static void RegisterWindowsServices(IServiceCollection services)
     {
-        services.RegisterLazySingleton<IProcessMonitorService>(() => new ProcessMonitorService());
-        services.RegisterLazySingleton<ICurrentWindowService>(
-            () => new Services.Windows.Implementations.CurrentWindowService()
-        );
-        services.RegisterLazySingleton<IBackgroundTasksRunner>(
-            () =>
-                new Services.Windows.Implementations.BackgroundTasksRunner(
-                    resolver.GetRequiredService<IMouseListener>(),
-                    resolver.GetRequiredService<KeyboardSimulatorWorker>(),
-                    resolver.GetRequiredService<ICurrentWindowService>()
-                )
-        );
+        services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
+        services.AddSingleton<
+            ICurrentWindowService,
+            Services.Windows.Implementations.CurrentWindowService
+        >();
+        services.AddSingleton<
+            IBackgroundTasksRunner,
+            Services.Windows.Implementations.BackgroundTasksRunner
+        >();
     }
 
-    private static void RegisterMacOsServices(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    private static void RegisterMacOsServices(IServiceCollection services)
     {
-        services.RegisterLazySingleton<IProcessMonitorService>(
-            () => new MacOsProcessMonitorService()
-        );
-        services.RegisterLazySingleton<ICurrentWindowService>(
-            () => new Services.MacOS.Implementations.CurrentWindowService()
-        );
-        services.RegisterLazySingleton<IBackgroundTasksRunner>(
-            () =>
-                new Services.MacOS.Implementations.BackgroundTasksRunner(
-                    resolver.GetRequiredService<IMouseListener>(),
-                    resolver.GetRequiredService<KeyboardSimulatorWorker>()
-                )
-        );
+        services.AddSingleton<
+            IProcessMonitorService,
+            Services.MacOS.Implementations.MacOsProcessMonitorService
+        >();
+        services.AddSingleton<
+            ICurrentWindowService,
+            Services.MacOS.Implementations.CurrentWindowService
+        >();
+        services.AddSingleton<
+            IBackgroundTasksRunner,
+            Services.MacOS.Implementations.BackgroundTasksRunner
+        >();
     }
 }

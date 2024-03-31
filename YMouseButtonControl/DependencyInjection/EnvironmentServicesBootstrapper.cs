@@ -1,4 +1,4 @@
-﻿using Splat;
+﻿using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Services.Environment.Implementations;
 using YMouseButtonControl.Services.Environment.Interfaces;
 
@@ -6,16 +6,13 @@ namespace YMouseButtonControl.DependencyInjection;
 
 public static class EnvironmentServicesBootstrapper
 {
-    public static void RegisterEnvironmentServices(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    public static void RegisterEnvironmentServices(IServiceCollection services)
     {
         RegisterCommonServices(services);
     }
 
-    private static void RegisterCommonServices(IMutableDependencyResolver services)
+    private static void RegisterCommonServices(IServiceCollection services)
     {
-        services.Register<IPlatformService>(() => new PlatformService());
+        services.AddTransient<IPlatformService, PlatformService>();
     }
 }

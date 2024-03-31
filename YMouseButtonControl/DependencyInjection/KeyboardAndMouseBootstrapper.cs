@@ -1,96 +1,34 @@
-﻿using SharpHook;
-using Splat;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SharpHook;
 using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Profiles.Interfaces;
 
 namespace YMouseButtonControl.DependencyInjection;
 
 public static class KeyboardAndMouseBootstrapper
 {
-    public static void RegisterKeyboardAndMouse(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver
-    )
+    public static void RegisterKeyboardAndMouse(IServiceCollection services)
     {
-        services.RegisterLazySingleton<IMouseListener>(
-            () =>
-                new MouseListener(
-                    new SimpleGlobalHook(),
-                    resolver.GetRequiredService<IProfilesService>()
-                )
-        );
-        services.RegisterLazySingleton<IParseKeysService>(() => new ParseKeysService());
-        services.RegisterLazySingleton<ISimulateKeyService>(
-            () =>
-                new SimulateKeyService(
-                    new EventSimulator(),
-                    resolver.GetRequiredService<IParseKeysService>()
-                )
-        );
-        services.RegisterLazySingleton<IStickyHoldService>(
-            () => new StickyHoldService(resolver.GetRequiredService<ISimulateKeyService>())
-        );
-        services.RegisterLazySingleton<IAsMouseButtonPressedService>(
-            () =>
-                new AsMouseButtonPressedService(resolver.GetRequiredService<ISimulateKeyService>())
-        );
-        services.RegisterLazySingleton<IAsMouseButtonReleasedService>(
-            () =>
-                new AsMouseButtonReleasedService(resolver.GetRequiredService<ISimulateKeyService>())
-        );
-        services.RegisterLazySingleton<IDuringMousePressAndReleaseService>(
-            () =>
-                new DuringMousePressAndReleaseService(
-                    resolver.GetRequiredService<ISimulateKeyService>()
-                )
-        );
-        services.RegisterLazySingleton<IRepeatedWhileButtonDownService>(
-            () =>
-                new RepeatedWhileButtonDownService(
-                    resolver.GetRequiredService<ISimulateKeyService>()
-                )
-        );
-        services.RegisterLazySingleton<IStickyRepeatService>(
-            () => new StickyRepeatService(resolver.GetRequiredService<ISimulateKeyService>())
-        );
-        services.RegisterLazySingleton<ISimulatedKeystrokesService>(
-            () =>
-                new SimulatedKeystrokesService(
-                    resolver.GetRequiredService<IStickyHoldService>(),
-                    resolver.GetRequiredService<IAsMouseButtonPressedService>(),
-                    resolver.GetRequiredService<IAsMouseButtonReleasedService>(),
-                    resolver.GetRequiredService<IDuringMousePressAndReleaseService>(),
-                    resolver.GetRequiredService<IRepeatedWhileButtonDownService>(),
-                    resolver.GetRequiredService<IStickyRepeatService>()
-                )
-        );
-        services.RegisterLazySingleton<IRouteButtonMappingService>(
-            () =>
-                new RouteButtonMappingService(
-                    resolver.GetRequiredService<ISimulatedKeystrokesService>()
-                )
-        );
-        services.RegisterLazySingleton<IRouteMouseButtonService>(
-            () =>
-                new RouteMouseButtonService(
-                    resolver.GetRequiredService<IRouteButtonMappingService>()
-                )
-        );
-        services.RegisterLazySingleton<ISkipProfileService>(
-            () => new SkipProfileService(resolver.GetRequiredService<ICurrentWindowService>())
-        );
-        services.RegisterLazySingleton(
-            () =>
-                new KeyboardSimulatorWorker(
-                    resolver.GetRequiredService<IProfilesService>(),
-                    resolver.GetRequiredService<IMouseListener>(),
-                    resolver.GetRequiredService<IRouteMouseButtonService>(),
-                    resolver.GetRequiredService<ISkipProfileService>()
-                )
-        );
+        services.AddSingleton<IGlobalHook, SimpleGlobalHook>();
+        services.AddSingleton<IMouseListener, MouseListener>();
+        services.AddSingleton<IParseKeysService, ParseKeysService>();
+        services.AddSingleton<IEventSimulator, EventSimulator>();
+        services.AddSingleton<ISimulateKeyService, SimulateKeyService>();
+        services.AddSingleton<IStickyHoldService, StickyHoldService>();
+        services.AddSingleton<IAsMouseButtonPressedService, AsMouseButtonPressedService>();
+        services.AddSingleton<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>();
+        services.AddSingleton<
+            IDuringMousePressAndReleaseService,
+            DuringMousePressAndReleaseService
+        >();
+        services.AddSingleton<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
+        services.AddSingleton<IStickyRepeatService, StickyRepeatService>();
+        services.AddSingleton<ISimulatedKeystrokesService, SimulatedKeystrokesService>();
+        services.AddSingleton<IRouteButtonMappingService, RouteButtonMappingService>();
+        services.AddSingleton<IRouteMouseButtonService, RouteMouseButtonService>();
+        services.AddSingleton<ISkipProfileService, SkipProfileService>();
+        services.AddSingleton<KeyboardSimulatorWorker, KeyboardSimulatorWorker>();
     }
 }

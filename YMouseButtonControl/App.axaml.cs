@@ -1,8 +1,16 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ReactiveUI;
 using Splat;
+using Splat.Microsoft.Extensions.DependencyInjection;
+using YMouseButtonControl.BackgroundTasks.Interfaces;
+using YMouseButtonControl.Configuration;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.ViewModels.Implementations;
 using YMouseButtonControl.ViewModels.Interfaces;
@@ -12,6 +20,9 @@ namespace YMouseButtonControl;
 
 public class App : Application
 {
+    public IServiceProvider? Container { get; private set; }
+    private IBackgroundTasksRunner? _backgroundTasksRunner;
+
     public App()
     {
         DataContext = new AppViewModel();
@@ -19,14 +30,44 @@ public class App : Application
 
     public override void Initialize()
     {
+        Init();
+        _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
         AvaloniaXamlLoader.Load(this);
+    }
+
+    private void Init()
+    {
+        var dataAccessConfig = new DataAccessConfiguration { UseInMemoryDatabase = false };
+        var host = Host.CreateDefaultBuilder()
+            .ConfigureServices(services =>
+            {
+                services.UseMicrosoftDependencyResolver();
+                var resolver = Locator.CurrentMutable;
+                resolver.InitializeSplat();
+                resolver.InitializeReactiveUI();
+
+                Bootstrapper.Register(services, dataAccessConfig);
+
+                services.AddSingleton<
+                    IActivationForViewFetcher,
+                    AvaloniaActivationForViewFetcher
+                >();
+                services.AddSingleton<IPropertyBindingHook, AutoDataTemplateBindingHook>();
+            })
+            .Build();
+        Container = host.Services;
+        Container.UseMicrosoftDependencyResolver();
+        RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = new MainWindow
+            {
+                DataContext = Container?.GetRequiredService<IMainWindowViewModel>()
+            };
             // Prevent the application from exiting and hide the window when the user presses the X button
             desktop.MainWindow.Closing += (s, e) =>
             {
@@ -37,6 +78,4 @@ public class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    private static T GetRequiredService<T>() => Locator.Current.GetRequiredService<T>();
 }

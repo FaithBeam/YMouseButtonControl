@@ -1,4 +1,4 @@
-using Splat;
+using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
 
 namespace YMouseButtonControl.DependencyInjection;
@@ -6,16 +6,15 @@ namespace YMouseButtonControl.DependencyInjection;
 public static class Bootstrapper
 {
     public static void Register(
-        IMutableDependencyResolver services,
-        IReadonlyDependencyResolver resolver,
+        IServiceCollection services,
         DataAccessConfiguration dataAccessConfig
     )
     {
-        EnvironmentServicesBootstrapper.RegisterEnvironmentServices(services, resolver);
-        ServicesBootstrapper.RegisterServices(services, resolver);
-        ConfigurationBootstrapper.RegisterConfiguration(services, resolver, dataAccessConfig);
-        DataAccessBootstrapper.RegisterDataAccess(services, resolver);
-        KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services, resolver);
-        ViewModelsBootstrapper.RegisterViewModels(services, resolver);
+        EnvironmentServicesBootstrapper.RegisterEnvironmentServices(services);
+        ServicesBootstrapper.RegisterServices(services);
+        ConfigurationBootstrapper.RegisterConfiguration(services, dataAccessConfig);
+        DataAccessBootstrapper.RegisterDataAccess(services);
+        KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services);
+        ViewModelsBootstrapper.RegisterViewModels(services);
     }
 }
