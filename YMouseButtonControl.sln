@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.DataAcc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.DataAccess.Models", "YMouseButtonControl.DataAccess.Models\YMouseButtonControl.DataAccess.Models.csproj", "{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Services.Environment", "YMouseButtonControl.Services.Environment\YMouseButtonControl.Services.Environment.csproj", "{32D05160-3659-4D61-AC11-02E2744BD8E1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Services.Abstractions", "YMouseButtonControl.Services.Abstractions\YMouseButtonControl.Services.Abstractions.csproj", "{882D9A56-CE0F-4D8B-926D-ABCAC7082EB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YMouseButtonControl.Avalonia", "YMouseButtonControl.Avalonia\YMouseButtonControl.Avalonia.csproj", "{C80D75A0-2740-4E14-8463-515B26D93EDB}"
@@ -63,10 +61,6 @@ Global
 		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44868CBC-59D8-4484-93AD-DF71D9D7F4F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32D05160-3659-4D61-AC11-02E2744BD8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32D05160-3659-4D61-AC11-02E2744BD8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32D05160-3659-4D61-AC11-02E2744BD8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32D05160-3659-4D61-AC11-02E2744BD8E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{882D9A56-CE0F-4D8B-926D-ABCAC7082EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{882D9A56-CE0F-4D8B-926D-ABCAC7082EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{882D9A56-CE0F-4D8B-926D-ABCAC7082EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU

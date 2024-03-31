@@ -62,7 +62,6 @@
       <ProjectReference Include="..\YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.ViewModels\YMouseButtonControl.ViewModels.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.Services.Environment\YMouseButtonControl.Services.Environment.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="App.axaml.cs">

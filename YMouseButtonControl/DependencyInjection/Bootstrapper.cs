@@ -10,7 +10,6 @@ public static class Bootstrapper
         DataAccessConfiguration dataAccessConfig
     )
     {
-        EnvironmentServicesBootstrapper.RegisterEnvironmentServices(services);
         ServicesBootstrapper.RegisterServices(services);
         ConfigurationBootstrapper.RegisterConfiguration(services, dataAccessConfig);
         DataAccessBootstrapper.RegisterDataAccess(services);
