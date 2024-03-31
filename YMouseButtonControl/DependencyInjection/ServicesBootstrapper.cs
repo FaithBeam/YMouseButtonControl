@@ -46,7 +46,7 @@ public static class ServicesBootstrapper
             ICurrentWindowService,
             Services.Windows.Implementations.CurrentWindowService
         >();
-        services.AddSingleton<
+        services.AddTransient<
             IBackgroundTasksRunner,
             Services.Windows.Implementations.BackgroundTasksRunner
         >();

@@ -12,23 +12,23 @@ public static class KeyboardAndMouseBootstrapper
     public static void RegisterKeyboardAndMouse(IServiceCollection services)
     {
         services.AddSingleton<IGlobalHook, SimpleGlobalHook>();
-        services.AddSingleton<IMouseListener, MouseListener>();
-        services.AddSingleton<IParseKeysService, ParseKeysService>();
-        services.AddSingleton<IEventSimulator, EventSimulator>();
-        services.AddSingleton<ISimulateKeyService, SimulateKeyService>();
-        services.AddSingleton<IStickyHoldService, StickyHoldService>();
-        services.AddSingleton<IAsMouseButtonPressedService, AsMouseButtonPressedService>();
-        services.AddSingleton<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>();
-        services.AddSingleton<
+        services.AddTransient<IMouseListener, MouseListener>();
+        services.AddTransient<IParseKeysService, ParseKeysService>();
+        services.AddTransient<IEventSimulator, EventSimulator>();
+        services.AddTransient<ISimulateKeyService, SimulateKeyService>();
+        services.AddTransient<IStickyHoldService, StickyHoldService>();
+        services.AddTransient<IAsMouseButtonPressedService, AsMouseButtonPressedService>();
+        services.AddTransient<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>();
+        services.AddTransient<
             IDuringMousePressAndReleaseService,
             DuringMousePressAndReleaseService
         >();
-        services.AddSingleton<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
-        services.AddSingleton<IStickyRepeatService, StickyRepeatService>();
-        services.AddSingleton<ISimulatedKeystrokesService, SimulatedKeystrokesService>();
-        services.AddSingleton<IRouteButtonMappingService, RouteButtonMappingService>();
-        services.AddSingleton<IRouteMouseButtonService, RouteMouseButtonService>();
-        services.AddSingleton<ISkipProfileService, SkipProfileService>();
-        services.AddSingleton<KeyboardSimulatorWorker, KeyboardSimulatorWorker>();
+        services.AddTransient<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
+        services.AddTransient<IStickyRepeatService, StickyRepeatService>();
+        services.AddTransient<ISimulatedKeystrokesService, SimulatedKeystrokesService>();
+        services.AddTransient<IRouteButtonMappingService, RouteButtonMappingService>();
+        services.AddTransient<IRouteMouseButtonService, RouteMouseButtonService>();
+        services.AddTransient<ISkipProfileService, SkipProfileService>();
+        services.AddTransient<KeyboardSimulatorWorker>();
     }
 }
