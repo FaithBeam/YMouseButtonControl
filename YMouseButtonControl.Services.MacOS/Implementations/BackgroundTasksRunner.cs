@@ -7,7 +7,6 @@ namespace YMouseButtonControl.Services.MacOS.Implementations;
 public class BackgroundTasksRunner : IBackgroundTasksRunner
 {
     private readonly IMouseListener _mouseListener;
-
     private readonly KeyboardSimulatorWorker _keyboardSimulatorWorker;
 
     public BackgroundTasksRunner(
@@ -17,17 +16,13 @@ public class BackgroundTasksRunner : IBackgroundTasksRunner
     {
         _mouseListener = mouseListener;
         _keyboardSimulatorWorker = keyboardSimulatorWorker;
-    }
-
-    public void Start()
-    {
         _mouseListener.Run();
         _keyboardSimulatorWorker.Run();
     }
 
-    public void Stop()
+    public void Dispose()
     {
-        _keyboardSimulatorWorker?.Dispose();
-        _mouseListener?.Dispose();
+        _mouseListener.Dispose();
+        _keyboardSimulatorWorker.Dispose();
     }
 }

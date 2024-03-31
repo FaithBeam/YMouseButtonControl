@@ -77,7 +77,7 @@ public static class ServicesBootstrapper
                 new Services.Windows.Implementations.BackgroundTasksRunner(
                     resolver.GetRequiredService<IMouseListener>(),
                     resolver.GetRequiredService<KeyboardSimulatorWorker>(),
-                    resolver.GetRequiredService<ILowLevelMouseHookService>(),
+                    // resolver.GetRequiredService<ILowLevelMouseHookService>(),
                     resolver.GetRequiredService<ICurrentWindowService>()
                 )
         );

@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -12,6 +13,7 @@ public class KeyboardSimulatorWorker : IDisposable
     private readonly IProfilesService _profilesService;
     private readonly IRouteMouseButtonService _routeMouseButtonService;
     private readonly ISkipProfileService _skipProfileService;
+    private readonly ILogger _log = Log.Logger.ForContext<KeyboardSimulatorWorker>();
 
     public KeyboardSimulatorWorker(
         IProfilesService profilesService,
@@ -56,9 +58,11 @@ public class KeyboardSimulatorWorker : IDisposable
         {
             if (_skipProfileService.ShouldSkipProfile(p))
             {
+                _log.Information("Skipped {Profile}", p.Name);
                 continue;
             }
 
+            _log.Information("{Profile}, Route {Button}", p.Name, e.Button);
             _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Pressed);
         }
     }

@@ -1,22 +1,33 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
+using Serilog;
 using SharpHook;
 using SharpHook.Native;
+using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Enums;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 using MouseButton = YMouseButtonControl.DataAccess.Models.Enums.MouseButton;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
+/// <summary>
+/// Wrapper around sharphook for listening to mouse events
+/// Converts mouse events to NewMouseHookEventArgs
+/// </summary>
 public class MouseListener : IMouseListener
 {
     private readonly IGlobalHook _hook;
+    private readonly IProfilesService _profilesService;
+    private readonly ILogger _log = Log.Logger.ForContext<MouseListener>();
     private Thread? _thread;
 
-    public MouseListener(IGlobalHook hook)
+    public MouseListener(IGlobalHook hook, IProfilesService profilesService)
     {
         _hook = hook;
+        _profilesService = profilesService;
 
         SubscribeToEvents();
     }
@@ -29,6 +40,7 @@ public class MouseListener : IMouseListener
     {
         _thread = new Thread(() =>
         {
+            _log.Information("Starting mouse lister");
             _hook.Run();
         });
         _thread.Start();
@@ -61,13 +73,25 @@ public class MouseListener : IMouseListener
 
     private void ConvertMousePressedEvent(object? sender, MouseHookEventArgs e)
     {
+        _log.Information("Translate press {Button}", e.Data.Button);
         var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button - 1));
+        if (ShouldSuppressEvent(e))
+        {
+            _log.Information("Suppressing {Button}: Press", e.Data.Button);
+            e.SuppressEvent = true;
+        }
         OnMousePressed(args);
     }
 
     private void ConvertMouseReleasedEvent(object? sender, MouseHookEventArgs e)
     {
+        _log.Information("Translate release {Button}", e.Data.Button);
         var args = new NewMouseHookEventArgs((MouseButton)(e.Data.Button - 1));
+        if (ShouldSuppressEvent(e))
+        {
+            _log.Information("Suppressing {Button}: Release", e.Data.Button);
+            e.SuppressEvent = true;
+        }
         OnMouseReleased(args);
     }
 
@@ -88,6 +112,48 @@ public class MouseListener : IMouseListener
         var handler = OnMouseWheelEventHandler;
         handler?.Invoke(this, e);
     }
+
+    private bool ShouldSuppressEvent(MouseHookEventArgs e) =>
+        (MouseButton)(e.Data.Button - 1) switch
+        {
+            MouseButton.MouseButton1
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseButton1.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseButton2
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseButton2.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseButton3
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseButton3.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseButton4
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseButton4.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseButton5
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseButton5.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseWheelUp
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseWheelUp.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseWheelDown
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseWheelDown.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseWheelLeft
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseWheelLeft.MouseButtonDisabled: true }
+                ),
+            MouseButton.MouseWheelRight
+                => _profilesService.Profiles.Any(p =>
+                    p is { Checked: true, MouseWheelRight.MouseButtonDisabled: true }
+                ),
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     private void SubscribeToEvents()
     {

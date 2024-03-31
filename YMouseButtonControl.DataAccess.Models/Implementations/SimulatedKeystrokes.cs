@@ -16,6 +16,10 @@ public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<Si
 
     public bool CanRaiseDialog { get; } = true;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
+
+    /// <summary>
+    /// Prevent the original mouse button from going through (not YMouseButtonControl's simulated keystroke)
+    /// </summary>
     public bool MouseButtonDisabled { get; set; } = true;
 
     public override string ToString()

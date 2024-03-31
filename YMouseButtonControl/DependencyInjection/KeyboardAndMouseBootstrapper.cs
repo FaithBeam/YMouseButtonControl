@@ -17,7 +17,11 @@ public static class KeyboardAndMouseBootstrapper
     )
     {
         services.RegisterLazySingleton<IMouseListener>(
-            () => new MouseListener(new TaskPoolGlobalHook())
+            () =>
+                new MouseListener(
+                    new SimpleGlobalHook(),
+                    resolver.GetRequiredService<IProfilesService>()
+                )
         );
         services.RegisterLazySingleton<IParseKeysService>(() => new ParseKeysService());
         services.RegisterLazySingleton<ISimulateKeyService>(

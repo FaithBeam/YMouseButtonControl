@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 using YMouseButtonControl.DataAccess.Models.Enums;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.Enums;
@@ -9,6 +10,7 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 public class RouteMouseButtonService : IRouteMouseButtonService
 {
     private readonly IRouteButtonMappingService _routeButtonMappingService;
+    private readonly ILogger _log = Log.Logger.ForContext<RouteMouseButtonService>();
 
     public RouteMouseButtonService(IRouteButtonMappingService routeButtonMappingService)
     {
@@ -29,6 +31,7 @@ public class RouteMouseButtonService : IRouteMouseButtonService
                 _routeButtonMappingService.Route(p.MouseButton3, state);
                 break;
             case MouseButton.MouseButton4:
+                _log.Information("Route mouse button 4, {State}", state);
                 _routeButtonMappingService.Route(p.MouseButton4, state);
                 break;
             case MouseButton.MouseButton5:

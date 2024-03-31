@@ -9,6 +9,7 @@ using System.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
+using Serilog;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -18,6 +19,9 @@ using YMouseButtonControl.Profiles.Interfaces;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
+/// <summary>
+/// This class is used to prevent the passthrough of real mouse button events depending on the profiles' mouse button event disabled/enabled setting
+/// </summary>
 [SupportedOSPlatform("windows5.1.2600")]
 public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
 {
@@ -28,6 +32,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
     private string _foregroundWindow = string.Empty;
     private Thread? _thread;
     private readonly object _lockObj = new();
+    private readonly ILogger _log = Log.Logger.ForContext<LowLevelMouseHookService>();
 
     private readonly ConcurrentDictionary<uint, bool> _buttonDisabledDict =
         new(
@@ -88,6 +93,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
                 }
             }
         });
+        _log.Information("Starting low level mouse hook");
         _thread.Start();
     }
 
@@ -191,10 +197,13 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
         }
     }
 
-    private LRESULT HandleButton(uint button, int nCode, WPARAM wParam, LPARAM lParam) =>
-        _buttonDisabledDict[button]
+    private LRESULT HandleButton(uint button, int nCode, WPARAM wParam, LPARAM lParam)
+    {
+        _log.Information("{Button}, {Disabled}", button, _buttonDisabledDict[button]);
+        return _buttonDisabledDict[button]
             ? new LRESULT(-1)
             : PInvoke.CallNextHookEx(null, nCode, wParam, lParam);
+    }
 
     private LRESULT HandleNormalButton(int nCode, WPARAM wParam, LPARAM lParam) =>
         HandleButton((uint)wParam, nCode, wParam, lParam);
@@ -221,6 +230,7 @@ public class LowLevelMouseHookService : IDisposable, ILowLevelMouseHookService
             case PInvoke.WM_RBUTTONUP:
             case PInvoke.WM_MBUTTONDOWN:
             case PInvoke.WM_MBUTTONUP:
+                _log.Information("Button event");
                 return HandleNormalButton(code, wParam, lParam);
             case PInvoke.WM_XBUTTONDOWN:
             case PInvoke.WM_XBUTTONUP:

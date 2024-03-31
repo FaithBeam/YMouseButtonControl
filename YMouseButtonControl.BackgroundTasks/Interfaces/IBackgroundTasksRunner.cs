@@ -1,7 +1,3 @@
 namespace YMouseButtonControl.BackgroundTasks.Interfaces;
 
-public interface IBackgroundTasksRunner
-{
-    void Start();
-    void Stop();
-}
+public interface IBackgroundTasksRunner : IDisposable { }
