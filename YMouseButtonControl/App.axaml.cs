@@ -74,6 +74,11 @@ public class App : Application
                 ((Window)s!).Hide();
                 e.Cancel = true;
             };
+
+            desktop.Exit += (sender, args) =>
+            {
+                _backgroundTasksRunner?.Dispose();
+            };
         }
 
         base.OnFrameworkInitializationCompleted();

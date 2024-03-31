@@ -9,12 +9,10 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 public class SimulateKeyService : ISimulateKeyService
 {
     private readonly IEventSimulator _keyboardSimulator;
-    private readonly IParseKeysService _parseKeysService;
 
-    public SimulateKeyService(IEventSimulator keyboardSimulator, IParseKeysService parseKeysService)
+    public SimulateKeyService(IEventSimulator keyboardSimulator)
     {
         _keyboardSimulator = keyboardSimulator;
-        _parseKeysService = parseKeysService;
     }
 
     public SimulateKeyboardResult SimulateKeyPress(string? key) =>
@@ -56,7 +54,7 @@ public class SimulateKeyService : ISimulateKeyService
     /// <param name="keys">Keys to be pressed</param>
     public void PressKeys(string? keys)
     {
-        foreach (var pk in _parseKeysService.ParseKeys(keys))
+        foreach (var pk in ParseKeys(keys))
         {
             SimulateKeyPress(pk.Key);
         }
@@ -69,7 +67,7 @@ public class SimulateKeyService : ISimulateKeyService
     /// <param name="keys">Keys to be released</param>
     public void ReleaseKeys(string? keys)
     {
-        var parsed = _parseKeysService.ParseKeys(keys);
+        var parsed = ParseKeys(keys);
         parsed.Reverse();
         foreach (var pk in parsed)
         {
@@ -83,7 +81,7 @@ public class SimulateKeyService : ISimulateKeyService
     /// <param name="keys"></param>
     public void TapKeys(string? keys)
     {
-        var parsed = _parseKeysService.ParseKeys(keys);
+        var parsed = ParseKeys(keys);
         var stack = new Stack<ParsedKey>();
 
         foreach (var pk in parsed)
@@ -106,5 +104,49 @@ public class SimulateKeyService : ISimulateKeyService
         {
             SimulateKeyRelease(poppedPk.Key);
         }
+    }
+
+    /// <summary>
+    /// Splits a string of characters into a list of strings. Words surrounded by {} will be added as the whole word.
+    /// For example, {shift} will be "shift" in the list.
+    /// "{SHIFT}abc" -> "shift", "a", "b", "c"
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <returns></returns>
+    private static List<ParsedKey> ParseKeys(string? keys)
+    {
+        var newKeys = new List<ParsedKey>();
+        var i = 0;
+        while (i < keys?.Length)
+        {
+            if (keys[i] == '{')
+            {
+                for (var j = i; j < keys.Length; j++)
+                {
+                    if (keys[j] != '}')
+                        continue;
+                    newKeys.Add(
+                        new ParsedKey
+                        {
+                            Key = keys.Substring(i + 1, j - i - 1).ToLower(),
+                            IsModifier = true
+                        }
+                    );
+                    i = j;
+                    break;
+                }
+
+                i += 1;
+            }
+            else
+            {
+                newKeys.Add(
+                    new ParsedKey { Key = keys[i].ToString().ToLower(), IsModifier = false }
+                );
+                i++;
+            }
+        }
+
+        return newKeys;
     }
 }

@@ -13,7 +13,6 @@ public static class KeyboardAndMouseBootstrapper
     {
         services.AddSingleton<IGlobalHook, SimpleGlobalHook>();
         services.AddTransient<IMouseListener, MouseListener>();
-        services.AddTransient<IParseKeysService, ParseKeysService>();
         services.AddTransient<IEventSimulator, EventSimulator>();
         services.AddTransient<ISimulateKeyService, SimulateKeyService>();
         services.AddTransient<IStickyHoldService, StickyHoldService>();
