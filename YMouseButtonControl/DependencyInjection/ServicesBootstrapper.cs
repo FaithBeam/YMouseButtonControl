@@ -8,8 +8,6 @@ using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Implementations;
 using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Environment.Enums;
-using YMouseButtonControl.Services.Environment.Interfaces;
 using YMouseButtonControl.Services.MacOS.Implementations;
 using YMouseButtonControl.Services.Windows.Implementations;
 
@@ -65,26 +63,14 @@ public static class ServicesBootstrapper
         services.RegisterLazySingleton<ICurrentWindowService>(
             () => new Services.Windows.Implementations.CurrentWindowService()
         );
-        services.RegisterLazySingleton<ILowLevelMouseHookService>(
-            () =>
-                new LowLevelMouseHookService(
-                    resolver.GetRequiredService<IProfilesService>(),
-                    resolver.GetRequiredService<ICurrentWindowService>()
-                )
-        );
         services.RegisterLazySingleton<IBackgroundTasksRunner>(
             () =>
                 new Services.Windows.Implementations.BackgroundTasksRunner(
                     resolver.GetRequiredService<IMouseListener>(),
                     resolver.GetRequiredService<KeyboardSimulatorWorker>(),
-                    // resolver.GetRequiredService<ILowLevelMouseHookService>(),
                     resolver.GetRequiredService<ICurrentWindowService>()
                 )
         );
-        //services.RegisterLazySingleton<IPayloadInjectorService>(() => new PayloadInjectorService(
-        //    resolver.GetRequiredService<IProfilesService>(),
-        //    resolver.GetRequiredService<IProcessMonitorService>()
-        //));
     }
 
     private static void RegisterMacOsServices(

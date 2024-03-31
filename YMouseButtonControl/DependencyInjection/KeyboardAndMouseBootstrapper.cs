@@ -60,8 +60,6 @@ public static class KeyboardAndMouseBootstrapper
         services.RegisterLazySingleton<ISimulatedKeystrokesService>(
             () =>
                 new SimulatedKeystrokesService(
-                    // resolver.GetRequiredService<ISimulateKeyService>(),
-                    // resolver.GetRequiredService<IParseKeysService>(),
                     resolver.GetRequiredService<IStickyHoldService>(),
                     resolver.GetRequiredService<IAsMouseButtonPressedService>(),
                     resolver.GetRequiredService<IAsMouseButtonReleasedService>(),
