@@ -17,7 +17,7 @@
             <Grid RowDefinitions="*,*,*,*,*,*,*,*,*,*">
                 <Grid ColumnDefinitions="Auto,*" Margin="5">
                     <Label Content="Layer Name" />
-                    <TextBox Grid.Column="1" Margin="40 0 0 0" Text="Layer 1 (Default)" />
+                    <TextBox Grid.Column="1" Width="275" Text="Layer 1 (Default)" />
                 </Grid>
                 <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,Auto" Margin="5">
                     <Label Content="Left Button" />
