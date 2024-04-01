@@ -36,10 +36,12 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     private int _mwlIndex;
     private int _mwrIndex;
 
-    private static readonly IBrush Highlight = Brushes.Yellow;
+    private static readonly IBrush HighlightLight = Brushes.Yellow;
+    private static readonly IBrush HighlightDark = Brush.Parse("#3700b3");
     private static readonly IBrush BackgroundDark = Brushes.Black;
     private static readonly IBrush BackgroundLight = Brushes.White;
-    private IBrush _curBackground;
+    private readonly IBrush _curBackground;
+    private readonly IBrush _curHighlight;
 
     private IBrush _mouseButton1BackgroundColor;
     private IBrush _mouseButton2BackgroundColor;
@@ -160,6 +162,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     )
     {
         _curBackground = GetCurrentThemeBackground();
+        _curHighlight = GetCurrentThemeHighlight();
         _mouseButton1BackgroundColor = _curBackground;
         _mouseButton2BackgroundColor = _curBackground;
         _mouseButton3BackgroundColor = _curBackground;
@@ -524,6 +527,21 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         throw new Exception("Unknown theme");
     }
 
+    private static IBrush GetCurrentThemeHighlight()
+    {
+        if (Application.Current?.ActualThemeVariant == ThemeVariant.Light)
+        {
+            return HighlightLight;
+        }
+
+        if (Application.Current?.ActualThemeVariant == ThemeVariant.Dark)
+        {
+            return HighlightDark;
+        }
+
+        throw new Exception("Unknown theme");
+    }
+
     public ReactiveCommand<Unit, Unit> MouseButton1ComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseButton2ComboSettingCommand { get; }
     public ReactiveCommand<Unit, Unit> MouseButton3ComboSettingCommand { get; }
@@ -686,7 +704,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         switch (e.Direction)
         {
             case WheelScrollDirection.VerticalUp:
-                WheelUpBackgroundColor = Highlight;
+                WheelUpBackgroundColor = _curHighlight;
                 if (!_wheelUpTimer.Enabled)
                 {
                     _wheelUpTimer.Start();
@@ -694,7 +712,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
                 break;
             case WheelScrollDirection.VerticalDown:
-                WheelDownBackgroundColor = Highlight;
+                WheelDownBackgroundColor = _curHighlight;
                 if (!_wheelDownTimer.Enabled)
                 {
                     _wheelDownTimer.Start();
@@ -702,7 +720,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
                 break;
             case WheelScrollDirection.HorizontalLeft:
-                WheelLeftBackgroundColor = Highlight;
+                WheelLeftBackgroundColor = _curHighlight;
                 if (!_wheelLeftTimer.Enabled)
                 {
                     _wheelLeftTimer.Start();
@@ -710,7 +728,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
                 break;
             case WheelScrollDirection.HorizontalRight:
-                WheelRightBackgroundColor = Highlight;
+                WheelRightBackgroundColor = _curHighlight;
                 if (!_wheelRightTimer.Enabled)
                 {
                     _wheelRightTimer.Start();
@@ -759,19 +777,19 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         switch (e.Button)
         {
             case MouseButton.MouseButton1:
-                MouseButton1BackgroundColor = Highlight;
+                MouseButton1BackgroundColor = _curHighlight;
                 break;
             case MouseButton.MouseButton2:
-                MouseButton2BackgroundColor = Highlight;
+                MouseButton2BackgroundColor = _curHighlight;
                 break;
             case MouseButton.MouseButton3:
-                MouseButton3BackgroundColor = Highlight;
+                MouseButton3BackgroundColor = _curHighlight;
                 break;
             case MouseButton.MouseButton4:
-                MouseButton4BackgroundColor = Highlight;
+                MouseButton4BackgroundColor = _curHighlight;
                 break;
             case MouseButton.MouseButton5:
-                MouseButton5BackgroundColor = Highlight;
+                MouseButton5BackgroundColor = _curHighlight;
                 break;
             case MouseButton.MouseWheelUp:
                 break;
