@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models.Enums;
-using YMouseButtonControl.DataAccess.Models.Factories;
 using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
@@ -607,91 +607,91 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     }
 
     public ObservableCollection<IButtonMapping> MouseButton1Combo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseButton2Combo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseButton3Combo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseButton4Combo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseButton5Combo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseWheelUpCombo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseWheelDownCombo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseWheelLeftCombo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     public ObservableCollection<IButtonMapping> MouseWheelRightCombo { get; set; } =
-        new(ButtonMappingFactory.GetButtonMappings());
+        new(GetButtonMappings());
 
     private void OnSelectedCurrentProfileChanged(Profile newProfile)
     {
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseButton1Combo[mapping.Index] = mapping;
         }
         MouseButton1Combo[newProfile.MouseButton1.Index] = newProfile.MouseButton1;
         Mb1Index = newProfile.MouseButton1.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseButton2Combo[mapping.Index] = mapping;
         }
         MouseButton2Combo[newProfile.MouseButton2.Index] = newProfile.MouseButton2;
         Mb2Index = newProfile.MouseButton2.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseButton3Combo[mapping.Index] = mapping;
         }
         MouseButton3Combo[newProfile.MouseButton3.Index] = newProfile.MouseButton3;
         Mb3Index = newProfile.MouseButton3.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseButton4Combo[mapping.Index] = mapping;
         }
         MouseButton4Combo[newProfile.MouseButton4.Index] = newProfile.MouseButton4;
         Mb4Index = newProfile.MouseButton4.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseButton5Combo[mapping.Index] = mapping;
         }
         MouseButton5Combo[newProfile.MouseButton5.Index] = newProfile.MouseButton5;
         Mb5Index = newProfile.MouseButton5.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseWheelUpCombo[mapping.Index] = mapping;
         }
         MouseWheelUpCombo[newProfile.MouseWheelUp.Index] = newProfile.MouseWheelUp;
         MwuIndex = newProfile.MouseWheelUp.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseWheelDownCombo[mapping.Index] = mapping;
         }
         MouseWheelDownCombo[newProfile.MouseWheelDown.Index] = newProfile.MouseWheelDown;
         MwdIndex = newProfile.MouseWheelDown.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseWheelLeftCombo[mapping.Index] = mapping;
         }
         MouseWheelLeftCombo[newProfile.MouseWheelLeft.Index] = newProfile.MouseWheelLeft;
         MwlIndex = newProfile.MouseWheelLeft.Index;
 
-        foreach (var mapping in ButtonMappingFactory.GetButtonMappings())
+        foreach (var mapping in GetButtonMappings())
         {
             MouseWheelRightCombo[mapping.Index] = mapping;
         }
@@ -803,4 +803,19 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 throw new ArgumentOutOfRangeException();
         }
     }
+
+    private static IEnumerable<IButtonMapping> GetButtonMappings() =>
+        ButtonMappingDictionary.Select(x => x.Value());
+
+    private static readonly Dictionary<
+        ButtonMappings,
+        Func<IButtonMapping>
+    > ButtonMappingDictionary =
+        new()
+        {
+            { ButtonMappings.Nothing, () => new NothingMapping() },
+            { ButtonMappings.Disabled, () => new DisabledMapping() },
+            { ButtonMappings.SimulatedKeystrokes, () => new SimulatedKeystrokes() },
+            { ButtonMappings.RightClick, () => new RightClick() },
+        };
 }

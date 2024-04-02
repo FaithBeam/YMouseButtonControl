@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using Avalonia.Collections;
 using ReactiveUI;
-using YMouseButtonControl.DataAccess.Models.Factories;
+using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.ViewModels.Models;
 
@@ -78,7 +79,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     }
 
     public AvaloniaList<ISimulatedKeystrokesType> SimulatedKeystrokesTypes { get; set; } =
-        new(SimulatedKeystrokeTypesMappingFactory.GetSimulatedKeystrokesTypes());
+        new(GetSimulatedKeystrokesTypes());
 
     public int SimulatedKeystrokesIndex
     {
@@ -236,4 +237,20 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         get => _caretIndex;
         set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
     }
+
+    private static readonly List<Func<ISimulatedKeystrokesType>> SimulatedKeystrokeTypesList =
+    [
+        () => new MouseButtonPressedActionType(),
+        () => new MouseButtonReleasedActionType(),
+        () => new DuringMouseActionType(),
+        () => new InAnotherThreadPressedActionType(),
+        () => new InAnotherThreadReleasedActionType(),
+        () => new RepeatedlyWhileButtonDownActionType(),
+        () => new StickyRepeatActionType(),
+        () => new StickyHoldActionType(),
+        () => new AsMousePressedAndReleasedActionType()
+    ];
+
+    public static IEnumerable<ISimulatedKeystrokesType> GetSimulatedKeystrokesTypes() =>
+        SimulatedKeystrokeTypesList.Select(x => x());
 }
