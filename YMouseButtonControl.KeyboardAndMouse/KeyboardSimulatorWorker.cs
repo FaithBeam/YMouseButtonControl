@@ -1,32 +1,31 @@
 ﻿using System;
 using Serilog;
+using YMouseButtonControl.DataAccess.Models.Enums;
+using YMouseButtonControl.DataAccess.Models.Implementations;
+using YMouseButtonControl.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
+using YMouseButtonControl.DataAccess.Models.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.Enums;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.Profiles.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.KeyboardAndMouse;
 
-public class KeyboardSimulatorWorker : IDisposable
+public class KeyboardSimulatorWorker(
+    IProfilesService profilesService,
+    IMouseListener mouseListener,
+    ISkipProfileService skipProfileService,
+    IAsMouseButtonPressedService asMouseButtonPressedService,
+    IAsMouseButtonReleasedService asMouseButtonReleasedService,
+    IDuringMousePressAndReleaseService duringMousePressAndReleaseService,
+    IRepeatedWhileButtonDownService repeatedWhileButtonDownService,
+    IStickyRepeatService stickyRepeatService,
+    IStickyHoldService stickyHoldService,
+    IRightClick rightClick
+) : IDisposable
 {
-    private readonly IMouseListener _mouseListener;
-    private readonly IProfilesService _profilesService;
-    private readonly IRouteMouseButtonService _routeMouseButtonService;
-    private readonly ISkipProfileService _skipProfileService;
     private readonly ILogger _log = Log.Logger.ForContext<KeyboardSimulatorWorker>();
-
-    public KeyboardSimulatorWorker(
-        IProfilesService profilesService,
-        IMouseListener mouseListener,
-        IRouteMouseButtonService routeMouseButtonService,
-        ISkipProfileService skipProfileService
-    )
-    {
-        _profilesService = profilesService;
-        _mouseListener = mouseListener;
-        _routeMouseButtonService = routeMouseButtonService;
-        _skipProfileService = skipProfileService;
-    }
 
     public void Run()
     {
@@ -40,43 +39,117 @@ public class KeyboardSimulatorWorker : IDisposable
 
     private void SubscribeToEvents()
     {
-        _mouseListener.OnMousePressedEventHandler += OnMousePressed;
-        _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
-        _mouseListener.OnMouseWheelEventHandler += OnMouseWheel;
+        mouseListener.OnMousePressedEventHandler += OnMousePressed;
+        mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
+        mouseListener.OnMouseWheelEventHandler += OnMouseWheel;
     }
 
     private void UnsubscribeFromEvents()
     {
-        _mouseListener.OnMousePressedEventHandler -= OnMousePressed;
-        _mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
-        _mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
+        mouseListener.OnMousePressedEventHandler -= OnMousePressed;
+        mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
+        mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
     }
 
     private void OnMousePressed(object? sender, NewMouseHookEventArgs e)
     {
-        foreach (var p in _profilesService.Profiles)
+        foreach (var p in profilesService.Profiles)
         {
-            if (_skipProfileService.ShouldSkipProfile(p))
+            if (skipProfileService.ShouldSkipProfile(p))
             {
                 _log.Information("Skipped {Profile}", p.Name);
                 continue;
             }
 
             _log.Information("{Profile}, Route {Button}", p.Name, e.Button);
-            _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Pressed);
+            RouteMouseButton(e.Button, p, MouseButtonState.Pressed);
         }
     }
 
     private void OnMouseReleased(object? sender, NewMouseHookEventArgs e)
     {
-        foreach (var p in _profilesService.Profiles)
+        foreach (var p in profilesService.Profiles)
         {
-            if (_skipProfileService.ShouldSkipProfile(p))
+            if (skipProfileService.ShouldSkipProfile(p))
             {
                 continue;
             }
 
-            _routeMouseButtonService.Route(e.Button, p, MouseButtonState.Released);
+            RouteMouseButton(e.Button, p, MouseButtonState.Released);
+        }
+    }
+
+    private void RouteMouseButton(YMouseButton yMouseButton, Profile p, MouseButtonState state)
+    {
+        switch (yMouseButton)
+        {
+            case YMouseButton.MouseButton1:
+                RouteButtonMapping(p.MouseButton1, state);
+                break;
+            case YMouseButton.MouseButton2:
+                RouteButtonMapping(p.MouseButton2, state);
+                break;
+            case YMouseButton.MouseButton3:
+                RouteButtonMapping(p.MouseButton3, state);
+                break;
+            case YMouseButton.MouseButton4:
+                RouteButtonMapping(p.MouseButton4, state);
+                break;
+            case YMouseButton.MouseButton5:
+                RouteButtonMapping(p.MouseButton5, state);
+                break;
+            case YMouseButton.MouseWheelUp:
+                RouteButtonMapping(p.MouseWheelUp, state);
+                break;
+            case YMouseButton.MouseWheelDown:
+                RouteButtonMapping(p.MouseWheelDown, state);
+                break;
+            case YMouseButton.MouseWheelLeft:
+                RouteButtonMapping(p.MouseWheelLeft, state);
+                break;
+            case YMouseButton.MouseWheelRight:
+                RouteButtonMapping(p.MouseWheelRight, state);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private void RouteButtonMapping(IButtonMapping mapping, MouseButtonState state)
+    {
+        switch (mapping)
+        {
+            case SimulatedKeystrokes:
+                RouteSimulatedKeystrokesType(mapping, state);
+                break;
+            case RightClick:
+                rightClick.SimulateRightClick(state);
+                break;
+        }
+    }
+
+    private void RouteSimulatedKeystrokesType(IButtonMapping buttonMapping, MouseButtonState state)
+    {
+        switch (buttonMapping.SimulatedKeystrokesType)
+        {
+            case MouseButtonPressedActionType:
+                asMouseButtonPressedService.AsMouseButtonPressed(buttonMapping, state);
+                break;
+            case MouseButtonReleasedActionType:
+                asMouseButtonReleasedService.AsMouseButtonReleased(buttonMapping, state);
+                break;
+            case DuringMouseActionType:
+                duringMousePressAndReleaseService.DuringMousePressAndRelease(buttonMapping, state);
+                break;
+            case RepeatedlyWhileButtonDownActionType:
+                repeatedWhileButtonDownService.RepeatWhileDown(buttonMapping, state);
+                break;
+            case StickyRepeatActionType:
+                stickyRepeatService.StickyRepeat(buttonMapping, state);
+                break;
+            case StickyHoldActionType:
+                stickyHoldService.StickyHold(buttonMapping, state);
+                break;
         }
     }
 

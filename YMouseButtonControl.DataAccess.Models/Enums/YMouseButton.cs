@@ -1,8 +1,8 @@
 ﻿namespace YMouseButtonControl.DataAccess.Models.Enums;
 
-public enum MouseButton
+public enum YMouseButton : ushort
 {
-    MouseButton1,
+    MouseButton1 = 1,
     MouseButton2,
     MouseButton3,
     MouseButton4,

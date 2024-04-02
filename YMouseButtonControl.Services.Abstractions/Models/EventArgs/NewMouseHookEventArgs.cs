@@ -4,9 +4,9 @@ namespace YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
 public class NewMouseHookEventArgs : System.EventArgs
 {
-    public MouseButton Button { get; }
+    public YMouseButton Button { get; }
 
-    public NewMouseHookEventArgs(MouseButton button)
+    public NewMouseHookEventArgs(YMouseButton button)
     {
         Button = button;
     }

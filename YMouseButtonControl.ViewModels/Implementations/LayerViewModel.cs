@@ -744,28 +744,28 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     {
         switch (e.Button)
         {
-            case MouseButton.MouseButton1:
+            case YMouseButton.MouseButton1:
                 MouseButton1BackgroundColor = _curBackground;
                 break;
-            case MouseButton.MouseButton2:
+            case YMouseButton.MouseButton2:
                 MouseButton2BackgroundColor = _curBackground;
                 break;
-            case MouseButton.MouseButton3:
+            case YMouseButton.MouseButton3:
                 MouseButton3BackgroundColor = _curBackground;
                 break;
-            case MouseButton.MouseButton4:
+            case YMouseButton.MouseButton4:
                 MouseButton4BackgroundColor = _curBackground;
                 break;
-            case MouseButton.MouseButton5:
+            case YMouseButton.MouseButton5:
                 MouseButton5BackgroundColor = _curBackground;
                 break;
-            case MouseButton.MouseWheelUp:
+            case YMouseButton.MouseWheelUp:
                 break;
-            case MouseButton.MouseWheelDown:
+            case YMouseButton.MouseWheelDown:
                 break;
-            case MouseButton.MouseWheelLeft:
+            case YMouseButton.MouseWheelLeft:
                 break;
-            case MouseButton.MouseWheelRight:
+            case YMouseButton.MouseWheelRight:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -776,28 +776,28 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
     {
         switch (e.Button)
         {
-            case MouseButton.MouseButton1:
+            case YMouseButton.MouseButton1:
                 MouseButton1BackgroundColor = _curHighlight;
                 break;
-            case MouseButton.MouseButton2:
+            case YMouseButton.MouseButton2:
                 MouseButton2BackgroundColor = _curHighlight;
                 break;
-            case MouseButton.MouseButton3:
+            case YMouseButton.MouseButton3:
                 MouseButton3BackgroundColor = _curHighlight;
                 break;
-            case MouseButton.MouseButton4:
+            case YMouseButton.MouseButton4:
                 MouseButton4BackgroundColor = _curHighlight;
                 break;
-            case MouseButton.MouseButton5:
+            case YMouseButton.MouseButton5:
                 MouseButton5BackgroundColor = _curHighlight;
                 break;
-            case MouseButton.MouseWheelUp:
+            case YMouseButton.MouseWheelUp:
                 break;
-            case MouseButton.MouseWheelDown:
+            case YMouseButton.MouseWheelDown:
                 break;
-            case MouseButton.MouseWheelLeft:
+            case YMouseButton.MouseWheelLeft:
                 break;
-            case MouseButton.MouseWheelRight:
+            case YMouseButton.MouseWheelRight:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

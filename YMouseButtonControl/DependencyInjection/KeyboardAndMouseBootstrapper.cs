@@ -4,6 +4,7 @@ using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
+using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedMousePressTypes;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -24,9 +25,8 @@ public static class KeyboardAndMouseBootstrapper
         >();
         services.AddTransient<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
         services.AddTransient<IStickyRepeatService, StickyRepeatService>();
-        services.AddTransient<ISimulatedKeystrokesService, SimulatedKeystrokesService>();
-        services.AddTransient<IRouteButtonMappingService, RouteButtonMappingService>();
-        services.AddTransient<IRouteMouseButtonService, RouteMouseButtonService>();
+        services.AddTransient<ISimulateMouseService, SimulateMouseService>();
+        services.AddTransient<IRightClick, RightClick>();
         services.AddTransient<ISkipProfileService, SkipProfileService>();
         services.AddTransient<KeyboardSimulatorWorker>();
     }

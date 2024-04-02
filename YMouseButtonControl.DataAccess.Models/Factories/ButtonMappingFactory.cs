@@ -15,6 +15,7 @@ public static class ButtonMappingFactory
             { ButtonMappings.Nothing, () => new NothingMapping() },
             { ButtonMappings.Disabled, () => new DisabledMapping() },
             { ButtonMappings.SimulatedKeystrokes, () => new SimulatedKeystrokes() },
+            { ButtonMappings.RightClick, () => new RightClick() },
         };
 
     public static IEnumerable<IButtonMapping> GetButtonMappings()
@@ -29,9 +30,9 @@ public static class ButtonMappingFactory
 
     public static IButtonMapping Create(ButtonMappings key)
     {
-        if (ButtonMappingDictionary.ContainsKey(key))
+        if (ButtonMappingDictionary.TryGetValue(key, out var value))
         {
-            return ButtonMappingDictionary[key]();
+            return value();
         }
 
         throw new ArgumentException($"Not a valid key: {key}");
