@@ -43,9 +43,9 @@ public static class ConfigurationBootstrapper
         var connectionString =
             configuration["DataAccess:ConnectionString"] ?? throw new Exception("Connection empty");
 
-        var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
         var dbDirectory =
-            Path.GetDirectoryName(assemblyLocation) ?? throw new InvalidOperationException();
+            Path.GetDirectoryName(AppContext.BaseDirectory)
+            ?? throw new InvalidOperationException();
         if (!Directory.Exists(dbDirectory))
         {
             Directory.CreateDirectory(dbDirectory);
