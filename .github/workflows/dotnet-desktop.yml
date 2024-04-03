@@ -12,7 +12,8 @@ jobs:
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     env:
-      Solution_Name: YMouseButtonControl.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      SOLUTION_NAME: YMouseButtonControl.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      PROJECT_NAME: YMouseButtonControl/YMouseButtonControl.csproj
 
     steps:
     - name: Checkout
@@ -31,11 +32,11 @@ jobs:
       run: dotnet test
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-    # - name: Restore the application
-    #   run: dotnet restore
+    - name: Restore the application
+      run: dotnet restore
 
     - name: Publish
-      run: dotnet publish $env:Solution_Name -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o bin
+      run: dotnet publish $env:PROJECT_NAME -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o bin
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
