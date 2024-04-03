@@ -73,6 +73,12 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
                     switch (eventType)
                     {
                         case PInvoke.EVENT_SYSTEM_FOREGROUND:
+                            var activeWindowHWnd = PInvoke.GetActiveWindow();
+                            if (activeWindowHWnd.IsNull)
+                            {
+                                return;
+                            }
+
                             uint pId;
                             var res = PInvoke.GetWindowThreadProcessId(hWnd, &pId);
                             if (res == 0)
@@ -137,7 +143,7 @@ public class CurrentWindowService : ReactiveObject, IDisposable, ICurrentWindowS
 
                                 ForegroundWindow = new string(pText);
                                 _log.Information(
-                                    "Unminimized window {ForegroundWindow}",
+                                    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA {ForegroundWindow}",
                                     ForegroundWindow
                                 );
                             }

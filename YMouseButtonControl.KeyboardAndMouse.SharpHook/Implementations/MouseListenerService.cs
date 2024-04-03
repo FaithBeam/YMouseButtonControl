@@ -5,7 +5,6 @@ using Serilog;
 using SharpHook;
 using SharpHook.Native;
 using YMouseButtonControl.DataAccess.Models.Enums;
-using YMouseButtonControl.DataAccess.Models.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Profiles.Interfaces;
@@ -81,7 +80,7 @@ public class MouseListener : IMouseListener
     private void ConvertMousePressedEvent(object? sender, MouseHookEventArgs e)
     {
         _log.Information("Translate press {Button}", e.Data.Button);
-        var args = new NewMouseHookEventArgs((YMouseButton)e.Data.Button);
+        var args = new NewMouseHookEventArgs((YMouseButton)e.Data.Button, e.Data.X, e.Data.Y);
         if (ShouldSuppressEvent(e))
         {
             _log.Information("Suppressing {Button}: Press", e.Data.Button);
@@ -93,7 +92,7 @@ public class MouseListener : IMouseListener
     private void ConvertMouseReleasedEvent(object? sender, MouseHookEventArgs e)
     {
         _log.Information("Translate release {Button}", e.Data.Button);
-        var args = new NewMouseHookEventArgs((YMouseButton)e.Data.Button);
+        var args = new NewMouseHookEventArgs((YMouseButton)e.Data.Button, e.Data.X, e.Data.Y);
         if (ShouldSuppressEvent(e))
         {
             _log.Information("Suppressing {Button}: Release", e.Data.Button);
