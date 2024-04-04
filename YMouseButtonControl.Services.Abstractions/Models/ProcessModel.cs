@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace YMouseButtonControl.Services.Abstractions.Models;
@@ -16,7 +15,7 @@ public class ProcessModel : ReactiveObject, IDisposable
     }
 
     public Process Process { get; }
-    public Bitmap? Bitmap { get; set; }
+    public Stream? Bitmap { get; set; }
     public bool HasExited
     {
         get => _hasExited;
@@ -26,5 +25,6 @@ public class ProcessModel : ReactiveObject, IDisposable
     public void Dispose()
     {
         Process.Dispose();
+        Bitmap?.Dispose();
     }
 }

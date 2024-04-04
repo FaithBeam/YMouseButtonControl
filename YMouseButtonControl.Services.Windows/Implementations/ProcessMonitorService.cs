@@ -107,7 +107,7 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
         var pm = new ProcessModel(proc)
         {
-            Bitmap = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
+            Bitmap = GetBitmapStreamFromPath(proc.MainModule?.FileName ?? string.Empty)
         };
 
         lock (_lock)
@@ -156,7 +156,7 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
             var pm = new ProcessModel(proc)
             {
-                Bitmap = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
+                Bitmap = GetBitmapStreamFromPath(proc.MainModule?.FileName ?? string.Empty)
             };
 
             lock (_lock)
@@ -194,7 +194,7 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
         propertyValue.Sender.Dispose();
     }
 
-    private static Bitmap? GetBitmapFromPath(string path)
+    private static Stream? GetBitmapStreamFromPath(string path)
     {
         if (path is null or "/")
         {
@@ -207,9 +207,9 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
         {
             return null;
         }
-        using var stream = new MemoryStream();
+        var stream = new MemoryStream();
         bmp.Save(stream, ImageFormat.Bmp);
         stream.Position = 0;
-        return new Bitmap(stream);
+        return stream;
     }
 }
