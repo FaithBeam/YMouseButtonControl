@@ -80,8 +80,14 @@ public class MouseListener : IMouseListener
     private void ConvertMousePressedEvent(object? sender, MouseHookEventArgs e)
     {
         _log.Information("Translate press {Button}", e.Data.Button);
-        var args = new NewMouseHookEventArgs((YMouseButton)e.Data.Button, e.Data.X, e.Data.Y);
-        if (ShouldSuppressEvent(e))
+
+        var args = new NewMouseHookEventArgs(
+            (YMouseButton)e.Data.Button,
+            e.Data.X,
+            e.Data.Y,
+            _currentWindowService.ForegroundWindow
+        );
+        if (ShouldSuppressEvent(args))
         {
             _log.Information("Suppressing {Button}: Press", e.Data.Button);
             e.SuppressEvent = true;
@@ -92,8 +98,13 @@ public class MouseListener : IMouseListener
     private void ConvertMouseReleasedEvent(object? sender, MouseHookEventArgs e)
     {
         _log.Information("Translate release {Button}", e.Data.Button);
-        var args = new NewMouseHookEventArgs((YMouseButton)e.Data.Button, e.Data.X, e.Data.Y);
-        if (ShouldSuppressEvent(e))
+        var args = new NewMouseHookEventArgs(
+            (YMouseButton)e.Data.Button,
+            e.Data.X,
+            e.Data.Y,
+            _currentWindowService.ForegroundWindow
+        );
+        if (ShouldSuppressEvent(args))
         {
             _log.Information("Suppressing {Button}: Release", e.Data.Button);
             e.SuppressEvent = true;
@@ -119,53 +130,53 @@ public class MouseListener : IMouseListener
         handler?.Invoke(this, e);
     }
 
-    private bool ShouldSuppressEvent(MouseHookEventArgs e) =>
-        (YMouseButton)e.Data.Button switch
+    private bool ShouldSuppressEvent(NewMouseHookEventArgs e) =>
+        e.Button switch
         {
             YMouseButton.MouseButton1
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton1.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseButton2
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton2.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseButton3
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton3.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseButton4
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton4.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseButton5
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseButton5.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseWheelUp
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelUp.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseWheelDown
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelDown.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseWheelLeft
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelLeft.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             YMouseButton.MouseWheelRight
                 => _profilesService.Profiles.Any(p =>
                     p is { Checked: true, MouseWheelRight.MouseButtonDisabled: true }
-                    && _currentWindowService.ForegroundWindow.Contains(p.Process)
+                    && (e.ActiveWindow?.Contains(p.Process) ?? false)
                 ),
             _ => throw new ArgumentOutOfRangeException()
         };

@@ -42,7 +42,7 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
-        services.AddSingleton<
+        services.AddTransient<
             ICurrentWindowService,
             Services.Windows.Implementations.CurrentWindowService
         >();

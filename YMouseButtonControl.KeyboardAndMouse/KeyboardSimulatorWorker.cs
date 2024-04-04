@@ -55,7 +55,7 @@ public class KeyboardSimulatorWorker(
     {
         foreach (var p in profilesService.Profiles)
         {
-            if (skipProfileService.ShouldSkipProfile(p))
+            if (skipProfileService.ShouldSkipProfile(p, e))
             {
                 _log.Information("Skipped {Profile}", p.Name);
                 continue;
@@ -70,7 +70,7 @@ public class KeyboardSimulatorWorker(
     {
         foreach (var p in profilesService.Profiles)
         {
-            if (skipProfileService.ShouldSkipProfile(p))
+            if (skipProfileService.ShouldSkipProfile(p, e))
             {
                 continue;
             }
