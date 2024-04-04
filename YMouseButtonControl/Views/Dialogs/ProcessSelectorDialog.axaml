@@ -3,8 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
-        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
-        xmlns:vm2="clr-namespace:YMouseButtonControl.Services.Abstractions.Models;assembly=YMouseButtonControl.Services.Abstractions"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="600"
@@ -19,10 +17,6 @@
     <Design.DataContext>
         <vm:ProcessSelectorDialogViewModel />
     </Design.DataContext>
-    
-    <Window.Resources>
-        <converters:BitmapConverter x:Key="BitmapConverter" />
-    </Window.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto">
         <!-- Row 1 -->
@@ -50,7 +44,7 @@
                 <DataGridTemplateColumn Width="12" CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Width="12" Stretch="Uniform" Source="{Binding BitmapPath, Converter={StaticResource BitmapConverter}}" />
+                            <Image Width="12" Stretch="Uniform"  Source="{Binding Bitmap}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

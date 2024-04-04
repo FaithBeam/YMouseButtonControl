@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -10,6 +11,7 @@ using DynamicData;
 using DynamicData.Binding;
 using YMouseButtonControl.Processes.Interfaces;
 using YMouseButtonControl.Services.Abstractions.Models;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 
@@ -105,7 +107,7 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
         var pm = new ProcessModel(proc)
         {
-            BitmapPath = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
+            Bitmap = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
         };
 
         lock (_lock)
@@ -154,7 +156,7 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
 
             var pm = new ProcessModel(proc)
             {
-                BitmapPath = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
+                Bitmap = GetBitmapFromPath(proc.MainModule?.FileName ?? string.Empty)
             };
 
             lock (_lock)
@@ -192,33 +194,22 @@ public class ProcessMonitorService : IProcessMonitorService, IDisposable
         propertyValue.Sender.Dispose();
     }
 
-    private static string GetBitmapFromPath(string path)
+    private static Bitmap? GetBitmapFromPath(string path)
     {
         if (path is null or "/")
         {
-            return string.Empty;
-        }
-
-        var destination = Path.Join("cache", Path.GetFileName(path + ".ico"));
-        if (File.Exists(destination))
-        {
-            return destination;
-        }
-
-        if (!Directory.Exists("cache"))
-        {
-            Directory.CreateDirectory("cache");
+            return null;
         }
 
         var icon = Icon.ExtractAssociatedIcon(path);
-        if (icon is null)
+        var bmp = icon?.ToBitmap();
+        if (bmp is null)
         {
-            return string.Empty;
+            return null;
         }
-
-        var bmp = icon.ToBitmap();
-        bmp.Save(destination);
-
-        return destination;
+        using var stream = new MemoryStream();
+        bmp.Save(stream, ImageFormat.Bmp);
+        stream.Position = 0;
+        return new Bitmap(stream);
     }
 }
