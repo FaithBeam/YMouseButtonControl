@@ -10,11 +10,10 @@ public class BitmapStreamConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is Stream s)
-        {
-            return new Bitmap(s);
-        }
-        return null;
+        if (value is not Stream s)
+            return null;
+        s.Position = 0;
+        return new Bitmap(s);
     }
 
     public object? ConvertBack(
