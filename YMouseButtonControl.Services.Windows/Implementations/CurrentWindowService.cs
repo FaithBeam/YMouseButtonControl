@@ -23,6 +23,7 @@ public class CurrentWindowService : ICurrentWindowService
             _log.Information("HWND is null");
             return "";
         }
+
         uint pId;
         var res = PInvoke.GetWindowThreadProcessId(hWnd, &pId);
         if (res == 0)
@@ -37,8 +38,15 @@ public class CurrentWindowService : ICurrentWindowService
         );
         if (hProc is null || hProc.IsInvalid)
         {
-            throw new Win32Exception(Marshal.GetLastWin32Error());
+            var lastWin32Err = Marshal.GetLastWin32Error();
+            if (lastWin32Err != 5)
+                throw new Win32Exception(lastWin32Err);
+            _log.Warning(
+                "ERROR_ACCESS_DENIED, likely tried to open an admin process without admin permissions. Try opening YMouseButtonControl as admin."
+            );
+            return "";
         }
+
         fixed (char* pText = new char[1024])
         {
             var lenCopied = PInvoke.GetModuleFileNameEx(hProc, null, pText, 1024);
