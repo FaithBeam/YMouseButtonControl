@@ -19,6 +19,7 @@ Anything that can install .NET 8 should be able to run YMouseButtonControl
 | **Operating System** | **Version** |
 |----------------------|-------------|
 | Windows 10           | 1607+       |
+| Windows 11           | 22000+      |
 | Ubuntu               | 20.04+      |
 | macOS                | 12.0+       |
 
