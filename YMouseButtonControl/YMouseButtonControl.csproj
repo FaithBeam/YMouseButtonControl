@@ -78,4 +78,10 @@
     <ItemGroup>
       <None Remove="Resources\gear_icon.png" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Include="..\LICENSE">
+        <Link>LICENSE</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 </Project>
