@@ -34,7 +34,7 @@ jobs:
       run: dotnet restore
 
     - name: Publish
-      run: dotnet publish $PROJECT_NAME -c Release -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o bin
+      run: dotnet publish $PROJECT_NAME -c Release -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o "$GITHUB_WORKSPACE/bin"
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.1
