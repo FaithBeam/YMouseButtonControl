@@ -6,9 +6,10 @@ This is an attempt at a cross-platform clone of X-Mouse-Button-Control.
 
 ## Usage
 
-1. Download the latest release from the releases page for your platform
-2. Extract the archive
-3. Run YMouseButtonControl
+1. Download the latest release from the [Releases](https://github.com/FaithBeam/YMouseButtonControl/releases) page for your platform
+     * Alternatively download the latest build from the [Actions tab](https://github.com/FaithBeam/YMouseButtonControl/actions)
+3. Extract the archive
+4. Run YMouseButtonControl
 
 ## OS Compatibility
 
