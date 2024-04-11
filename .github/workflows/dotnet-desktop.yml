@@ -14,7 +14,9 @@ jobs:
       matrix:
         rid: [win-x64, linux-x64, osx-arm64]
     env:
-      PROJECT_NAME: YMouseButtonControl/YMouseButtonControl.csproj
+      PROJECT_FOLDER: YMouseButtonControl
+      PROJECT_NAME: YMouseButtonControl.csproj
+      CONFIGURATION: Release
 
     steps:
     - name: Checkout
@@ -34,10 +36,10 @@ jobs:
       run: dotnet restore
 
     - name: Publish
-      run: dotnet publish $PROJECT_NAME -c Release -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o "$GITHUB_WORKSPACE/bin"
+      run: dotnet publish "$PROJECT_FOLDER/$PROJECT_NAME" -c $CONFIGURATION -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.1
       with:
         name: ${{ matrix.rid }}
-        path: bin\
+        path: $PROJECT_FOLDER/bin/$CONFIGURATION/net8.0/${{ matrix.rid }}/publish
