@@ -36,10 +36,10 @@ jobs:
       run: dotnet restore
 
     - name: Publish
-      run: dotnet publish "${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }}" -c ${{ env.CONFIGURATION }} -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded
+      run: dotnet publish "${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }}" -c ${{ env.CONFIGURATION }} -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o bin
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.1
       with:
         name: ${{ matrix.rid }}
-        path: ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION}}/net8.0/${{ matrix.rid }}/publish
+        path: bin/
