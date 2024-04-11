@@ -14,6 +14,7 @@ jobs:
       matrix:
         rid: [win-x64, linux-x64, osx-arm64]
     env:
+      APP_NAME: YMouseButtonControl
       PROJECT_FOLDER: YMouseButtonControl
       PROJECT_NAME: YMouseButtonControl.csproj
       CONFIGURATION: Release
@@ -28,6 +29,13 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+      
+    - name: GitTools
+      uses: GitTools/actions@v1.1.1
+    
+    - name: Determine Version
+      id: gitversion # id to later be referenced
+      uses: gittools/actions/gitversion/execute@v1.1.1
 
     - name: Execute unit tests
       run: dotnet test
@@ -36,10 +44,10 @@ jobs:
       run: dotnet restore
 
     - name: Publish
-      run: dotnet publish "${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }}" -c ${{ env.CONFIGURATION }} -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -o bin
+      run: dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} -c ${{ env.CONFIGURATION }} -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -p:Version=${{ steps.gitversion.outputs.semVer }} -o bin
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.1
       with:
-        name: ${{ matrix.rid }}
+        name: ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}
         path: bin/
