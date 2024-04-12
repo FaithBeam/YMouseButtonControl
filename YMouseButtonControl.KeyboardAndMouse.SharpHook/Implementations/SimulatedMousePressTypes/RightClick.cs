@@ -1,7 +1,7 @@
 ﻿using System;
-using SharpHook.Native;
-using YMouseButtonControl.KeyboardAndMouse.Enums;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.DataAccess.Models.Enums;
+using YMouseButtonControl.Core.KeyboardAndMouse.Enums;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedMousePressTypes;
 
@@ -12,10 +12,10 @@ public class RightClick(ISimulateMouseService simulateMouseService) : IRightClic
         switch (state)
         {
             case MouseButtonState.Pressed:
-                simulateMouseService.SimulateMousePress(MouseButton.Button2);
+                simulateMouseService.SimulateMousePress(YMouseButton.MouseButton2);
                 break;
             case MouseButtonState.Released:
-                simulateMouseService.SimulateMouseRelease(MouseButton.Button2);
+                simulateMouseService.SimulateMouseRelease(YMouseButton.MouseButton2);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);

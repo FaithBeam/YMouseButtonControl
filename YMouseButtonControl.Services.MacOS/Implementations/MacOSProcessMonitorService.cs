@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using DynamicData;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models;
+using YMouseButtonControl.Core.Processes;
+using YMouseButtonControl.Core.Services.Abstractions.Models;
 
 namespace YMouseButtonControl.Services.MacOS.Implementations;
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
-using YMouseButtonControl.DataAccess.Models.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse.Enums;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.DataAccess.Models.Interfaces;
+using YMouseButtonControl.Core.KeyboardAndMouse.Enums;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 

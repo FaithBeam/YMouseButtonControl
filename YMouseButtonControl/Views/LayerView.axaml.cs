@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using YMouseButtonControl.Avalonia.Implementations;
-using YMouseButtonControl.ViewModels.Implementations;
-using YMouseButtonControl.ViewModels.Implementations.Dialogs;
-using YMouseButtonControl.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Views.Dialogs;
 
 namespace YMouseButtonControl.Views;

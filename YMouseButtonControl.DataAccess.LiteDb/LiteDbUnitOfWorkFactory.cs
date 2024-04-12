@@ -1,7 +1,6 @@
-﻿using System.IO;
-using LiteDB;
-using YMouseButtonControl.DataAccess.Configuration;
-using YMouseButtonControl.DataAccess.UnitOfWork;
+﻿using LiteDB;
+using YMouseButtonControl.Core.DataAccess.Configuration;
+using YMouseButtonControl.Core.DataAccess.UnitOfWork;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
 

@@ -1,4 +1,4 @@
-using YMouseButtonControl.Processes.Interfaces;
+using YMouseButtonControl.Core.Processes;
 
 namespace YMouseButtonControl.Services.MacOS.Implementations;
 

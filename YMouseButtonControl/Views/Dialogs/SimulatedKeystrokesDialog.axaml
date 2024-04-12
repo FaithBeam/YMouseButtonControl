@@ -3,14 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
-        xmlns:vm="clr-namespace:YMouseButtonControl.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.ViewModels"
+        xmlns:dialogs="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.Core"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         WindowStartupLocation="CenterOwner"
         SizeToContent="WidthAndHeight"
         x:Class="YMouseButtonControl.Views.Dialogs.SimulatedKeystrokesDialog"
         Title="SimulatedKeystrokesDialog">
     <Design.DataContext>
-        <vm:SimulatedKeystrokesDialogViewModel />
+        <dialogs:SimulatedKeystrokesDialogViewModel />
     </Design.DataContext>
     
     <Window.Resources>

@@ -4,7 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using YMouseButtonControl.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 
 namespace YMouseButtonControl.Views.Dialogs;
 

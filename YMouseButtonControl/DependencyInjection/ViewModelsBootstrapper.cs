@@ -1,10 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.ViewModels;
-using YMouseButtonControl.ViewModels.Implementations;
-using YMouseButtonControl.ViewModels.Implementations.Dialogs;
-using YMouseButtonControl.ViewModels.Interfaces;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
-using YMouseButtonControl.ViewModels.Services;
+using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.Core.ViewModels.Interfaces;
+using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
 

@@ -4,12 +4,12 @@ using System.Threading;
 using Serilog;
 using SharpHook;
 using SharpHook.Native;
-using YMouseButtonControl.DataAccess.Models.Enums;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Profiles.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Enums;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using YMouseButtonControl.Core.DataAccess.Models.Enums;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.Processes;
+using YMouseButtonControl.Core.Profiles.Interfaces;
+using YMouseButtonControl.Core.Services.Abstractions.Enums;
+using YMouseButtonControl.Core.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 

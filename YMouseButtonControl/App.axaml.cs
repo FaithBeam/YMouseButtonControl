@@ -9,11 +9,11 @@ using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.BackgroundTasks.Interfaces;
 using YMouseButtonControl.Configuration;
+using YMouseButtonControl.Core.BackgroundTasks;
+using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.DependencyInjection;
-using YMouseButtonControl.ViewModels.Implementations;
-using YMouseButtonControl.ViewModels.Interfaces;
 using YMouseButtonControl.Views;
 
 namespace YMouseButtonControl;

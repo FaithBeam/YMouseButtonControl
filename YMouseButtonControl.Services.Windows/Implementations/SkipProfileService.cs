@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Versioning;
 using Serilog;
-using YMouseButtonControl.DataAccess.Models.Implementations;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using YMouseButtonControl.Core.DataAccess.Models.Implementations;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 

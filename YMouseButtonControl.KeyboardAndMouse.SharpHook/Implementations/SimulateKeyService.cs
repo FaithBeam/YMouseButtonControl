@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using SharpHook;
 using SharpHook.Native;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse.Models;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 

@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using SharpHook;
+using YMouseButtonControl.Core.KeyboardAndMouse;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedMousePressTypes;

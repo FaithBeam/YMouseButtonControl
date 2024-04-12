@@ -9,8 +9,8 @@ using System.Management;
 using System.Runtime.Versioning;
 using DynamicData;
 using DynamicData.Binding;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models;
+using YMouseButtonControl.Core.Processes;
+using YMouseButtonControl.Core.Services.Abstractions.Models;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;

@@ -6,11 +6,9 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using YMouseButtonControl.Avalonia.Implementations;
-using YMouseButtonControl.DataAccess.Models.Implementations;
-using YMouseButtonControl.ViewModels.Implementations;
-using YMouseButtonControl.ViewModels.Implementations.Dialogs;
-using YMouseButtonControl.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.DataAccess.Models.Implementations;
+using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Views.Dialogs;
 
 namespace YMouseButtonControl.Views;

@@ -1,6 +1,6 @@
-using YMouseButtonControl.BackgroundTasks.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.BackgroundTasks;
+using YMouseButtonControl.Core.KeyboardAndMouse;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.Services.MacOS.Implementations;
 

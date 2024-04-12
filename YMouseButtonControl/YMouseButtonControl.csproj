@@ -59,12 +59,11 @@
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\YMouseButtonControl.BackgroundTasks\YMouseButtonControl.BackgroundTasks.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.DataAccess.LiteDb\YMouseButtonControl.DataAccess.LiteDb.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse.SharpHook\YMouseButtonControl.KeyboardAndMouse.SharpHook.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse\YMouseButtonControl.KeyboardAndMouse.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.ViewModels\YMouseButtonControl.ViewModels.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Core\YMouseButtonControl.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="App.axaml.cs">

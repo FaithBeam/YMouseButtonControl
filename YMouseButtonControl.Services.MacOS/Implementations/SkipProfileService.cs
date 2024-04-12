@@ -1,8 +1,8 @@
 ﻿using Serilog;
-using YMouseButtonControl.DataAccess.Models.Implementations;
-using YMouseButtonControl.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Services.Abstractions.Models.EventArgs;
+using YMouseButtonControl.Core.DataAccess.Models.Implementations;
+using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.Processes;
+using YMouseButtonControl.Core.Services.Abstractions.Models.EventArgs;
 
 namespace YMouseButtonControl.Services.MacOS.Implementations;
 

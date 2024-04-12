@@ -4,7 +4,7 @@ using System.Runtime.Versioning;
 using Serilog;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
-using YMouseButtonControl.Processes.Interfaces;
+using YMouseButtonControl.Core.Processes;
 
 namespace YMouseButtonControl.Services.Windows.Implementations;
 

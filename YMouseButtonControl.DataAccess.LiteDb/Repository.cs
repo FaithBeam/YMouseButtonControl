@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using LiteDB;
-using YMouseButtonControl.DataAccess.Repositories;
+using YMouseButtonControl.Core.DataAccess.Repositories;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
 

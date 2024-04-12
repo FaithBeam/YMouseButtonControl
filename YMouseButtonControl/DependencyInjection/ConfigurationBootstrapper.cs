@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
-using YMouseButtonControl.DataAccess.Configuration;
+using YMouseButtonControl.Core.DataAccess.Configuration;
 
 namespace YMouseButtonControl.DependencyInjection;
 

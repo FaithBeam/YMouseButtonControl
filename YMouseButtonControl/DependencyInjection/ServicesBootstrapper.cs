@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.BackgroundTasks.Interfaces;
-using YMouseButtonControl.Processes.Interfaces;
-using YMouseButtonControl.Profiles.Implementations;
-using YMouseButtonControl.Profiles.Interfaces;
+using YMouseButtonControl.Core.BackgroundTasks;
+using YMouseButtonControl.Core.Processes;
+using YMouseButtonControl.Core.Profiles.Implementations;
+using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Services.Windows.Implementations;
 
 namespace YMouseButtonControl.DependencyInjection;

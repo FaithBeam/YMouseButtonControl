@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using YMouseButtonControl.ViewModels.Interfaces;
 
 namespace YMouseButtonControl.Views;
 

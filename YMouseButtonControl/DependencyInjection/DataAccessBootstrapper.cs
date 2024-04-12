@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using YMouseButtonControl.Core.DataAccess.UnitOfWork;
 using YMouseButtonControl.DataAccess.LiteDb;
-using YMouseButtonControl.DataAccess.UnitOfWork;
 
 namespace YMouseButtonControl.DependencyInjection;
 
