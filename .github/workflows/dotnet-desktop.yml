@@ -49,7 +49,19 @@ jobs:
       run: dotnet restore
 
     - name: Publish
-      run: dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} -c ${{ env.CONFIGURATION }} -r ${{ matrix.rid }} -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=embedded -p:Version=${{ steps.gitversion.outputs.semVer }} -o bin
+      run: |
+        dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
+        -c ${{ env.CONFIGURATION }} \
+        -r ${{ matrix.rid }} \
+        -p:PublishSingleFile=true \
+        -p:SelfContained=true \
+        -p:IncludeNativeLibrariesForSelfExtract=true \
+        -p:IncludeAllContentForSelfExtract=true \
+        -p:EnableCompressionInSingleFile=true \
+        -p:DebugType=embedded \
+        -p:Version=${{ steps.gitversion.outputs.SemVer }} \
+        -p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemFileVer }} \
+        -o bin
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.1
