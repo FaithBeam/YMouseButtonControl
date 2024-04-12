@@ -7,15 +7,28 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  
+
 
 jobs:
-
   build:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        rid: [win-x64, win-arm64, linux-x64, linux-arm64, osx-arm64, osx-x64]
+        include:
+          - os: windows-latest
+            rid: win-x64
+          - os: windows-latest
+            rid: win-arm64
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: ubuntu-latest
+            rid: linux-arm64
+          - os: macos-latest
+            rid: osx-arm64
+          - os: macos-latest
+            rid: osx-x64
+    
+    runs-on: ${{ matrix.os }}
+    
     env:
       APP_NAME: YMouseButtonControl
       PROJECT_FOLDER: YMouseButtonControl
@@ -23,48 +36,48 @@ jobs:
       CONFIGURATION: Release
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-      
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0
-      with:
-        versionSpec: "5.x"
-      
-    - name: Determine Version
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Execute unit tests
-      run: dotnet test
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: "5.x"
 
-    - name: Restore the application
-      run: dotnet restore
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
 
-    - name: Publish
-      run: |
-        dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
-        -c ${{ env.CONFIGURATION }} \
-        -r ${{ matrix.rid }} \
-        -p:PublishSingleFile=true \
-        -p:SelfContained=true \
-        -p:IncludeNativeLibrariesForSelfExtract=true \
-        -p:IncludeAllContentForSelfExtract=true \
-        -p:EnableCompressionInSingleFile=true \
-        -p:DebugType=embedded \
-        -p:Version=${{ steps.gitversion.outputs.SemVer }} \
-        -p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemFileVer }} \
-        -o bin
+      - name: Execute unit tests
+        run: dotnet test
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4.3.1
-      with:
-        name: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}"
-        path: bin/
+      - name: Restore the application
+        run: dotnet restore
+
+      - name: Publish
+        run: |
+          dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
+          -c ${{ env.CONFIGURATION }} \
+          -r ${{ matrix.rid }} \
+          -p:PublishSingleFile=true \
+          -p:SelfContained=true \
+          -p:IncludeNativeLibrariesForSelfExtract=true \
+          -p:IncludeAllContentForSelfExtract=true \
+          -p:EnableCompressionInSingleFile=true \
+          -p:DebugType=embedded \
+          -p:Version=${{ steps.gitversion.outputs.SemVer }} \
+          -p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemFileVer }} \
+          -o bin
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}"
+          path: bin/
