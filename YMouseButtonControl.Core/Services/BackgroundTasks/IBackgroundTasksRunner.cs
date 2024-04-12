@@ -1,5 +1,5 @@
 using System;
 
-namespace YMouseButtonControl.Core.BackgroundTasks;
+namespace YMouseButtonControl.Core.Services.BackgroundTasks;
 
 public interface IBackgroundTasksRunner : IDisposable { }

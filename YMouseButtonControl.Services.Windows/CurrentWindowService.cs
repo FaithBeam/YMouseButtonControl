@@ -6,7 +6,7 @@ using Windows.Win32;
 using Windows.Win32.System.Threading;
 using YMouseButtonControl.Core.Processes;
 
-namespace YMouseButtonControl.Services.Windows.Implementations;
+namespace YMouseButtonControl.Services.Windows;
 
 [SupportedOSPlatform("windows5.1.2600")]
 public class CurrentWindowService : ICurrentWindowService

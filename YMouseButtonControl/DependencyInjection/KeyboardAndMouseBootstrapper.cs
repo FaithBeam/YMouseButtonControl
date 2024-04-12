@@ -7,6 +7,7 @@ using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedMousePressTypes;
+using YMouseButtonControl.Services.MacOS;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -22,17 +23,11 @@ public static class KeyboardAndMouseBootstrapper
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600))
         {
-            services.AddTransient<
-                ISkipProfileService,
-                Services.Windows.Implementations.SkipProfileService
-            >();
+            services.AddTransient<ISkipProfileService, Services.Windows.SkipProfileService>();
         }
         else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
         {
-            services.AddTransient<
-                ISkipProfileService,
-                Services.MacOS.Implementations.SkipProfileService
-            >();
+            services.AddTransient<ISkipProfileService, SkipProfileService>();
         }
         else
         {

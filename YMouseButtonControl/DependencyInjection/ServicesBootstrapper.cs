@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.BackgroundTasks;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Profiles.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
-using YMouseButtonControl.Services.Windows.Implementations;
+using YMouseButtonControl.Core.Services.BackgroundTasks;
+using YMouseButtonControl.Services.MacOS;
+using YMouseButtonControl.Services.Windows;
+using BackgroundTasksRunner = YMouseButtonControl.Services.MacOS.BackgroundTasksRunner;
+using CurrentWindowService = YMouseButtonControl.Services.MacOS.CurrentWindowService;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -42,29 +45,14 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
-        services.AddTransient<
-            ICurrentWindowService,
-            Services.Windows.Implementations.CurrentWindowService
-        >();
-        services.AddTransient<
-            IBackgroundTasksRunner,
-            Services.Windows.Implementations.BackgroundTasksRunner
-        >();
+        services.AddTransient<ICurrentWindowService, Services.Windows.CurrentWindowService>();
+        services.AddTransient<IBackgroundTasksRunner, Services.Windows.BackgroundTasksRunner>();
     }
 
     private static void RegisterMacOsServices(IServiceCollection services)
     {
-        services.AddSingleton<
-            IProcessMonitorService,
-            Services.MacOS.Implementations.MacOsProcessMonitorService
-        >();
-        services.AddSingleton<
-            ICurrentWindowService,
-            Services.MacOS.Implementations.CurrentWindowService
-        >();
-        services.AddSingleton<
-            IBackgroundTasksRunner,
-            Services.MacOS.Implementations.BackgroundTasksRunner
-        >();
+        services.AddSingleton<IProcessMonitorService, MacOsProcessMonitorService>();
+        services.AddSingleton<ICurrentWindowService, CurrentWindowService>();
+        services.AddSingleton<IBackgroundTasksRunner, BackgroundTasksRunner>();
     }
 }

@@ -11,9 +11,8 @@ using DynamicData;
 using DynamicData.Binding;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Services.Abstractions.Models;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
-namespace YMouseButtonControl.Services.Windows.Implementations;
+namespace YMouseButtonControl.Services.Windows;
 
 [SupportedOSPlatform("windows5.1.2600")]
 public class ProcessMonitorService : IProcessMonitorService, IDisposable

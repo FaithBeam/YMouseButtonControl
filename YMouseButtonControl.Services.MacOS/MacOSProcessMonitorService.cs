@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using DynamicData;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Services.Abstractions.Models;
 
-namespace YMouseButtonControl.Services.MacOS.Implementations;
+namespace YMouseButtonControl.Services.MacOS;
 
 public class MacOsProcessMonitorService : IProcessMonitorService
 {
@@ -14,10 +12,7 @@ public class MacOsProcessMonitorService : IProcessMonitorService
 
     public IObservableCache<ProcessModel, int> RunningProcesses => GetProcesses();
 
-    public bool ProcessRunning(string process)
-    {
-        return Process.GetProcessesByName(process).Any();
-    }
+    public bool ProcessRunning(string process) => Process.GetProcessesByName(process).Length != 0;
 
     private SourceCache<ProcessModel, int> GetProcesses()
     {

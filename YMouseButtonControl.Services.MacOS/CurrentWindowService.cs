@@ -1,12 +1,8 @@
 using YMouseButtonControl.Core.Processes;
 
-namespace YMouseButtonControl.Services.MacOS.Implementations;
+namespace YMouseButtonControl.Services.MacOS;
 
 public class CurrentWindowService : ICurrentWindowService
 {
-    public void Run() { }
-
-    public void Dispose() { }
-
     public string ForegroundWindow { get; private set; } = string.Empty;
 }

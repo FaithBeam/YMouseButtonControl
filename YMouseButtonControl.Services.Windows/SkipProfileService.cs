@@ -4,7 +4,7 @@ using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.Services.Abstractions.Models.EventArgs;
 
-namespace YMouseButtonControl.Services.Windows.Implementations;
+namespace YMouseButtonControl.Services.Windows;
 
 [SupportedOSPlatform("windows5.1.2600")]
 public class SkipProfileService : ISkipProfileService
@@ -25,11 +25,6 @@ public class SkipProfileService : ISkipProfileService
             return false;
         }
 
-        if (e.ActiveWindow?.Contains(p.Process) ?? false)
-        {
-            return false;
-        }
-
-        return true;
+        return !(e.ActiveWindow?.Contains(p.Process) ?? false);
     }
 }

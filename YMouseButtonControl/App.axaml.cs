@@ -10,7 +10,7 @@ using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
-using YMouseButtonControl.Core.BackgroundTasks;
+using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.DependencyInjection;

@@ -1,8 +1,8 @@
-﻿using YMouseButtonControl.Core.BackgroundTasks;
 using YMouseButtonControl.Core.KeyboardAndMouse;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Core.Services.BackgroundTasks;
 
-namespace YMouseButtonControl.Services.Windows.Implementations;
+namespace YMouseButtonControl.Services.MacOS;
 
 public class BackgroundTasksRunner : IBackgroundTasksRunner
 {
@@ -16,14 +16,13 @@ public class BackgroundTasksRunner : IBackgroundTasksRunner
     {
         _mouseListener = mouseListener;
         _keyboardSimulatorWorker = keyboardSimulatorWorker;
-
         _mouseListener.Run();
         _keyboardSimulatorWorker.Run();
     }
 
     public void Dispose()
     {
-        _keyboardSimulatorWorker.Dispose();
         _mouseListener.Dispose();
+        _keyboardSimulatorWorker.Dispose();
     }
 }
