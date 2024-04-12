@@ -4,16 +4,9 @@ using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
-public class SimulateMouseService : ISimulateMouseService
+public class SimulateMouseService(IEventSimulator mouseSimulator) : ISimulateMouseService
 {
-    private readonly IEventSimulator _mouseSimulator;
+    public void SimulateMousePress(MouseButton mb) => mouseSimulator.SimulateMousePress(mb);
 
-    public SimulateMouseService(IEventSimulator mouseSimulator)
-    {
-        _mouseSimulator = mouseSimulator;
-    }
-
-    public void SimulateMousePress(MouseButton mb) => _mouseSimulator.SimulateMousePress(mb);
-
-    public void SimulateMouseRelease(MouseButton mb) => _mouseSimulator.SimulateMouseRelease(mb);
+    public void SimulateMouseRelease(MouseButton mb) => mouseSimulator.SimulateMouseRelease(mb);
 }

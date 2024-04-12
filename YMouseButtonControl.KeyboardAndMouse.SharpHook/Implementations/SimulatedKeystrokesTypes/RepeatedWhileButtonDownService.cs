@@ -6,18 +6,13 @@ using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
+public class RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyService)
+    : IRepeatedWhileButtonDownService
 {
-    private readonly ISimulateKeyService _simulateKeyService;
     private Thread? _thread;
     private bool _shouldStop;
     private readonly object _lock = new();
     private const int RepeatRateMs = 33;
-
-    public RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyService)
-    {
-        _simulateKeyService = simulateKeyService;
-    }
 
     public void RepeatWhileDown(IButtonMapping mapping, MouseButtonState state)
     {
@@ -38,7 +33,7 @@ public class RepeatedWhileButtonDownService : IRepeatedWhileButtonDownService
                             }
                         }
                         Thread.Sleep(RepeatRateMs);
-                        _simulateKeyService.TapKeys(mapping.Keys);
+                        simulateKeyService.TapKeys(mapping.Keys);
                     }
                 });
 

@@ -7,19 +7,12 @@ using YMouseButtonControl.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
-public class SimulateKeyService : ISimulateKeyService
+public class SimulateKeyService(IEventSimulator keyboardSimulator) : ISimulateKeyService
 {
-    private readonly IEventSimulator _keyboardSimulator;
-
-    public SimulateKeyService(IEventSimulator keyboardSimulator)
-    {
-        _keyboardSimulator = keyboardSimulator;
-    }
-
     public SimulateKeyboardResult SimulateKeyPress(string? key) =>
         new()
         {
-            Result = _keyboardSimulator
+            Result = keyboardSimulator
                 .SimulateKeyPress(KeyCodes[key ?? throw new NullReferenceException(key)])
                 .ToString()
         };
@@ -27,7 +20,7 @@ public class SimulateKeyService : ISimulateKeyService
     public SimulateKeyboardResult SimulateKeyRelease(string? key) =>
         new()
         {
-            Result = _keyboardSimulator
+            Result = keyboardSimulator
                 .SimulateKeyRelease(KeyCodes[key ?? throw new NullReferenceException(key)])
                 .ToString()
         };
@@ -40,8 +33,8 @@ public class SimulateKeyService : ISimulateKeyService
     public SimulateKeyboardResult SimulateKeyTap(string? key)
     {
         var keyCode = KeyCodes[key ?? throw new NullReferenceException(key)];
-        _keyboardSimulator.SimulateKeyPress(keyCode);
-        _keyboardSimulator.SimulateKeyRelease(keyCode);
+        keyboardSimulator.SimulateKeyPress(keyCode);
+        keyboardSimulator.SimulateKeyRelease(keyCode);
         return new SimulateKeyboardResult { Result = "Success" };
     }
 

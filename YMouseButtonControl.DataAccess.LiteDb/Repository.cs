@@ -4,31 +4,24 @@ using YMouseButtonControl.DataAccess.Repositories;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
 
-public class Repository<T> : IRepository<T>
+public class Repository<T>(ILiteCollection<T> collection) : IRepository<T>
     where T : class
 {
-    private readonly ILiteCollection<T> _collection;
+    public T GetById(string id) => collection.FindById(id);
 
-    public Repository(ILiteCollection<T> collection)
-    {
-        _collection = collection;
-    }
+    public IEnumerable<T> GetAll() => collection.FindAll();
 
-    public T GetById(string id) => _collection.FindById(id);
+    public void Add(T entity) => collection.Insert(entity);
 
-    public IEnumerable<T> GetAll() => _collection.FindAll();
+    public void Update(string id, T entity) => collection.Update(id, entity);
 
-    public void Add(T entity) => _collection.Insert(entity);
+    public void Upsert(string id, T entity) => collection.Upsert(id, entity);
 
-    public void Update(string id, T entity) => _collection.Update(id, entity);
-
-    public void Upsert(string id, T entity) => _collection.Upsert(id, entity);
-
-    public void Remove(string id) => _collection.Delete(id);
+    public void Remove(string id) => collection.Delete(id);
 
     public void ApplyAction(IEnumerable<T> entities)
     {
-        _collection.DeleteAll();
-        _collection.InsertBulk(entities);
+        collection.DeleteAll();
+        collection.InsertBulk(entities);
     }
 }

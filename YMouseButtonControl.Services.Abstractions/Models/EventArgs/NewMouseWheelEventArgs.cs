@@ -2,12 +2,7 @@
 
 namespace YMouseButtonControl.Services.Abstractions.Models.EventArgs;
 
-public class NewMouseWheelEventArgs
+public class NewMouseWheelEventArgs(WheelScrollDirection direction)
 {
-    public WheelScrollDirection Direction { get; }
-
-    public NewMouseWheelEventArgs(WheelScrollDirection direction)
-    {
-        Direction = direction;
-    }
+    public WheelScrollDirection Direction { get; } = direction;
 }

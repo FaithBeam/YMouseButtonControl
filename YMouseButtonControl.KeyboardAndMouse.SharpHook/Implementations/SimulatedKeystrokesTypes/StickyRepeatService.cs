@@ -5,18 +5,12 @@ using YMouseButtonControl.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class StickyRepeatService : IStickyRepeatService
+public class StickyRepeatService(ISimulateKeyService simulateKeyService) : IStickyRepeatService
 {
-    private readonly ISimulateKeyService _simulateKeyService;
     private Thread? _thread;
     private bool _shouldStop;
     private readonly object _lock = new();
     private const int RepeatRateMs = 33;
-
-    public StickyRepeatService(ISimulateKeyService simulateKeyService)
-    {
-        _simulateKeyService = simulateKeyService;
-    }
 
     public void StickyRepeat(IButtonMapping mapping, MouseButtonState state)
     {
@@ -62,7 +56,7 @@ public class StickyRepeatService : IStickyRepeatService
                 }
 
                 Thread.Sleep(RepeatRateMs);
-                _simulateKeyService.TapKeys(mapping.Keys);
+                simulateKeyService.TapKeys(mapping.Keys);
             }
         });
 

@@ -3,12 +3,9 @@ using YMouseButtonControl.ViewModels.Interfaces;
 
 namespace YMouseButtonControl.ViewModels.Implementations;
 
-public class ProfilesInformationViewModel : ViewModelBase, IProfilesInformationViewModel
+public class ProfilesInformationViewModel(IProfilesService profilesService)
+    : ViewModelBase,
+        IProfilesInformationViewModel
 {
-    public ProfilesInformationViewModel(IProfilesService profilesService)
-    {
-        ProfilesService = profilesService;
-    }
-
-    public IProfilesService ProfilesService { get; }
+    public IProfilesService ProfilesService { get; } = profilesService;
 }

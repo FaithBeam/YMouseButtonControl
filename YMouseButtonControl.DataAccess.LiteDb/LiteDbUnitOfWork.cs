@@ -4,24 +4,17 @@ using YMouseButtonControl.DataAccess.UnitOfWork;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
 
-public class LiteDbUnitOfWork : IUnitOfWork
+public class LiteDbUnitOfWork(LiteDatabase database) : IUnitOfWork
 {
-    private readonly LiteDatabase _database;
-
-    public LiteDbUnitOfWork(LiteDatabase database)
-    {
-        _database = database;
-    }
-
     public IRepository<T> GetRepository<T>()
         where T : class
     {
-        var collection = _database.GetCollection<T>();
+        var collection = database.GetCollection<T>();
 
         return new Repository<T>(collection);
     }
 
-    public void SaveChanges() => _database.Commit();
+    public void SaveChanges() => database.Commit();
 
-    public void Dispose() => _database.Dispose();
+    public void Dispose() => database.Dispose();
 }

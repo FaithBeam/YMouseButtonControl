@@ -5,18 +5,12 @@ using YMouseButtonControl.DataAccess.UnitOfWork;
 
 namespace YMouseButtonControl.DataAccess.LiteDb;
 
-public class LiteDbUnitOfWorkFactory : IUnitOfWorkFactory
+public class LiteDbUnitOfWorkFactory(DatabaseConfiguration databaseConfiguration)
+    : IUnitOfWorkFactory
 {
-    private readonly DatabaseConfiguration _databaseConfiguration;
-
-    public LiteDbUnitOfWorkFactory(DatabaseConfiguration databaseConfiguration)
-    {
-        _databaseConfiguration = databaseConfiguration;
-    }
-
     public IUnitOfWork Create() =>
         new LiteDbUnitOfWork(
-            _databaseConfiguration.UseInMemoryDatabase
+            databaseConfiguration.UseInMemoryDatabase
                 ? CreateInMemoryDatabase()
                 : CreateDatabaseFromConnectionString()
         );
@@ -25,5 +19,5 @@ public class LiteDbUnitOfWorkFactory : IUnitOfWorkFactory
         new("Filename=:memory:;Connection=shared");
 
     private LiteDatabase CreateDatabaseFromConnectionString() =>
-        new(_databaseConfiguration.ConnectionString);
+        new(databaseConfiguration.ConnectionString);
 }
