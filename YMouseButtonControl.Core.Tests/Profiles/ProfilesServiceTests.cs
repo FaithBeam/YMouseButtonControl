@@ -49,8 +49,8 @@ public class ProfilesServiceTests
         Assert.Multiple(() =>
         {
             Assert.That(sut.Profiles, Has.Count.EqualTo(1));
-            Assert.That(sut.CurrentProfileIndex, Is.EqualTo(0));
-            Assert.That(sut.CurrentProfile.Name, Is.EqualTo("Default"));
+            Assert.That(sut.CurrentProfile, Is.Not.Null);
+            Assert.That(sut.CurrentProfile!.IsDefault, Is.True);
             Assert.That(sut.UnsavedChanges, Is.False);
         });
     }
@@ -59,10 +59,14 @@ public class ProfilesServiceTests
     public void AddProfile()
     {
         var newProfile = new Profile { Name = "NEW" };
-        var sut = GetSut(new[] { newProfile });
+        var sut = GetSut();
+        var defaultProfile = sut.Profiles.First(x => x.IsDefault);
+
+        sut.AddProfile(newProfile);
 
         Assert.Multiple(() =>
         {
+            Assert.That(newProfile.DisplayPriority, Is.GreaterThan(defaultProfile.DisplayPriority));
             Assert.That(sut.Profiles, Has.Count.EqualTo(2));
             Assert.That(sut.UnsavedChanges);
             sut.CurrentProfile.Should().BeEquivalentTo(newProfile);
@@ -84,6 +88,7 @@ public class ProfilesServiceTests
     public void RemoveDefaultProfile_ThrowsException()
     {
         var sut = GetSut();
+        sut.CurrentProfile = sut.Profiles.First(x => x.Name == "Default");
 
         Assert.Throws<Exception>(() => sut.RemoveProfile(sut.CurrentProfile));
     }
@@ -92,6 +97,7 @@ public class ProfilesServiceTests
     public void MoveDefaultProfile_ThrowsException()
     {
         var sut = GetSut();
+        sut.CurrentProfile = sut.Profiles.First(x => x.Name == "Default");
 
         Assert.Throws<InvalidMoveException>(() => sut.MoveProfileDown(sut.CurrentProfile));
         Assert.Throws<InvalidMoveException>(() => sut.MoveProfileUp(sut.CurrentProfile));
@@ -101,8 +107,12 @@ public class ProfilesServiceTests
     public void MoveProfileAboveDefault_ThrowsException()
     {
         var sut = GetSut(GetSeedData());
+        var defaultProfile = sut.Profiles.First(x => x.Name == "Default");
+        var profToMove = sut
+            .Profiles.Where(x => x.DisplayPriority > defaultProfile.DisplayPriority)
+            .MinBy(x => x.DisplayPriority);
 
-        Assert.Throws<InvalidMoveException>(() => sut.MoveProfileUp(sut.Profiles[1]));
+        Assert.Throws<InvalidMoveException>(() => sut.MoveProfileUp(profToMove));
     }
 
     [Test]
@@ -110,12 +120,12 @@ public class ProfilesServiceTests
     {
         var sut = GetSut(GetSeedData());
         var profileToMoveDown = sut.Profiles[5];
-        var initialIdx = sut.Profiles.IndexOf(profileToMoveDown);
+        var initialPriority = profileToMoveDown.DisplayPriority;
+
         sut.MoveProfileDown(profileToMoveDown);
 
-        var newIdx = sut.Profiles.IndexOf(profileToMoveDown);
-
-        Assert.That(newIdx, Is.EqualTo(initialIdx + 1));
+        var newPriority = profileToMoveDown.DisplayPriority;
+        Assert.That(initialPriority, Is.LessThan(newPriority));
     }
 
     [Test]
@@ -123,12 +133,12 @@ public class ProfilesServiceTests
     {
         var sut = GetSut(GetSeedData());
         var profile = sut.Profiles[5];
-        var initialIdx = sut.Profiles.IndexOf(profile);
+        var initialPriority = profile.DisplayPriority;
         sut.MoveProfileUp(profile);
 
-        var newIdx = sut.Profiles.IndexOf(profile);
+        var newPriority = profile.DisplayPriority;
 
-        Assert.That(newIdx, Is.EqualTo(initialIdx - 1));
+        Assert.That(initialPriority, Is.GreaterThan(newPriority));
     }
 
     [Test]
@@ -190,9 +200,8 @@ public class ProfilesServiceTests
     {
         var sut = GetSut(GetSeedData());
 
-        var profiles = sut.GetProfiles();
-
-        Assert.That(profiles, Is.Not.Null);
+        Assert.That(sut.Profiles, Is.Not.Null);
+        Assert.That(sut.Profiles, Has.Count.GreaterThan(0));
     }
 
     [Test]
@@ -208,7 +217,6 @@ public class ProfilesServiceTests
         {
             sut.Profiles.Should().NotContainEquivalentOf(toBeReplaced);
             sut.Profiles.Should().ContainEquivalentOf(replacement);
-            sut.Profiles.IndexOf(replacement).Should().Be(1);
         });
     }
 
@@ -216,6 +224,7 @@ public class ProfilesServiceTests
     public void ReplaceDefaultProfile_ThrowsException()
     {
         var sut = GetSut();
+        sut.CurrentProfile = sut.Profiles.First(x => x.Name == "Default");
         var replacement = new Profile { Name = "WAHOO" };
 
         Assert.Throws<InvalidReplaceException>(
@@ -228,24 +237,30 @@ public class ProfilesServiceTests
         return GetSut(Array.Empty<Profile>());
     }
 
+    /// <summary>
+    /// This method adds seed data to the database before it is read
+    /// </summary>
+    /// <param name="seedData"></param>
+    /// <returns></returns>
     private static ProfilesService GetSut(IEnumerable<Profile>? seedData)
     {
         var dbConfig = new DatabaseConfiguration { ConnectionString = $"Filename={ConnStr}" };
         var uowF = new LiteDbUnitOfWorkFactory(dbConfig);
-        var pf = new ProfilesService(uowF);
-        if (seedData is null)
-            return pf;
-        foreach (var seed in seedData)
-        {
-            pf.AddProfile(seed);
-        }
 
-        return pf;
+        if (seedData is null)
+            return new ProfilesService(uowF);
+
+        var uow = uowF.Create();
+        var repo = uow.GetRepository<Profile>();
+        repo.ApplyAction(seedData);
+        uow.Dispose();
+        return new ProfilesService(uowF);
     }
 
     private static List<Profile> GetSeedData(int count = 10)
     {
         var fixture = new Fixture();
+        fixture.Customize<Profile>(c => c.With(p => p.IsDefault, false));
         fixture.Customizations.Add(
             new TypeRelay(
                 typeof(DataAccess.Models.Interfaces.ISimulatedKeystrokesType),

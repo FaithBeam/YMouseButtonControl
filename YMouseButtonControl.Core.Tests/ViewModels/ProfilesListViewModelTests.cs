@@ -87,6 +87,7 @@ public class ProfilesListViewModelTests
     public void EditButton_UserSelectsProcess()
     {
         var pf = GetProfilesService(GetSeedData());
+        pf.CurrentProfile = pf.Profiles.First(x => !x.IsDefault);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
         var profileToReturn = new Profile { Name = "WAHOO" };
@@ -94,8 +95,6 @@ public class ProfilesListViewModelTests
             context.SetOutput(profileToReturn)
         );
         var profileToEdit = pf.Profiles[1];
-        var profileToEditIdx = pf.Profiles.IndexOf(profileToEdit);
-        pf.CurrentProfileIndex = profileToEditIdx;
 
         sut.EditButtonCommand.Execute(Unit.Default).Subscribe();
 
@@ -113,9 +112,7 @@ public class ProfilesListViewModelTests
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
         sut.ShowProcessSelectorInteraction.RegisterHandler(context => context.SetOutput(null));
-        var profileToEdit = pf.Profiles[1];
-        var profileToEditIdx = pf.Profiles.IndexOf(profileToEdit);
-        pf.CurrentProfileIndex = profileToEditIdx;
+        var profileToEdit = pf.CurrentProfile;
 
         sut.EditButtonCommand.Execute(Unit.Default).Subscribe();
 
@@ -143,9 +140,9 @@ public class ProfilesListViewModelTests
     public void EditButton_EnabledWhenNonDefaultProfileSelected()
     {
         var pf = GetProfilesService(GetSeedData());
+        pf.CurrentProfile = pf.Profiles.First(x => !x.IsDefault);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(pf.Profiles[1]);
 
         sut.EditButtonCommand.CanExecute.Subscribe(x =>
         {
@@ -159,8 +156,8 @@ public class ProfilesListViewModelTests
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        var profileToRemove = pf.Profiles[1];
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(profileToRemove);
+        var profileToRemove = pf.Profiles.First(x => !x.IsDefault);
+        pf.CurrentProfile = profileToRemove;
 
         sut.RemoveButtonCommand.Execute(Unit.Default).Subscribe();
 
@@ -185,9 +182,9 @@ public class ProfilesListViewModelTests
     public void RemoveButton_EnabledWhenNonDefaultProfileSelected()
     {
         var pf = GetProfilesService(GetSeedData());
+        pf.CurrentProfile = pf.Profiles.First(x => !x.IsDefault);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(pf.Profiles[1]);
 
         sut.RemoveButtonCommand.CanExecute.Subscribe(x =>
         {
@@ -201,8 +198,8 @@ public class ProfilesListViewModelTests
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        var profileToMove = pf.Profiles[2];
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(profileToMove);
+        var profileToMove = pf.Profiles.Last(x => !x.IsDefault);
+        pf.CurrentProfile = profileToMove;
 
         sut.UpCommand.CanExecute.Subscribe(x =>
         {
@@ -227,9 +224,9 @@ public class ProfilesListViewModelTests
     public void UpButton_DisabledForProfileImmediatelyBelowDefault()
     {
         var pf = GetProfilesService(GetSeedData(1));
+        pf.CurrentProfile = pf.Profiles.Where(x => !x.IsDefault).MinBy(x => x.DisplayPriority);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(pf.Profiles.Last());
 
         sut.UpCommand.CanExecute.Subscribe(x =>
         {
@@ -243,16 +240,20 @@ public class ProfilesListViewModelTests
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        var profileToMoveUp = pf.Profiles[2];
-        var profileThatWillBeShiftedDown = pf.Profiles[1];
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(profileToMoveUp);
+        var profileToMoveUp = pf.Profiles.Last(x => !x.IsDefault);
+        var p1p = profileToMoveUp.DisplayPriority;
+        pf.CurrentProfile = profileToMoveUp;
+        var profileThatWillBeShiftedDown = pf
+            .Profiles.Where(x => x.DisplayPriority < profileToMoveUp.DisplayPriority)
+            .MaxBy(x => x.DisplayPriority);
+        var p2p = profileThatWillBeShiftedDown.DisplayPriority;
 
         sut.UpCommand.Execute(Unit.Default).Subscribe();
 
         Assert.Multiple(() =>
         {
-            Assert.That(pf.Profiles.IndexOf(profileToMoveUp), Is.EqualTo(1));
-            Assert.That(pf.Profiles.IndexOf(profileThatWillBeShiftedDown), Is.EqualTo(2));
+            Assert.That(profileToMoveUp.DisplayPriority, Is.EqualTo(p2p));
+            Assert.That(profileThatWillBeShiftedDown.DisplayPriority, Is.EqualTo(p1p));
         });
     }
 
@@ -275,7 +276,7 @@ public class ProfilesListViewModelTests
         var pf = GetProfilesService(GetSeedData(1));
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(pf.Profiles.Last());
+        pf.CurrentProfile = pf.Profiles.Where(x => !x.IsDefault).MaxBy(x => x.DisplayPriority);
 
         sut.DownCommand.CanExecute.Subscribe(x =>
         {
@@ -287,9 +288,11 @@ public class ProfilesListViewModelTests
     public void DownButton_Enabled()
     {
         var pf = GetProfilesService(GetSeedData(2));
+        pf.CurrentProfile = pf
+            .Profiles.Where(p => p.DisplayPriority > 0)
+            .MinBy(x => x.DisplayPriority);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(pf.Profiles[1]);
 
         sut.DownCommand.CanExecute.Subscribe(x =>
         {
@@ -303,16 +306,22 @@ public class ProfilesListViewModelTests
         var pf = GetProfilesService(GetSeedData(2));
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
-        var profileToMove = pf.Profiles[1];
-        var profileToBeShiftedUp = pf.Profiles[2];
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(profileToMove);
+        var profileToMove = pf.Profiles.First(x => !x.IsDefault);
+        pf.CurrentProfile = profileToMove;
+        var priority1 = profileToMove.DisplayPriority;
+        var profileToBeShiftedUp = pf
+            .Profiles.Where(x => x.DisplayPriority > profileToMove.DisplayPriority)
+            .MinBy(x => x.DisplayPriority);
+        var priority2 = profileToBeShiftedUp!.DisplayPriority;
+
+        Assert.That(priority1, Is.LessThan(priority2));
 
         sut.DownCommand.Execute(Unit.Default).Subscribe();
 
         Assert.Multiple(() =>
         {
-            Assert.That(pf.Profiles.IndexOf(profileToMove), Is.EqualTo(2));
-            Assert.That(pf.Profiles.IndexOf(profileToBeShiftedUp), Is.EqualTo(1));
+            Assert.That(profileToMove.DisplayPriority, Is.EqualTo(priority2));
+            Assert.That(profileToBeShiftedUp.DisplayPriority, Is.EqualTo(priority1));
         });
     }
 
@@ -323,7 +332,7 @@ public class ProfilesListViewModelTests
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
         var sut = new ProfilesListViewModel(pf, psdvm);
         var profileToExport = pf.Profiles[1];
-        pf.CurrentProfileIndex = pf.Profiles.IndexOf(profileToExport);
+        pf.CurrentProfile = profileToExport;
         const string outputPath = "tmp.json";
         sut.ShowExportFileDialog.RegisterHandler(x => x.SetOutput(outputPath));
 
@@ -381,7 +390,6 @@ public class ProfilesListViewModelTests
         sut.ShowProcessSelectorInteraction.RegisterHandler(context =>
             context.SetOutput(newProfile)
         );
-        pf.CurrentProfileIndex = 1;
         var profileToCopyFrom = pf.CurrentProfile;
         sut.CopyCommand.Execute(Unit.Default).Subscribe();
 
@@ -439,20 +447,21 @@ public class ProfilesListViewModelTests
     {
         var dbConfig = new DatabaseConfiguration { ConnectionString = $"Filename={ConnStr}" };
         var uowF = new LiteDbUnitOfWorkFactory(dbConfig);
-        var pf = new ProfilesService(uowF);
-        if (seedData is null)
-            return pf;
-        foreach (var seed in seedData)
-        {
-            pf.AddProfile(seed);
-        }
 
-        return pf;
+        if (seedData is null)
+            return new ProfilesService(uowF);
+
+        var uow = uowF.Create();
+        var repo = uow.GetRepository<Profile>();
+        repo.ApplyAction(seedData);
+        uow.Dispose();
+        return new ProfilesService(uowF);
     }
 
     private static List<Profile> GetSeedData(int count = 10)
     {
         var fixture = new Fixture();
+        fixture.Customize<Profile>(c => c.With(p => p.IsDefault, false));
         fixture.Customizations.Add(
             new TypeRelay(typeof(ISimulatedKeystrokesType), typeof(StickyHoldActionType))
         );

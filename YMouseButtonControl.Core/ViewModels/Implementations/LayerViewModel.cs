@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -212,7 +213,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb1Index = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseButton1 = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton1 = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.Mb2Index)
@@ -226,7 +234,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb2Index = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseButton2 = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton2 = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.Mb3Index)
@@ -240,7 +255,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb3Index = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseButton3 = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton3 = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.Mb4Index)
@@ -254,7 +276,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb4Index = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseButton4 = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton4 = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.Mb5Index)
@@ -268,7 +297,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb5Index = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseButton5 = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton5 = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.MwuIndex)
@@ -282,7 +318,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwuIndex = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseWheelUp = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelUp = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.MwdIndex)
@@ -296,7 +339,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwdIndex = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseWheelDown = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelDown = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.MwlIndex)
@@ -310,7 +360,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwlIndex = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseWheelLeft = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelLeft = value;
+                    }
                 )
             );
         this.WhenAnyValue(x => x.MwrIndex)
@@ -324,7 +381,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwrIndex = x;
                     },
                     x,
-                    value => _profilesService.CurrentProfile.MouseWheelRight = value
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelRight = value;
+                    }
                 )
             );
 
@@ -369,7 +433,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb1Index = value.Index;
                     },
                     Mb1Index,
-                    value => _profilesService.CurrentProfile.MouseButton1 = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton1 = value;
+                    },
                     true
                 );
             },
@@ -386,7 +457,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb2Index = value.Index;
                     },
                     Mb2Index,
-                    value => _profilesService.CurrentProfile.MouseButton2 = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton2 = value;
+                    },
                     true
                 );
             },
@@ -403,7 +481,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb3Index = value.Index;
                     },
                     Mb3Index,
-                    value => _profilesService.CurrentProfile.MouseButton3 = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton3 = value;
+                    },
                     true
                 );
             },
@@ -420,7 +505,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb4Index = value.Index;
                     },
                     Mb4Index,
-                    value => _profilesService.CurrentProfile.MouseButton4 = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton4 = value;
+                    },
                     true
                 );
             },
@@ -437,7 +529,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         Mb5Index = value.Index;
                     },
                     Mb5Index,
-                    value => _profilesService.CurrentProfile.MouseButton5 = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseButton5 = value;
+                    },
                     true
                 );
             },
@@ -454,7 +553,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwuIndex = value.Index;
                     },
                     MwuIndex,
-                    value => _profilesService.CurrentProfile.MouseWheelUp = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelUp = value;
+                    },
                     true
                 );
             },
@@ -471,7 +577,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwdIndex = value.Index;
                     },
                     MwdIndex,
-                    value => _profilesService.CurrentProfile.MouseWheelDown = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelDown = value;
+                    },
                     true
                 );
             },
@@ -488,7 +601,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwlIndex = value.Index;
                     },
                     MwlIndex,
-                    value => _profilesService.CurrentProfile.MouseWheelLeft = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelLeft = value;
+                    },
                     true
                 );
             },
@@ -505,7 +625,14 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         MwrIndex = value.Index;
                     },
                     MwrIndex,
-                    value => _profilesService.CurrentProfile.MouseWheelRight = value,
+                    value =>
+                    {
+                        Debug.Assert(
+                            _profilesService.CurrentProfile != null,
+                            "_profilesService.CurrentProfile != null"
+                        );
+                        _profilesService.CurrentProfile.MouseWheelRight = value;
+                    },
                     true
                 );
             },

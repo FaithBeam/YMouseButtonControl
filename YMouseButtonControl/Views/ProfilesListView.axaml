@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:implementations="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations;assembly=YMouseButtonControl.Core"
+             xmlns:models="clr-namespace:YMouseButtonControl.Core.DataAccess.Models.Implementations;assembly=YMouseButtonControl.Core"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -21,10 +22,17 @@
                   HeadersVisibility="None"
                   Margin="5"
                   Height="300"
-                  SelectedIndex="{Binding ProfilesService.CurrentProfileIndex}"
+                  SelectedItem="{Binding ProfilesService.CurrentProfile}"
                   VerticalAlignment="Top">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:Profile">
+                            <CheckBox IsChecked="{Binding Checked}"></CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" /> -->
                 <DataGridTextColumn Binding="{Binding Description}" />
             </DataGrid.Columns>
         </DataGrid>

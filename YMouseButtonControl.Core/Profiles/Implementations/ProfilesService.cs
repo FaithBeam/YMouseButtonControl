@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
-using DynamicData.Binding;
 using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
@@ -18,27 +17,56 @@ namespace YMouseButtonControl.Core.Profiles.Implementations;
 public class ProfilesService : ReactiveObject, IProfilesService
 {
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
-    private int _currentProfileIndex;
-    private readonly ObservableAsPropertyHelper<Profile> _currentProfile;
+    private Profile? _currentProfile;
     private bool _unsavedChanges;
+    private readonly SourceCache<Profile, int> _profiles;
+    private readonly ReadOnlyObservableCollection<Profile> _profilesObsCol;
 
     public ProfilesService(IUnitOfWorkFactory unitOfWorkFactory)
     {
-        Profiles = new ObservableCollection<Profile>();
+        _profiles = new SourceCache<Profile, int>(x => x.Id);
+        _profiles
+            .Connect()
+            .AutoRefresh()
+            .SortBy(x => x.DisplayPriority)
+            .Bind(out _profilesObsCol)
+            .Subscribe();
         _unitOfWorkFactory = unitOfWorkFactory;
         CheckDefaultProfile();
         LoadProfilesFromDb();
-        _currentProfile = this.WhenAnyValue(x => x.CurrentProfileIndex)
-            .Select(x => Profiles[x])
-            .DistinctUntilChanged()
-            .ToProperty(this, x => x.CurrentProfile);
 
-        var unsavedChanges = Profiles
-            .ToObservableChangeSet()
+        _profiles
+            .Connect()
+            .Subscribe(set =>
+            {
+                var change = set.Last();
+                CurrentProfile = change.Reason switch
+                {
+                    ChangeReason.Add => change.Current,
+                    ChangeReason.Remove
+                        => _profiles
+                            .Items.Where(x => x.DisplayPriority < change.Current.DisplayPriority)
+                            .MaxBy(x => x.DisplayPriority)
+                            ?? throw new Exception("Unable to get next lower priority on remove"),
+                    ChangeReason.Update => change.Current,
+                    _ => throw new Exception("Unhandled change reason")
+                };
+            });
+
+        CurrentProfile =
+            _profiles.Items.MinBy(x => x.DisplayPriority)
+            ?? throw new Exception("Unable to retrieve current profile");
+
+        var unsavedChanges = Connect()
             .AutoRefresh()
             .Select(_ => IsUnsavedChanges())
             .Subscribe(UnsavedChangesHelper);
     }
+
+    /// <summary>
+    /// Read only collection of profiles
+    /// </summary>
+    public ReadOnlyObservableCollection<Profile> Profiles => _profilesObsCol;
 
     public bool UnsavedChanges
     {
@@ -46,15 +74,13 @@ public class ProfilesService : ReactiveObject, IProfilesService
         set => this.RaiseAndSetIfChanged(ref _unsavedChanges, value);
     }
 
-    public ObservableCollection<Profile> Profiles { get; private set; }
+    public IObservable<IChangeSet<Profile, int>> Connect() => _profiles.Connect();
 
-    public int CurrentProfileIndex
+    public Profile? CurrentProfile
     {
-        get => _currentProfileIndex;
-        set => this.RaiseAndSetIfChanged(ref _currentProfileIndex, value);
+        get => _currentProfile;
+        set => this.RaiseAndSetIfChanged(ref _currentProfile, value);
     }
-
-    public Profile CurrentProfile => _currentProfile.Value;
 
     private void CheckDefaultProfile()
     {
@@ -66,7 +92,9 @@ public class ProfilesService : ReactiveObject, IProfilesService
         var defaultProfile = new Profile
         {
             Checked = true,
+            DisplayPriority = 0,
             Name = "Default",
+            IsDefault = true,
             Description = "Default description",
             Process = "*",
             MatchType = "N/A",
@@ -103,8 +131,8 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var dbProfiles = repository.GetAll().ToList();
-        return Profiles.Count != dbProfiles.Count
-            || Profiles.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
+        return _profiles.Items.Count() != dbProfiles.Count
+            || _profiles.Items.Where((p, i) => !p.Equals(dbProfiles[i])).Any();
     }
 
     public void WriteProfileToFile(Profile p, string path)
@@ -127,70 +155,85 @@ public class ProfilesService : ReactiveObject, IProfilesService
         AddProfile(deserializedProfile);
     }
 
-    public IEnumerable<Profile> GetProfiles()
-    {
-        return Profiles;
-    }
-
     public void AddProfile(Profile profile)
     {
         profile.Id = GetNextProfileId();
-        Profiles.Add(profile);
-        CurrentProfileIndex = Profiles.IndexOf(profile);
+        profile.DisplayPriority = GetNextProfileDisplayPriority();
+        _profiles.AddOrUpdate(profile);
     }
 
     public void ReplaceProfile(Profile oldProfile, Profile newProfile)
     {
-        if (oldProfile.Id == 1)
+        if (oldProfile.IsDefault || newProfile.IsDefault)
         {
             throw new InvalidReplaceException("Cannot replace the default profile");
         }
-        var pIndex = Profiles.IndexOf(oldProfile);
-        Profiles.Replace(oldProfile, newProfile);
-        // Trigger CurrentProfile to update
-        CurrentProfileIndex = 0;
-        CurrentProfileIndex = pIndex;
+
+        newProfile.Id = oldProfile.Id;
+        _profiles.AddOrUpdate(newProfile);
+    }
+
+    public void ReplaceProfile(Profile p)
+    {
+        if (p.IsDefault)
+        {
+            throw new InvalidReplaceException("Cannot replace the default profile");
+        }
+
+        _profiles.AddOrUpdate(p);
     }
 
     public void MoveProfileUp(Profile p)
     {
-        if (p.Id == 1)
+        if (p.IsDefault)
         {
             throw new InvalidMoveException("Cannot move the default profile");
         }
-        var index = Profiles.IndexOf(p);
-        switch (index)
+
+        var nextSmallerPriority = _profiles
+            .Items.Where(x => x.DisplayPriority < p.DisplayPriority)
+            .MaxBy(x => x.DisplayPriority);
+        if (nextSmallerPriority is null)
         {
-            case < 1:
-                throw new InvalidMoveException($"Index is less than 1: {index}");
-            case 1:
-                throw new InvalidMoveException("Cannot move profile above default profile");
+            throw new InvalidMoveException(
+                "Unable to retrieve max display index from profiles cache"
+            );
         }
 
-        Profiles.Remove(p);
-        Profiles.Insert(index - 1, p);
-        CurrentProfileIndex = index - 1;
+        if (nextSmallerPriority.IsDefault)
+        {
+            throw new InvalidMoveException("Cannot move profile above default profile");
+        }
+
+        // swap priorities
+        (nextSmallerPriority.DisplayPriority, p.DisplayPriority) = (
+            p.DisplayPriority,
+            nextSmallerPriority.DisplayPriority
+        );
     }
 
     public void MoveProfileDown(Profile p)
     {
-        if (p.Id == 1)
+        if (p.IsDefault)
         {
             throw new InvalidMoveException("Cannot move the default profile");
         }
-        var index = Profiles.IndexOf(p);
-        if (index < 0)
+
+        var nextLargerPriority = _profiles
+            .Items.Where(x => x.DisplayPriority > p.DisplayPriority)
+            .MinBy(x => x.DisplayPriority);
+        if (nextLargerPriority is null)
         {
-            throw new InvalidMoveException($"Index is less than 0: {index}");
-        }
-        if (Profiles.Count < index + 2)
-        {
-            return;
+            throw new InvalidMoveException(
+                "Unable to retrieve max display index from profiles cache"
+            );
         }
 
-        Profiles.Remove(p);
-        Profiles.Insert(index + 1, p);
-        CurrentProfileIndex = index + 1;
+        // swap priorities
+        (nextLargerPriority.DisplayPriority, p.DisplayPriority) = (
+            p.DisplayPriority,
+            nextLargerPriority.DisplayPriority
+        );
     }
 
     public void RemoveProfile(Profile profile)
@@ -199,15 +242,24 @@ public class ProfilesService : ReactiveObject, IProfilesService
         {
             throw new Exception("Attempted to remove default profile");
         }
-        CurrentProfileIndex--;
-        Profiles.Remove(profile);
+
+        var nextSmallerPriority = _profiles
+            .Items.Where(x => x.DisplayPriority < profile.DisplayPriority)
+            .MaxBy(x => x.DisplayPriority);
+        if (nextSmallerPriority is null)
+        {
+            throw new Exception("Unable to find next profile to set as current profile");
+        }
+
+        _profiles.Remove(profile);
+        CurrentProfile = nextSmallerPriority;
     }
 
     public void ApplyProfiles()
     {
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
-        repository.ApplyAction(Profiles);
+        repository.ApplyAction(_profiles.Items);
     }
 
     private void LoadProfilesFromDb()
@@ -215,16 +267,12 @@ public class ProfilesService : ReactiveObject, IProfilesService
         using var unitOfWork = _unitOfWorkFactory.Create();
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
-        Profiles = new ObservableCollection<Profile>(model);
+        _profiles.AddOrUpdate(model);
     }
 
-    private int GetNextProfileId()
-    {
-        return Profiles.Max(x => x.Id) + 1;
-    }
+    private int GetNextProfileId() => _profiles.Items.Max(x => x.Id) + 1;
 
-    private void UnsavedChangesHelper(bool next)
-    {
-        UnsavedChanges = next;
-    }
+    private int GetNextProfileDisplayPriority() => _profiles.Items.Max(x => x.DisplayPriority) + 1;
+
+    private void UnsavedChangesHelper(bool next) => UnsavedChanges = next;
 }

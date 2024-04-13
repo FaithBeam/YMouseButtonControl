@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -40,21 +42,36 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         ImportCommand = ReactiveCommand.CreateFromTask(OnImportClickedAsync);
         var exportCanExecute = this.WhenAnyValue(
             x => x.ProfilesService.CurrentProfile,
-            curProf => curProf.Name != "Default"
+            curProf =>
+            {
+                Debug.Assert(curProf != null, nameof(curProf) + " != null");
+                return !curProf.IsDefault;
+            }
         );
         ExportCommand = ReactiveCommand.CreateFromTask(OnExportClickedAsync, exportCanExecute);
         var removeCanExecute = this.WhenAnyValue(
             x => x.ProfilesService.CurrentProfile,
-            curProf => curProf.Name != "Default"
+            curProf =>
+            {
+                Debug.Assert(curProf != null, nameof(curProf) + " != null");
+                return !curProf.IsDefault;
+            }
         );
         RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked, removeCanExecute);
-        var upCommandCanExecute = this.WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)
-            .Select(x => x > 1);
-        UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
-        var downCommandCanExecute = this.WhenAnyValue(x => x.ProfilesService.CurrentProfileIndex)
+        var upCommandCanExecute = this.WhenAnyValue(x => x.ProfilesService.CurrentProfile)
+            .WhereNotNull()
             .Select(x =>
-                x + 1 < ProfilesService.Profiles.Count
-                && ProfilesService.CurrentProfile.Name != "Default"
+                !x.IsDefault
+                && _profilesService.Profiles.Any(p =>
+                    !p.IsDefault && p.DisplayPriority < x.DisplayPriority
+                )
+            );
+        UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
+        var downCommandCanExecute = this.WhenAnyValue(x => x.ProfilesService.CurrentProfile)
+            .WhereNotNull()
+            .Select(curProf =>
+                !curProf.IsDefault
+                && _profilesService.Profiles.Any(p => p.DisplayPriority > curProf.DisplayPriority)
             );
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
@@ -62,7 +79,11 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             new Interaction<IProcessSelectorDialogViewModel, Profile?>();
         var editCanExecute = this.WhenAnyValue(
             x => x.ProfilesService.CurrentProfile,
-            curProf => curProf.Name != "Default"
+            curProf =>
+            {
+                Debug.Assert(curProf != null, nameof(curProf) + " != null");
+                return !curProf.IsDefault;
+            }
         );
         EditButtonCommand = ReactiveCommand.CreateFromTask(EditButtonClickedAsync, editCanExecute);
         CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
@@ -90,6 +111,10 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 
     private async Task OnExportClickedAsync()
     {
+        Debug.Assert(
+            _profilesService.CurrentProfile != null,
+            "_profilesService.CurrentProfile != null"
+        );
         var result = await ShowExportFileDialog.Handle(_profilesService.CurrentProfile.Name);
         if (string.IsNullOrWhiteSpace(result))
         {
@@ -109,6 +134,10 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             return;
         }
 
+        Debug.Assert(
+            _profilesService.CurrentProfile != null,
+            "_profilesService.CurrentProfile != null"
+        );
         var copiedProfile = _profilesService.CopyProfile(_profilesService.CurrentProfile);
         copiedProfile.Name = newProfile.Name;
         copiedProfile.Description = newProfile.Description;
@@ -123,16 +152,28 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 
     private void OnRemoveButtonClicked()
     {
+        Debug.Assert(
+            _profilesService.CurrentProfile != null,
+            "_profilesService.CurrentProfile != null"
+        );
         _profilesService.RemoveProfile(_profilesService.CurrentProfile);
     }
 
     private void UpButtonClicked()
     {
+        Debug.Assert(
+            _profilesService.CurrentProfile != null,
+            "_profilesService.CurrentProfile != null"
+        );
         _profilesService.MoveProfileUp(_profilesService.CurrentProfile);
     }
 
     private void DownButtonClicked()
     {
+        Debug.Assert(
+            _profilesService.CurrentProfile != null,
+            "_profilesService.CurrentProfile != null"
+        );
         _profilesService.MoveProfileDown(_profilesService.CurrentProfile);
     }
 
@@ -144,6 +185,10 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             return;
         }
 
+        Debug.Assert(
+            _profilesService.CurrentProfile != null,
+            "_profilesService.CurrentProfile != null"
+        );
         var newProfile = _profilesService.CopyProfile(_profilesService.CurrentProfile);
         newProfile.Process = result.Process;
         newProfile.Name = result.Name;

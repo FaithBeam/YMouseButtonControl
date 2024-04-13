@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using Avalonia;
@@ -49,7 +50,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         {
             _ps.UnsavedChanges = false;
         });
-        this.WhenAnyValue(x => x._ps.CurrentProfile).Subscribe(OnProfileChanged);
+        this.WhenAnyValue(x => x._ps.CurrentProfile).WhereNotNull().Subscribe(OnProfileChanged);
+        Debug.Assert(_ps.CurrentProfile != null, "_ps.CurrentProfile != null");
         ProfileName = _ps.CurrentProfile.Name;
     }
 
@@ -74,8 +76,5 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     #endregion
 
-    private void OnProfileChanged(Profile profile)
-    {
-        ProfileName = profile.Name;
-    }
+    private void OnProfileChanged(Profile profile) => ProfileName = profile.Name;
 }

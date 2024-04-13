@@ -18,6 +18,10 @@ public class Profile : ReactiveObject, IEquatable<Profile>
     private IButtonMapping _mwl = new NothingMapping();
     private IButtonMapping _mwr = new NothingMapping();
 
+    private int _displayPriority;
+
+    private bool _isChecked = true;
+
     private string _description = "N/A";
     private string _windowCaption = "N/A";
     private string _process = "N/A";
@@ -27,7 +31,23 @@ public class Profile : ReactiveObject, IEquatable<Profile>
 
     [JsonIgnore]
     public int Id { get; set; }
-    public bool Checked { get; set; }
+
+    /// <summary>
+    /// The display priority of a profile. Lower values should appear first in a list. Higher values should appear later in a list.
+    /// </summary>
+    public int DisplayPriority
+    {
+        get => _displayPriority;
+        set => this.RaiseAndSetIfChanged(ref _displayPriority, value);
+    }
+
+    public bool IsDefault { get; set; }
+
+    public bool Checked
+    {
+        get => _isChecked;
+        set => this.RaiseAndSetIfChanged(ref _isChecked, value);
+    }
 
     public string Name { get; set; } = string.Empty;
 
