@@ -13,7 +13,7 @@
         SizeToContent="WidthAndHeight"
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
-        Icon="/Resources/mouse.png">
+        Icon="/Resources/mouse.ico">
 
     <Design.DataContext>
         <implementations:MainWindowViewModel />
