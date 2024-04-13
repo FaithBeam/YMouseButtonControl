@@ -14,9 +14,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-latest
+          - os: ubuntu-latest
             rid: win-x64
-          - os: windows-latest
+          - os: ubuntu-latest
             rid: win-arm64
           - os: ubuntu-latest
             rid: linux-x64
