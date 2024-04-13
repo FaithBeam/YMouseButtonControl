@@ -1,7 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
+using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.Processes;
@@ -21,14 +23,19 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         _processes = new ObservableCollection<ProcessModel>();
         _processMonitorService = processMonitorService;
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
+        var canExecuteOkCommand = this.WhenAnyValue(
+            x => x.SelectedProcessModel,
+            selector: model => model is not null
+        );
         OkCommand = ReactiveCommand.Create(
             () =>
                 new Profile
                 {
-                    Name = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty,
-                    Description = SelectedProcessModel?.Process.MainWindowTitle ?? string.Empty,
-                    Process = SelectedProcessModel?.Process.MainModule?.ModuleName ?? string.Empty
-                }
+                    Name = SelectedProcessModel!.Process.MainModule!.ModuleName,
+                    Description = SelectedProcessModel.Process.MainWindowTitle,
+                    Process = SelectedProcessModel.Process.MainModule.ModuleName
+                },
+            canExecuteOkCommand
         );
         RefreshProcessList();
     }
@@ -51,8 +58,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     private void RefreshProcessList()
     {
-        Processes = new ObservableCollection<ProcessModel>(
-            _processMonitorService.RunningProcesses.Items.OrderBy(x => x.Process.ProcessName)
-        );
+        Processes.Clear();
+        Processes.AddRange(_processMonitorService.GetProcesses.OrderBy(x => x.Process.ProcessName));
     }
 }

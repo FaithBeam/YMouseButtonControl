@@ -1,10 +1,9 @@
-﻿using System;
-using DynamicData;
+﻿using System.Collections.Generic;
 using YMouseButtonControl.Core.Services.Abstractions.Models;
 
 namespace YMouseButtonControl.Core.Processes;
 
-public interface IProcessMonitorService : IDisposable
+public interface IProcessMonitorService
 {
-    IObservableCache<ProcessModel, int> RunningProcesses { get; }
+    IEnumerable<ProcessModel> GetProcesses { get; }
 }
