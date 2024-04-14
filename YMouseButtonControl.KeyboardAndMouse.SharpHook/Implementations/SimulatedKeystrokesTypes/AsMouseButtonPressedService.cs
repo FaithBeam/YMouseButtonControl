@@ -4,7 +4,7 @@ using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class AsMouseButtonPressedService(ISimulateKeyService simulateKeyService)
+public class AsMouseButtonPressedService(IEventSimulatorService eventSimulatorService)
     : IAsMouseButtonPressedService
 {
     public void AsMouseButtonPressed(IButtonMapping mapping, MouseButtonState state)
@@ -14,6 +14,6 @@ public class AsMouseButtonPressedService(ISimulateKeyService simulateKeyService)
             return;
         }
 
-        simulateKeyService.TapKeys(mapping.Keys);
+        eventSimulatorService.TapKeys(mapping.Keys);
     }
 }

@@ -5,7 +5,7 @@ using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class DuringMousePressAndReleaseService(ISimulateKeyService simulateKeyService)
+public class DuringMousePressAndReleaseService(IEventSimulatorService eventSimulatorService)
     : IDuringMousePressAndReleaseService
 {
     public void DuringMousePressAndRelease(IButtonMapping mapping, MouseButtonState state)
@@ -13,10 +13,10 @@ public class DuringMousePressAndReleaseService(ISimulateKeyService simulateKeySe
         switch (state)
         {
             case MouseButtonState.Pressed:
-                simulateKeyService.PressKeys(mapping.Keys);
+                eventSimulatorService.PressKeys(mapping.Keys);
                 break;
             case MouseButtonState.Released:
-                simulateKeyService.ReleaseKeys(mapping.Keys);
+                eventSimulatorService.ReleaseKeys(mapping.Keys);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);

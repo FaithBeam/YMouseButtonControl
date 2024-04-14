@@ -45,8 +45,8 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
-        services.AddTransient<ICurrentWindowService, Services.Windows.CurrentWindowService>();
-        services.AddTransient<IBackgroundTasksRunner, Services.Windows.BackgroundTasksRunner>();
+        services.AddSingleton<ICurrentWindowService, Services.Windows.CurrentWindowService>();
+        services.AddSingleton<IBackgroundTasksRunner, Services.Windows.BackgroundTasksRunner>();
     }
 
     private static void RegisterMacOsServices(IServiceCollection services)

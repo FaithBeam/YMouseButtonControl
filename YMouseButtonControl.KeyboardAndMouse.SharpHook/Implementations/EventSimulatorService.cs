@@ -1,29 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using Serilog;
 using SharpHook;
 using SharpHook.Native;
+using YMouseButtonControl.Core.DataAccess.Models.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
-public class SimulateKeyService(IEventSimulator keyboardSimulator) : ISimulateKeyService
+public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimulatorService
 {
-    public SimulateKeyboardResult SimulateKeyPress(string? key) =>
-        new()
+    private readonly ILogger _logger = Log.Logger.ForContext<EventSimulatorService>();
+
+    public void SimulateMousePress(YMouseButton mb) =>
+        eventSimulator.SimulateMousePress((MouseButton)mb);
+
+    public void SimulateMouseRelease(YMouseButton mb) =>
+        eventSimulator.SimulateMouseRelease((MouseButton)mb);
+
+    public SimulateKeyboardResult SimulateKeyPress(string? key)
+    {
+        _logger.Information("Simulate press {Key}", key);
+        return new SimulateKeyboardResult
         {
-            Result = keyboardSimulator
+            Result = eventSimulator
                 .SimulateKeyPress(KeyCodes[key ?? throw new NullReferenceException(key)])
                 .ToString()
         };
+    }
 
-    public SimulateKeyboardResult SimulateKeyRelease(string? key) =>
-        new()
+    public SimulateKeyboardResult SimulateKeyRelease(string? key)
+    {
+        _logger.Information("Simulate release {Key}", key);
+        return new SimulateKeyboardResult
         {
-            Result = keyboardSimulator
+            Result = eventSimulator
                 .SimulateKeyRelease(KeyCodes[key ?? throw new NullReferenceException(key)])
                 .ToString()
         };
+    }
 
     /// <summary>
     /// Press then release
@@ -32,9 +48,10 @@ public class SimulateKeyService(IEventSimulator keyboardSimulator) : ISimulateKe
     /// <returns></returns>
     public SimulateKeyboardResult SimulateKeyTap(string? key)
     {
+        _logger.Information("Simulate key tap {Key}", key);
         var keyCode = KeyCodes[key ?? throw new NullReferenceException(key)];
-        keyboardSimulator.SimulateKeyPress(keyCode);
-        keyboardSimulator.SimulateKeyRelease(keyCode);
+        eventSimulator.SimulateKeyPress(keyCode);
+        eventSimulator.SimulateKeyRelease(keyCode);
         return new SimulateKeyboardResult { Result = "Success" };
     }
 

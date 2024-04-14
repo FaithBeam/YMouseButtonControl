@@ -23,11 +23,11 @@ public static class KeyboardAndMouseBootstrapper
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600))
         {
-            services.AddTransient<ISkipProfileService, Services.Windows.SkipProfileService>();
+            services.AddSingleton<ISkipProfileService, Services.Windows.SkipProfileService>();
         }
         else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
         {
-            services.AddTransient<ISkipProfileService, SkipProfileService>();
+            services.AddSingleton<ISkipProfileService, SkipProfileService>();
         }
         else
         {
@@ -38,20 +38,19 @@ public static class KeyboardAndMouseBootstrapper
     private static void RegisterCommonKeyboardAndMouseServices(IServiceCollection services)
     {
         services.AddSingleton<IGlobalHook, SimpleGlobalHook>();
-        services.AddTransient<IMouseListener, MouseListener>();
-        services.AddTransient<IEventSimulator, EventSimulator>();
-        services.AddTransient<ISimulateKeyService, SimulateKeyService>();
-        services.AddTransient<IStickyHoldService, StickyHoldService>();
-        services.AddTransient<IAsMouseButtonPressedService, AsMouseButtonPressedService>();
-        services.AddTransient<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>();
-        services.AddTransient<
+        services.AddSingleton<IMouseListener, MouseListener>();
+        services.AddSingleton<IEventSimulator, EventSimulator>();
+        services.AddSingleton<IEventSimulatorService, EventSimulatorService>();
+        services.AddSingleton<IStickyHoldService, StickyHoldService>();
+        services.AddSingleton<IAsMouseButtonPressedService, AsMouseButtonPressedService>();
+        services.AddSingleton<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>();
+        services.AddSingleton<
             IDuringMousePressAndReleaseService,
             DuringMousePressAndReleaseService
         >();
-        services.AddTransient<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
-        services.AddTransient<IStickyRepeatService, StickyRepeatService>();
-        services.AddTransient<ISimulateMouseService, SimulateMouseService>();
-        services.AddTransient<IRightClick, RightClick>();
-        services.AddTransient<KeyboardSimulatorWorker>();
+        services.AddSingleton<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
+        services.AddSingleton<IStickyRepeatService, StickyRepeatService>();
+        services.AddSingleton<IRightClick, RightClick>();
+        services.AddSingleton<KeyboardSimulatorWorker>();
     }
 }

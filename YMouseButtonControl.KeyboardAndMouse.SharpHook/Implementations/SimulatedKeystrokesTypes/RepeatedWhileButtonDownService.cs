@@ -6,7 +6,7 @@ using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyService)
+public class RepeatedWhileButtonDownService(IEventSimulatorService eventSimulatorService)
     : IRepeatedWhileButtonDownService
 {
     private Thread? _thread;
@@ -33,7 +33,7 @@ public class RepeatedWhileButtonDownService(ISimulateKeyService simulateKeyServi
                             }
                         }
                         Thread.Sleep(RepeatRateMs);
-                        simulateKeyService.TapKeys(mapping.Keys);
+                        eventSimulatorService.TapKeys(mapping.Keys);
                     }
                 });
 

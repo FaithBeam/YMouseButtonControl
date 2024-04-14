@@ -1,8 +1,9 @@
-﻿using YMouseButtonControl.Core.KeyboardAndMouse.Models;
+﻿using YMouseButtonControl.Core.DataAccess.Models.Enums;
+using YMouseButtonControl.Core.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
-public interface ISimulateKeyService
+public interface IEventSimulatorService
 {
     SimulateKeyboardResult SimulateKeyPress(string? key);
     SimulateKeyboardResult SimulateKeyRelease(string? key);
@@ -28,4 +29,6 @@ public interface ISimulateKeyService
     void ReleaseKeys(string? keys);
 
     void TapKeys(string? keys);
+    void SimulateMousePress(YMouseButton mb);
+    void SimulateMouseRelease(YMouseButton mb);
 }

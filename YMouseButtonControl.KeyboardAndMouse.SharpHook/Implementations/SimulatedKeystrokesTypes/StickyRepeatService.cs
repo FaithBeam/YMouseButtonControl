@@ -5,7 +5,8 @@ using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class StickyRepeatService(ISimulateKeyService simulateKeyService) : IStickyRepeatService
+public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
+    : IStickyRepeatService
 {
     private Thread? _thread;
     private bool _shouldStop;
@@ -56,7 +57,7 @@ public class StickyRepeatService(ISimulateKeyService simulateKeyService) : IStic
                 }
 
                 Thread.Sleep(RepeatRateMs);
-                simulateKeyService.TapKeys(mapping.Keys);
+                eventSimulatorService.TapKeys(mapping.Keys);
             }
         });
 

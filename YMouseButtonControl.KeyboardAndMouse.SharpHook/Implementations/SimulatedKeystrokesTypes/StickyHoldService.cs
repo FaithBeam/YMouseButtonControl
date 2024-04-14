@@ -4,7 +4,7 @@ using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 
-public class StickyHoldService(ISimulateKeyService simulateKeyService) : IStickyHoldService
+public class StickyHoldService(IEventSimulatorService eventSimulatorService) : IStickyHoldService
 {
     public void StickyHold(IButtonMapping mapping, MouseButtonState state)
     {
@@ -15,12 +15,12 @@ public class StickyHoldService(ISimulateKeyService simulateKeyService) : ISticky
 
         if (mapping.State)
         {
-            simulateKeyService.ReleaseKeys(mapping.Keys);
+            eventSimulatorService.ReleaseKeys(mapping.Keys);
             mapping.State = false;
         }
         else
         {
-            simulateKeyService.PressKeys(mapping.Keys);
+            eventSimulatorService.PressKeys(mapping.Keys);
             mapping.State = true;
         }
     }
