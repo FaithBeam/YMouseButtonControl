@@ -36,6 +36,7 @@ public class ShowSimulatedKeystrokesDialogService : IShowSimulatedKeystrokesDial
             Keys = result.CustomKeys,
             PriorityDescription = result.Description,
             SimulatedKeystrokesType = result.SimulatedKeystrokesType,
+            BlockOriginalMouseInput = result.BlockOriginalMouseInput
         };
     }
 }

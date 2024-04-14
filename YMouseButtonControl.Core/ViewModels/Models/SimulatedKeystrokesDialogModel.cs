@@ -7,4 +7,5 @@ public class SimulatedKeystrokesDialogModel
     public string? CustomKeys { get; set; }
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
     public string? Description { get; set; }
+    public bool BlockOriginalMouseInput { get; set; }
 }

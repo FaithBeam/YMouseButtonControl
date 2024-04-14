@@ -9,7 +9,7 @@ public interface IButtonMapping
     public string? Keys { get; }
     public bool State { get; set; }
     public bool CanRaiseDialog { get; }
-    public bool MouseButtonDisabled { get; set; }
+    public bool BlockOriginalMouseInput { get; set; }
 
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 }

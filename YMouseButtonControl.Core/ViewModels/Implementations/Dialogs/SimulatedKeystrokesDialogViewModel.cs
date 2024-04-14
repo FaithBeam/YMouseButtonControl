@@ -27,6 +27,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     private string _description;
     private int _simulatedKeystrokesIndex;
     private int _caretIndex;
+    private bool _blockOriginalMouseInput = true;
     private readonly ObservableAsPropertyHelper<ISimulatedKeystrokesType> _currentSimulatedKeystrokesType;
 
     public SimulatedKeystrokesDialogViewModel()
@@ -40,7 +41,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
                 {
                     CustomKeys = CustomKeys,
                     SimulatedKeystrokesType = CurrentSimulatedKeystrokesType,
-                    Description = Description
+                    Description = Description,
+                    BlockOriginalMouseInput = BlockOriginalMouseInput
                 }
         );
 
@@ -76,6 +78,12 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     {
         get => _description;
         set => this.RaiseAndSetIfChanged(ref _description, value);
+    }
+
+    public bool BlockOriginalMouseInput
+    {
+        get => _blockOriginalMouseInput;
+        set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);
     }
 
     public AvaloniaList<ISimulatedKeystrokesType> SimulatedKeystrokesTypes { get; set; } =

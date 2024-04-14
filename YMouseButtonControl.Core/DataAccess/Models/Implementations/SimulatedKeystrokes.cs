@@ -21,7 +21,7 @@ public class SimulatedKeystrokes : ReactiveObject, IButtonMapping, IEquatable<Si
     /// <summary>
     /// Prevent the original mouse button from going through (not YMouseButtonControl's simulated keystroke)
     /// </summary>
-    public bool MouseButtonDisabled { get; set; } = true;
+    public bool BlockOriginalMouseInput { get; set; } = true;
 
     public override string ToString()
     {

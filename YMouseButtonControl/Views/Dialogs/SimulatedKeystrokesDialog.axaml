@@ -6,7 +6,8 @@
         xmlns:dialogs="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.Core"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         WindowStartupLocation="CenterOwner"
-        SizeToContent="WidthAndHeight"
+        Width="800"
+        Height="600"
         x:Class="YMouseButtonControl.Views.Dialogs.SimulatedKeystrokesDialog"
         Title="SimulatedKeystrokesDialog">
     <Design.DataContext>
@@ -16,9 +17,9 @@
     <Window.Resources>
         <converters:SimulatedKeystrokesDialogKeyConverter x:Key="DialogKeyConverter" />
     </Window.Resources>
-    
-    <Grid RowDefinitions="*,*,*,*,*">
-        <Label HorizontalAlignment="Left" Content="Enter the custom key(s)" />
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,400,Auto,Auto" Margin="10">
+        <Label HorizontalAlignment="Left" Content="Enter the custom key(s)" VerticalAlignment="Center" VerticalContentAlignment="Center" />
         
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
             <TextBox Text="{Binding CustomKeys}"
@@ -75,19 +76,30 @@
             </SplitButton>
         </Grid>
         
-        <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
+        <Grid Grid.Row="2" ColumnDefinitions="350,*">
             <Label HorizontalAlignment="Left" Content="How to send the simulated key strokes:" />
             <ComboBox Grid.Column="1" 
                       ItemsSource="{Binding SimulatedKeystrokesTypes}"
-                      SelectedIndex="{Binding SimulatedKeystrokesIndex}" />
+                      SelectedIndex="{Binding SimulatedKeystrokesIndex}"
+                      HorizontalAlignment="Stretch"/>
         </Grid>
         
-        <Grid Grid.Row="3" Grid.ColumnDefinitions="Auto,Auto">
+        <Grid Grid.Row="3">
+            <CheckBox IsChecked="{Binding BlockOriginalMouseInput}" Content="Block original mouse input" />
+        </Grid>
+        
+        <Grid Grid.Row="4">
+            <Border BorderThickness="1" CornerRadius="5" BorderBrush="Gray">
+                <SelectableTextBlock Margin="5 0">Placeholder</SelectableTextBlock>
+            </Border>
+        </Grid>
+        
+        <Grid Grid.Row="5" ColumnDefinitions="350,*">
             <Label Content="Description (to show in the button drop-down)" />
             <TextBox Grid.Column="1" Text="{Binding Description}"></TextBox>
         </Grid>
         
-        <Grid Grid.Row="4" ColumnDefinitions="Auto,Auto">
+        <Grid Grid.Row="6" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Right">
             <Button Content="OK" Command="{Binding OkCommand}" />
             <Button Grid.Column="1" Content="Cancel" Click="Button_OnClick"></Button>
         </Grid>

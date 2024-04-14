@@ -13,7 +13,7 @@ public class RightClick : ReactiveObject, IButtonMapping, IEquatable<RightClick>
     public string? Keys { get; } = null;
     public bool State { get; set; }
     public bool CanRaiseDialog { get; } = false;
-    public bool MouseButtonDisabled { get; set; } = true;
+    public bool BlockOriginalMouseInput { get; set; } = true;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 
     public override string ToString() => "Right Click";
@@ -30,7 +30,7 @@ public class RightClick : ReactiveObject, IButtonMapping, IEquatable<RightClick>
             && Keys == other.Keys
             && State == other.State
             && CanRaiseDialog == other.CanRaiseDialog
-            && MouseButtonDisabled == other.MouseButtonDisabled
+            && BlockOriginalMouseInput == other.BlockOriginalMouseInput
             && Equals(SimulatedKeystrokesType, other.SimulatedKeystrokesType);
     }
 
@@ -54,7 +54,7 @@ public class RightClick : ReactiveObject, IButtonMapping, IEquatable<RightClick>
             Keys,
             State,
             CanRaiseDialog,
-            MouseButtonDisabled,
+            BlockOriginalMouseInput,
             SimulatedKeystrokesType
         );
     }
