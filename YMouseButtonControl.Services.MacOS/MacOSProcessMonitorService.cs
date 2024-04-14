@@ -8,6 +8,6 @@ namespace YMouseButtonControl.Services.MacOS;
 
 public class MacOsProcessMonitorService : IProcessMonitorService
 {
-    public IEnumerable<ProcessModel> GetProcesses =>
+    public IEnumerable<ProcessModel> GetProcesses() =>
         Process.GetProcesses().Select(x => new ProcessModel(x));
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
+using System.Threading.Tasks;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Services.Abstractions.Models;
 
@@ -14,25 +17,30 @@ namespace YMouseButtonControl.Services.Windows;
 [SupportedOSPlatform("windows5.1.2600")]
 public class ProcessMonitorService : IProcessMonitorService
 {
-    public IEnumerable<ProcessModel> GetProcesses =>
-        Process
-            .GetProcesses()
-            .Where(x =>
+    public IEnumerable<ProcessModel> GetProcesses()
+    {
+        var cb = new ConcurrentBag<Process>();
+        Parallel.ForEach(
+            Process.GetProcesses().DistinctBy(x => x.ProcessName),
+            p =>
             {
                 try
                 {
-                    return x.MainModule != null;
+                    if (p.MainModule != null)
+                    {
+                        cb.Add(p);
+                    }
                 }
-                catch (Win32Exception)
-                {
-                    return false;
-                }
-            })
-            .DistinctBy(x => x.MainModule!.FileName)
+                catch (Win32Exception) { }
+            }
+        );
+        return cb.DistinctBy(x => x.MainModule!.FileName)
             .Select(x => new ProcessModel(x)
             {
                 Bitmap = GetBitmapStreamFromPath(x.MainModule!.FileName)
-            });
+            })
+            .ToList();
+    }
 
     private static MemoryStream? GetBitmapStreamFromPath(string path)
     {

@@ -59,6 +59,8 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
     private void RefreshProcessList()
     {
         Processes.Clear();
-        Processes.AddRange(_processMonitorService.GetProcesses.OrderBy(x => x.Process.ProcessName));
+        Processes.AddRange(
+            _processMonitorService.GetProcesses().OrderBy(x => x.Process.ProcessName)
+        );
     }
 }

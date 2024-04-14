@@ -5,5 +5,5 @@ namespace YMouseButtonControl.Core.Processes;
 
 public interface IProcessMonitorService
 {
-    IEnumerable<ProcessModel> GetProcesses { get; }
+    IEnumerable<ProcessModel> GetProcesses();
 }
