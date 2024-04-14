@@ -25,16 +25,18 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     private string _customKeys;
     private string? _currentKey;
     private string _description;
+    private readonly string _title;
     private int _simulatedKeystrokesIndex;
     private int _caretIndex;
     private bool _blockOriginalMouseInput = true;
     private readonly ObservableAsPropertyHelper<ISimulatedKeystrokesType> _currentSimulatedKeystrokesType;
 
-    public SimulatedKeystrokesDialogViewModel()
-        : this(null) { }
-
-    public SimulatedKeystrokesDialogViewModel(IButtonMapping? currentMapping)
+    public SimulatedKeystrokesDialogViewModel(
+        string buttonName,
+        IButtonMapping? currentMapping = null
+    )
     {
+        _title = $"SimulatedKeystrokes - {buttonName}";
         OkCommand = ReactiveCommand.Create(
             () =>
                 new SimulatedKeystrokesDialogModel
@@ -67,6 +69,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         SimulatedKeystrokesIndex = currentMapping?.SimulatedKeystrokesType?.Index ?? 0;
         _caretIndex = 0;
     }
+
+    public string Title => _title;
 
     public string CustomKeys
     {

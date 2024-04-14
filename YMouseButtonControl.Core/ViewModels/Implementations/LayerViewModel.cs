@@ -127,6 +127,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         Action<IButtonMapping> setComboList,
         int index,
         Action<IButtonMapping> setMouseMapping,
+        string buttonName,
         bool settingsGearClicked = false
     )
     {
@@ -142,6 +143,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         )
         {
             newMapping = await ShowSimulatedKeystrokesDialogService.ShowSimulatedKeystrokesDialog(
+                buttonName,
                 mapping
             );
             if (newMapping is null)
@@ -206,21 +208,22 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .DistinctUntilChanged()
             .Subscribe(async x =>
                 await OnComboIndexChangedAsync(
-                    MouseButton1Combo,
-                    value =>
+                    list: MouseButton1Combo,
+                    setComboList: value =>
                     {
                         MouseButton1Combo[x] = value;
                         Mb1Index = x;
                     },
-                    x,
-                    value =>
+                    index: x,
+                    setMouseMapping: value =>
                     {
                         Debug.Assert(
                             _profilesService.CurrentProfile != null,
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseButton1 = value;
-                    }
+                    },
+                    buttonName: "Left Mouse Button"
                 )
             );
         this.WhenAnyValue(x => x.Mb2Index)
@@ -241,7 +244,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseButton2 = value;
-                    }
+                    },
+                    buttonName: "Right Mouse Button"
                 )
             );
         this.WhenAnyValue(x => x.Mb3Index)
@@ -262,7 +266,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseButton3 = value;
-                    }
+                    },
+                    buttonName: "Middle Mouse Button"
                 )
             );
         this.WhenAnyValue(x => x.Mb4Index)
@@ -283,7 +288,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseButton4 = value;
-                    }
+                    },
+                    buttonName: "Mouse Button 4"
                 )
             );
         this.WhenAnyValue(x => x.Mb5Index)
@@ -304,7 +310,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseButton5 = value;
-                    }
+                    },
+                    buttonName: "Mouse Button 5"
                 )
             );
         this.WhenAnyValue(x => x.MwuIndex)
@@ -325,7 +332,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseWheelUp = value;
-                    }
+                    },
+                    buttonName: "Mouse Wheel Up"
                 )
             );
         this.WhenAnyValue(x => x.MwdIndex)
@@ -346,7 +354,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseWheelDown = value;
-                    }
+                    },
+                    buttonName: "Mouse Wheel Down"
                 )
             );
         this.WhenAnyValue(x => x.MwlIndex)
@@ -367,7 +376,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseWheelLeft = value;
-                    }
+                    },
+                    buttonName: "Mouse Wheel Left"
                 )
             );
         this.WhenAnyValue(x => x.MwrIndex)
@@ -388,7 +398,8 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                             "_profilesService.CurrentProfile != null"
                         );
                         _profilesService.CurrentProfile.MouseWheelRight = value;
-                    }
+                    },
+                    buttonName: "Mouse Wheel Right"
                 )
             );
 
@@ -441,6 +452,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseButton1 = value;
                     },
+                    buttonName: "Left Mouse Button",
                     true
                 );
             },
@@ -465,6 +477,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseButton2 = value;
                     },
+                    buttonName: "Right Mouse Button",
                     true
                 );
             },
@@ -489,6 +502,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseButton3 = value;
                     },
+                    buttonName: "Middle Mouse Button",
                     true
                 );
             },
@@ -513,6 +527,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseButton4 = value;
                     },
+                    buttonName: "Mouse Button 4",
                     true
                 );
             },
@@ -537,6 +552,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseButton5 = value;
                     },
+                    buttonName: "Mouse Button 5",
                     true
                 );
             },
@@ -561,6 +577,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseWheelUp = value;
                     },
+                    buttonName: "Mouse Wheel Up",
                     true
                 );
             },
@@ -585,6 +602,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseWheelDown = value;
                     },
+                    buttonName: "Mouse Wheel Down",
                     true
                 );
             },
@@ -609,6 +627,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseWheelLeft = value;
                     },
+                    buttonName: "Mouse Wheel Left",
                     true
                 );
             },
@@ -633,6 +652,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                         );
                         _profilesService.CurrentProfile.MouseWheelRight = value;
                     },
+                    buttonName: "Mouse Wheel Right",
                     true
                 );
             },

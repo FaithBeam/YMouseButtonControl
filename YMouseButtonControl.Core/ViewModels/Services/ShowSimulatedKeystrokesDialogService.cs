@@ -16,15 +16,18 @@ public class ShowSimulatedKeystrokesDialogService : IShowSimulatedKeystrokesDial
         SimulatedKeystrokesDialogModel?
     > ShowSimulatedKeystrokesPickerInteraction { get; } = new();
 
-    public async Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog()
+    public async Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog(string buttonName)
     {
-        return await ShowSimulatedKeystrokesDialog(null);
+        return await ShowSimulatedKeystrokesDialog(buttonName, null);
     }
 
-    public async Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog(IButtonMapping? mapping)
+    public async Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog(
+        string buttonName,
+        IButtonMapping? mapping
+    )
     {
         var result = await ShowSimulatedKeystrokesPickerInteraction.Handle(
-            new SimulatedKeystrokesDialogViewModel(mapping)
+            new SimulatedKeystrokesDialogViewModel(buttonName, mapping)
         );
         if (result is null)
         {

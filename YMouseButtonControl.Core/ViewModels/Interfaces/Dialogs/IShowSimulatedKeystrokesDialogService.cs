@@ -13,6 +13,9 @@ public interface IShowSimulatedKeystrokesDialogService
         SimulatedKeystrokesDialogViewModel,
         SimulatedKeystrokesDialogModel?
     > ShowSimulatedKeystrokesPickerInteraction { get; }
-    Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog();
-    Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog(IButtonMapping mapping);
+    Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog(string buttonName);
+    Task<SimulatedKeystrokes?> ShowSimulatedKeystrokesDialog(
+        string buttonName,
+        IButtonMapping mapping
+    );
 }
