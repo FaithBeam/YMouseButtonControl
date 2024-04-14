@@ -18,28 +18,8 @@ using YMouseButtonControl.DataAccess.LiteDb;
 
 namespace YMouseButtonControl.Core.Tests.ViewModels;
 
-public class ProfilesListViewModelTests
+public class ProfilesListViewModelTests : BaseTest
 {
-    private const string ConnStr = "tmp.db";
-
-    [SetUp]
-    public void Setup()
-    {
-        if (File.Exists(ConnStr))
-        {
-            File.Delete(ConnStr);
-        }
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        if (File.Exists(ConnStr))
-        {
-            File.Delete(ConnStr);
-        }
-    }
-
     [Test]
     public void Ctor()
     {
@@ -441,32 +421,5 @@ public class ProfilesListViewModelTests
 
         Assert.That(pf.Profiles, Has.Count.EqualTo(1));
         pf.Profiles.Should().NotContainNulls();
-    }
-
-    private static ProfilesService GetProfilesService(IEnumerable<Profile>? seedData = null)
-    {
-        var dbConfig = new DatabaseConfiguration { ConnectionString = $"Filename={ConnStr}" };
-        var uowF = new LiteDbUnitOfWorkFactory(dbConfig);
-
-        if (seedData is null)
-            return new ProfilesService(uowF);
-
-        var uow = uowF.Create();
-        var repo = uow.GetRepository<Profile>();
-        repo.ApplyAction(seedData);
-        uow.Dispose();
-        return new ProfilesService(uowF);
-    }
-
-    private static List<Profile> GetSeedData(int count = 10)
-    {
-        var fixture = new Fixture();
-        fixture.Customize<Profile>(c => c.With(p => p.IsDefault, false));
-        fixture.Customizations.Add(
-            new TypeRelay(typeof(ISimulatedKeystrokesType), typeof(StickyHoldActionType))
-        );
-        fixture.Customizations.Add(new TypeRelay(typeof(IButtonMapping), typeof(NothingMapping)));
-        return fixture.CreateMany<Profile>(count).ToList()
-            ?? throw new Exception("Error creating test profiles");
     }
 }
