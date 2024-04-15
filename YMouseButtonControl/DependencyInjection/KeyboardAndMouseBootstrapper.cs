@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using SharpHook;
+using SharpHook.Reactive;
 using YMouseButtonControl.Core.KeyboardAndMouse;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.KeyboardAndMouse;
@@ -37,7 +38,7 @@ public static class KeyboardAndMouseBootstrapper
 
     private static void RegisterCommonKeyboardAndMouseServices(IServiceCollection services)
     {
-        services.AddSingleton<IGlobalHook, SimpleGlobalHook>();
+        services.AddSingleton<IReactiveGlobalHook, SimpleReactiveGlobalHook>();
         services.AddSingleton<IMouseListener, MouseListener>();
         services.AddSingleton<IEventSimulator, EventSimulator>();
         services.AddSingleton<IEventSimulatorService, EventSimulatorService>();

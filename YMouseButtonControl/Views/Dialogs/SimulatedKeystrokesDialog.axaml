@@ -99,9 +99,11 @@
             <TextBox Grid.Column="1" Text="{Binding Description}"></TextBox>
         </Grid>
         
-        <Grid Grid.Row="6" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Right">
-            <Button Content="OK" Command="{Binding OkCommand}" />
-            <Button Grid.Column="1" Content="Cancel" Click="Button_OnClick"></Button>
+        <Grid Grid.Row="6" ColumnDefinitions="Auto,Auto,Auto,Auto" HorizontalAlignment="Right">
+            <Label Content="Cursor Position: X,Y" />
+            <TextBox Grid.Column="1" Text="{Binding ComputedXY}"></TextBox>
+            <Button Grid.Column="2" Content="OK" Command="{Binding OkCommand}" />
+            <Button Grid.Column="3" Content="Cancel" Click="Button_OnClick"></Button>
         </Grid>
     </Grid>
 </Window>

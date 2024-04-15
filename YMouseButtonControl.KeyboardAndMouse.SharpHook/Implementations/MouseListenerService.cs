@@ -4,12 +4,14 @@ using System.Threading;
 using Serilog;
 using SharpHook;
 using SharpHook.Native;
+using SharpHook.Reactive;
 using YMouseButtonControl.Core.DataAccess.Models.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.Services.Abstractions.Enums;
 using YMouseButtonControl.Core.Services.Abstractions.Models.EventArgs;
+using System.Reactive.Linq;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
@@ -19,14 +21,19 @@ namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 /// </summary>
 public class MouseListener : IMouseListener
 {
-    private readonly IGlobalHook _hook;
+    private readonly IReactiveGlobalHook _hook;
     private readonly IProfilesService _profilesService;
     private readonly ICurrentWindowService _currentWindowService;
     private readonly ILogger _log = Log.Logger.ForContext<MouseListener>();
     private Thread? _thread;
+    private IDisposable? _mouseMovedDisposable;
+    private IDisposable? _mousePressedDisposable;
+    private IDisposable? _mouseReleasedDisposable;
+    private IDisposable? _mouseWheelDisposable;
+
 
     public MouseListener(
-        IGlobalHook hook,
+        IReactiveGlobalHook hook,
         IProfilesService profilesService,
         ICurrentWindowService currentWindowService
     )
@@ -39,6 +46,7 @@ public class MouseListener : IMouseListener
     }
 
     public event EventHandler<NewMouseHookEventArgs>? OnMousePressedEventHandler;
+    public event EventHandler<NewMouseHookMoveEventArgs>? OnMouseMovedEventHandler;
     public event EventHandler<NewMouseHookEventArgs>? OnMouseReleasedEventHandler;
     public event EventHandler<NewMouseWheelEventArgs>? OnMouseWheelEventHandler;
 
@@ -50,76 +58,6 @@ public class MouseListener : IMouseListener
             _hook.Run();
         });
         _thread.Start();
-    }
-
-    private void ConvertMouseWheelEvent(object? sender, MouseWheelHookEventArgs e)
-    {
-        switch (e.Data.Direction)
-        {
-            case MouseWheelScrollDirection.Vertical when e.Data.Rotation > 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalUp));
-                break;
-            case MouseWheelScrollDirection.Vertical when e.Data.Rotation < 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalDown));
-                break;
-            case MouseWheelScrollDirection.Vertical:
-                throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
-            case MouseWheelScrollDirection.Horizontal when e.Data.Rotation > 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalRight));
-                break;
-            case MouseWheelScrollDirection.Horizontal when e.Data.Rotation < 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalLeft));
-                break;
-            case MouseWheelScrollDirection.Horizontal:
-                throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
-            default:
-                throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
-        }
-    }
-
-    private void ConvertMousePressedEvent(object? sender, MouseHookEventArgs e)
-    {
-        _log.Information("Translate press {Button}", e.Data.Button);
-        _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
-
-        var args = new NewMouseHookEventArgs(
-            (YMouseButton)e.Data.Button,
-            e.Data.X,
-            e.Data.Y,
-            _currentWindowService.ForegroundWindow
-        );
-        if (ShouldSuppressEvent(args))
-        {
-            _log.Information("Suppressing {Button}: Press", e.Data.Button);
-            e.SuppressEvent = true;
-        }
-        else
-        {
-            _log.Information("Not suppressing {Button}: Press", e.Data.Button);
-        }
-        OnMousePressed(args);
-    }
-
-    private void ConvertMouseReleasedEvent(object? sender, MouseHookEventArgs e)
-    {
-        _log.Information("Translate release {Button}", e.Data.Button);
-        _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
-        var args = new NewMouseHookEventArgs(
-            (YMouseButton)e.Data.Button,
-            e.Data.X,
-            e.Data.Y,
-            _currentWindowService.ForegroundWindow
-        );
-        if (ShouldSuppressEvent(args))
-        {
-            _log.Information("Suppressing {Button}: Release", e.Data.Button);
-            e.SuppressEvent = true;
-        }
-        else
-        {
-            _log.Information("Not suppressing {Button}: Release", e.Data.Button);
-        }
-        OnMouseReleased(args);
     }
 
     private void OnMouseReleased(NewMouseHookEventArgs args)
@@ -193,16 +131,100 @@ public class MouseListener : IMouseListener
 
     private void SubscribeToEvents()
     {
-        _hook.MousePressed += ConvertMousePressedEvent;
-        _hook.MouseReleased += ConvertMouseReleasedEvent;
-        _hook.MouseWheel += ConvertMouseWheelEvent;
+        _mouseMovedDisposable = _hook.MouseMoved.Sample(TimeSpan.FromMilliseconds(100)).Subscribe(ConvertMouseMovedEvent);
+        _mousePressedDisposable = _hook.MousePressed.Subscribe(ConvertMousePressedEvent);
+        _mouseReleasedDisposable = _hook.MouseReleased.Subscribe(ConvertMouseReleasedEvent);
+        _mouseWheelDisposable = _hook.MouseWheel.Subscribe(ConvertMouseWheelEvent);
+    }
+
+    private void ConvertMouseWheelEvent(MouseWheelHookEventArgs e)
+    {
+        switch (e.Data.Direction)
+        {
+            case MouseWheelScrollDirection.Vertical when e.Data.Rotation > 0:
+                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalUp));
+                break;
+            case MouseWheelScrollDirection.Vertical when e.Data.Rotation < 0:
+                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalDown));
+                break;
+            case MouseWheelScrollDirection.Vertical:
+                throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
+            case MouseWheelScrollDirection.Horizontal when e.Data.Rotation > 0:
+                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalRight));
+                break;
+            case MouseWheelScrollDirection.Horizontal when e.Data.Rotation < 0:
+                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalLeft));
+                break;
+            case MouseWheelScrollDirection.Horizontal:
+                throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
+            default:
+                throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
+        }
+    }
+
+    private void ConvertMouseReleasedEvent(MouseHookEventArgs e)
+    {
+        _log.Information("Translate release {Button}", e.Data.Button);
+        _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
+        var args = new NewMouseHookEventArgs(
+            (YMouseButton)e.Data.Button,
+            e.Data.X,
+            e.Data.Y,
+            _currentWindowService.ForegroundWindow
+        );
+        if (ShouldSuppressEvent(args))
+        {
+            _log.Information("Suppressing {Button}: Release", e.Data.Button);
+            e.SuppressEvent = true;
+        }
+        else
+        {
+            _log.Information("Not suppressing {Button}: Release", e.Data.Button);
+        }
+        OnMouseReleased(args);
+    }
+
+    private void ConvertMousePressedEvent(MouseHookEventArgs e)
+    {
+        _log.Information("Translate press {Button}", e.Data.Button);
+        _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
+
+        var args = new NewMouseHookEventArgs(
+            (YMouseButton)e.Data.Button,
+            e.Data.X,
+            e.Data.Y,
+            _currentWindowService.ForegroundWindow
+        );
+        if (ShouldSuppressEvent(args))
+        {
+            _log.Information("Suppressing {Button}: Press", e.Data.Button);
+            e.SuppressEvent = true;
+        }
+        else
+        {
+            _log.Information("Not suppressing {Button}: Press", e.Data.Button);
+        }
+        OnMousePressed(args);
+    }
+
+    private void ConvertMouseMovedEvent(MouseHookEventArgs e)
+    {
+        var args = new NewMouseHookMoveEventArgs(e.Data.X, e.Data.Y);
+        OnMouseMoved(args);
+    }
+
+    private void OnMouseMoved(NewMouseHookMoveEventArgs args)
+    {
+        var handler = OnMouseMovedEventHandler;
+        handler?.Invoke(this, args);
     }
 
     private void UnsubscribeFromEvents()
     {
-        _hook.MousePressed -= ConvertMousePressedEvent;
-        _hook.MouseReleased -= ConvertMouseReleasedEvent;
-        _hook.MouseWheel -= ConvertMouseWheelEvent;
+        _mouseMovedDisposable?.Dispose();
+        _mousePressedDisposable?.Dispose();
+        _mouseReleasedDisposable?.Dispose();
+        _mouseWheelDisposable?.Dispose();
     }
 
     public void Dispose()

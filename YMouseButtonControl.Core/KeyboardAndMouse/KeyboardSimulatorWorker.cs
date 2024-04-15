@@ -38,13 +38,20 @@ public class KeyboardSimulatorWorker(
 
     private void SubscribeToEvents()
     {
+        // mouseListener.OnMouseMovedEventHandler += OnMouseMoved;
         mouseListener.OnMousePressedEventHandler += OnMousePressed;
         mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
         mouseListener.OnMouseWheelEventHandler += OnMouseWheel;
     }
 
+    // private void OnMouseMoved(object? sender, NewMouseHookMoveEventArgs e)
+    // {
+    //     _log.Information("{X}:{Y}", e.X, e.Y);
+    // }
+
     private void UnsubscribeFromEvents()
     {
+        // mouseListener.OnMouseMovedEventHandler -= OnMouseMoved;
         mouseListener.OnMousePressedEventHandler -= OnMousePressed;
         mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
         mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
