@@ -2,8 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Windows.Input;
+using Avalonia.Threading;
 using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.Processes;
@@ -14,14 +18,20 @@ namespace YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 
 public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
 {
-    private ObservableCollection<ProcessModel> _processes;
     private readonly IProcessMonitorService _processMonitorService;
     private ProcessModel? _processModel;
+    private readonly SourceList<ProcessModel> _sourceProcessModels;
+    private string? _processFilter;
+    private readonly ReadOnlyObservableCollection<ProcessModel> _filtered;
 
     public ProcessSelectorDialogViewModel(IProcessMonitorService processMonitorService)
     {
-        _processes = new ObservableCollection<ProcessModel>();
+        _sourceProcessModels = new SourceList<ProcessModel>();
         _processMonitorService = processMonitorService;
+        var dynamicFilter = this.WhenValueChanged(x => x.ProcessFilter)
+            .Select(CreateProcessFilterPredicate);
+        var filteredDisposable = _sourceProcessModels.Connect().Filter(dynamicFilter).Bind(out _filtered).Subscribe();
+        RefreshProcessList();
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
         var canExecuteOkCommand = this.WhenAnyValue(
             x => x.SelectedProcessModel,
@@ -37,18 +47,29 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
                 },
             canExecuteOkCommand
         );
-        RefreshProcessList();
+    }
+
+    private Func<ProcessModel, bool> CreateProcessFilterPredicate(string? txt)
+    {
+        if (string.IsNullOrWhiteSpace(txt))
+        {
+            return _ => true;
+        }
+
+        return model => model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public string? ProcessFilter
+    {
+        get => _processFilter;
+        set => this.RaiseAndSetIfChanged(ref _processFilter, value);
     }
 
     public ICommand RefreshButtonCommand { get; }
 
     public ReactiveCommand<Unit, Profile> OkCommand { get; }
 
-    public ObservableCollection<ProcessModel> Processes
-    {
-        get => _processes;
-        private set => this.RaiseAndSetIfChanged(ref _processes, value);
-    }
+    public ReadOnlyObservableCollection<ProcessModel> Filtered => _filtered;
 
     public ProcessModel? SelectedProcessModel
     {
@@ -58,9 +79,10 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     private void RefreshProcessList()
     {
-        Processes.Clear();
-        Processes.AddRange(
-            _processMonitorService.GetProcesses().OrderBy(x => x.Process.ProcessName)
-        );
+        _sourceProcessModels.Edit(x =>
+        {
+            x.Clear();
+            x.AddRange(_processMonitorService.GetProcesses().OrderBy(x => x.Process.ProcessName));
+        });
     }
 }
