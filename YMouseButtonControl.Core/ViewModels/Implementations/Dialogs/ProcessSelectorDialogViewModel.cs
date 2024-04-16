@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows.Input;
-using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
@@ -56,7 +53,9 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             return _ => true;
         }
 
-        return model => model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
+
+        return model => string.IsNullOrWhiteSpace(model.Process.ProcessName) ||
+                        model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
     }
 
     public string? ProcessFilter
@@ -82,7 +81,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         _sourceProcessModels.Edit(x =>
         {
             x.Clear();
-            x.AddRange(_processMonitorService.GetProcesses().OrderBy(x => x.Process.ProcessName));
+            x.AddRange(_processMonitorService.GetProcesses());
         });
     }
 }
