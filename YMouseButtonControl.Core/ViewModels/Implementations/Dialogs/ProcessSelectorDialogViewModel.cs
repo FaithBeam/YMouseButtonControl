@@ -54,7 +54,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         }
 
 
-        return model => string.IsNullOrWhiteSpace(model.Process.ProcessName) ||
+        return model => !string.IsNullOrWhiteSpace(model.Process.ProcessName) &&
                         model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
     }
 
