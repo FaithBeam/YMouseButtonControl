@@ -6,6 +6,7 @@ using CFIndex = long;
 
 namespace YMouseButtonControl.Services.MacOS;
 
+// a lot of this code was copied from https://stackoverflow.com/a/44669560 and https://github.com/isnowrain/CoreFoundation/blob/master/Project/CFType.cs
 public class CurrentWindowService : ICurrentWindowService
 {
     public string ForegroundWindow => GetForegroundWindow();
