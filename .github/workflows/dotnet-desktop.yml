@@ -45,7 +45,12 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-
+          
+      - name: Run Csharpier
+        run: |
+          dotnet tool restore
+          dotnet csharpier --check .
+              
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0
         with:
