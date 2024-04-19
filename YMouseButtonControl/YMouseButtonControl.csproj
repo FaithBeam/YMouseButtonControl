@@ -62,6 +62,7 @@
     <ItemGroup>
       <ProjectReference Include="..\YMouseButtonControl.DataAccess.LiteDb\YMouseButtonControl.DataAccess.LiteDb.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.KeyboardAndMouse.SharpHook\YMouseButtonControl.KeyboardAndMouse.SharpHook.csproj" />
+      <ProjectReference Include="..\YMouseButtonControl.Services.Linux\YMouseButtonControl.Services.Linux.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.MacOS\YMouseButtonControl.Services.MacOS.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Services.Windows\YMouseButtonControl.Services.Windows.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Core\YMouseButtonControl.Core.csproj" />

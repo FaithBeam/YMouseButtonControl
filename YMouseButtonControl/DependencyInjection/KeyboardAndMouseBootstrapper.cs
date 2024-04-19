@@ -4,11 +4,9 @@ using SharpHook;
 using SharpHook.Reactive;
 using YMouseButtonControl.Core.KeyboardAndMouse;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedMousePressTypes;
-using YMouseButtonControl.Services.MacOS;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -26,9 +24,13 @@ public static class KeyboardAndMouseBootstrapper
         {
             services.AddSingleton<ISkipProfileService, Services.Windows.SkipProfileService>();
         }
-        else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
+        else if (OperatingSystem.IsMacOS())
         {
-            services.AddSingleton<ISkipProfileService, SkipProfileService>();
+            services.AddSingleton<ISkipProfileService, Services.MacOS.SkipProfileService>();
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            services.AddSingleton<ISkipProfileService, Services.Linux.SkipProfileService>();
         }
         else
         {

@@ -7,8 +7,6 @@ using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Services.MacOS;
 using YMouseButtonControl.Services.Windows;
-using BackgroundTasksRunner = YMouseButtonControl.Services.MacOS.BackgroundTasksRunner;
-using CurrentWindowService = YMouseButtonControl.Services.MacOS.CurrentWindowService;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -31,14 +29,25 @@ public static class ServicesBootstrapper
         {
             RegisterWindowsServices(services);
         }
-        else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
+        else if (OperatingSystem.IsMacOS())
         {
             RegisterMacOsServices(services);
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            RegisterLinuxServices(services);
         }
         else
         {
             throw new Exception("Unsupported operating system");
         }
+    }
+
+    private static void RegisterLinuxServices(IServiceCollection services)
+    {
+        services.AddSingleton<IProcessMonitorService, Services.Linux.ProcessMonitorService>();
+        services.AddSingleton<ICurrentWindowService, Services.Linux.CurrentWindowService>();
+        services.AddSingleton<IBackgroundTasksRunner, Services.Linux.BackgroundTasksRunner>();
     }
 
     [SupportedOSPlatform("windows5.1.2600")]
@@ -52,7 +61,7 @@ public static class ServicesBootstrapper
     private static void RegisterMacOsServices(IServiceCollection services)
     {
         services.AddSingleton<IProcessMonitorService, MacOsProcessMonitorService>();
-        services.AddSingleton<ICurrentWindowService, CurrentWindowService>();
-        services.AddSingleton<IBackgroundTasksRunner, BackgroundTasksRunner>();
+        services.AddSingleton<ICurrentWindowService, Services.MacOS.CurrentWindowService>();
+        services.AddSingleton<IBackgroundTasksRunner, Services.MacOS.BackgroundTasksRunner>();
     }
 }
