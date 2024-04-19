@@ -27,7 +27,11 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         _processMonitorService = processMonitorService;
         var dynamicFilter = this.WhenValueChanged(x => x.ProcessFilter)
             .Select(CreateProcessFilterPredicate);
-        var filteredDisposable = _sourceProcessModels.Connect().Filter(dynamicFilter).Bind(out _filtered).Subscribe();
+        var filteredDisposable = _sourceProcessModels
+            .Connect()
+            .Filter(dynamicFilter)
+            .Bind(out _filtered)
+            .Subscribe();
         RefreshProcessList();
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
         var canExecuteOkCommand = this.WhenAnyValue(
@@ -53,9 +57,9 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             return _ => true;
         }
 
-
-        return model => !string.IsNullOrWhiteSpace(model.Process.ProcessName) &&
-                        model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
+        return model =>
+            !string.IsNullOrWhiteSpace(model.Process.ProcessName)
+            && model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
     }
 
     public string? ProcessFilter

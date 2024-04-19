@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using Serilog;
 using SharpHook;
@@ -11,7 +12,6 @@ using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.Services.Abstractions.Enums;
 using YMouseButtonControl.Core.Services.Abstractions.Models.EventArgs;
-using System.Reactive.Linq;
 
 namespace YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
 
@@ -30,7 +30,6 @@ public class MouseListener : IMouseListener
     private IDisposable? _mousePressedDisposable;
     private IDisposable? _mouseReleasedDisposable;
     private IDisposable? _mouseWheelDisposable;
-
 
     public MouseListener(
         IReactiveGlobalHook hook,
@@ -131,7 +130,9 @@ public class MouseListener : IMouseListener
 
     private void SubscribeToEvents()
     {
-        _mouseMovedDisposable = _hook.MouseMoved.Sample(TimeSpan.FromMilliseconds(100)).Subscribe(ConvertMouseMovedEvent);
+        _mouseMovedDisposable = _hook
+            .MouseMoved.Sample(TimeSpan.FromMilliseconds(100))
+            .Subscribe(ConvertMouseMovedEvent);
         _mousePressedDisposable = _hook.MousePressed.Subscribe(ConvertMousePressedEvent);
         _mouseReleasedDisposable = _hook.MouseReleased.Subscribe(ConvertMouseReleasedEvent);
         _mouseWheelDisposable = _hook.MouseWheel.Subscribe(ConvertMouseWheelEvent);
