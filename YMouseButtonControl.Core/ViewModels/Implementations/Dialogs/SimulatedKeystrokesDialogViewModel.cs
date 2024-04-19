@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
 using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations.SimulatedKeystrokesTypes;
@@ -28,12 +27,11 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     private string? _currentKey;
     private string _description;
     private readonly string _title;
-    private int _simulatedKeystrokesIndex;
     private int _caretIndex;
     private bool _blockOriginalMouseInput = true;
     private short _x;
     private short _y;
-    private readonly ObservableAsPropertyHelper<ISimulatedKeystrokesType> _currentSimulatedKeystrokesType;
+    private ISimulatedKeystrokesType? _currentSimulatedKeystrokesType;
     private readonly IMouseListener _mouseListener;
 
     public SimulatedKeystrokesDialogViewModel(
@@ -45,16 +43,29 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         _title = $"SimulatedKeystrokes - {buttonName}";
         _mouseListener = mouseListener;
         _mouseListener.OnMouseMovedEventHandler += MouseListenerOnOnMouseMovedEventHandler;
+        _description = currentMapping?.PriorityDescription ?? string.Empty;
+        _customKeys = currentMapping?.Keys ?? string.Empty;
+        SimulatedKeystrokesType =
+            currentMapping?.SimulatedKeystrokesType ?? new MouseButtonPressedActionType();
+        _caretIndex = 0;
+
         var canExecuteOkCmd = this.WhenAnyValue(
-            x => x.CustomKeys,
-            selector: keys => !string.IsNullOrWhiteSpace(keys)
+            property1: x => x.CustomKeys,
+            property2: x => x.SimulatedKeystrokesType,
+            selector: (keys, skt) =>
+                !string.IsNullOrWhiteSpace(keys)
+                && skt is not null
+                && (
+                    keys != currentMapping?.Keys
+                    || !Equals(skt, currentMapping.SimulatedKeystrokesType)
+                )
         );
         OkCommand = ReactiveCommand.Create(
             () =>
                 new SimulatedKeystrokesDialogModel
                 {
                     CustomKeys = CustomKeys,
-                    SimulatedKeystrokesType = CurrentSimulatedKeystrokesType,
+                    SimulatedKeystrokesType = SimulatedKeystrokesType,
                     Description = Description,
                     BlockOriginalMouseInput = BlockOriginalMouseInput
                 },
@@ -71,16 +82,6 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             CustomKeys = CustomKeys.Insert(CaretIndex, insertString);
             CaretIndex += insertString.Length;
         });
-
-        _currentSimulatedKeystrokesType = this.WhenAnyValue(x => x.SimulatedKeystrokesIndex)
-            .DistinctUntilChanged()
-            .Select(x => SimulatedKeystrokesTypes[x])
-            .ToProperty(this, x => x.CurrentSimulatedKeystrokesType);
-
-        _description = currentMapping?.PriorityDescription ?? string.Empty;
-        _customKeys = currentMapping?.Keys ?? string.Empty;
-        SimulatedKeystrokesIndex = currentMapping?.SimulatedKeystrokesType?.Index ?? 0;
-        _caretIndex = 0;
     }
 
     private void MouseListenerOnOnMouseMovedEventHandler(
@@ -90,25 +91,31 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
     {
         X = e.X;
         Y = e.Y;
-        ComputedXY = $"{X},{Y}";
+        ComputedXy = $"{X},{Y}";
     }
 
-    public short X
+    public ISimulatedKeystrokesType? SimulatedKeystrokesType
+    {
+        get => _currentSimulatedKeystrokesType;
+        set => this.RaiseAndSetIfChanged(ref _currentSimulatedKeystrokesType, value);
+    }
+
+    private short X
     {
         get => _x;
         set => this.RaiseAndSetIfChanged(ref _x, value);
     }
 
-    public short Y
+    private short Y
     {
         get => _y;
         set => this.RaiseAndSetIfChanged(ref _y, value);
     }
 
-    public string? ComputedXY
+    public string? ComputedXy
     {
-        get => _computedXY;
-        set => this.RaiseAndSetIfChanged(ref _computedXY, value);
+        get => _computedXy;
+        set => this.RaiseAndSetIfChanged(ref _computedXy, value);
     }
 
     public string Title => _title;
@@ -133,15 +140,6 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
 
     public AvaloniaList<ISimulatedKeystrokesType> SimulatedKeystrokesTypes { get; set; } =
         new(GetSimulatedKeystrokesTypes());
-
-    public int SimulatedKeystrokesIndex
-    {
-        get => _simulatedKeystrokesIndex;
-        set => this.RaiseAndSetIfChanged(ref _simulatedKeystrokesIndex, value);
-    }
-
-    private ISimulatedKeystrokesType CurrentSimulatedKeystrokesType =>
-        _currentSimulatedKeystrokesType.Value;
 
     public ReactiveCommand<Unit, SimulatedKeystrokesDialogModel> OkCommand { get; }
 
@@ -304,8 +302,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         () => new AsMousePressedAndReleasedActionType()
     ];
 
-    private string? _computedXY;
+    private string? _computedXy;
 
-    public static IEnumerable<ISimulatedKeystrokesType> GetSimulatedKeystrokesTypes() =>
+    private static IEnumerable<ISimulatedKeystrokesType> GetSimulatedKeystrokesTypes() =>
         SimulatedKeystrokeTypesList.Select(x => x());
 }

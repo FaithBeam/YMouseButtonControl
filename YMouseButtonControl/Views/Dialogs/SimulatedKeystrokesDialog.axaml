@@ -80,7 +80,7 @@
             <Label HorizontalAlignment="Left" Content="How to send the simulated key strokes:" />
             <ComboBox Grid.Column="1" 
                       ItemsSource="{Binding SimulatedKeystrokesTypes}"
-                      SelectedIndex="{Binding SimulatedKeystrokesIndex}"
+                      SelectedItem="{Binding SimulatedKeystrokesType}"
                       HorizontalAlignment="Stretch"/>
         </Grid>
         
@@ -101,7 +101,7 @@
         
         <Grid Grid.Row="6" ColumnDefinitions="Auto,Auto,Auto,Auto" HorizontalAlignment="Right">
             <Label Content="Cursor Position: X,Y" />
-            <TextBox Grid.Column="1" Text="{Binding ComputedXY}"></TextBox>
+            <TextBox Grid.Column="1" Text="{Binding ComputedXy}"></TextBox>
             <Button Grid.Column="2" Content="OK" Command="{Binding OkCommand}" />
             <Button Grid.Column="3" Content="Cancel" Click="Button_OnClick"></Button>
         </Grid>
