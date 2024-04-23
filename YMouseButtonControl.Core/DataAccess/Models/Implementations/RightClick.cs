@@ -14,10 +14,7 @@ public class RightClick : ReactiveObject, IButtonMapping, IEquatable<RightClick>
     public bool State { get; set; }
     public bool CanRaiseDialog { get; } = false;
 
-    /// <summary>
-    /// When sending mouse clicks, the original mouse click cannot be blocked. Or can't be blocked easily. See https://github.com/TolikPylypchuk/SharpHook/issues/97
-    /// </summary>
-    public bool BlockOriginalMouseInput { get; set; } = false;
+    public bool BlockOriginalMouseInput { get; set; } = true;
     public ISimulatedKeystrokesType? SimulatedKeystrokesType { get; set; }
 
     public override string ToString() => "Right Click";

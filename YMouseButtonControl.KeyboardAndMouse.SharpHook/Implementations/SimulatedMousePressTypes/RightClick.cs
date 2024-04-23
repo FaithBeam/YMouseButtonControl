@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using YMouseButtonControl.Core.DataAccess.Models.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
@@ -12,10 +13,16 @@ public class RightClick(IEventSimulatorService eventSimulatorService) : IRightCl
         switch (state)
         {
             case MouseButtonState.Pressed:
-                eventSimulatorService.SimulateMousePress(YMouseButton.MouseButton2);
+                var t = new Thread(
+                    () => eventSimulatorService.SimulateMousePress(YMouseButton.MouseButton2)
+                );
+                t.Start();
                 break;
             case MouseButtonState.Released:
-                eventSimulatorService.SimulateMouseRelease(YMouseButton.MouseButton2);
+                t = new Thread(
+                    () => eventSimulatorService.SimulateMouseRelease(YMouseButton.MouseButton2)
+                );
+                t.Start();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
