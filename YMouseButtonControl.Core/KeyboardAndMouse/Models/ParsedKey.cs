@@ -4,6 +4,7 @@ public class ParsedKey
 {
     public string? Key { get; set; }
     public bool IsModifier { get; set; }
+    public ushort Value { get; set; }
 
     public override bool Equals(object? obj)
     {

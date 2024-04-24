@@ -33,8 +33,4 @@
       <ProjectReference Include="..\YMouseButtonControl.DataAccess.LiteDb\YMouseButtonControl.DataAccess.LiteDb.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Dialogs\" />
-    </ItemGroup>
-
 </Project>

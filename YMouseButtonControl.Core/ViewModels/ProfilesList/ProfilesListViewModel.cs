@@ -9,6 +9,7 @@ using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
 
 namespace YMouseButtonControl.Core.ViewModels.Implementations;
 
@@ -16,6 +17,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
     private IProfilesService _profilesService;
     private readonly IProcessSelectorDialogViewModel _processSelectorDialogViewModel;
+    private readonly IAddProfile _addProfile;
 
     public ICommand AddButtonCommand { get; }
     public ReactiveCommand<Unit, Unit> EditButtonCommand { get; }
@@ -32,7 +34,8 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 
     public ProfilesListViewModel(
         IProfilesService profilesService,
-        IProcessSelectorDialogViewModel processSelectorDialogViewModel
+        IProcessSelectorDialogViewModel processSelectorDialogViewModel,
+        IAddProfile addProfile
     )
     {
         _profilesService = profilesService;
@@ -75,6 +78,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             );
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
         _processSelectorDialogViewModel = processSelectorDialogViewModel;
+        _addProfile = addProfile;
         ShowProcessSelectorInteraction =
             new Interaction<IProcessSelectorDialogViewModel, Profile?>();
         var editCanExecute = this.WhenAnyValue(
@@ -203,6 +207,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         {
             return;
         }
-        _profilesService.AddProfile(result);
+        _addProfile.Add(result);
     }
 }

@@ -1,4 +1,4 @@
-﻿using YMouseButtonControl.Core.DataAccess.Models.Enums;
+﻿using SharpHook.Native;
 using YMouseButtonControl.Core.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
@@ -29,6 +29,6 @@ public interface IEventSimulatorService
     void ReleaseKeys(string? keys);
 
     void TapKeys(string? keys);
-    void SimulateMousePress(YMouseButton mb);
-    void SimulateMouseRelease(YMouseButton mb);
+    void SimulateMousePress(MouseButton mb);
+    void SimulateMouseRelease(MouseButton mb);
 }

@@ -14,6 +14,7 @@ using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
 using YMouseButtonControl.DataAccess.LiteDb;
 
 namespace YMouseButtonControl.Core.Tests.ViewModels;
@@ -25,7 +26,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvmMock = Substitute.For<IProcessSelectorDialogViewModel>();
-        var sut = new ProfilesListViewModel(pf, psdvmMock);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvmMock, addProfileMock);
 
         Assert.Multiple(() =>
         {
@@ -39,7 +41,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToReturn = new Profile { Name = "WAHOO" };
         sut.ShowProcessSelectorInteraction.RegisterHandler(context =>
             context.SetOutput(profileToReturn)
@@ -55,7 +58,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         sut.ShowProcessSelectorInteraction.RegisterHandler(context => context.SetOutput(null));
 
         sut.AddButtonCommand.Execute(null);
@@ -69,7 +73,8 @@ public class ProfilesListViewModelTests : BaseTest
         var pf = GetProfilesService(GetSeedData());
         pf.CurrentProfile = pf.Profiles.First(x => !x.IsDefault);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToReturn = new Profile { Name = "WAHOO" };
         sut.ShowProcessSelectorInteraction.RegisterHandler(context =>
             context.SetOutput(profileToReturn)
@@ -90,7 +95,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         sut.ShowProcessSelectorInteraction.RegisterHandler(context => context.SetOutput(null));
         var profileToEdit = pf.CurrentProfile;
 
@@ -108,7 +114,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.EditButtonCommand.CanExecute.Subscribe(x =>
         {
@@ -122,7 +129,8 @@ public class ProfilesListViewModelTests : BaseTest
         var pf = GetProfilesService(GetSeedData());
         pf.CurrentProfile = pf.Profiles.First(x => !x.IsDefault);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.EditButtonCommand.CanExecute.Subscribe(x =>
         {
@@ -135,7 +143,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToRemove = pf.Profiles.First(x => !x.IsDefault);
         pf.CurrentProfile = profileToRemove;
 
@@ -150,7 +159,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.RemoveButtonCommand.CanExecute.Subscribe(x =>
         {
@@ -164,7 +174,8 @@ public class ProfilesListViewModelTests : BaseTest
         var pf = GetProfilesService(GetSeedData());
         pf.CurrentProfile = pf.Profiles.First(x => !x.IsDefault);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.RemoveButtonCommand.CanExecute.Subscribe(x =>
         {
@@ -177,7 +188,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToMove = pf.Profiles.Last(x => !x.IsDefault);
         pf.CurrentProfile = profileToMove;
 
@@ -192,7 +204,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.UpCommand.CanExecute.Subscribe(x =>
         {
@@ -206,7 +219,8 @@ public class ProfilesListViewModelTests : BaseTest
         var pf = GetProfilesService(GetSeedData(1));
         pf.CurrentProfile = pf.Profiles.Where(x => !x.IsDefault).MinBy(x => x.DisplayPriority);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.UpCommand.CanExecute.Subscribe(x =>
         {
@@ -219,7 +233,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToMoveUp = pf.Profiles.Last(x => !x.IsDefault);
         var p1p = profileToMoveUp.DisplayPriority;
         pf.CurrentProfile = profileToMoveUp;
@@ -242,7 +257,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.DownCommand.CanExecute.Subscribe(x =>
         {
@@ -255,7 +271,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData(1));
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         pf.CurrentProfile = pf.Profiles.Where(x => !x.IsDefault).MaxBy(x => x.DisplayPriority);
 
         sut.DownCommand.CanExecute.Subscribe(x =>
@@ -272,7 +289,8 @@ public class ProfilesListViewModelTests : BaseTest
             .Profiles.Where(p => p.DisplayPriority > 0)
             .MinBy(x => x.DisplayPriority);
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
 
         sut.DownCommand.CanExecute.Subscribe(x =>
         {
@@ -285,7 +303,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData(2));
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToMove = pf.Profiles.First(x => !x.IsDefault);
         pf.CurrentProfile = profileToMove;
         var priority1 = profileToMove.DisplayPriority;
@@ -310,7 +329,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData(1));
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var profileToExport = pf.Profiles[1];
         pf.CurrentProfile = profileToExport;
         const string outputPath = "tmp.json";
@@ -339,7 +359,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         sut.ExportCommand.CanExecute.Subscribe(x =>
         {
             Assert.That(x, Is.False);
@@ -351,7 +372,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData());
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         sut.ShowProcessSelectorInteraction.RegisterHandler(context => context.SetOutput(null));
         var numProfiles = pf.Profiles.Count;
         sut.CopyCommand.Execute(Unit.Default).Subscribe();
@@ -365,7 +387,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService(GetSeedData(1));
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         var newProfile = new Profile { Name = "New Profile", Description = "Some description" };
         sut.ShowProcessSelectorInteraction.RegisterHandler(context =>
             context.SetOutput(newProfile)
@@ -396,7 +419,8 @@ public class ProfilesListViewModelTests : BaseTest
         File.WriteAllText(path, data);
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         sut.ShowImportFileDialog.RegisterHandler(x => x.SetOutput(path));
 
         sut.ImportCommand.Execute(Unit.Default).Subscribe();
@@ -414,7 +438,8 @@ public class ProfilesListViewModelTests : BaseTest
     {
         var pf = GetProfilesService();
         var psdvm = new ProcessSelectorDialogViewModel(Substitute.For<IProcessMonitorService>());
-        var sut = new ProfilesListViewModel(pf, psdvm);
+        var addProfileMock = Substitute.For<IAddProfile>();
+        var sut = new ProfilesListViewModel(pf, psdvm, addProfileMock);
         sut.ShowImportFileDialog.RegisterHandler(x => x.SetOutput(null));
 
         sut.ImportCommand.Execute(Unit.Default).Subscribe();

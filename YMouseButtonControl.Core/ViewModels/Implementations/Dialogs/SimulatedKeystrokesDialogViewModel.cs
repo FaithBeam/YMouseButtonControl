@@ -21,6 +21,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         .Concat(NumericKeypadKeys)
         .Concat(MediaKeys)
         .Concat(BrowserKeys)
+        .Concat(MouseButtons)
         .ToDictionary(x => x.Key, x => x.Value);
 
     private string _customKeys;
@@ -275,6 +276,20 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             { "Web Refresh", "{REFRESH}" },
             { "Web Search", "{SEARCH}" },
             { "Web Stop", "{STOP}" },
+        };
+
+    public static Dictionary<string, string> MouseButtons =>
+        new()
+        {
+            { "Left Button", "{LMB}" },
+            { "Right Button", "{RMB}" },
+            { "Middle Button", "{MMB}" },
+            { "4th Button", "{MB4}" },
+            { "5th Button", "{MB5}" },
+            { "Wheel Up", "{MWUP}" },
+            { "Wheel Down", "{MWDN}" },
+            { "Tilt Left", "{TILTL}" },
+            { "Tilt Right", "{TILTR}" },
         };
 
     public string? CurrentKey

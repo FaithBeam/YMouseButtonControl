@@ -3,6 +3,7 @@ using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.Services;
 
 namespace YMouseButtonControl.DependencyInjection;

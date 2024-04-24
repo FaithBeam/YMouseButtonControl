@@ -20,5 +20,5 @@ public interface IProfilesService
     void MoveProfileUp(Profile p);
     void MoveProfileDown(Profile p);
     void RemoveProfile(Profile profile);
-    void ApplyProfiles();
+    void AddOrUpdate(Profile profile);
 }

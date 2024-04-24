@@ -14,6 +14,7 @@ public static class Bootstrapper
         ConfigurationBootstrapper.RegisterConfiguration(services, dataAccessConfig);
         DataAccessBootstrapper.RegisterDataAccess(services);
         KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services);
+        FeaturesBootstrapper.RegisterFeatures(services);
         ViewModelsBootstrapper.RegisterViewModels(services);
     }
 }

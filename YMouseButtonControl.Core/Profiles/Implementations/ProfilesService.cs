@@ -68,6 +68,8 @@ public class ProfilesService : ReactiveObject, IProfilesService
     /// </summary>
     public ReadOnlyObservableCollection<Profile> Profiles => _profilesObsCol;
 
+    public void AddOrUpdate(Profile profile) => _profiles.AddOrUpdate(profile);
+
     public bool UnsavedChanges
     {
         get => _unsavedChanges;
@@ -253,13 +255,6 @@ public class ProfilesService : ReactiveObject, IProfilesService
 
         _profiles.Remove(profile);
         CurrentProfile = nextSmallerPriority;
-    }
-
-    public void ApplyProfiles()
-    {
-        using var unitOfWork = _unitOfWorkFactory.Create();
-        var repository = unitOfWork.GetRepository<Profile>();
-        repository.ApplyAction(_profiles.Items);
     }
 
     private void LoadProfilesFromDb()

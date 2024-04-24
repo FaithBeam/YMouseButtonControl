@@ -13,6 +13,7 @@ using YMouseButtonControl.Configuration;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
+using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.Views;
 

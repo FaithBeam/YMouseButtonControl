@@ -1,6 +1,6 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
-using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.MainWindow;
 
 namespace YMouseButtonControl.Views;
 

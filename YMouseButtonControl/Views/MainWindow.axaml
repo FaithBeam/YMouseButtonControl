@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:YMouseButtonControl.Views"
         xmlns:implementations="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations;assembly=YMouseButtonControl.Core"
+        xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="750"
@@ -16,7 +17,7 @@
         Icon="/Resources/mouse.ico">
 
     <Design.DataContext>
-        <implementations:MainWindowViewModel />
+        <mainWindow:MainWindowViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,Auto" Margin="10">

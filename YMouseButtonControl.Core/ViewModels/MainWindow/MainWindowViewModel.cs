@@ -7,9 +7,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
+using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
+using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 
-namespace YMouseButtonControl.Core.ViewModels.Implementations;
+namespace YMouseButtonControl.Core.ViewModels.MainWindow;
+
+public interface IMainWindowViewModel { }
 
 public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
@@ -27,7 +31,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         IProfilesService ps,
         ILayerViewModel layerViewModel,
         IProfilesListViewModel profilesListViewModel,
-        IProfilesInformationViewModel profilesInformationViewModel
+        IProfilesInformationViewModel profilesInformationViewModel,
+        IApply apply
     )
     {
         _profilesListViewModel = profilesListViewModel;
@@ -45,7 +50,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
                 lifetime.MainWindow?.Hide();
             }
         });
-        ApplyCommand = ReactiveCommand.Create(() => _ps.ApplyProfiles(), canApply);
+        ApplyCommand = ReactiveCommand.Create(apply.ApplyProfiles, canApply);
         ApplyCommand.Subscribe(_ =>
         {
             _ps.UnsavedChanges = false;

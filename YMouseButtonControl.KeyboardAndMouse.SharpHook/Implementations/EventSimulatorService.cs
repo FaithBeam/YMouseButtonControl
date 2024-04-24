@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Serilog;
 using SharpHook;
 using SharpHook.Native;
-using YMouseButtonControl.Core.DataAccess.Models.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.KeyboardAndMouse.Models;
 
@@ -13,11 +13,17 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
 {
     private readonly ILogger _logger = Log.Logger.ForContext<EventSimulatorService>();
 
-    public void SimulateMousePress(YMouseButton mb) =>
-        eventSimulator.SimulateMousePress((MouseButton)mb);
+    public void SimulateMousePress(MouseButton mb)
+    {
+        var t = new Thread(() => eventSimulator.SimulateMousePress(mb));
+        t.Start();
+    }
 
-    public void SimulateMouseRelease(YMouseButton mb) =>
-        eventSimulator.SimulateMouseRelease((MouseButton)mb);
+    public void SimulateMouseRelease(MouseButton mb)
+    {
+        var t = new Thread(() => eventSimulator.SimulateMouseRelease(mb));
+        t.Start();
+    }
 
     public SimulateKeyboardResult SimulateKeyPress(string? key)
     {
@@ -63,7 +69,17 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
     {
         foreach (var pk in ParseKeys(keys))
         {
-            SimulateKeyPress(pk.Key);
+            switch (pk.Value)
+            {
+                case <= 5:
+                    SimulateMousePress((MouseButton)pk.Value);
+                    break;
+                case >= (int)KeyCode.VcEscape:
+                    SimulateKeyPress(pk.Key);
+                    break;
+                default:
+                    throw new Exception($"Unknown key value {pk.Value}");
+            }
         }
     }
 
@@ -78,7 +94,17 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
         parsed.Reverse();
         foreach (var pk in parsed)
         {
-            SimulateKeyRelease(pk.Key);
+            switch (pk.Value)
+            {
+                case <= 5:
+                    SimulateMouseRelease((MouseButton)pk.Value);
+                    break;
+                case >= (int)KeyCode.VcEscape:
+                    SimulateKeyRelease(pk.Key);
+                    break;
+                default:
+                    throw new Exception($"Unknown key value {pk.Value}");
+            }
         }
     }
 
@@ -98,18 +124,48 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
             {
                 while (stack.TryPop(out var poppedPk))
                 {
-                    SimulateKeyRelease(poppedPk.Key);
+                    switch (poppedPk.Value)
+                    {
+                        case <= 5:
+                            SimulateMouseRelease((MouseButton)poppedPk.Value);
+                            break;
+                        case >= (int)KeyCode.VcEscape:
+                            SimulateKeyRelease(poppedPk.Key);
+                            break;
+                        default:
+                            throw new Exception($"Unknown key value {poppedPk.Value}");
+                    }
                 }
             }
 
             stack.Push(pk);
-            SimulateKeyPress(pk.Key);
+            switch (pk.Value)
+            {
+                case <= (ushort)MouseButton.Button5:
+                    SimulateMousePress((MouseButton)pk.Value);
+                    break;
+                case >= (int)KeyCode.VcEscape:
+                    SimulateKeyPress(pk.Key);
+                    break;
+                default:
+                    throw new Exception($"Unknown key value {pk.Value}");
+            }
         }
 
         // Release any remaining keys in the stack
         while (stack.TryPop(out var poppedPk))
         {
-            SimulateKeyRelease(poppedPk.Key);
+            switch (poppedPk.Value)
+            {
+                case <= 5:
+                    SimulateMouseRelease((MouseButton)poppedPk.Value);
+                    break;
+                case >= (int)KeyCode.VcEscape:
+                    SimulateKeyRelease(poppedPk.Key);
+                    break;
+                default:
+                    throw new Exception($"Unknown key value {poppedPk.Value}");
+            }
         }
     }
 
@@ -131,14 +187,27 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
                 for (var j = i; j < keys.Length; j++)
                 {
                     if (keys[j] != '}')
+                    {
                         continue;
-                    newKeys.Add(
-                        new ParsedKey
-                        {
-                            Key = keys.Substring(i + 1, j - i - 1).ToLower(),
-                            IsModifier = true
-                        }
-                    );
+                    }
+
+                    var substr = keys.Substring(i + 1, j - i - 1).ToLower();
+                    var pk = new ParsedKey { Key = substr };
+                    if (MouseButtons.TryGetValue(substr, out var mbVal))
+                    {
+                        pk.Value = (ushort)mbVal;
+                        pk.IsModifier = false;
+                    }
+                    else if (KeyCodes.TryGetValue(substr, out var kcVal))
+                    {
+                        pk.Value = (ushort)kcVal;
+                        pk.IsModifier = true;
+                    }
+                    else
+                    {
+                        throw new Exception($"Error parsing keys, {substr}");
+                    }
+                    newKeys.Add(pk);
                     i = j;
                     break;
                 }
@@ -147,8 +216,14 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
             }
             else
             {
+                var substr = keys[i].ToString().ToLower();
                 newKeys.Add(
-                    new ParsedKey { Key = keys[i].ToString().ToLower(), IsModifier = false }
+                    new ParsedKey
+                    {
+                        Key = substr,
+                        IsModifier = false,
+                        Value = (ushort)KeyCodes[substr]
+                    }
                 );
                 i++;
             }
@@ -342,5 +417,15 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
 
             { "undefined", KeyCode.VcUndefined },
             // {"charundefined", KeyCode.CharUndefined},
+        };
+
+    private static readonly Dictionary<string, MouseButton> MouseButtons =
+        new()
+        {
+            { "lmb", MouseButton.Button1 },
+            { "rmb", MouseButton.Button2 },
+            { "mmb", MouseButton.Button3 },
+            { "mb4", MouseButton.Button4 },
+            { "mb5", MouseButton.Button5 }
         };
 }

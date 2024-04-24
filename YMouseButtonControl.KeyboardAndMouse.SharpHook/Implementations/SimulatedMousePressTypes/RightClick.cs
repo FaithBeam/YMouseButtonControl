@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using SharpHook.Native;
 using YMouseButtonControl.Core.DataAccess.Models.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
@@ -14,13 +15,13 @@ public class RightClick(IEventSimulatorService eventSimulatorService) : IRightCl
         {
             case MouseButtonState.Pressed:
                 var t = new Thread(
-                    () => eventSimulatorService.SimulateMousePress(YMouseButton.MouseButton2)
+                    () => eventSimulatorService.SimulateMousePress(MouseButton.Button2)
                 );
                 t.Start();
                 break;
             case MouseButtonState.Released:
                 t = new Thread(
-                    () => eventSimulatorService.SimulateMouseRelease(YMouseButton.MouseButton2)
+                    () => eventSimulatorService.SimulateMouseRelease(MouseButton.Button2)
                 );
                 t.Start();
                 break;
