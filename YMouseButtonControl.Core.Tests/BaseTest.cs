@@ -22,7 +22,7 @@ public abstract class BaseTest
     }
 
     [TearDown]
-    public void TearDown()
+    public virtual void TearDown()
     {
         if (File.Exists(ConnStr))
         {
@@ -30,7 +30,7 @@ public abstract class BaseTest
         }
     }
 
-    public static ProfilesService GetProfilesService()
+    protected static ProfilesService GetProfilesService()
     {
         return GetProfilesService(Array.Empty<Profile>());
     }
@@ -40,7 +40,7 @@ public abstract class BaseTest
     /// </summary>
     /// <param name="seedData"></param>
     /// <returns></returns>
-    public static ProfilesService GetProfilesService(IEnumerable<Profile>? seedData)
+    protected static ProfilesService GetProfilesService(IEnumerable<Profile>? seedData)
     {
         var dbConfig = new DatabaseConfiguration { ConnectionString = $"Filename={ConnStr}" };
         var uowF = new LiteDbUnitOfWorkFactory(dbConfig);
@@ -55,7 +55,7 @@ public abstract class BaseTest
         return new ProfilesService(uowF);
     }
 
-    public static List<Profile> GetSeedData(int count = 10)
+    protected static List<Profile> GetSeedData(int count = 10)
     {
         var fixture = new Fixture();
         fixture.Customize<Profile>(c => c.With(p => p.IsDefault, false));

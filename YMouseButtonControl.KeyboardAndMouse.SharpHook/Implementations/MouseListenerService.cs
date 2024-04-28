@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Reactive.Linq;
 using System.Threading;
 using Serilog;
@@ -77,6 +78,12 @@ public class MouseListener : IMouseListener
         handler?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Whether to suppress the original mouse event from propagating
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private bool ShouldSuppressEvent(NewMouseHookEventArgs args) =>
         args.Button switch
         {
@@ -140,6 +147,10 @@ public class MouseListener : IMouseListener
 
     private void ConvertMouseWheelEvent(MouseWheelHookEventArgs e)
     {
+        if (e is null)
+        {
+            return;
+        }
         switch (e.Data.Direction)
         {
             case MouseWheelScrollDirection.Vertical when e.Data.Rotation > 0:
@@ -165,6 +176,10 @@ public class MouseListener : IMouseListener
 
     private void ConvertMouseReleasedEvent(MouseHookEventArgs e)
     {
+        if (e is null)
+        {
+            return;
+        }
         _log.Information("Translate release {Button}", e.Data.Button);
         _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
         var args = new NewMouseHookEventArgs(
@@ -187,6 +202,10 @@ public class MouseListener : IMouseListener
 
     private void ConvertMousePressedEvent(MouseHookEventArgs e)
     {
+        if (e is null)
+        {
+            return;
+        }
         _log.Information("Translate press {Button}", e.Data.Button);
         _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
 
@@ -210,6 +229,10 @@ public class MouseListener : IMouseListener
 
     private void ConvertMouseMovedEvent(MouseHookEventArgs e)
     {
+        if (e is null)
+        {
+            return;
+        }
         var args = new NewMouseHookMoveEventArgs(e.Data.X, e.Data.Y);
         OnMouseMoved(args);
     }
