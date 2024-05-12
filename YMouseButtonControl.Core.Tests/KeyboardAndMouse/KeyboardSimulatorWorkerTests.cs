@@ -15,6 +15,7 @@ using RightClick = YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementation
 
 namespace YMouseButtonControl.Core.Tests.KeyboardAndMouse;
 
+[Platform("Win")]
 public class KeyboardSimulatorWorkerTests : BaseTest
 {
     [Test]
