@@ -170,6 +170,84 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
     }
 
     /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <param name="delay">Optional delay between key presses</param>
+    /// <param name="cancellationToken"></param>
+    public void TapKeys(string? keys, int delay, CancellationToken cancellationToken)
+    {
+        var parsed = ParseKeys(keys);
+        var stack = new Stack<ParsedKey>();
+
+        foreach (var pk in parsed)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _logger.Information("========STOPPING TAP KEYS===========");
+                return;
+            }
+            if (delay > -1)
+            {
+                Thread.Sleep(delay);
+            }
+
+            // Pop the entire stack if the last key pressed is a normal key
+            if (stack.TryPeek(out var peekPk) && !peekPk.IsModifier)
+            {
+                while (stack.TryPop(out var poppedPk))
+                {
+                    switch (poppedPk.Value)
+                    {
+                        case <= 5:
+                            SimulateMouseRelease((MouseButton)poppedPk.Value);
+                            break;
+                        case >= (int)KeyCode.VcEscape:
+                            SimulateKeyRelease(poppedPk.Key);
+                            break;
+                        default:
+                            throw new Exception($"Unknown key value {poppedPk.Value}");
+                    }
+                }
+            }
+
+            stack.Push(pk);
+            switch (pk.Value)
+            {
+                case <= (ushort)MouseButton.Button5:
+                    SimulateMousePress((MouseButton)pk.Value);
+                    break;
+                case >= (int)KeyCode.VcEscape:
+                    SimulateKeyPress(pk.Key);
+                    break;
+                default:
+                    throw new Exception($"Unknown key value {pk.Value}");
+            }
+        }
+
+        // Release any remaining keys in the stack
+        while (stack.TryPop(out var poppedPk))
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _logger.Information("========STOPPING TAP KEYS===========");
+                return;
+            }
+            switch (poppedPk.Value)
+            {
+                case <= 5:
+                    SimulateMouseRelease((MouseButton)poppedPk.Value);
+                    break;
+                case >= (int)KeyCode.VcEscape:
+                    SimulateKeyRelease(poppedPk.Key);
+                    break;
+                default:
+                    throw new Exception($"Unknown key value {poppedPk.Value}");
+            }
+        }
+    }
+
+    /// <summary>
     /// Splits a string of characters into a list of strings. Words surrounded by {} will be added as the whole word.
     /// For example, {shift} will be "shift" in the list.
     /// "{SHIFT}abc" -> "shift", "a", "b", "c"

@@ -11,7 +11,7 @@
         Width="800"
         Height="700"
         CanResize="False"
-        SizeToContent="WidthAndHeight"
+        SizeToContent="Height"
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
         Icon="/Resources/mouse.ico">

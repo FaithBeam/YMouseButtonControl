@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Serilog;
 using YMouseButtonControl.Core.DataAccess.Models.Interfaces;
 using YMouseButtonControl.Core.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
@@ -12,6 +13,8 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
     private bool _shouldStop;
     private readonly object _lock = new();
     private const int RepeatRateMs = 33;
+    private CancellationTokenSource? _cts;
+    private readonly ILogger _log = Log.Logger.ForContext<StickyRepeatService>();
 
     public void StickyRepeat(IButtonMapping mapping, MouseButtonState state)
     {
@@ -28,6 +31,8 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
         {
             lock (_lock)
             {
+                _log.Information("=====CANCELATION REQUESTED=======");
+                _cts?.Cancel();
                 _shouldStop = true;
             }
             _thread.Join();
@@ -44,6 +49,7 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
 
     private void StartThread(IButtonMapping mapping)
     {
+        _cts = new CancellationTokenSource();
         _thread = new Thread(() =>
         {
             while (true)
@@ -52,12 +58,13 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
                 {
                     if (_shouldStop)
                     {
+                        _log.Information("=====CANCELATION REQUESTED=======");
+                        _cts.Cancel();
                         break;
                     }
                 }
 
-                Thread.Sleep(RepeatRateMs);
-                eventSimulatorService.TapKeys(mapping.Keys);
+                eventSimulatorService.TapKeys(mapping.Keys, RepeatRateMs, _cts.Token);
             }
         });
 

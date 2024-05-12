@@ -1,4 +1,5 @@
-﻿using SharpHook.Native;
+﻿using System.Threading;
+using SharpHook.Native;
 using YMouseButtonControl.Core.KeyboardAndMouse.Models;
 
 namespace YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
@@ -31,4 +32,11 @@ public interface IEventSimulatorService
     void TapKeys(string? keys);
     void SimulateMousePress(MouseButton mb);
     void SimulateMouseRelease(MouseButton mb);
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <param name="delay">Optional delay between key presses</param>
+    void TapKeys(string? keys, int delay, CancellationToken cancellationToken);
 }
