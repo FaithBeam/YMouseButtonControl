@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="750"
-        Width="800"
+        Width="1000"
         Height="700"
         CanResize="False"
         SizeToContent="Height"
@@ -21,14 +21,17 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,Auto" Margin="10">
-        <Grid ColumnDefinitions="Auto,*">
+        <Grid ColumnDefinitions="400,*">
             <Grid RowDefinitions="Auto,*">
                 <Label Content="Application / Window Profiles" />
                 <views:ProfilesListView Grid.Row="1" DataContext="{Binding ProfilesListViewModel}" />
             </Grid>
             <Grid Grid.Column="1" RowDefinitions="Auto,Auto">
                 <views:LayerView DataContext="{Binding LayerViewModel}" />
-                <views:ProfileInformationView Grid.Row="1" DataContext="{Binding ProfilesInformationViewModel}" />
+			    <Grid Grid.Row="1" RowDefinitions="Auto,*">
+					<Label>Profile Information</Label>
+                    <views:ProfileInformationView Grid.Row="1" DataContext="{Binding ProfilesInformationViewModel}" />
+				</Grid>
             </Grid>
         </Grid>
 

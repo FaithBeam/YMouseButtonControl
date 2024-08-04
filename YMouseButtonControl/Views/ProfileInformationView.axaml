@@ -12,7 +12,7 @@
         <implementations:ProfilesInformationViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*,*,*,*,*,*">
+    <Grid ColumnDefinitions="150,Auto" RowDefinitions="*,*,*,*,*,*">
         <Label Grid.Row="0" Grid.Column="0" Content="Description" />
         <Label Grid.Row="0" Grid.Column="1" Content="{Binding ProfilesService.CurrentProfile.Description}" />
         <Label Grid.Row="1" Grid.Column="0" Content="Window Caption" />
