@@ -2,7 +2,7 @@
 
 This is an attempt at a cross-platform clone of X-Mouse-Button-Control.
 
-![Image of YMouseButtonControl](https://i.imgur.com/DikLksf.png)
+![Image of YMouseButtonControl](https://github.com/user-attachments/assets/b85448e5-3f94-498b-b1f9-f442aad753e5)
 
 ## Usage
 
