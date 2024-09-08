@@ -55,9 +55,5 @@ public class StartupInstallerService : IStartupInstallerService
     }
 
     private static string GetCurExePath() =>
-        Path.Join(
-            Path.GetDirectoryName(AppContext.BaseDirectory)
-                ?? throw new Exception("Error retrieving path of executing assembly"),
-            $"{ValName}.exe"
-        );
+        Environment.ProcessPath ?? throw new Exception("Error retrieving process path");
 }

@@ -54,9 +54,5 @@ public class StartupInstallerService : IStartupInstallerService
     public void Uninstall() => File.Delete(_plistPath);
 
     private static string GetCurExePath() =>
-        Path.Join(
-            Path.GetDirectoryName(AppContext.BaseDirectory)
-                ?? throw new Exception("Error retrieving path of executing assembly"),
-            "YMouseButtonControl"
-        );
+        Environment.ProcessPath ?? throw new Exception("Error retrieving process path");
 }

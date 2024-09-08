@@ -72,6 +72,8 @@ jobs:
           -c ${{ env.CONFIGURATION }} \
           -r ${{ matrix.rid }} \
           -p:PublishSingleFile=true \
+          -p:IncludeNativeLibrariesForSelfExtract=true \
+          -p:IncludeAllContentForSelfExtract=true \
           -p:SelfContained=true \
           -p:EnableCompressionInSingleFile=true \
           -p:DebugType=embedded \
