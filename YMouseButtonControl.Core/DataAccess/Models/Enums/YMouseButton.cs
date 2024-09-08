@@ -10,5 +10,5 @@ public enum YMouseButton : ushort
     MouseWheelUp,
     MouseWheelDown,
     MouseWheelLeft,
-    MouseWheelRight
+    MouseWheelRight,
 }

@@ -44,7 +44,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
                 {
                     Name = SelectedProcessModel!.Process.MainModule!.ModuleName,
                     Description = SelectedProcessModel.Process.MainWindowTitle,
-                    Process = SelectedProcessModel.Process.MainModule.ModuleName
+                    Process = SelectedProcessModel.Process.MainModule.ModuleName,
                 },
             canExecuteOkCommand
         );

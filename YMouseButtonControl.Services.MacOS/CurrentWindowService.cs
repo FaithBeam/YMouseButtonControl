@@ -110,7 +110,7 @@ public class CurrentWindowService : ICurrentWindowService
         UTF16 = 0x0100,
         UTF16BE = 0x10000100,
         UTF16LE = 0x14000100,
-        ASCII = 0x0600
+        ASCII = 0x0600,
     }
 
     [StructLayout(LayoutKind.Sequential)]

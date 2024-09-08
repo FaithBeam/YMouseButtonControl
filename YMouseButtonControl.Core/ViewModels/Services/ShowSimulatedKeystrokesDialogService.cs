@@ -41,7 +41,7 @@ public class ShowSimulatedKeystrokesDialogService(IMouseListener mouseListener)
             Keys = result.CustomKeys,
             PriorityDescription = result.Description,
             SimulatedKeystrokesType = result.SimulatedKeystrokesType,
-            BlockOriginalMouseInput = result.BlockOriginalMouseInput
+            BlockOriginalMouseInput = result.BlockOriginalMouseInput,
         };
     }
 }

@@ -6,16 +6,18 @@ namespace YMouseButtonControl.Services.Linux.Services;
 public class StartupInstallerService : IStartupInstallerService
 {
     private const string DesktopFile = """
-                                       [Desktop Entry]
-                                       Type=Application
-                                       Exec={0}
-                                       Hidden=false
-                                       NoDisplay=false
-                                       X-GNOME-Autostart-enabled=true
-                                       Name=YMouseButtonControl
-                                       Comment=YMouseButtonControl
-                                       """;
-    private readonly string _configDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        [Desktop Entry]
+        Type=Application
+        Exec={0}
+        Hidden=false
+        NoDisplay=false
+        X-GNOME-Autostart-enabled=true
+        Name=YMouseButtonControl
+        Comment=YMouseButtonControl
+        """;
+    private readonly string _configDir = Environment.GetFolderPath(
+        Environment.SpecialFolder.ApplicationData
+    );
     private readonly string _autostartDir;
     private readonly string _desktopFilePath;
 
@@ -52,7 +54,11 @@ public class StartupInstallerService : IStartupInstallerService
     {
         File.Delete(_desktopFilePath);
     }
-    
-    private static string GetCurExePath() => Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
-                                                       ?? throw new Exception("Error retrieving path of executing assembly"), "YMouseButtonControl");
+
+    private static string GetCurExePath() =>
+        Path.Join(
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                ?? throw new Exception("Error retrieving path of executing assembly"),
+            "YMouseButtonControl"
+        );
 }

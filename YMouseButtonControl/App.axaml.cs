@@ -83,7 +83,7 @@ public class App : Application
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = Container?.GetRequiredService<IMainWindowViewModel>()
+                DataContext = Container?.GetRequiredService<IMainWindowViewModel>(),
             };
             // Prevent the application from exiting and hide the window when the user presses the X button
             desktop.MainWindow.Closing += (s, e) =>

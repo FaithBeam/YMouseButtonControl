@@ -5,5 +5,5 @@ public enum ButtonMappings
     Nothing,
     Disabled,
     SimulatedKeystrokes,
-    RightClick
+    RightClick,
 }

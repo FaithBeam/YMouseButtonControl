@@ -44,23 +44,29 @@ public class AppViewModel : ViewModelBase, IAppViewModel
             }
         });
         var runAtStartupCanExecute = this.WhenAnyValue(x => x.RunAtStartupIsEnabled);
-        RunAtStartupCommand = ReactiveCommand.Create(() =>
-        {
-            if (startupInstallerService.InstallStatus())
+        RunAtStartupCommand = ReactiveCommand.Create(
+            () =>
             {
-                // uninstall
-                startupInstallerService.Uninstall();
-                RunAtStartupIsChecked = false;
-                RunAtStartupHeader = string.Format(RunAtStartupHeaderFmt, RunAtStartupNotChecked);
-            }
-            else
-            {
-                // install
-                startupInstallerService.Install();
-                RunAtStartupIsChecked = true;
-                RunAtStartupHeader = string.Format(RunAtStartupHeaderFmt, RunAtStartupChecked);
-            }
-        }, runAtStartupCanExecute);
+                if (startupInstallerService.InstallStatus())
+                {
+                    // uninstall
+                    startupInstallerService.Uninstall();
+                    RunAtStartupIsChecked = false;
+                    RunAtStartupHeader = string.Format(
+                        RunAtStartupHeaderFmt,
+                        RunAtStartupNotChecked
+                    );
+                }
+                else
+                {
+                    // install
+                    startupInstallerService.Install();
+                    RunAtStartupIsChecked = true;
+                    RunAtStartupHeader = string.Format(RunAtStartupHeaderFmt, RunAtStartupChecked);
+                }
+            },
+            runAtStartupCanExecute
+        );
     }
 
     public string ToolTipText => $"YMouseButtonControl v{GetType().Assembly.GetName().Version}";
@@ -70,7 +76,7 @@ public class AppViewModel : ViewModelBase, IAppViewModel
         get => _runAtStartupIsEnabled;
         set => this.RaiseAndSetIfChanged(ref _runAtStartupIsEnabled, value);
     }
-    
+
     public bool RunAtStartupIsChecked
     {
         get => _runAtStartupIsChecked;
