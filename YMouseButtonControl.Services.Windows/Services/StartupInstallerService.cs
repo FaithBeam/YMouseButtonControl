@@ -23,22 +23,24 @@ public class StartupInstallerService : IStartupInstallerService
     public bool InstallStatus()
     {
         using var key = Registry.CurrentUser.OpenSubKey(BaseKeyPath, RegistryRights.ReadKey);
-        var keyVal = key?.GetValue(ValName);
-        return keyVal != null;
+        var keyVal = key?.GetValue(ValName)?.ToString();
+        if (string.IsNullOrWhiteSpace(keyVal))
+        {
+            return false;
+        }
+
+        return keyVal.Trim('"') == GetCurExePath();
     }
 
     public void Install()
     {
-        var dir =
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
-            ?? throw new Exception("Error retrieving path of executing assembly");
         using var key =
             Registry.CurrentUser.OpenSubKey(
                 BaseKeyPath,
                 RegistryKeyPermissionCheck.ReadWriteSubTree,
                 RegistryRights.FullControl
             ) ?? throw new Exception($"Error opening key {BaseKeyPath}");
-        var newKeyVal = $"\"{Path.Join(dir, $"{ValName}.exe")}\"";
+        var newKeyVal = $"\"{Path.Join(GetCurExePath())}\"";
         key.SetValue(ValName, newKeyVal);
     }
 
@@ -52,4 +54,11 @@ public class StartupInstallerService : IStartupInstallerService
             ) ?? throw new Exception($"Error opening key {BaseKeyPath}");
         key.DeleteValue(ValName);
     }
+
+    private static string GetCurExePath() =>
+        Path.Join(
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                ?? throw new Exception("Error retrieving path of executing assembly"),
+            $"{ValName}.exe"
+        );
 }
