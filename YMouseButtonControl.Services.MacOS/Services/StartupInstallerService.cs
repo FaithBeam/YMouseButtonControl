@@ -55,7 +55,7 @@ public class StartupInstallerService : IStartupInstallerService
 
     private static string GetCurExePath() =>
         Path.Join(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+            Path.GetDirectoryName(AppContext.BaseDirectory)
                 ?? throw new Exception("Error retrieving path of executing assembly"),
             "YMouseButtonControl"
         );

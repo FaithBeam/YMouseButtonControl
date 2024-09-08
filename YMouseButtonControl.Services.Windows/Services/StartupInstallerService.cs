@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using Microsoft.Win32;
@@ -57,7 +56,7 @@ public class StartupInstallerService : IStartupInstallerService
 
     private static string GetCurExePath() =>
         Path.Join(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+            Path.GetDirectoryName(AppContext.BaseDirectory)
                 ?? throw new Exception("Error retrieving path of executing assembly"),
             $"{ValName}.exe"
         );
