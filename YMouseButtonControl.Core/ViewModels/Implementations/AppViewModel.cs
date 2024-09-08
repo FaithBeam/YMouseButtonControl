@@ -10,13 +10,15 @@ namespace YMouseButtonControl.Core.ViewModels.Implementations;
 public class AppViewModel : ViewModelBase, IAppViewModel
 {
     private bool _runAtStartupIsChecked;
-    private const string RunAtStartupChecked = "✅ | ";
+    private bool _runAtStartupIsEnabled;
+    private const string RunAtStartupChecked = "✅ ";
     private const string RunAtStartupNotChecked = "";
     private const string RunAtStartupHeaderFmt = "{0}Run at startup";
     private string _runAtStartupHeader = "";
 
     public AppViewModel(IStartupInstallerService startupInstallerService)
     {
+        RunAtStartupIsEnabled = startupInstallerService.ButtonEnabled();
         RunAtStartupIsChecked = startupInstallerService.InstallStatus();
         RunAtStartupHeader = RunAtStartupIsChecked
             ? string.Format(RunAtStartupHeaderFmt, RunAtStartupChecked)
@@ -41,6 +43,7 @@ public class AppViewModel : ViewModelBase, IAppViewModel
                 lifetime.MainWindow?.Show();
             }
         });
+        var runAtStartupCanExecute = this.WhenAnyValue(x => x.RunAtStartupIsEnabled);
         RunAtStartupCommand = ReactiveCommand.Create(() =>
         {
             if (startupInstallerService.InstallStatus())
@@ -57,11 +60,17 @@ public class AppViewModel : ViewModelBase, IAppViewModel
                 RunAtStartupIsChecked = true;
                 RunAtStartupHeader = string.Format(RunAtStartupHeaderFmt, RunAtStartupChecked);
             }
-        });
+        }, runAtStartupCanExecute);
     }
 
     public string ToolTipText => $"YMouseButtonControl v{GetType().Assembly.GetName().Version}";
 
+    public bool RunAtStartupIsEnabled
+    {
+        get => _runAtStartupIsEnabled;
+        set => this.RaiseAndSetIfChanged(ref _runAtStartupIsEnabled, value);
+    }
+    
     public bool RunAtStartupIsChecked
     {
         get => _runAtStartupIsChecked;

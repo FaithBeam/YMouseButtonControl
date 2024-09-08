@@ -14,6 +14,8 @@ public class StartupInstallerService : IStartupInstallerService
     private const string BaseKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run\";
     private const string ValName = "YMouseButtonControl";
 
+    public bool ButtonEnabled() => true;
+
     /// <summary>
     /// Gets the start-up install status of the program
     /// </summary>
