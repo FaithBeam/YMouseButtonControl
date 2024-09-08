@@ -29,7 +29,10 @@ public class App : Application
         {
             DataContext = new AppViewModel(new Services.Windows.Services.StartupInstallerService());
         }
-        else if (OperatingSystem.IsMacOS()) { }
+        else if (OperatingSystem.IsMacOS())
+        {
+            DataContext = new AppViewModel(new Services.MacOS.Services.StartupInstallerService());
+        }
         else if (OperatingSystem.IsLinux())
         {
             DataContext = new AppViewModel(new Services.Linux.Services.StartupInstallerService());
