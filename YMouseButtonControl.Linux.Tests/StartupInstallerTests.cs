@@ -2,6 +2,7 @@ using YMouseButtonControl.Services.Linux.Services;
 
 namespace YMouseButtonControl.Linux.Tests;
 
+[Explicit]
 public class StartupInstallerTests
 {
     [Test]

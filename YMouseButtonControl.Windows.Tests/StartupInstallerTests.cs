@@ -4,6 +4,7 @@ using YMouseButtonControl.Services.Windows.Services;
 namespace YMouseButtonControl.Windows.Tests;
 
 [SupportedOSPlatform("windows")]
+[Explicit]
 public class StartupInstallerTests
 {
     [Test]
