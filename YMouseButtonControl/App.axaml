@@ -17,6 +17,9 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="Setup" Command="{Binding SetupCommand}" />
+                        <NativeMenuItem Header="{Binding RunAtStartupHeader}" Command="{Binding RunAtStartupCommand}">
+                        </NativeMenuItem>
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Header="Exit" Command="{Binding ExitCommand}" />
                     </NativeMenu>
                 </TrayIcon.Menu>

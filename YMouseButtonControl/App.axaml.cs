@@ -12,7 +12,6 @@ using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.ViewModels.Implementations;
-using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.Views;
@@ -26,7 +25,18 @@ public class App : Application
 
     public App()
     {
-        DataContext = new AppViewModel();
+        if (OperatingSystem.IsWindows())
+        {
+            DataContext = new AppViewModel(new Services.Windows.Services.StartupInstallerService());
+        }
+        else if (OperatingSystem.IsMacOS()) { }
+        else if (OperatingSystem.IsLinux()) { }
+        else
+        {
+            throw new Exception(
+                $"Unsupported operating system: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}"
+            );
+        }
     }
 
     public override void Initialize()

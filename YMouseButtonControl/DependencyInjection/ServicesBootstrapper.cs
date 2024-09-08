@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Profiles.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
+using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Services.MacOS;
 using YMouseButtonControl.Services.Windows;
@@ -53,6 +54,10 @@ public static class ServicesBootstrapper
     [SupportedOSPlatform("windows5.1.2600")]
     private static void RegisterWindowsServices(IServiceCollection services)
     {
+        services.AddSingleton<
+            IStartupInstallerService,
+            Services.Windows.Services.StartupInstallerService
+        >();
         services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
         services.AddSingleton<ICurrentWindowService, Services.Windows.CurrentWindowService>();
         services.AddSingleton<IBackgroundTasksRunner, Services.Windows.BackgroundTasksRunner>();
