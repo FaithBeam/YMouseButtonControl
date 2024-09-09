@@ -1,9 +1,14 @@
 ﻿using System.Reactive;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.ReactiveUI;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services;
+using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
+using YMouseButtonControl.Core.ViewModels.MainWindow;
+using YMouseButtonControl.Core.Views;
 
 namespace YMouseButtonControl.Core.ViewModels.Implementations;
 
@@ -16,7 +21,12 @@ public class AppViewModel : ViewModelBase, IAppViewModel
     private const string RunAtStartupHeaderFmt = "{0}Run at startup";
     private string _runAtStartupHeader = "";
 
-    public AppViewModel(IStartupInstallerService startupInstallerService)
+    public AppViewModel(
+        IStartupInstallerService startupInstallerService,
+        IMainWindow mainWindow,
+        IMainWindowViewModel mainWindowViewModel,
+        IBackgroundTasksRunner backgroundTasksRunner
+    )
     {
         RunAtStartupIsEnabled = startupInstallerService.ButtonEnabled();
         RunAtStartupIsChecked = startupInstallerService.InstallStatus();
@@ -40,6 +50,24 @@ public class AppViewModel : ViewModelBase, IAppViewModel
                 is IClassicDesktopStyleApplicationLifetime lifetime
             )
             {
+                if (lifetime.MainWindow is null)
+                {
+                    lifetime.MainWindow = (Window)mainWindow;
+                    // lifetime.MainWindow.DataContext = mainWindowViewModel;
+
+                    // Prevent the application from exiting and hide the window when the user presses the X button
+                    lifetime.MainWindow.Closing += (s, e) =>
+                    {
+                        ((Window)s!).Hide();
+                        e.Cancel = true;
+                    };
+
+                    lifetime.Exit += (sender, args) =>
+                    {
+                        backgroundTasksRunner.Dispose();
+                    };
+                }
+
                 lifetime.MainWindow?.Show();
             }
         });

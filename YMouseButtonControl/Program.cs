@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.ReactiveUI;
 using Serilog;
 
@@ -16,7 +17,15 @@ internal static class Program
             .CreateLogger();
         Log.Logger = log;
 
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        try
+        {
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
+            throw;
+        }
     }
 
     private static AppBuilder BuildAvaloniaApp() =>

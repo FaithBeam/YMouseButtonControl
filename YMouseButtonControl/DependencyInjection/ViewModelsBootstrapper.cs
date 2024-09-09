@@ -18,6 +18,7 @@ public static class ViewModelsBootstrapper
     private static void RegisterCommonViewModels(IServiceCollection services)
     {
         services.AddTransient<IProcessSelectorDialogViewModel, ProcessSelectorDialogViewModel>();
+        services.AddTransient<IGlobalSettingsDialogViewModel, GlobalSettingsDialogViewModel>();
         services.AddSingleton<IProfilesInformationViewModel, ProfilesInformationViewModel>();
         services.AddSingleton<
             IShowSimulatedKeystrokesDialogService,

@@ -22,6 +22,7 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         services.AddSingleton<IProfilesService, ProfilesService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
     }
 
     private static void RegisterPlatformSpecificServices(IServiceCollection services)

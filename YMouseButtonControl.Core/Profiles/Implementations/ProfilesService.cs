@@ -89,7 +89,9 @@ public class ProfilesService : ReactiveObject, IProfilesService
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
         if (model.Any(x => x.Name == "Default"))
+        {
             return;
+        }
         var defaultProfile = new Profile
         {
             Checked = true,

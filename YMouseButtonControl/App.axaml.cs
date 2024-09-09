@@ -10,8 +10,10 @@ using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
+using YMouseButtonControl.Core.Profiles.Implementations;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.Views;
@@ -25,29 +27,30 @@ public class App : Application
 
     public App()
     {
-        if (OperatingSystem.IsWindows())
-        {
-            DataContext = new AppViewModel(new Services.Windows.Services.StartupInstallerService());
-        }
-        else if (OperatingSystem.IsMacOS())
-        {
-            DataContext = new AppViewModel(new Services.MacOS.Services.StartupInstallerService());
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            DataContext = new AppViewModel(new Services.Linux.Services.StartupInstallerService());
-        }
-        else
-        {
-            throw new Exception(
-                $"Unsupported operating system: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}"
-            );
-        }
+        // if (OperatingSystem.IsWindows())
+        // {
+        //     DataContext = new AppViewModel(new Services.Windows.Services.StartupInstallerService(), );
+        // }
+        // else if (OperatingSystem.IsMacOS())
+        // {
+        //     DataContext = new AppViewModel(new Services.MacOS.Services.StartupInstallerService());
+        // }
+        // else if (OperatingSystem.IsLinux())
+        // {
+        //     DataContext = new AppViewModel(new Services.Linux.Services.StartupInstallerService());
+        // }
+        // else
+        // {
+        //     throw new Exception(
+        //         $"Unsupported operating system: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}"
+        //     );
+        // }
     }
 
     public override void Initialize()
     {
         Init();
+        DataContext = Container?.GetRequiredService<IAppViewModel>();
         _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
         AvaloniaXamlLoader.Load(this);
     }
@@ -79,18 +82,30 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        var settingsService =
+            Container?.GetRequiredService<ISettingsService>()
+            ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
+        var startMinimized =
+            settingsService.GetSetting("StartMinimized")
+            ?? throw new Exception($"Error retrieving setting StartMinimized");
+        var startMinimizedValue = bool.Parse(startMinimized.Value ?? "false");
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            if (!startMinimizedValue)
             {
-                DataContext = Container?.GetRequiredService<IMainWindowViewModel>(),
-            };
-            // Prevent the application from exiting and hide the window when the user presses the X button
-            desktop.MainWindow.Closing += (s, e) =>
-            {
-                ((Window)s!).Hide();
-                e.Cancel = true;
-            };
+                desktop.MainWindow = new MainWindow
+                {
+                    DataContext = Container?.GetRequiredService<IMainWindowViewModel>(),
+                };
+
+                // Prevent the application from exiting and hide the window when the user presses the X button
+                desktop.MainWindow.Closing += (s, e) =>
+                {
+                    ((Window)s!).Hide();
+                    e.Cancel = true;
+                };
+            }
 
             desktop.Exit += (sender, args) =>
             {
