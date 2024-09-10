@@ -54,7 +54,7 @@ public class SettingsService : ReactiveObject, ISettingsService
             return;
         }
 
-        var startMinimizedSetting = new Setting { Name = "StartMinimized", Value = "true" };
+        var startMinimizedSetting = new Setting { Name = "StartMinimized", Value = "false" };
         repo.Add(startMinimizedSetting);
 
         uow.SaveChanges();
