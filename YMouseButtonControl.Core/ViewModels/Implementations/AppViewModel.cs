@@ -50,7 +50,12 @@ public class AppViewModel : ViewModelBase, IAppViewModel
                 is IClassicDesktopStyleApplicationLifetime lifetime
             )
             {
-                lifetime.MainWindow!.Opened -= HideWindow.Hide;
+                if (lifetime.MainWindow is null)
+                {
+                    var mw = (Window)mainWindow;
+                    mw.DataContext = mainWindowViewModel;
+                    lifetime.MainWindow = mw;
+                }
                 lifetime.MainWindow?.Show();
             }
         });
