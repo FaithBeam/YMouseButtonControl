@@ -10,9 +10,9 @@ using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
+using YMouseButtonControl.Core;
 using YMouseButtonControl.Core.Profiles.Implementations;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
-using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.DependencyInjection;
@@ -24,28 +24,6 @@ public class App : Application
 {
     public IServiceProvider? Container { get; private set; }
     private IBackgroundTasksRunner? _backgroundTasksRunner;
-
-    public App()
-    {
-        // if (OperatingSystem.IsWindows())
-        // {
-        //     DataContext = new AppViewModel(new Services.Windows.Services.StartupInstallerService(), );
-        // }
-        // else if (OperatingSystem.IsMacOS())
-        // {
-        //     DataContext = new AppViewModel(new Services.MacOS.Services.StartupInstallerService());
-        // }
-        // else if (OperatingSystem.IsLinux())
-        // {
-        //     DataContext = new AppViewModel(new Services.Linux.Services.StartupInstallerService());
-        // }
-        // else
-        // {
-        //     throw new Exception(
-        //         $"Unsupported operating system: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}"
-        //     );
-        // }
-    }
 
     public override void Initialize()
     {
@@ -92,20 +70,23 @@ public class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            if (!startMinimizedValue)
+            desktop.MainWindow = new MainWindow
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = Container?.GetRequiredService<IMainWindowViewModel>(),
-                };
+                DataContext = Container?.GetRequiredService<IMainWindowViewModel>(),
+            };
 
-                // Prevent the application from exiting and hide the window when the user presses the X button
-                desktop.MainWindow.Closing += (s, e) =>
-                {
-                    ((Window)s!).Hide();
-                    e.Cancel = true;
-                };
+            // Prevent the application from exiting and hide the window when the user presses the X button
+            desktop.MainWindow.Closing += (s, e) =>
+            {
+                ((Window)s!).Hide();
+                e.Cancel = true;
+            };
+            if (startMinimizedValue)
+            {
+                desktop.MainWindow.Opened += HideWindow.Hide;
             }
+
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             desktop.Exit += (sender, args) =>
             {

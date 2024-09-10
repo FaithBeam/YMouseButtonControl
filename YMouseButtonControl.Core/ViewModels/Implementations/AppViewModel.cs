@@ -50,24 +50,7 @@ public class AppViewModel : ViewModelBase, IAppViewModel
                 is IClassicDesktopStyleApplicationLifetime lifetime
             )
             {
-                if (lifetime.MainWindow is null)
-                {
-                    lifetime.MainWindow = (Window)mainWindow;
-                    // lifetime.MainWindow.DataContext = mainWindowViewModel;
-
-                    // Prevent the application from exiting and hide the window when the user presses the X button
-                    lifetime.MainWindow.Closing += (s, e) =>
-                    {
-                        ((Window)s!).Hide();
-                        e.Cancel = true;
-                    };
-
-                    lifetime.Exit += (sender, args) =>
-                    {
-                        backgroundTasksRunner.Dispose();
-                    };
-                }
-
+                lifetime.MainWindow!.Opened -= HideWindow.Hide;
                 lifetime.MainWindow?.Show();
             }
         });
