@@ -10,10 +10,13 @@ using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
+using YMouseButtonControl.Core;
+using YMouseButtonControl.Core.Profiles.Implementations;
+using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
-using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
+using YMouseButtonControl.Core.Views;
 using YMouseButtonControl.DependencyInjection;
 using YMouseButtonControl.Views;
 
@@ -24,15 +27,8 @@ public class App : Application
     public IServiceProvider? Container { get; private set; }
     private IBackgroundTasksRunner? _backgroundTasksRunner;
 
-    public App()
-    {
-        DataContext = new AppViewModel();
-    }
-
     public override void Initialize()
     {
-        Init();
-        _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -63,18 +59,27 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Init();
+        DataContext = Container?.GetRequiredService<IAppViewModel>();
+        _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
+        var settingsService =
+            Container?.GetRequiredService<ISettingsService>()
+            ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
+        var startMinimized =
+            settingsService.GetSetting("StartMinimized")
+            ?? throw new Exception($"Error retrieving setting StartMinimized");
+        var startMinimizedValue = bool.Parse(startMinimized.Value ?? "false");
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            if (!startMinimizedValue)
             {
-                DataContext = Container?.GetRequiredService<IMainWindowViewModel>()
-            };
-            // Prevent the application from exiting and hide the window when the user presses the X button
-            desktop.MainWindow.Closing += (s, e) =>
-            {
-                ((Window)s!).Hide();
-                e.Cancel = true;
-            };
+                var mainWindow = (Window)Container.GetRequiredService<IMainWindow>();
+                mainWindow.DataContext = Container.GetRequiredService<IMainWindowViewModel>();
+                desktop.MainWindow = mainWindow;
+            }
+
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             desktop.Exit += (sender, args) =>
             {

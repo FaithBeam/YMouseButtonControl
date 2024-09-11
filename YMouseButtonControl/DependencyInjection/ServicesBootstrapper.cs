@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Processes;
 using YMouseButtonControl.Core.Profiles.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
+using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Services.MacOS;
 using YMouseButtonControl.Services.Windows;
@@ -21,6 +22,7 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         services.AddSingleton<IProfilesService, ProfilesService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
     }
 
     private static void RegisterPlatformSpecificServices(IServiceCollection services)
@@ -45,6 +47,10 @@ public static class ServicesBootstrapper
 
     private static void RegisterLinuxServices(IServiceCollection services)
     {
+        services.AddSingleton<
+            IStartupInstallerService,
+            Services.Linux.Services.StartupInstallerService
+        >();
         services.AddSingleton<IProcessMonitorService, Services.Linux.ProcessMonitorService>();
         services.AddSingleton<ICurrentWindowService, Services.Linux.CurrentWindowService>();
         services.AddSingleton<IBackgroundTasksRunner, Services.Linux.BackgroundTasksRunner>();
@@ -53,6 +59,10 @@ public static class ServicesBootstrapper
     [SupportedOSPlatform("windows5.1.2600")]
     private static void RegisterWindowsServices(IServiceCollection services)
     {
+        services.AddSingleton<
+            IStartupInstallerService,
+            Services.Windows.Services.StartupInstallerService
+        >();
         services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
         services.AddSingleton<ICurrentWindowService, Services.Windows.CurrentWindowService>();
         services.AddSingleton<IBackgroundTasksRunner, Services.Windows.BackgroundTasksRunner>();
@@ -60,6 +70,10 @@ public static class ServicesBootstrapper
 
     private static void RegisterMacOsServices(IServiceCollection services)
     {
+        services.AddSingleton<
+            IStartupInstallerService,
+            Services.MacOS.Services.StartupInstallerService
+        >();
         services.AddSingleton<IProcessMonitorService, MacOsProcessMonitorService>();
         services.AddSingleton<ICurrentWindowService, Services.MacOS.CurrentWindowService>();
         services.AddSingleton<IBackgroundTasksRunner, Services.MacOS.BackgroundTasksRunner>();

@@ -14,6 +14,7 @@ using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.ProfilesList;
 using YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
 using YMouseButtonControl.DataAccess.LiteDb;
 

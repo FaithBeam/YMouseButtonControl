@@ -68,7 +68,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
                     CustomKeys = CustomKeys,
                     SimulatedKeystrokesType = SimulatedKeystrokesType,
                     Description = Description,
-                    BlockOriginalMouseInput = BlockOriginalMouseInput
+                    BlockOriginalMouseInput = BlockOriginalMouseInput,
                 },
             canExecuteOkCmd
         );
@@ -215,7 +215,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             { "F21", "{F21}" },
             { "F22", "{F22}" },
             { "F23", "{F23}" },
-            { "F24", "{F24}" }
+            { "F24", "{F24}" },
         };
 
     public static Dictionary<string, string> NumericKeypadKeys =>
@@ -263,7 +263,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
             { "Next Track", "{MEDIANEXT}" },
             { "Previous Track", "{MEDIAPREV}" },
             { "Select Track", "{MEDIASELECT}" },
-            { "Eject Media", "{MEDIAEJECT}" }
+            { "Eject Media", "{MEDIAEJECT}" },
         };
 
     public static Dictionary<string, string> BrowserKeys =>
@@ -314,7 +314,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         () => new RepeatedlyWhileButtonDownActionType(),
         () => new StickyRepeatActionType(),
         () => new StickyHoldActionType(),
-        () => new AsMousePressedAndReleasedActionType()
+        () => new AsMousePressedAndReleasedActionType(),
     ];
 
     private string? _computedXy;

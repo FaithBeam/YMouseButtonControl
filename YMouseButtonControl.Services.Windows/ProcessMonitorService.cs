@@ -37,7 +37,7 @@ public class ProcessMonitorService : IProcessMonitorService
         return cb.DistinctBy(x => x.MainModule!.FileName)
             .Select(x => new ProcessModel(x)
             {
-                Bitmap = GetBitmapStreamFromPath(x.MainModule!.FileName)
+                Bitmap = GetBitmapStreamFromPath(x.MainModule!.FileName),
             })
             .ToList();
     }

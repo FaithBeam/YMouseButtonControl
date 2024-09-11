@@ -3,5 +3,5 @@
 public enum MouseButtonState
 {
     Pressed,
-    Released
+    Released,
 }

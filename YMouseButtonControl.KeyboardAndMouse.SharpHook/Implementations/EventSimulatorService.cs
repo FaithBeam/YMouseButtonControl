@@ -32,7 +32,7 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
         {
             Result = eventSimulator
                 .SimulateKeyPress(KeyCodes[key ?? throw new NullReferenceException(key)])
-                .ToString()
+                .ToString(),
         };
     }
 
@@ -43,7 +43,7 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
         {
             Result = eventSimulator
                 .SimulateKeyRelease(KeyCodes[key ?? throw new NullReferenceException(key)])
-                .ToString()
+                .ToString(),
         };
     }
 
@@ -300,7 +300,7 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
                     {
                         Key = substr,
                         IsModifier = false,
-                        Value = (ushort)KeyCodes[substr]
+                        Value = (ushort)KeyCodes[substr],
                     }
                 );
                 i++;
@@ -504,6 +504,6 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
             { "rmb", MouseButton.Button2 },
             { "mmb", MouseButton.Button3 },
             { "mb4", MouseButton.Button4 },
-            { "mb5", MouseButton.Button5 }
+            { "mb5", MouseButton.Button5 },
         };
 }

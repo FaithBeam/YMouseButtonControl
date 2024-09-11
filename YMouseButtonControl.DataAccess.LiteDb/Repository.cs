@@ -9,6 +9,8 @@ public class Repository<T>(ILiteCollection<T> collection) : IRepository<T>
 {
     public T GetById(string id) => collection.FindById(id);
 
+    public T GetById(int id) => collection.FindById(id);
+
     public IEnumerable<T> GetAll() => collection.FindAll();
 
     public void Add(T entity) => collection.Insert(entity);

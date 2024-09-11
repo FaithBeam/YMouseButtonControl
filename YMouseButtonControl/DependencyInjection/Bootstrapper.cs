@@ -16,5 +16,6 @@ public static class Bootstrapper
         KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services);
         FeaturesBootstrapper.RegisterFeatures(services);
         ViewModelsBootstrapper.RegisterViewModels(services);
+        ViewBootstrapper.RegisterViews(services);
     }
 }

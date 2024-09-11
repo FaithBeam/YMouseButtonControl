@@ -4,6 +4,7 @@ using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
+using YMouseButtonControl.Core.ViewModels.ProfilesList;
 using YMouseButtonControl.Core.ViewModels.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
@@ -18,6 +19,7 @@ public static class ViewModelsBootstrapper
     private static void RegisterCommonViewModels(IServiceCollection services)
     {
         services.AddTransient<IProcessSelectorDialogViewModel, ProcessSelectorDialogViewModel>();
+        services.AddTransient<IGlobalSettingsDialogViewModel, GlobalSettingsDialogViewModel>();
         services.AddSingleton<IProfilesInformationViewModel, ProfilesInformationViewModel>();
         services.AddSingleton<
             IShowSimulatedKeystrokesDialogService,

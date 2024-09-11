@@ -1,7 +1,8 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:implementations="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations;assembly=YMouseButtonControl.Core"
-             x:Class="YMouseButtonControl.App">
+             x:Class="YMouseButtonControl.App"
+             Name="YMouseButtonControl">
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
@@ -17,6 +18,10 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="Setup" Command="{Binding SetupCommand}" />
+                        <NativeMenuItem Header="{Binding RunAtStartupHeader}"
+                                        IsEnabled="{Binding RunAtStartupIsEnabled}"
+                                        Command="{Binding RunAtStartupCommand}" />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Header="Exit" Command="{Binding ExitCommand}" />
                     </NativeMenu>
                 </TrayIcon.Menu>

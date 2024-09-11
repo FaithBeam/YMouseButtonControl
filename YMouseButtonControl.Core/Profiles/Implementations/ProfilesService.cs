@@ -43,13 +43,12 @@ public class ProfilesService : ReactiveObject, IProfilesService
                 CurrentProfile = change.Reason switch
                 {
                     ChangeReason.Add => change.Current,
-                    ChangeReason.Remove
-                        => _profiles
-                            .Items.Where(x => x.DisplayPriority < change.Current.DisplayPriority)
-                            .MaxBy(x => x.DisplayPriority)
-                            ?? throw new Exception("Unable to get next lower priority on remove"),
+                    ChangeReason.Remove => _profiles
+                        .Items.Where(x => x.DisplayPriority < change.Current.DisplayPriority)
+                        .MaxBy(x => x.DisplayPriority)
+                        ?? throw new Exception("Unable to get next lower priority on remove"),
                     ChangeReason.Update => change.Current,
-                    _ => throw new Exception("Unhandled change reason")
+                    _ => throw new Exception("Unhandled change reason"),
                 };
             });
 
@@ -90,7 +89,9 @@ public class ProfilesService : ReactiveObject, IProfilesService
         var repository = unitOfWork.GetRepository<Profile>();
         var model = repository.GetAll();
         if (model.Any(x => x.Name == "Default"))
+        {
             return;
+        }
         var defaultProfile = new Profile
         {
             Checked = true,
@@ -111,7 +112,7 @@ public class ProfilesService : ReactiveObject, IProfilesService
             MouseWheelUp = new NothingMapping(),
             MouseWheelDown = new NothingMapping(),
             MouseWheelLeft = new NothingMapping(),
-            MouseWheelRight = new NothingMapping()
+            MouseWheelRight = new NothingMapping(),
         };
         repository.Add(defaultProfile);
     }

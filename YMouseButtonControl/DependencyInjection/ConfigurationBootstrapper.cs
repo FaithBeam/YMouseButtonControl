@@ -32,7 +32,7 @@ public static class ConfigurationBootstrapper
         services.AddTransient<DatabaseConfiguration>(_ => new DatabaseConfiguration
         {
             ConnectionString = GetDatabaseConnectionString(configuration),
-            UseInMemoryDatabase = dataAccessConfig.UseInMemoryDatabase
+            UseInMemoryDatabase = dataAccessConfig.UseInMemoryDatabase,
         });
     }
 

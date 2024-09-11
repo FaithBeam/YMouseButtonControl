@@ -26,7 +26,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         {
             SimulatedKeystrokesType = new MouseButtonPressedActionType(),
             BlockOriginalMouseInput = true,
-            Keys = "wee"
+            Keys = "wee",
         };
         var testProvider = new TestProvider();
         using var hook = new SimpleReactiveGlobalHook(globalHookProvider: testProvider);
@@ -51,7 +51,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         var evtDn = new UioHookEvent
         {
             Type = EventType.MousePressed,
-            Mouse = new MouseEventData { Button = MouseButton.Button3, }
+            Mouse = new MouseEventData { Button = MouseButton.Button3 },
         };
         // var evtUp = new UioHookEvent
         // {
@@ -78,7 +78,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         {
             SimulatedKeystrokesType = new MouseButtonPressedActionType(),
             BlockOriginalMouseInput = true,
-            Keys = "wee"
+            Keys = "wee",
         };
         var testProvider = new TestProvider();
         using var hook = new SimpleReactiveGlobalHook(globalHookProvider: testProvider);
@@ -103,7 +103,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         var evtDn = new UioHookEvent
         {
             Type = EventType.MousePressed,
-            Mouse = new MouseEventData { Button = MouseButton.Button3, }
+            Mouse = new MouseEventData { Button = MouseButton.Button3 },
         };
         // var evtUp = new UioHookEvent
         // {
@@ -130,7 +130,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         {
             SimulatedKeystrokesType = new MouseButtonPressedActionType(),
             BlockOriginalMouseInput = true,
-            Keys = "wee"
+            Keys = "wee",
         };
         var testProvider = new TestProvider();
         using var hook = new SimpleReactiveGlobalHook(globalHookProvider: testProvider);
@@ -156,7 +156,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         var evtDn = new UioHookEvent
         {
             Type = EventType.MousePressed,
-            Mouse = new MouseEventData { Button = MouseButton.Button3, }
+            Mouse = new MouseEventData { Button = MouseButton.Button3 },
         };
         // var evtUp = new UioHookEvent
         // {
@@ -181,7 +181,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         {
             SimulatedKeystrokesType = new MouseButtonReleasedActionType(),
             BlockOriginalMouseInput = true,
-            Keys = "wee"
+            Keys = "wee",
         };
         var testProvider = new TestProvider();
         using var hook = new SimpleReactiveGlobalHook(globalHookProvider: testProvider);
@@ -206,7 +206,7 @@ public class KeyboardSimulatorWorkerTests : BaseTest
         var evtUp = new UioHookEvent
         {
             Type = EventType.MouseReleased,
-            Mouse = new MouseEventData { Button = MouseButton.Button3, }
+            Mouse = new MouseEventData { Button = MouseButton.Button3 },
         };
         RunHookAndWaitForStart(hook, testProvider);
 
