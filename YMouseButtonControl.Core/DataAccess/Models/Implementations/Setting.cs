@@ -1,12 +1,20 @@
 ﻿using System;
+using ReactiveUI;
 
 namespace YMouseButtonControl.Core.DataAccess.Models.Implementations;
 
-public class Setting : IEquatable<Setting>
+public class Setting : ReactiveObject, IEquatable<Setting>
 {
+    private string? _value;
+
     public int Id { get; set; }
     public required string Name { get; set; }
-    public string? Value { get; set; }
+
+    public string? Value
+    {
+        get => _value;
+        set => this.RaiseAndSetIfChanged(ref _value, value);
+    }
 
     public bool Equals(Setting? other)
     {

@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.Views;
 using YMouseButtonControl.Views.Dialogs;
@@ -33,7 +34,9 @@ public partial class MainWindow : ReactiveWindow<IMainWindowViewModel>, IMainWin
 #endif
     }
 
-    private async Task ShowGlobalSettingsDialog(IInteractionContext<Unit, Unit> context)
+    private async Task ShowGlobalSettingsDialog(
+        IInteractionContext<IGlobalSettingsDialogViewModel, Unit> context
+    )
     {
         var dialog = new GlobalSettingsDialog { DataContext = context.Input };
         await dialog.ShowDialog<IGlobalSettingsDialogViewModel?>(

@@ -9,7 +9,9 @@ using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Implementations;
+using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
+using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
@@ -20,6 +22,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     private readonly IProfilesService _ps;
     private readonly IProfilesListViewModel _profilesListViewModel;
+    private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
     private string? _profileName;
 
     #endregion
@@ -31,15 +34,17 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         ILayerViewModel layerViewModel,
         IProfilesListViewModel profilesListViewModel,
         IProfilesInformationViewModel profilesInformationViewModel,
+        IGlobalSettingsDialogViewModel globalSettingsDialogViewModel,
         IApply apply
     )
     {
         _profilesListViewModel = profilesListViewModel;
+        _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
         _ps = ps;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
         SettingsCommand = ReactiveCommand.CreateFromTask(ShowSettingsDialogAsync);
-        ShowSettingsDialogInteraction = new Interaction<Unit, Unit>();
+        ShowSettingsDialogInteraction = new Interaction<IGlobalSettingsDialogViewModel, Unit>();
         CloseCommand = ReactiveCommand.Create(() =>
         {
             if (
@@ -75,7 +80,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     public ReactiveCommand<Unit, Unit> CloseCommand { get; }
     public ReactiveCommand<Unit, Unit> SettingsCommand { get; }
 
-    public Interaction<Unit, Unit> ShowSettingsDialogInteraction { get; }
+    public Interaction<IGlobalSettingsDialogViewModel, Unit> ShowSettingsDialogInteraction { get; }
 
     public string? ProfileName
     {
@@ -87,7 +92,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     private async Task ShowSettingsDialogAsync()
     {
-        await ShowSettingsDialogInteraction.Handle(Unit.Default);
+        await ShowSettingsDialogInteraction.Handle(_globalSettingsDialogViewModel);
     }
 
     private void OnProfileChanged(Profile profile) => ProfileName = profile.Name;

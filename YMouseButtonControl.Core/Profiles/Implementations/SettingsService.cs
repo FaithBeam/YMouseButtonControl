@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Linq;
 using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.DataAccess.UnitOfWork;
+using YMouseButtonControl.Core.Profiles.Interfaces;
 
 namespace YMouseButtonControl.Core.Profiles.Implementations;
 
@@ -33,7 +35,19 @@ public class SettingsService : ReactiveObject, ISettingsService
 
     public Setting? GetSetting(string name)
     {
-        return _settings.Items.FirstOrDefault(x => x.Name == name);
+        using var unitOfWork = _unitOfWorkFactory.Create();
+        var repository = unitOfWork.GetRepository<Setting>();
+        return repository.GetAll().ToList().FirstOrDefault(x => x.Name == name);
+    }
+
+    public Setting UpdateSetting(int id, string value)
+    {
+        using var unitOfWork = _unitOfWorkFactory.Create();
+        var repository = unitOfWork.GetRepository<Setting>();
+        var dbSetting = repository.GetById(id);
+        dbSetting.Value = value;
+        repository.ApplyAction([dbSetting]);
+        return dbSetting;
     }
 
     private void LoadSettingsFromDb()

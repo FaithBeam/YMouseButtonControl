@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:implementations="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations;assembly=YMouseButtonControl.Core"
              xmlns:models="clr-namespace:YMouseButtonControl.Core.DataAccess.Models.Implementations;assembly=YMouseButtonControl.Core"
+             xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -12,7 +13,7 @@
              x:Class="YMouseButtonControl.Views.ProfilesListView">
 
     <Design.DataContext>
-        <implementations:ProfilesListViewModel />
+        <profilesList:ProfilesListViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">

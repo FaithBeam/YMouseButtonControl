@@ -7,11 +7,12 @@ using System.Windows.Input;
 using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.Profiles.Interfaces;
+using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
 
-namespace YMouseButtonControl.Core.ViewModels.Implementations;
+namespace YMouseButtonControl.Core.ViewModels.ProfilesList;
 
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {

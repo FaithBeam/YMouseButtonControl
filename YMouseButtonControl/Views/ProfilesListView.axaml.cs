@@ -9,6 +9,7 @@ using ReactiveUI;
 using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 using YMouseButtonControl.Core.ViewModels.Implementations;
 using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.ProfilesList;
 using YMouseButtonControl.Views.Dialogs;
 
 namespace YMouseButtonControl.Views;

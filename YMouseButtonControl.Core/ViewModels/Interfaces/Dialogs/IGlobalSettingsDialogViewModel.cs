@@ -1,6 +1,6 @@
 ﻿using YMouseButtonControl.Core.DataAccess.Models.Implementations;
 
-namespace YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
+namespace YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 
 public interface IGlobalSettingsDialogViewModel
 {

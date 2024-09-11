@@ -12,6 +12,7 @@ using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Configuration;
 using YMouseButtonControl.Core;
 using YMouseButtonControl.Core.Profiles.Implementations;
+using YMouseButtonControl.Core.Profiles.Interfaces;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.ViewModels.Interfaces;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
