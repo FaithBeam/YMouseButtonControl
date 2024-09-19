@@ -2,11 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using SharpHook;
 using SharpHook.Reactive;
-using YMouseButtonControl.Core.KeyboardAndMouse;
-using YMouseButtonControl.Core.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations;
-using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedKeystrokesTypes;
-using YMouseButtonControl.KeyboardAndMouse.SharpHook.Implementations.SimulatedMousePressTypes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedMousePressTypes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
+using YMouseButtonControl.Linux.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -22,15 +23,15 @@ public static class KeyboardAndMouseBootstrapper
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600))
         {
-            services.AddSingleton<ISkipProfileService, Services.Windows.SkipProfileService>();
+            services.AddScoped<ISkipProfileService, Windows.Services.SkipProfileService>();
         }
         else if (OperatingSystem.IsMacOS())
         {
-            services.AddSingleton<ISkipProfileService, Services.MacOS.SkipProfileService>();
+            services.AddScoped<ISkipProfileService, MacOS.Services.SkipProfileService>();
         }
         else if (OperatingSystem.IsLinux())
         {
-            services.AddSingleton<ISkipProfileService, Services.Linux.SkipProfileService>();
+            services.AddScoped<ISkipProfileService, SkipProfileService>();
         }
         else
         {
@@ -40,20 +41,18 @@ public static class KeyboardAndMouseBootstrapper
 
     private static void RegisterCommonKeyboardAndMouseServices(IServiceCollection services)
     {
-        services.AddSingleton<IReactiveGlobalHook, SimpleReactiveGlobalHook>();
-        services.AddSingleton<IMouseListener, MouseListener>();
-        services.AddSingleton<IEventSimulator, EventSimulator>();
-        services.AddSingleton<IEventSimulatorService, EventSimulatorService>();
-        services.AddSingleton<IStickyHoldService, StickyHoldService>();
-        services.AddSingleton<IAsMouseButtonPressedService, AsMouseButtonPressedService>();
-        services.AddSingleton<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>();
-        services.AddSingleton<
-            IDuringMousePressAndReleaseService,
-            DuringMousePressAndReleaseService
-        >();
-        services.AddSingleton<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>();
-        services.AddSingleton<IStickyRepeatService, StickyRepeatService>();
-        services.AddSingleton<IRightClick, RightClick>();
-        services.AddSingleton<KeyboardSimulatorWorker>();
+        services
+            .AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
+            .AddScoped<IMouseListener, MouseListener>()
+            .AddScoped<IEventSimulator, EventSimulator>()
+            .AddScoped<IEventSimulatorService, EventSimulatorService>()
+            .AddScoped<IStickyHoldService, StickyHoldService>()
+            .AddScoped<IAsMouseButtonPressedService, AsMouseButtonPressedService>()
+            .AddScoped<IAsMouseButtonReleasedService, AsMouseButtonReleasedService>()
+            .AddScoped<IDuringMousePressAndReleaseService, DuringMousePressAndReleaseService>()
+            .AddScoped<IRepeatedWhileButtonDownService, RepeatedWhileButtonDownService>()
+            .AddScoped<IStickyRepeatService, StickyRepeatService>()
+            .AddScoped<IRightClick, RightClick>()
+            .AddScoped<KeyboardSimulatorWorker>();
     }
 }

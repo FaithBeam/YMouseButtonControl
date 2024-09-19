@@ -1,5 +1,6 @@
 using System.Runtime.Versioning;
-using YMouseButtonControl.Services.Windows.Services;
+using YMouseButtonControl.Windows;
+using YMouseButtonControl.Windows.Services;
 
 namespace YMouseButtonControl.Windows.Tests;
 

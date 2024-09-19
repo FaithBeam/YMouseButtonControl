@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.Processes;
-using YMouseButtonControl.Core.Profiles.Implementations;
-using YMouseButtonControl.Core.Profiles.Interfaces;
-using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
-using YMouseButtonControl.Services.MacOS;
-using YMouseButtonControl.Services.Windows;
+using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.Profiles;
+using YMouseButtonControl.Core.Services.Settings;
+using YMouseButtonControl.Core.Services.StartupInstaller;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -21,8 +19,9 @@ public static class ServicesBootstrapper
 
     private static void RegisterCommonServices(IServiceCollection services)
     {
-        services.AddSingleton<IProfilesService, ProfilesService>();
-        services.AddSingleton<ISettingsService, SettingsService>();
+        services
+            .AddScoped<IProfilesService, ProfilesService>()
+            .AddScoped<ISettingsService, SettingsService>();
     }
 
     private static void RegisterPlatformSpecificServices(IServiceCollection services)
@@ -47,35 +46,29 @@ public static class ServicesBootstrapper
 
     private static void RegisterLinuxServices(IServiceCollection services)
     {
-        services.AddSingleton<
-            IStartupInstallerService,
-            Services.Linux.Services.StartupInstallerService
-        >();
-        services.AddSingleton<IProcessMonitorService, Services.Linux.ProcessMonitorService>();
-        services.AddSingleton<ICurrentWindowService, Services.Linux.CurrentWindowService>();
-        services.AddSingleton<IBackgroundTasksRunner, Services.Linux.BackgroundTasksRunner>();
+        services
+            .AddScoped<IStartupInstallerService, Linux.Services.StartupInstallerService>()
+            .AddScoped<IProcessMonitorService, Linux.Services.ProcessMonitorService>()
+            .AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowService>()
+            .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
     }
 
     [SupportedOSPlatform("windows5.1.2600")]
     private static void RegisterWindowsServices(IServiceCollection services)
     {
-        services.AddSingleton<
-            IStartupInstallerService,
-            Services.Windows.Services.StartupInstallerService
-        >();
-        services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
-        services.AddSingleton<ICurrentWindowService, Services.Windows.CurrentWindowService>();
-        services.AddSingleton<IBackgroundTasksRunner, Services.Windows.BackgroundTasksRunner>();
+        services
+            .AddScoped<IStartupInstallerService, Windows.Services.StartupInstallerService>()
+            .AddScoped<IProcessMonitorService, Windows.Services.ProcessMonitorService>()
+            .AddScoped<ICurrentWindowService, Windows.Services.CurrentWindowService>()
+            .AddScoped<IBackgroundTasksRunner, Windows.Services.BackgroundTasksRunner>();
     }
 
     private static void RegisterMacOsServices(IServiceCollection services)
     {
-        services.AddSingleton<
-            IStartupInstallerService,
-            Services.MacOS.Services.StartupInstallerService
-        >();
-        services.AddSingleton<IProcessMonitorService, MacOsProcessMonitorService>();
-        services.AddSingleton<ICurrentWindowService, Services.MacOS.CurrentWindowService>();
-        services.AddSingleton<IBackgroundTasksRunner, Services.MacOS.BackgroundTasksRunner>();
+        services
+            .AddScoped<IStartupInstallerService, MacOS.Services.StartupInstallerService>()
+            .AddScoped<IProcessMonitorService, MacOS.Services.ProcessMonitorService>()
+            .AddScoped<ICurrentWindowService, MacOS.Services.CurrentWindowService>()
+            .AddScoped<IBackgroundTasksRunner, MacOS.Services.BackgroundTasksRunner>();
     }
 }

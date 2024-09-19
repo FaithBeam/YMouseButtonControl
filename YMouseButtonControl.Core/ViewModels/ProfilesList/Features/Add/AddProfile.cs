@@ -1,17 +1,17 @@
 ﻿using System.Linq;
-using YMouseButtonControl.Core.DataAccess.Models.Implementations;
-using YMouseButtonControl.Core.Profiles.Interfaces;
+using YMouseButtonControl.Core.Services.Profiles;
+using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
 
 public interface IAddProfile
 {
-    void Add(Profile profile);
+    void Add(ProfileVm profile);
 }
 
 public class AddProfile(IProfilesService profilesService) : IAddProfile
 {
-    public void Add(Profile profile)
+    public void Add(ProfileVm profile)
     {
         profile.Id = GetNextProfileId();
         profile.DisplayPriority = GetNextProfileDisplayPriority();

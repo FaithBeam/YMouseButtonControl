@@ -2,8 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:dialogs="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.Core"
-        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
+        xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
         WindowStartupLocation="CenterOwner"
         Width="800"
         Height="600"
@@ -11,16 +10,12 @@
         x:Class="YMouseButtonControl.Views.Dialogs.GlobalSettingsDialog"
         Title="Global Settings">
     <Design.DataContext>
-        <dialogs:GlobalSettingsDialogViewModel />
+        <mainWindow:GlobalSettingsDialogViewModel />
     </Design.DataContext>
-
-    <Window.Resources>
-        <converters:SettingValueConverter x:Key="SettingValueConverter" />
-    </Window.Resources>
 
     <StackPanel>
         <CheckBox Content="Start Minimized"
-                  IsChecked="{Binding StartMinimized.Value, Converter={StaticResource SettingValueConverter}}" />
+                  IsChecked="{Binding StartMinimized.Value}" />
         <Button Content="Apply" Command="{Binding ApplyCommand}" />
         <Button Content="Cancel" Click="Cancel_OnClick"></Button>
     </StackPanel>

@@ -8,7 +8,6 @@ public static class ViewBootstrapper
 {
     public static void RegisterViews(IServiceCollection services)
     {
-        services.AddSingleton<IMainWindow, MainWindow>();
-        services.AddSingleton<MainWindow>();
+        services.AddSingleton<IMainWindow, MainWindow>().AddSingleton<MainWindow>();
     }
 }

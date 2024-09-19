@@ -8,7 +8,6 @@ public static class FeaturesBootstrapper
 {
     public static void RegisterFeatures(IServiceCollection services)
     {
-        services.AddTransient<IApply, Apply>();
-        services.AddTransient<IAddProfile, AddProfile>();
+        services.AddTransient<IApply, Apply>().AddTransient<IAddProfile, AddProfile>();
     }
 }

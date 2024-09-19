@@ -2,9 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:implementations="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations;assembly=YMouseButtonControl.Core"
-             xmlns:models="clr-namespace:YMouseButtonControl.Core.DataAccess.Models.Implementations;assembly=YMouseButtonControl.Core"
              xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
+             xmlns:models="clr-namespace:YMouseButtonControl.Core.ViewModels.Models;assembly=YMouseButtonControl.Core"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -17,25 +16,21 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">
-        <DataGrid Name="ProfilesDataGrid"
-                  ItemsSource="{Binding ProfilesService.Profiles}"
-                  AutoGenerateColumns="False"
-                  HeadersVisibility="None"
-                  Height="300"
-                  SelectedItem="{Binding ProfilesService.CurrentProfile}"
-                  VerticalAlignment="Top">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="models:Profile">
-                            <CheckBox IsChecked="{Binding Checked}"></CheckBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- <DataGridCheckBoxColumn Binding="{Binding Checked}" Width="0" /> -->
-                <DataGridTextColumn Binding="{Binding Description}" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <ListBox ItemsSource="{Binding ProfilesService.Profiles}" SelectedIndex="{Binding SelectedIndex}">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="Padding" Value="6"></Setter>
+                </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Checked}"></CheckBox>
+                        <TextBlock Text="{Binding Description}" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <Grid Grid.Row="1" RowDefinitions="*,*">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" SharedSizeGroup="button" />
@@ -47,8 +42,8 @@
                     Grid.Column="0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    Content="Add" 
-                    Command="{Binding AddButtonCommand}"/>
+                    Content="Add"
+                    Command="{Binding AddButtonCommand}" />
             <Button Grid.Row="0"
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
@@ -82,7 +77,7 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     Content="Remove"
-                    Command="{Binding RemoveButtonCommand}"/>
+                    Command="{Binding RemoveButtonCommand}" />
             <Button Grid.Row="1"
                     Grid.Column="2"
                     HorizontalAlignment="Stretch"
@@ -99,5 +94,5 @@
             </Button>
         </Grid>
     </Grid>
-        
+
 </UserControl>

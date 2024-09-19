@@ -61,7 +61,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0
 
       - name: Execute unit tests
-        run: dotnet test
+        run: dotnet test11
 
       - name: Restore the application
         run: dotnet restore

@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using YMouseButtonControl.Core.ViewModels.Implementations;
-using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
+using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Views.Dialogs;
 
@@ -29,15 +28,12 @@ public partial class LayerView : ReactiveUserControl<LayerViewModel>
     }
 
     private static async Task ShowSimulateKeystrokesPicker(
-        IInteractionContext<
-            SimulatedKeystrokesDialogViewModel?,
-            SimulatedKeystrokesDialogModel?
-        > context
+        IInteractionContext<SimulatedKeystrokesDialogViewModel?, SimulatedKeystrokeVm?> context
     )
     {
         var dialog = new SimulatedKeystrokesDialog { DataContext = context.Input };
 
-        var result = await dialog.ShowDialog<SimulatedKeystrokesDialogModel?>(
+        var result = await dialog.ShowDialog<SimulatedKeystrokeVm?>(
             MainWindowProvider.GetMainWindow()
         );
         context.SetOutput(result);

@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
-        xmlns:dialogs="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;assembly=YMouseButtonControl.Core"
+        xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="600"
@@ -15,7 +15,7 @@
         Title="Choose Application">
 
     <Design.DataContext>
-        <dialogs:ProcessSelectorDialogViewModel />
+        <profilesList:ProcessSelectorDialogViewModel />
     </Design.DataContext>
     
     <Window.Resources>

@@ -1,11 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.ViewModels.Implementations;
-using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
-using YMouseButtonControl.Core.ViewModels.Interfaces;
-using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
+using YMouseButtonControl.Core.ViewModels.AppViewModel;
+using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
+using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
-using YMouseButtonControl.Core.ViewModels.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -18,16 +16,17 @@ public static class ViewModelsBootstrapper
 
     private static void RegisterCommonViewModels(IServiceCollection services)
     {
-        services.AddTransient<IProcessSelectorDialogViewModel, ProcessSelectorDialogViewModel>();
-        services.AddTransient<IGlobalSettingsDialogViewModel, GlobalSettingsDialogViewModel>();
-        services.AddSingleton<IProfilesInformationViewModel, ProfilesInformationViewModel>();
-        services.AddSingleton<
-            IShowSimulatedKeystrokesDialogService,
-            ShowSimulatedKeystrokesDialogService
-        >();
-        services.AddSingleton<ILayerViewModel, LayerViewModel>();
-        services.AddSingleton<IProfilesListViewModel, ProfilesListViewModel>();
-        services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
-        services.AddSingleton<IAppViewModel, AppViewModel>();
+        services
+            .AddScoped<IProcessSelectorDialogViewModel, ProcessSelectorDialogViewModel>()
+            .AddScoped<IGlobalSettingsDialogViewModel, GlobalSettingsDialogViewModel>()
+            .AddScoped<IProfilesInformationViewModel, ProfilesInformationViewModel>()
+            .AddScoped<
+                IShowSimulatedKeystrokesDialogService,
+                ShowSimulatedKeystrokesDialogService
+            >()
+            .AddScoped<ILayerViewModel, LayerViewModel>()
+            .AddScoped<IProfilesListViewModel, ProfilesListViewModel>()
+            .AddScoped<IMainWindowViewModel, MainWindowViewModel>()
+            .AddScoped<IAppViewModel, AppViewModel>();
     }
 }
