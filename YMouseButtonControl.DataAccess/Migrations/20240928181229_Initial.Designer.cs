@@ -10,7 +10,7 @@ using YMouseButtonControl.DataAccess.Context;
 namespace YMouseButtonControl.DataAccess.Migrations
 {
     [DbContext(typeof(YMouseButtonControlDbContext))]
-    [Migration("20240928171758_Initial")]
+    [Migration("20240928181229_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -181,6 +181,13 @@ namespace YMouseButtonControl.DataAccess.Migrations
                         },
                         new
                         {
+                            Id = 4,
+                            BlockOriginalMouseInput = false,
+                            MouseButton = 3,
+                            ProfileId = 1
+                        },
+                        new
+                        {
                             Id = 5,
                             BlockOriginalMouseInput = false,
                             MouseButton = 4,
@@ -228,17 +235,6 @@ namespace YMouseButtonControl.DataAccess.Migrations
                     b.HasBaseType("YMouseButtonControl.DataAccess.Models.ButtonMapping");
 
                     b.HasDiscriminator().HasValue("SimulatedKeystroke");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 4,
-                            BlockOriginalMouseInput = true,
-                            Keys = "ABC123",
-                            MouseButton = 3,
-                            ProfileId = 1,
-                            SimulatedKeystrokeType = 7
-                        });
                 });
 
             modelBuilder.Entity("YMouseButtonControl.DataAccess.Models.SettingBool", b =>

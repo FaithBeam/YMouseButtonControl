@@ -29,20 +29,6 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
         modelBuilder.Entity<SimulatedKeystroke>();
 
         modelBuilder
-            .Entity<SimulatedKeystroke>()
-            .HasData(
-                [
-                    new SimulatedKeystroke
-                    {
-                        Id = 4,
-                        MouseButton = MouseButton.Mb4,
-                        Keys = "ABC123",
-                        SimulatedKeystrokeType = SimulatedKeystrokeType.StickyHoldActionType,
-                        ProfileId = 1,
-                    },
-                ]
-            );
-        modelBuilder
             .Entity<NothingMapping>()
             .HasData(
                 [
@@ -64,7 +50,12 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
                         ProfileId = 1,
                         MouseButton = MouseButton.Mb3,
                     },
-                    // new NothingMapping { Id = 4 },
+                    new NothingMapping
+                    {
+                        Id = 4,
+                        ProfileId = 1,
+                        MouseButton = MouseButton.Mb4,
+                    },
                     new NothingMapping
                     {
                         Id = 5,

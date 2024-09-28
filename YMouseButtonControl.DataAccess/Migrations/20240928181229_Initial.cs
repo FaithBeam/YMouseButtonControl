@@ -92,7 +92,7 @@ namespace YMouseButtonControl.DataAccess.Migrations
                     { 1, false, "NothingMapping", null, 0, 1, null },
                     { 2, false, "NothingMapping", null, 1, 1, null },
                     { 3, false, "NothingMapping", null, 2, 1, null },
-                    { 4, true, "SimulatedKeystroke", "ABC123", 3, 1, 7 },
+                    { 4, false, "NothingMapping", null, 3, 1, null },
                     { 5, false, "NothingMapping", null, 4, 1, null },
                     { 6, false, "NothingMapping", null, 5, 1, null },
                     { 7, false, "NothingMapping", null, 6, 1, null },
