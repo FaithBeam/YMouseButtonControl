@@ -18,19 +18,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia" Version="11.1.1" />
-      <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.1" />
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="Avalonia" Version="11.1.3" />
+      <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.3" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="ReactiveUI" Version="20.1.1" />
       <PackageReference Include="Serilog" Version="4.0.1" />
       <PackageReference Include="SharpHook" Version="5.3.7" />
+      <PackageReference Include="SharpHook.Reactive" Version="5.3.7" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DataAccess\Models\" />
-      <Folder Include="Profiles\" />
-      <Folder Include="Services\Abstractions\" />
       <Folder Include="ViewModels\MainWindow\Features\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.DataAccess\YMouseButtonControl.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>

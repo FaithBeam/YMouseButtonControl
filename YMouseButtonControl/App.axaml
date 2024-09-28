@@ -1,6 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:implementations="clr-namespace:YMouseButtonControl.Core.ViewModels.Implementations;assembly=YMouseButtonControl.Core"
+             xmlns:appViewModel="clr-namespace:YMouseButtonControl.Core.ViewModels.AppViewModel;assembly=YMouseButtonControl.Core"
              x:Class="YMouseButtonControl.App"
              Name="YMouseButtonControl">
     <Application.Styles>
@@ -9,7 +9,7 @@
     </Application.Styles>
     
     <Design.DataContext>
-        <implementations:AppViewModel />
+        <appViewModel:AppViewModel />
     </Design.DataContext>
     
     <TrayIcon.Icons>

@@ -1,4 +1,4 @@
-using YMouseButtonControl.Services.Linux.Services;
+using YMouseButtonControl.Linux.Services;
 
 namespace YMouseButtonControl.Linux.Tests;
 

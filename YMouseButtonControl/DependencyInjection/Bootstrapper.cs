@@ -1,17 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Configuration;
 
 namespace YMouseButtonControl.DependencyInjection;
 
 public static class Bootstrapper
 {
-    public static void Register(
-        IServiceCollection services,
-        DataAccessConfiguration dataAccessConfig
-    )
+    public static void Register(IServiceCollection services)
     {
         ServicesBootstrapper.RegisterServices(services);
-        ConfigurationBootstrapper.RegisterConfiguration(services, dataAccessConfig);
         DataAccessBootstrapper.RegisterDataAccess(services);
         KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services);
         FeaturesBootstrapper.RegisterFeatures(services);

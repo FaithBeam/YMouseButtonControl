@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using YMouseButtonControl.Core.ViewModels.Implementations.Dialogs;
-using YMouseButtonControl.Core.ViewModels.Interfaces.Dialogs;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.Views;
 using YMouseButtonControl.Views.Dialogs;
