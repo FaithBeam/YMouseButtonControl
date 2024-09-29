@@ -12,7 +12,7 @@ using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
 
-public class SimulatedKeystrokesDialogViewModel : DialogBase
+public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
 {
     private static readonly Dictionary<string, string> CombinedKeyDict = ModifierKeys
         .Concat(StandardKeys)
@@ -48,8 +48,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         _title = $"SimulatedKeystrokes - {buttonName}";
         _mouseListener = mouseListener;
         currentMapping ??= new SimulatedKeystrokeVm();
-        _mouseListener.OnMouseMovedEventHandler += MouseListenerOnOnMouseMovedEventHandler;
-        _description = currentMapping?.PriorityDescription ?? string.Empty;
+        _mouseListener.OnMouseMovedChanged.Subscribe(MouseListenerOnOnMouseMovedEventHandler);
+        _description = currentMapping.PriorityDescription ?? string.Empty;
         _customKeys = currentMapping?.Keys ?? string.Empty;
         SimulatedKeystrokesType =
             currentMapping?.SimulatedKeystrokeType ?? new MouseButtonPressedActionTypeVm();
@@ -90,10 +90,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
         });
     }
 
-    private void MouseListenerOnOnMouseMovedEventHandler(
-        object? sender,
-        NewMouseHookMoveEventArgs e
-    )
+    private void MouseListenerOnOnMouseMovedEventHandler(NewMouseHookMoveEventArgs e)
     {
         X = e.X;
         Y = e.Y;
@@ -332,4 +329,11 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
 
     private static IEnumerable<BaseSimulatedKeystrokeTypeVm> GetSimulatedKeystrokesTypes() =>
         SimulatedKeystrokeTypesList.Select(x => x());
+
+    public void Dispose()
+    {
+        _mouseListener.Dispose();
+        OkCommand.Dispose();
+        SplitButtonCommand.Dispose();
+    }
 }
