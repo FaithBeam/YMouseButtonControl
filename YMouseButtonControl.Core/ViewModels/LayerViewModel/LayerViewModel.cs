@@ -431,33 +431,42 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             );
 
         // Bool to represent whether the gear settings button is enabled/disabled
-        var mb1ComboSettingCanExecute = this.WhenAnyValue(x => x.Mb1Index)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseButton1Combo[x]));
-        var mb2ComboSettingCanExecute = this.WhenAnyValue(x => x.Mb2Index)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseButton2Combo[x]));
-        var mb3ComboSettingCanExecute = this.WhenAnyValue(x => x.Mb3Index)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseButton3Combo[x]));
-        var mb4ComboSettingCanExecute = this.WhenAnyValue(x => x.Mb4Index)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseButton4Combo[x]));
-        var mb5ComboSettingCanExecute = this.WhenAnyValue(x => x.Mb5Index)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseButton5Combo[x]));
-        var mwuComboSettingCanExecute = this.WhenAnyValue(x => x.MwuIndex)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseWheelUpCombo[x]));
-        var mwdComboSettingCanExecute = this.WhenAnyValue(x => x.MwdIndex)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseWheelDownCombo[x]));
-        var mwlComboSettingCanExecute = this.WhenAnyValue(x => x.MwlIndex)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseWheelLeftCombo[x]));
-        var mwrComboSettingCanExecute = this.WhenAnyValue(x => x.MwrIndex)
-            .Where(x => x >= 0)
-            .Select(x => CanClickGearButton(MouseWheelRightCombo[x]));
+        var mb1ComboSettingCanExecute = this.WhenAnyValue(
+            x => x.Mb1Index,
+            selector: x => x >= 0 && CanClickGearButton(MouseButton1Combo[x])
+        );
+        var mb2ComboSettingCanExecute = this.WhenAnyValue(
+            x => x.Mb2Index,
+            selector: x => x >= 0 && CanClickGearButton(MouseButton2Combo[x])
+        );
+        var mb3ComboSettingCanExecute = this.WhenAnyValue(
+            x => x.Mb3Index,
+            selector: x => x >= 0 && CanClickGearButton(MouseButton3Combo[x])
+        );
+        var mb4ComboSettingCanExecute = this.WhenAnyValue(
+            x => x.Mb4Index,
+            selector: x => x >= 0 && CanClickGearButton(MouseButton4Combo[x])
+        );
+        var mb5ComboSettingCanExecute = this.WhenAnyValue(
+            x => x.Mb5Index,
+            selector: x => x >= 0 && CanClickGearButton(MouseButton5Combo[x])
+        );
+        var mwuComboSettingCanExecute = this.WhenAnyValue(
+            x => x.MwuIndex,
+            selector: x => x >= 0 && CanClickGearButton(MouseWheelUpCombo[x])
+        );
+        var mwdComboSettingCanExecute = this.WhenAnyValue(
+            x => x.MwdIndex,
+            selector: x => x >= 0 && CanClickGearButton(MouseWheelDownCombo[x])
+        );
+        var mwlComboSettingCanExecute = this.WhenAnyValue(
+            x => x.MwlIndex,
+            selector: x => x >= 0 && CanClickGearButton(MouseWheelLeftCombo[x])
+        );
+        var mwrComboSettingCanExecute = this.WhenAnyValue(
+            x => x.MwrIndex,
+            selector: x => x >= 0 && CanClickGearButton(MouseWheelRightCombo[x])
+        );
 
         // When the gear button is clicked, try to open the key dialog
         MouseButton1ComboSettingCommand = ReactiveCommand.CreateFromTask(

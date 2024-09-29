@@ -37,7 +37,7 @@
         <!-- Row 2 -->
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding Filtered}"
-                  SelectedItem="{Binding SelectedProcessModel}"
+                  SelectedItem="{Binding SelectedProcessModel, Mode=OneWayToSource}"
                   AutoGenerateColumns="False"
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"

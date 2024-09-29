@@ -22,10 +22,10 @@ public interface IProcessSelectorDialogViewModel
 public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
 {
     private readonly IProcessMonitorService _processMonitorService;
-    private ProcessModel? _processModel;
     private readonly SourceList<ProcessModel> _sourceProcessModels;
     private string? _processFilter;
     private readonly ReadOnlyObservableCollection<ProcessModel> _filtered;
+    private ProcessModel? _processModel;
 
     public ProcessSelectorDialogViewModel(
         IProcessMonitorService processMonitorService,
@@ -40,7 +40,9 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         var filteredDisposable = _sourceProcessModels
             .Connect()
             .Filter(dynamicFilter)
+            .RefCount()
             .Bind(out _filtered)
+            .DisposeMany()
             .Subscribe();
         RefreshProcessList();
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
@@ -119,12 +121,6 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         set => this.RaiseAndSetIfChanged(ref _processModel, value);
     }
 
-    private void RefreshProcessList()
-    {
-        _sourceProcessModels.Edit(x =>
-        {
-            x.Clear();
-            x.AddRange(_processMonitorService.GetProcesses());
-        });
-    }
+    private void RefreshProcessList() =>
+        _sourceProcessModels.EditDiff(_processMonitorService.GetProcesses());
 }
