@@ -5,8 +5,8 @@
         xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
         WindowStartupLocation="CenterOwner"
-        Width="800"
-        Height="600"
+        Width="400"
+        SizeToContent="Height"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YMouseButtonControl.Views.Dialogs.GlobalSettingsDialog"
         Title="Global Settings"
@@ -19,10 +19,10 @@
         <converters:SettingIntToThemeConverter x:Key="ThemeConverter" />
     </Window.Resources>
 
-    <StackPanel>
-        <CheckBox Content="Start Minimized"
+    <Grid Margin="6" RowDefinitions="Auto,Auto,*">
+        <CheckBox Grid.Row="0" Content="Start Minimized"
                   IsChecked="{Binding StartMinimized.Value}" />
-        <StackPanel>
+        <StackPanel Grid.Row="1">
             <Label Content="Theme" />
             <ComboBox ItemsSource="{Binding ThemeCollection}"
                       SelectedItem="{Binding ThemeSetting.Value, Converter={StaticResource ThemeConverter}}" />
@@ -38,7 +38,9 @@
                 </TextBlock>
             </ToolTip.Tip>
         </StackPanel>
-        <Button Content="Apply" Command="{Binding ApplyCommand}" />
-        <Button Content="Cancel" Click="Cancel_OnClick"></Button>
-    </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Content="Apply" Command="{Binding ApplyCommand}" />
+            <Button Content="Cancel" Click="Cancel_OnClick"></Button>
+        </StackPanel>
+    </Grid>
 </Window>

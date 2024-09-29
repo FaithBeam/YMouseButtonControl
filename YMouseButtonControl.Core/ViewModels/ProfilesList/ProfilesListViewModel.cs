@@ -105,7 +105,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
                     }
                     else
                     {
-                        if (_profilesService.Profiles.Count < x)
+                        if (_profilesService.Profiles.Count <= x)
                         {
                             // _profilesService.CurrentProfile = _profilesService.Profiles.First(y =>
                             //     y.IsDefault
