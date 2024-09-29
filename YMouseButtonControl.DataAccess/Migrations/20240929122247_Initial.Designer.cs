@@ -10,7 +10,7 @@ using YMouseButtonControl.DataAccess.Context;
 namespace YMouseButtonControl.DataAccess.Migrations
 {
     [DbContext(typeof(YMouseButtonControlDbContext))]
-    [Migration("20240928181229_Initial")]
+    [Migration("20240929122247_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -252,6 +252,30 @@ namespace YMouseButtonControl.DataAccess.Migrations
                             Id = 1,
                             Name = "StartMinimized",
                             Value = false
+                        });
+                });
+
+            modelBuilder.Entity("YMouseButtonControl.DataAccess.Models.SettingInt", b =>
+                {
+                    b.HasBaseType("YMouseButtonControl.DataAccess.Models.Setting");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Settings", t =>
+                        {
+                            t.Property("Value")
+                                .HasColumnName("SettingInt_Value");
+                        });
+
+                    b.HasDiscriminator().HasValue("SettingInt");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "Theme",
+                            Value = 0
                         });
                 });
 

@@ -43,6 +43,7 @@ namespace YMouseButtonControl.DataAccess.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     Value = table.Column<bool>(type: "INTEGER", nullable: true),
+                    SettingInt_Value = table.Column<int>(type: "INTEGER", nullable: true),
                     SettingString_Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -83,6 +84,11 @@ namespace YMouseButtonControl.DataAccess.Migrations
                 table: "Settings",
                 columns: new[] { "Id", "Discriminator", "Name", "Value" },
                 values: new object[] { 1, "SettingBool", "StartMinimized", false });
+
+            migrationBuilder.InsertData(
+                table: "Settings",
+                columns: new[] { "Id", "Discriminator", "Name", "SettingInt_Value" },
+                values: new object[] { 2, "SettingInt", "Theme", 0 });
 
             migrationBuilder.InsertData(
                 table: "ButtonMappings",

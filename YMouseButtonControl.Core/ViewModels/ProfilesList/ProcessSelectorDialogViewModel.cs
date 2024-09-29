@@ -8,6 +8,7 @@ using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Models;
 
@@ -26,7 +27,11 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
     private string? _processFilter;
     private readonly ReadOnlyObservableCollection<ProcessModel> _filtered;
 
-    public ProcessSelectorDialogViewModel(IProcessMonitorService processMonitorService)
+    public ProcessSelectorDialogViewModel(
+        IProcessMonitorService processMonitorService,
+        IThemeService themeService
+    )
+        : base(themeService)
     {
         _sourceProcessModels = new SourceList<ProcessModel>();
         _processMonitorService = processMonitorService;

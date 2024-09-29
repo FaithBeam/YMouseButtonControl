@@ -103,3 +103,39 @@ public class SettingStringVm : BaseSettingVm, IEquatable<SettingStringVm>
         return HashCode.Combine(base.GetHashCode(), _value);
     }
 }
+
+public class SettingIntVm : BaseSettingVm, IEquatable<SettingIntVm>
+{
+    private int _value;
+
+    public int Value
+    {
+        get => _value;
+        set => this.RaiseAndSetIfChanged(ref _value, value);
+    }
+
+    public bool Equals(SettingIntVm? other)
+    {
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && _value == other._value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != this.GetType())
+            return false;
+        return Equals((SettingIntVm)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(base.GetHashCode(), _value);
+    }
+}

@@ -9,7 +9,8 @@
         Width="800"
         Height="600"
         x:Class="YMouseButtonControl.Views.Dialogs.SimulatedKeystrokesDialog"
-        Title="{Binding Title}">
+        Title="{Binding Title}"
+        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
     <Design.DataContext>
         <layerViewModel:SimulatedKeystrokesDialogViewModel />
     </Design.DataContext>

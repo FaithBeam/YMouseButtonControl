@@ -252,6 +252,30 @@ namespace YMouseButtonControl.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("YMouseButtonControl.DataAccess.Models.SettingInt", b =>
+                {
+                    b.HasBaseType("YMouseButtonControl.DataAccess.Models.Setting");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Settings", t =>
+                        {
+                            t.Property("Value")
+                                .HasColumnName("SettingInt_Value");
+                        });
+
+                    b.HasDiscriminator().HasValue("SettingInt");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "Theme",
+                            Value = 0
+                        });
+                });
+
             modelBuilder.Entity("YMouseButtonControl.DataAccess.Models.SettingString", b =>
                 {
                     b.HasBaseType("YMouseButtonControl.DataAccess.Models.Setting");
