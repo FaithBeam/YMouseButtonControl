@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Models;
 
@@ -21,8 +22,10 @@ public interface IShowSimulatedKeystrokesDialogService
     );
 }
 
-public class ShowSimulatedKeystrokesDialogService(IMouseListener mouseListener)
-    : IShowSimulatedKeystrokesDialogService
+public class ShowSimulatedKeystrokesDialogService(
+    IMouseListener mouseListener,
+    IThemeService themeService
+) : IShowSimulatedKeystrokesDialogService
 {
     public Interaction<
         SimulatedKeystrokesDialogViewModel,
@@ -43,6 +46,7 @@ public class ShowSimulatedKeystrokesDialogService(IMouseListener mouseListener)
         return await ShowSimulatedKeystrokesPickerInteraction.Handle(
             new SimulatedKeystrokesDialogViewModel(
                 mouseListener,
+                themeService,
                 buttonName,
                 mouseButton,
                 mapping as SimulatedKeystrokeVm

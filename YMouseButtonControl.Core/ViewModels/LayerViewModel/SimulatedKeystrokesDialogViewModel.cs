@@ -6,6 +6,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Models;
 
@@ -37,10 +38,12 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase
 
     public SimulatedKeystrokesDialogViewModel(
         IMouseListener mouseListener,
+        IThemeService themeService,
         string buttonName,
         MouseButton mouseButton,
         SimulatedKeystrokeVm? currentMapping = null
     )
+        : base(themeService)
     {
         _title = $"SimulatedKeystrokes - {buttonName}";
         _mouseListener = mouseListener;

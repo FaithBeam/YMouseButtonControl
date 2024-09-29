@@ -16,6 +16,7 @@ using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.ViewModels.AppViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
+using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.Views;
 using YMouseButtonControl.DataAccess.Context;
 using YMouseButtonControl.DependencyInjection;
@@ -82,7 +83,7 @@ public class App : Application
             Container?.GetRequiredService<ISettingsService>()
             ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
         var startMinimized =
-            settingsService.GetBoolSetting("StartMinimized")
+            settingsService.GetSetting("StartMinimized") as SettingBoolVm
             ?? throw new Exception($"Error retrieving setting StartMinimized");
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

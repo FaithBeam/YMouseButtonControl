@@ -12,7 +12,8 @@
         WindowStartupLocation="CenterOwner"
         x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
         CanResize="True"
-        Title="Choose Application">
+        Title="Choose Application"
+        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
 
     <Design.DataContext>
         <profilesList:ProcessSelectorDialogViewModel />

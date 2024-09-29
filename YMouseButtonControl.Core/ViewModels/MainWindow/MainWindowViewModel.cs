@@ -13,6 +13,7 @@ using ReactiveUI;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Settings;
+using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -31,6 +32,7 @@ public interface IMainWindowViewModel
     ReactiveCommand<Unit, Unit> SettingsCommand { get; }
     Interaction<IGlobalSettingsDialogViewModel, Unit> ShowSettingsDialogInteraction { get; }
     ProfileVm? CurrentProfile { get; }
+    IThemeService ThemeService { get; }
 }
 
 public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
@@ -38,7 +40,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #region Fields
 
     private readonly IProfilesService _ps;
-    private readonly ISettingsService _ss;
+    private readonly IThemeService _themeService;
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
     private readonly IUnitOfWork _unitOfWork;
@@ -52,7 +54,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     public MainWindowViewModel(
         IProfilesService ps,
-        ISettingsService ss,
+        IThemeService themeService,
         ILayerViewModel layerViewModel,
         IProfilesListViewModel profilesListViewModel,
         IProfilesInformationViewModel profilesInformationViewModel,
@@ -65,7 +67,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
         _unitOfWork = unitOfWork;
         _ps = ps;
-        _ss = ss;
+        _themeService = themeService;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
         SettingsCommand = ReactiveCommand.CreateFromTask(ShowSettingsDialogAsync);
@@ -86,7 +88,6 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             .Bind(out _profileVms)
             .DisposeMany()
             .Subscribe(CanSaveHelper);
-        // var watchSettings
         var isExecutingObservable = this.WhenAnyValue(x => x.IsExecutingSave)
             .Subscribe(_ => CanSave = false);
         var canSaveCmd = this.WhenAnyValue(x => x.CanSave);
@@ -147,6 +148,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     public ReactiveCommand<Unit, Unit> SettingsCommand { get; }
 
     public Interaction<IGlobalSettingsDialogViewModel, Unit> ShowSettingsDialogInteraction { get; }
+
+    public IThemeService ThemeService => _themeService;
 
     #endregion
 

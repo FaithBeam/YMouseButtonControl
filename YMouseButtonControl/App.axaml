@@ -4,7 +4,7 @@
              x:Class="YMouseButtonControl.App"
              Name="YMouseButtonControl">
     <Application.Styles>
-        <FluentTheme />
+        <FluentTheme DensityStyle="Compact" />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
     

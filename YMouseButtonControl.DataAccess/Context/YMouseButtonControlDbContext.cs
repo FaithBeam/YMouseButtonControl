@@ -9,6 +9,7 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
     public DbSet<Setting> Settings { get; set; }
     public DbSet<SettingBool> SettingBools { get; set; }
     public DbSet<SettingString> SettingStrings { get; set; }
+    public DbSet<SettingInt> SettingInts { get; set; }
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<ButtonMapping> ButtonMappings { get; set; }
     public DbSet<DisabledMapping> DisabledMappings { get; set; }
@@ -20,6 +21,7 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
         modelBuilder.Entity<Setting>();
         modelBuilder.Entity<SettingBool>();
         modelBuilder.Entity<SettingString>();
+        modelBuilder.Entity<SettingInt>();
 
         modelBuilder.Entity<Profile>();
         modelBuilder.Entity<ButtonMapping>();
@@ -116,6 +118,18 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
                         Id = 1,
                         Name = "StartMinimized",
                         Value = false,
+                    },
+                ]
+            );
+        modelBuilder
+            .Entity<SettingInt>()
+            .HasData(
+                [
+                    new SettingInt
+                    {
+                        Id = 2,
+                        Name = "Theme",
+                        Value = (int)ThemeEnum.Default,
                     },
                 ]
             );

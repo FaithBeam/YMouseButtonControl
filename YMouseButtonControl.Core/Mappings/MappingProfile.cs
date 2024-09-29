@@ -17,6 +17,8 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<SettingBool, SettingBoolVm>();
         CreateMap<SettingStringVm, SettingString>();
         CreateMap<SettingBoolVm, SettingBool>();
+        CreateMap<SettingInt, SettingIntVm>();
+        CreateMap<SettingIntVm, SettingInt>();
 
         CreateMap<ButtonMapping, BaseButtonMappingVm>()
             .IncludeAllDerived()

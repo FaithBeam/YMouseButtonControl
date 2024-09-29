@@ -15,3 +15,8 @@ public class SettingString : Setting
 {
     public string? Value { get; set; }
 }
+
+public class SettingInt : Setting
+{
+    public int Value { get; set; }
+}

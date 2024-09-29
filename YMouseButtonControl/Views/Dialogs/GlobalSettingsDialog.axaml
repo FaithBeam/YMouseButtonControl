@@ -3,19 +3,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
+        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
         WindowStartupLocation="CenterOwner"
         Width="800"
         Height="600"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YMouseButtonControl.Views.Dialogs.GlobalSettingsDialog"
-        Title="Global Settings">
+        Title="Global Settings"
+        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
     <Design.DataContext>
         <mainWindow:GlobalSettingsDialogViewModel />
     </Design.DataContext>
 
+    <Window.Resources>
+        <converters:SettingIntToThemeConverter x:Key="ThemeConverter" />
+    </Window.Resources>
+
     <StackPanel>
         <CheckBox Content="Start Minimized"
                   IsChecked="{Binding StartMinimized.Value}" />
+        <StackPanel>
+            <Label Content="Theme" />
+            <ComboBox ItemsSource="{Binding ThemeCollection}"
+                      SelectedItem="{Binding ThemeSetting.Value, Converter={StaticResource ThemeConverter}}" />
+            <ToolTip.Tip>
+                <TextBlock>
+                    The application theme. Restart the application the see the change.
+                    <LineBreak />
+                    <TextBlock Text="Default" FontWeight="Bold" />: follow the theme of your OS. Doesn't work on Linux.
+                    <LineBreak />
+                    <TextBlock Text="Light" FontWeight="Bold" />: light theme.
+                    <LineBreak />
+                    <TextBlock Text="Dark" FontWeight="Bold" />: dark theme.
+                </TextBlock>
+            </ToolTip.Tip>
+        </StackPanel>
         <Button Content="Apply" Command="{Binding ApplyCommand}" />
         <Button Content="Cancel" Click="Cancel_OnClick"></Button>
     </StackPanel>

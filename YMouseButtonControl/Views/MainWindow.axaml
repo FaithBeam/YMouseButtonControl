@@ -13,7 +13,8 @@
         SizeToContent="Height"
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
-        Icon="/Resources/mouse.ico">
+        Icon="/Resources/mouse.ico"
+        RequestedThemeVariant="{Binding ThemeService.ThemeVariant }">
 
     <Design.DataContext>
         <mainWindow:MainWindowViewModel />
