@@ -25,39 +25,27 @@ public class KeyboardSimulatorWorker(
 ) : IDisposable
 {
     private readonly ILogger _log = Log.Logger.ForContext<KeyboardSimulatorWorker>();
+    private IDisposable? _onMousePressedDisposable;
+    private IDisposable? _onMouseReleasedDisposable;
+    private IDisposable? _onMouseWheelDisposable;
 
     public void Run()
     {
-        SubscribeToEvents();
+        _onMousePressedDisposable = mouseListener.OnMousePressedChanged.Subscribe(OnMousePressed);
+        _onMouseReleasedDisposable = mouseListener.OnMouseReleasedChanged.Subscribe(
+            OnMouseReleased
+        );
+        _onMouseWheelDisposable = mouseListener.OnMouseWheelChanged.Subscribe(OnMouseWheel);
     }
 
     public void Dispose()
     {
-        UnsubscribeFromEvents();
+        _onMousePressedDisposable?.Dispose();
+        _onMouseReleasedDisposable?.Dispose();
+        _onMouseWheelDisposable?.Dispose();
     }
 
-    private void SubscribeToEvents()
-    {
-        // mouseListener.OnMouseMovedEventHandler += OnMouseMoved;
-        mouseListener.OnMousePressedEventHandler += OnMousePressed;
-        mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
-        mouseListener.OnMouseWheelEventHandler += OnMouseWheel;
-    }
-
-    // private void OnMouseMoved(object? sender, NewMouseHookMoveEventArgs e)
-    // {
-    //     _log.Information("{X}:{Y}", e.X, e.Y);
-    // }
-
-    private void UnsubscribeFromEvents()
-    {
-        // mouseListener.OnMouseMovedEventHandler -= OnMouseMoved;
-        mouseListener.OnMousePressedEventHandler -= OnMousePressed;
-        mouseListener.OnMouseReleasedEventHandler -= OnMouseReleased;
-        mouseListener.OnMouseWheelEventHandler -= OnMouseWheel;
-    }
-
-    private void OnMousePressed(object? sender, NewMouseHookEventArgs e)
+    private void OnMousePressed(NewMouseHookEventArgs e)
     {
         foreach (var p in profilesService.Profiles)
         {
@@ -72,7 +60,7 @@ public class KeyboardSimulatorWorker(
         }
     }
 
-    private void OnMouseReleased(object? sender, NewMouseHookEventArgs e)
+    private void OnMouseReleased(NewMouseHookEventArgs e)
     {
         foreach (var p in profilesService.Profiles)
         {
@@ -162,5 +150,5 @@ public class KeyboardSimulatorWorker(
         }
     }
 
-    private void OnMouseWheel(object? sender, NewMouseWheelEventArgs e) { }
+    private void OnMouseWheel(NewMouseWheelEventArgs e) { }
 }

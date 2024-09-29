@@ -40,9 +40,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         var filteredDisposable = _sourceProcessModels
             .Connect()
             .Filter(dynamicFilter)
-            .RefCount()
             .Bind(out _filtered)
-            .DisposeMany()
             .Subscribe();
         RefreshProcessList();
         RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);

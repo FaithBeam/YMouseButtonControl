@@ -24,12 +24,15 @@ namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
 
 public interface ILayerViewModel;
 
-public class LayerViewModel : ViewModelBase, ILayerViewModel
+public class LayerViewModel : ViewModelBase, ILayerViewModel, IDisposable
 {
     private IProfilesService _profilesService;
     private readonly IThemeService _themeService;
     private readonly ISettingsService _settingsService;
     private readonly IMouseListener _mouseListener;
+    private readonly IDisposable _onMousePressed;
+    private readonly IDisposable _onMouseReleased;
+    private readonly IDisposable _onMouseWheel;
 
     private int _mb1Index;
     private int _mb2Index;
@@ -183,9 +186,10 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .DistinctUntilChanged()
             .Subscribe(OnSelectedCurrentProfileChanged);
         _mouseListener = mouseListener;
-        _mouseListener.OnMousePressedEventHandler += OnMouseClicked;
-        _mouseListener.OnMouseReleasedEventHandler += OnMouseReleased;
-        _mouseListener.OnMouseWheelEventHandler += OnWheelScroll;
+        _onMousePressed = _mouseListener.OnMousePressedChanged.Subscribe(OnMouseClicked);
+        _onMouseReleased = _mouseListener.OnMouseReleasedChanged.Subscribe(OnMouseReleased);
+        _onMouseWheel = _mouseListener.OnMouseWheelChanged.Subscribe(OnWheelScroll);
+
         _wheelUpTimer.Elapsed += delegate
         {
             WheelUpBackgroundColor = themeService.CurBackground;
@@ -862,7 +866,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         MwrIndex = newProfile.MouseWheelRight.Index;
     }
 
-    private void OnWheelScroll(object? sender, NewMouseWheelEventArgs e)
+    private void OnWheelScroll(NewMouseWheelEventArgs e)
     {
         switch (e.Direction)
         {
@@ -903,7 +907,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         }
     }
 
-    private void OnMouseReleased(object? sender, NewMouseHookEventArgs e)
+    private void OnMouseReleased(NewMouseHookEventArgs e)
     {
         switch (e.Button)
         {
@@ -935,7 +939,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         }
     }
 
-    private void OnMouseClicked(object? sender, NewMouseHookEventArgs e)
+    private void OnMouseClicked(NewMouseHookEventArgs e)
     {
         switch (e.Button)
         {
@@ -1000,5 +1004,26 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         Disabled,
         SimulatedKeystrokes,
         RightClick,
+    }
+
+    public void Dispose()
+    {
+        _onMousePressed?.Dispose();
+        _onMouseReleased.Dispose();
+        _onMouseWheel.Dispose();
+        _mouseListener.Dispose();
+        _wheelUpTimer.Dispose();
+        _wheelDownTimer.Dispose();
+        _wheelLeftTimer.Dispose();
+        _wheelRightTimer.Dispose();
+        MouseButton1ComboSettingCommand.Dispose();
+        MouseButton2ComboSettingCommand.Dispose();
+        MouseButton3ComboSettingCommand.Dispose();
+        MouseButton4ComboSettingCommand.Dispose();
+        MouseButton5ComboSettingCommand.Dispose();
+        MouseWheelUpComboSettingCommand.Dispose();
+        MouseWheelDownComboSettingCommand.Dispose();
+        MouseWheelLeftComboSettingCommand.Dispose();
+        MouseWheelRightComboSettingCommand.Dispose();
     }
 }

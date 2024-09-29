@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using Serilog;
 using SharpHook;
@@ -15,10 +16,10 @@ namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 
 public interface IMouseListener : IDisposable
 {
-    event EventHandler<NewMouseHookMoveEventArgs> OnMouseMovedEventHandler;
-    event EventHandler<NewMouseHookEventArgs> OnMousePressedEventHandler;
-    event EventHandler<NewMouseHookEventArgs> OnMouseReleasedEventHandler;
-    event EventHandler<NewMouseWheelEventArgs> OnMouseWheelEventHandler;
+    IObservable<NewMouseHookMoveEventArgs> OnMouseMovedChanged { get; }
+    IObservable<NewMouseHookEventArgs> OnMousePressedChanged { get; }
+    IObservable<NewMouseHookEventArgs> OnMouseReleasedChanged { get; }
+    IObservable<NewMouseWheelEventArgs> OnMouseWheelChanged { get; }
     void Run();
 }
 
@@ -33,10 +34,14 @@ public class MouseListener : IMouseListener
     private readonly ICurrentWindowService _currentWindowService;
     private readonly ILogger _log = Log.Logger.ForContext<MouseListener>();
     private Thread? _thread;
-    private IDisposable? _mouseMovedDisposable;
-    private IDisposable? _mousePressedDisposable;
-    private IDisposable? _mouseReleasedDisposable;
-    private IDisposable? _mouseWheelDisposable;
+    private readonly IDisposable? _mouseMovedDisposable;
+    private readonly IDisposable? _mousePressedDisposable;
+    private readonly IDisposable? _mouseReleasedDisposable;
+    private readonly IDisposable? _mouseWheelDisposable;
+    private readonly Subject<NewMouseHookEventArgs> _mousePressedSubject;
+    private readonly Subject<NewMouseHookEventArgs> _mouseReleasedSubject;
+    private readonly Subject<NewMouseHookMoveEventArgs> _mouseMovedSubject;
+    private readonly Subject<NewMouseWheelEventArgs> _mouseWheelSubject;
 
     public MouseListener(
         IReactiveGlobalHook hook,
@@ -47,14 +52,27 @@ public class MouseListener : IMouseListener
         _hook = hook;
         _profilesService = profilesService;
         _currentWindowService = currentWindowService;
+        _mousePressedSubject = new Subject<NewMouseHookEventArgs>();
+        _mouseReleasedSubject = new Subject<NewMouseHookEventArgs>();
+        _mouseMovedSubject = new Subject<NewMouseHookMoveEventArgs>();
+        _mouseWheelSubject = new Subject<NewMouseWheelEventArgs>();
 
-        SubscribeToEvents();
+        _mouseMovedDisposable = _hook
+            .MouseMoved.Sample(TimeSpan.FromMilliseconds(100))
+            .Subscribe(ConvertMouseMovedEvent);
+        _mousePressedDisposable = _hook.MousePressed.Subscribe(ConvertMousePressedEvent);
+        _mouseReleasedDisposable = _hook.MouseReleased.Subscribe(ConvertMouseReleasedEvent);
+        _mouseWheelDisposable = _hook.MouseWheel.Subscribe(ConvertMouseWheelEvent);
     }
 
-    public event EventHandler<NewMouseHookEventArgs>? OnMousePressedEventHandler;
-    public event EventHandler<NewMouseHookMoveEventArgs>? OnMouseMovedEventHandler;
-    public event EventHandler<NewMouseHookEventArgs>? OnMouseReleasedEventHandler;
-    public event EventHandler<NewMouseWheelEventArgs>? OnMouseWheelEventHandler;
+    public IObservable<NewMouseHookEventArgs> OnMousePressedChanged =>
+        _mousePressedSubject.AsObservable();
+    public IObservable<NewMouseHookEventArgs> OnMouseReleasedChanged =>
+        _mouseReleasedSubject.AsObservable();
+    public IObservable<NewMouseHookMoveEventArgs> OnMouseMovedChanged =>
+        _mouseMovedSubject.AsObservable();
+    public IObservable<NewMouseWheelEventArgs> OnMouseWheelChanged =>
+        _mouseWheelSubject.AsObservable();
 
     public void Run()
     {
@@ -64,24 +82,6 @@ public class MouseListener : IMouseListener
             _hook.Run();
         });
         _thread.Start();
-    }
-
-    private void OnMouseReleased(NewMouseHookEventArgs args)
-    {
-        var handler = OnMouseReleasedEventHandler;
-        handler?.Invoke(this, args);
-    }
-
-    private void OnMousePressed(NewMouseHookEventArgs args)
-    {
-        var handler = OnMousePressedEventHandler;
-        handler?.Invoke(this, args);
-    }
-
-    private void OnMouseWheel(NewMouseWheelEventArgs args)
-    {
-        var handler = OnMouseWheelEventHandler;
-        handler?.Invoke(this, args);
     }
 
     /// <summary>
@@ -132,16 +132,6 @@ public class MouseListener : IMouseListener
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-    private void SubscribeToEvents()
-    {
-        _mouseMovedDisposable = _hook
-            .MouseMoved.Sample(TimeSpan.FromMilliseconds(100))
-            .Subscribe(ConvertMouseMovedEvent);
-        _mousePressedDisposable = _hook.MousePressed.Subscribe(ConvertMousePressedEvent);
-        _mouseReleasedDisposable = _hook.MouseReleased.Subscribe(ConvertMouseReleasedEvent);
-        _mouseWheelDisposable = _hook.MouseWheel.Subscribe(ConvertMouseWheelEvent);
-    }
-
     private void ConvertMouseWheelEvent(MouseWheelHookEventArgs e)
     {
         if (e is null)
@@ -151,18 +141,26 @@ public class MouseListener : IMouseListener
         switch (e.Data.Direction)
         {
             case MouseWheelScrollDirection.Vertical when e.Data.Rotation > 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalUp));
+                _mouseWheelSubject.OnNext(
+                    new NewMouseWheelEventArgs(WheelScrollDirection.VerticalUp)
+                );
                 break;
             case MouseWheelScrollDirection.Vertical when e.Data.Rotation < 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.VerticalDown));
+                _mouseWheelSubject.OnNext(
+                    new NewMouseWheelEventArgs(WheelScrollDirection.VerticalDown)
+                );
                 break;
             case MouseWheelScrollDirection.Vertical:
                 throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
             case MouseWheelScrollDirection.Horizontal when e.Data.Rotation > 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalRight));
+                _mouseWheelSubject.OnNext(
+                    new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalRight)
+                );
                 break;
             case MouseWheelScrollDirection.Horizontal when e.Data.Rotation < 0:
-                OnMouseWheel(new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalLeft));
+                _mouseWheelSubject.OnNext(
+                    new NewMouseWheelEventArgs(WheelScrollDirection.HorizontalLeft)
+                );
                 break;
             case MouseWheelScrollDirection.Horizontal:
                 throw new ArgumentOutOfRangeException($"{e.Data.Direction}\t{e.Data.Rotation}");
@@ -194,7 +192,7 @@ public class MouseListener : IMouseListener
         {
             _log.Information("Not suppressing {Button}: Release", e.Data.Button);
         }
-        OnMouseReleased(args);
+        _mouseReleasedSubject.OnNext(args);
     }
 
     private void ConvertMousePressedEvent(MouseHookEventArgs e)
@@ -221,7 +219,7 @@ public class MouseListener : IMouseListener
         {
             _log.Information("Not suppressing {Button}: Press", e.Data.Button);
         }
-        OnMousePressed(args);
+        _mousePressedSubject.OnNext(args);
     }
 
     private void ConvertMouseMovedEvent(MouseHookEventArgs e)
@@ -230,27 +228,15 @@ public class MouseListener : IMouseListener
         {
             return;
         }
-        var args = new NewMouseHookMoveEventArgs(e.Data.X, e.Data.Y);
-        OnMouseMoved(args);
+        _mouseMovedSubject.OnNext(new NewMouseHookMoveEventArgs(e.Data.X, e.Data.Y));
     }
 
-    private void OnMouseMoved(NewMouseHookMoveEventArgs args)
-    {
-        var handler = OnMouseMovedEventHandler;
-        handler?.Invoke(this, args);
-    }
-
-    private void UnsubscribeFromEvents()
+    public void Dispose()
     {
         _mouseMovedDisposable?.Dispose();
         _mousePressedDisposable?.Dispose();
         _mouseReleasedDisposable?.Dispose();
         _mouseWheelDisposable?.Dispose();
-    }
-
-    public void Dispose()
-    {
-        UnsubscribeFromEvents();
 
         _hook.Dispose();
 
