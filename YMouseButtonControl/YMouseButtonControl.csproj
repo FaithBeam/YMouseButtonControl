@@ -12,6 +12,21 @@
         <Version>0.1.0</Version>
         <ApplicationIcon>Resources\mouse.ico</ApplicationIcon>
     </PropertyGroup>
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <UseAppHost>true</UseAppHost>
+        <CFBundleName>YMouseButtonControl</CFBundleName>
+        <!-- Also defines .app file name -->
+        <CFBundleDisplayName>YMouseButtonControl</CFBundleDisplayName>
+        <CFBundleIdentifier>com.example</CFBundleIdentifier>
+        <CFBundleVersion>0.15.0</CFBundleVersion>
+        <CFBundleShortVersionString>0.15.0</CFBundleShortVersionString>
+        <CFBundlePackageType>APPL</CFBundlePackageType>
+        <CFBundleExecutable>YMouseButtonControl</CFBundleExecutable>
+        <CFBundleIconFile>Resources/mouse.ico</CFBundleIconFile>
+        <!-- Will be copied from output directory -->
+        <NSPrincipalClass>NSApplication</NSPrincipalClass>
+        <NSHighResolutionCapable>true</NSHighResolutionCapable>
+    </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
