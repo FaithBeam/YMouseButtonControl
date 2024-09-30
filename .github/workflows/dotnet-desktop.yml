@@ -67,6 +67,7 @@ jobs:
         run: dotnet restore
 
       - name: Publish
+        if: ${{ ! startsWith(matrix.rid, 'osx') }}
         run: |
           dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
           -c ${{ env.CONFIGURATION }} \
@@ -81,10 +82,29 @@ jobs:
           -p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemFileVer }} \
           -o bin
           
-      - name: Set Executable Bit
-        if: ${{ ! startsWith(matrix.rid, 'win') }}
+      - name: Publish
+        if: ${{ startsWith(matrix.rid, 'osx') }}
         run: |
-          chmod +x bin/${{ env.APP_NAME }}
+          dotnet msbuild YMouseButtonControl/YMouseButtonControl.csproj \
+          -t:BundleApp \
+          -p:RuntimeIdentifier=${{ matrix.rid }} \
+          -p:Configuration=${{ env.CONFIGURATION }} \
+          -p:TargetFramework=net8.0 \
+          -p:VersionPrefix=${{ steps.gitversion.outputs.SemVer }} \
+          -p:PublishSingleFile=true \
+          -p:SelfContained=true \
+          -p:DebugType=embedded \
+          -p:IncludeNativeLibrariesForSelfExtract=true \
+          -p:EnableCompressionInSingleFile=true \
+          -p:PublishTrimmed=true
+          
+      - name: Move App Bundle to Artifacts
+        if: ${{ startsWith(matrix.rid, 'osx') }}
+        run: mkdir bin && mv YMouseButtonControl/bin/Release/net8.0/${{ matrix.rid }}/publish/YMouseButtonControl.app bin/
+      
+      - name: Set Executable Bit
+        if: ${{ startsWith(matrix.rid, 'osx') }}
+        run: chmod -R +x bin/YMouseButtonControl.app/Contents/MacOS/
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.1
