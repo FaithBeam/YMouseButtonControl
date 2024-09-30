@@ -82,7 +82,7 @@ jobs:
           -o bin
           
       - name: Set Executable Bit
-        if: ${{ ! startsWith(matrix.os, 'win') }}
+        if: ${{ ! startsWith(matrix.rid, 'win') }}
         run: chmod +x "bin/${{ env.APP_NAME }}"
 
       - name: Upload build artifacts
