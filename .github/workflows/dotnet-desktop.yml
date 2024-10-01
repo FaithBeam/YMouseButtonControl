@@ -67,7 +67,6 @@ jobs:
         run: dotnet restore -r ${{ matrix.rid }}  
 
       - name: Publish
-        if: ${{ ! startsWith(matrix.rid, 'osx') }}
         run: |
           dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
           -c ${{ env.CONFIGURATION }} \
@@ -82,31 +81,22 @@ jobs:
           -p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemFileVer }} \
           -o bin
           
-      - name: Publish
-        if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: |
-          dotnet msbuild YMouseButtonControl/YMouseButtonControl.csproj \
-          -t:BundleApp \
-          -p:RuntimeIdentifier=${{ matrix.rid }} \
-          -p:Configuration=${{ env.CONFIGURATION }} \
-          -p:TargetFramework=net8.0 \
-          -p:VersionPrefix=${{ steps.gitversion.outputs.SemVer }} \
-          -p:PublishSingleFile=true \
-          -p:SelfContained=true \
-          -p:DebugType=embedded \
-          -p:IncludeNativeLibrariesForSelfExtract=true \
-          -p:EnableCompressionInSingleFile=true \
-          -p:PublishTrimmed=true
-          
-      - name: Move App Bundle to Artifacts
-        if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: mkdir bin && mv YMouseButtonControl/bin/Release/net8.0/${{ matrix.rid }}/publish/YMouseButtonControl.app bin/
-      
       - name: Set Executable Bit
         if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: chmod -R +x bin/YMouseButtonControl.app/Contents/MacOS/
+        run: chmod -R +x bin/YMouseButtonControl
+        
+      - name: Tar to Preserve Executable Bit
+        run: tar -cvf ${{ env.APP_NAME }}.${{ env.PACK_VER }}+${{ matrix.rid }}.tar bin/
 
       - name: Upload build artifacts
+        if: ${{ startsWith(matrix.rid, 'osx') }}
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}"
+          path: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar"
+      
+      - name: Upload build artifacts
+        if: ${{ ! startsWith(matrix.rid, 'osx') }}
         uses: actions/upload-artifact@v4.3.1
         with:
           name: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}"
