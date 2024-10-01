@@ -86,7 +86,8 @@ jobs:
         run: chmod -R +x bin/YMouseButtonControl
         
       - name: Tar to Preserve Executable Bit
-        run: tar -cvf ${{ env.APP_NAME }}.${{ env.PACK_VER }}+${{ matrix.rid }}.tar bin/${{ env.APP_NAME }}
+        if: ${{ startsWith(matrix.rid, 'osx') }}
+        run: tar -cvf ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar bin/${{ env.APP_NAME }}
 
       - name: Upload build artifacts
         if: ${{ startsWith(matrix.rid, 'osx') }}
