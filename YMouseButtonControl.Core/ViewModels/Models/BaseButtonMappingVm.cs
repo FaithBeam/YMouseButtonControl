@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models;
@@ -16,6 +17,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
     private bool _state;
     private bool _blockOriginalMouseInput;
     private BaseSimulatedKeystrokeTypeVm? _simulatedKeystrokeTypeVm;
+    private bool _selected;
+    private bool _hasSettingsPopped;
 
     [JsonIgnore]
     public int Id { get; set; }
@@ -27,6 +30,25 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         get => _index;
         set => this.RaiseAndSetIfChanged(ref _index, value);
     }
+
+    /// <summary>
+    /// Used to return to the previously selected button mapping when a user changes profile
+    /// </summary>
+    public bool Selected
+    {
+        get => _selected;
+        set => this.RaiseAndSetIfChanged(ref _selected, value);
+    }
+
+    /// <summary>
+    /// If the simulated keystrokes settings window has popped for this button mapping
+    /// </summary>
+    public bool HasSettingsPopped
+    {
+        get => _hasSettingsPopped;
+        set => this.RaiseAndSetIfChanged(ref _hasSettingsPopped, value);
+    }
+    
     public bool Enabled
     {
         get => _enabled;
@@ -102,14 +124,12 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
-        hashCode.Add(Id);
         hashCode.Add(Index);
         hashCode.Add(Enabled);
         hashCode.Add(Description);
         hashCode.Add(PriorityDescription);
         hashCode.Add(Keys);
         hashCode.Add(State);
-        hashCode.Add(CanRaiseDialog);
         hashCode.Add(SimulatedKeystrokeType);
         hashCode.Add(BlockOriginalMouseInput);
         return hashCode.ToHashCode();

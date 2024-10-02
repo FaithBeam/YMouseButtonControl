@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:layerViewModel="clr-namespace:YMouseButtonControl.Core.ViewModels.LayerViewModel;assembly=YMouseButtonControl.Core"
+             xmlns:views="clr-namespace:YMouseButtonControl.Views"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -34,105 +35,41 @@
                     <Button Grid.Column="3" IsEnabled="False">Swap</Button>
                     <Button Grid.Column="4" IsEnabled="False">Reset</Button>
                 </Grid>
-                <Grid Grid.Row="1" ColumnDefinitions="150,*,Auto" Margin="5">
+                <Grid Grid.Row="1" ColumnDefinitions="150,*" Margin="5">
                     <Label Content="Left Button" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseButton1Combo}"
-                              SelectedIndex="{Binding Mb1Index}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding MouseButton1BackgroundColor}">
-                    </ComboBox>
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseButton1ComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb1ComboVm}" />
                 </Grid>
-                <Grid Grid.Row="2" ColumnDefinitions="150,*,Auto" Margin="5">
+                <Grid Grid.Row="2" ColumnDefinitions="150,*" Margin="5">
                     <Label Content="Right Button" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseButton2Combo}"
-                              SelectedIndex="{Binding Mb2Index}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding MouseButton2BackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseButton2ComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb2ComboVm}" />
                 </Grid>
                 <Grid Grid.Row="3" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Middle Button" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseButton3Combo}"
-                              SelectedIndex="{Binding Mb3Index}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding MouseButton3BackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseButton3ComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb3ComboVm}" />
                 </Grid>
                 <Grid Grid.Row="4" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Mouse Button 4" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseButton4Combo}"
-                              SelectedIndex="{Binding Mb4Index}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding MouseButton4BackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseButton4ComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb4ComboVm}" />
                 </Grid>
                 <Grid Grid.Row="5" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Mouse Button 5" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseButton5Combo}"
-                              SelectedIndex="{Binding Mb5Index}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding MouseButton5BackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseButton5ComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb5ComboVm}" />
                 </Grid>
                 <Grid Grid.Row="6" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Wheel Up" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseWheelUpCombo}"
-                              SelectedIndex="{Binding MwuIndex}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding WheelUpBackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseWheelUpComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwuComboVm}" />
                 </Grid>
                 <Grid Grid.Row="7" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Wheel Down" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseWheelDownCombo}"
-                              SelectedIndex="{Binding MwdIndex}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding WheelDownBackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseWheelDownComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwdComboVm}" />
                 </Grid>
                 <Grid Grid.Row="8" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Tilt Wheel Left" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseWheelLeftCombo}"
-                              SelectedIndex="{Binding MwlIndex}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding WheelLeftBackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseWheelLeftComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwlComboVm}" />
                 </Grid>
                 <Grid Grid.Row="9" ColumnDefinitions="150,*,Auto" Margin="5">
                     <Label Content="Tilt Wheel Right" />
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding MouseWheelRightCombo}"
-                              SelectedIndex="{Binding MwrIndex}"
-                              HorizontalAlignment="Stretch"
-                              Background="{Binding WheelRightBackgroundColor}" />
-                    <Button Grid.Column="2" Background="White" Command="{Binding MouseWheelRightComboSettingCommand}">
-                        <Image Source="../Resources/gear_icon1.png" />
-                    </Button>
+                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwrComboVm}" />
                 </Grid>
             </Grid>
         </TabItem>
