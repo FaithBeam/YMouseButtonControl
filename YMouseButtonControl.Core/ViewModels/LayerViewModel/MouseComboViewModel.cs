@@ -21,12 +21,12 @@ namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
 public interface IMouseComboViewModel
 {
     BaseButtonMappingVm? SelectedBtnMap { get; }
+    IShowSimulatedKeystrokesDialogService ShowSimulatedKeystrokesDialogService { get; }
 }
 
 public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDisposable
 {
     private readonly IProfilesService _profilesService;
-    private readonly IThemeService _themeService;
     private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _btnMappings;
     private BaseButtonMappingVm? _selectedBtnMap;
     private readonly IDisposable? _mbDownDisposable;
@@ -108,8 +108,6 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                                 _wheelTimer.Start();
                             }
                             break;
-                        default:
-                            break;
                     }
                 });
                 break;
@@ -117,7 +115,6 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                 throw new ArgumentOutOfRangeException(nameof(mouseButton), mouseButton, null);
         }
         _profilesService = profilesService;
-        _themeService = themeService;
         SourceCache<BaseButtonMappingVm, int> sourceButtonMappings = new(x => x.Index);
         var myOp = sourceButtonMappings.Connect().AutoRefresh().Bind(out _btnMappings).Subscribe();
         sourceButtonMappings.AddOrUpdate(GetButtonMappings(mouseButton));

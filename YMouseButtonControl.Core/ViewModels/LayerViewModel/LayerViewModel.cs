@@ -11,8 +11,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 {
     public LayerViewModel(
         IMouseComboViewModelFactory mbComboViewModelFactory,
-        IProfilesService profilesService,
-        IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService
+        IProfilesService profilesService
     )
     {
         Mb1ComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mb1);
@@ -25,7 +24,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
         MwlComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mwl);
         MwrComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mwr);
 
-        ShowSimulatedKeystrokesDialogService = showSimulatedKeystrokesDialogService;
         this.WhenAnyValue(x => x.Mb1ComboVm.SelectedBtnMap)
             .WhereNotNull()
             .Subscribe(x =>
@@ -108,8 +106,6 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
                 }
             });
     }
-
-    public IShowSimulatedKeystrokesDialogService ShowSimulatedKeystrokesDialogService { get; }
 
     public IMouseComboViewModel Mb1ComboVm { get; }
 
