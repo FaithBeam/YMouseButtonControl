@@ -48,7 +48,7 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         get => _hasSettingsPopped;
         set => this.RaiseAndSetIfChanged(ref _hasSettingsPopped, value);
     }
-    
+
     public bool Enabled
     {
         get => _enabled;
