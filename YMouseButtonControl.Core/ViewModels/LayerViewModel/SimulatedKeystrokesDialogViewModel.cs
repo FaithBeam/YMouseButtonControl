@@ -48,11 +48,12 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         _title = $"SimulatedKeystrokes - {buttonName}";
         _mouseListener = mouseListener;
         currentMapping ??= new SimulatedKeystrokeVm();
+        var newMapping = new SimulatedKeystrokeVm();
         _mouseListener.OnMouseMovedChanged.Subscribe(MouseListenerOnOnMouseMovedEventHandler);
         _description = currentMapping.PriorityDescription ?? string.Empty;
-        _customKeys = currentMapping?.Keys ?? string.Empty;
+        _customKeys = currentMapping.Keys ?? string.Empty;
         SimulatedKeystrokesType =
-            currentMapping?.SimulatedKeystrokeType ?? new MouseButtonPressedActionTypeVm();
+            currentMapping.SimulatedKeystrokeType ?? new MouseButtonPressedActionTypeVm();
         _caretIndex = 0;
 
         var canExecuteOkCmd = this.WhenAnyValue(
@@ -69,11 +70,12 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         OkCommand = ReactiveCommand.Create(
             () =>
             {
-                currentMapping!.Keys = CustomKeys;
-                currentMapping.MouseButton = mouseButton;
-                currentMapping.SimulatedKeystrokeType = SimulatedKeystrokesType;
-                currentMapping.BlockOriginalMouseInput = BlockOriginalMouseInput;
-                return currentMapping;
+                newMapping.Id = currentMapping.Id;
+                newMapping.Keys = CustomKeys;
+                newMapping.MouseButton = mouseButton;
+                newMapping.SimulatedKeystrokeType = SimulatedKeystrokesType;
+                newMapping.BlockOriginalMouseInput = BlockOriginalMouseInput;
+                return newMapping;
             },
             canExecuteOkCmd
         );

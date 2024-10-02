@@ -1,0 +1,22 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels.LayerViewModel;assembly=YMouseButtonControl.Core"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="YMouseButtonControl.Views.MouseButtonComboControl">
+    <Design.DataContext>
+        <vm:MouseComboViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,Auto">
+        <ComboBox ItemsSource="{Binding BtnMappings}"
+                  SelectedItem="{Binding SelectedBtnMap}"
+                  HorizontalAlignment="Stretch"
+                  Background="{Binding BackgroundColor}">
+        </ComboBox>
+        <Button Grid.Column="1" Background="White" Command="{Binding UserClickedEditSettingButton}">
+            <Image Source="../Resources/gear_icon1.png" />
+        </Button>
+    </Grid>
+</UserControl>

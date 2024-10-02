@@ -34,11 +34,6 @@ public class ShowSimulatedKeystrokesDialogService(
 
     public async Task<SimulatedKeystrokeVm?> ShowSimulatedKeystrokesDialog(
         string buttonName,
-        MouseButton mouseButton
-    ) => await ShowSimulatedKeystrokesDialog(buttonName, mouseButton, null);
-
-    public async Task<SimulatedKeystrokeVm?> ShowSimulatedKeystrokesDialog(
-        string buttonName,
         MouseButton mouseButton,
         BaseButtonMappingVm? mapping
     )
