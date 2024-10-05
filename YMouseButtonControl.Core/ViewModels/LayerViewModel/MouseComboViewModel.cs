@@ -80,34 +80,12 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                     switch (next.Direction)
                     {
                         case WheelScrollDirection.VerticalUp when mouseButton == MouseButton.Mwu:
-                            BackgroundColor = themeService.CurHighlight;
-                            if (!_wheelTimer.Enabled)
-                            {
-                                _wheelTimer.Start();
-                            }
-                            break;
                         case WheelScrollDirection.VerticalDown when mouseButton == MouseButton.Mwd:
-                            BackgroundColor = themeService.CurHighlight;
-                            if (!_wheelTimer.Enabled)
-                            {
-                                _wheelTimer.Start();
-                            }
-                            break;
                         case WheelScrollDirection.HorizontalRight
                             when mouseButton == MouseButton.Mwr:
-                            BackgroundColor = themeService.CurHighlight;
-                            if (!_wheelTimer.Enabled)
-                            {
-                                _wheelTimer.Start();
-                            }
-                            break;
                         case WheelScrollDirection.HorizontalLeft
                             when mouseButton == MouseButton.Mwl:
-                            BackgroundColor = themeService.CurHighlight;
-                            if (!_wheelTimer.Enabled)
-                            {
-                                _wheelTimer.Start();
-                            }
+                            MouseWheelDoHighlight();
                             break;
                     }
                 });
@@ -115,6 +93,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
             default:
                 throw new ArgumentOutOfRangeException(nameof(mouseButton), mouseButton, null);
         }
+
         _profilesService = profilesService;
         SourceCache<BaseButtonMappingVm, int> sourceButtonMappings = new(x => x.Index);
         var myOp = sourceButtonMappings.Connect().AutoRefresh().Bind(out _btnMappings).Subscribe();
@@ -166,6 +145,16 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
             },
             canClickUserClickedSettingsBtn
         );
+        return;
+
+        void MouseWheelDoHighlight()
+        {
+            BackgroundColor = themeService.CurHighlight;
+            if (!_wheelTimer.Enabled)
+            {
+                _wheelTimer.Start();
+            }
+        }
     }
 
     public IBrush BackgroundColor
@@ -173,6 +162,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
         get => _backgroundColor;
         set => this.RaiseAndSetIfChanged(ref _backgroundColor, value);
     }
+
     public IShowSimulatedKeystrokesDialogService ShowSimulatedKeystrokesDialogService { get; }
 
     public BaseButtonMappingVm? SelectedBtnMap
