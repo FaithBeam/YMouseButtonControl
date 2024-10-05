@@ -13,17 +13,17 @@
         <layerViewModel:LayerViewModel />
     </Design.DataContext>
 
-	<UserControl.Styles>
-	    <Style Selector="TabItem">
-		    <Setter Property="FontSize" Value="14"/>
-			<Setter Property="FontWeight" Value="Normal"/>
-			<Setter Property="VerticalAlignment" Value="Top" />
-			<Setter Property="MinHeight" Value="20" />
-		</Style>
-		<Style Selector="Label">
-			<Setter Property="VerticalAlignment" Value="Center"></Setter>
-		</Style>
-	</UserControl.Styles>
+    <UserControl.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="MinHeight" Value="20" />
+        </Style>
+        <Style Selector="Label">
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+    </UserControl.Styles>
 
     <TabControl Padding="0">
         <TabItem Header="Layer 1">
@@ -35,42 +35,15 @@
                     <Button Grid.Column="3" IsEnabled="False">Swap</Button>
                     <Button Grid.Column="4" IsEnabled="False">Reset</Button>
                 </Grid>
-                <Grid Grid.Row="1" ColumnDefinitions="150,*" Margin="5">
-                    <Label Content="Left Button" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb1ComboVm}" />
-                </Grid>
-                <Grid Grid.Row="2" ColumnDefinitions="150,*" Margin="5">
-                    <Label Content="Right Button" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb2ComboVm}" />
-                </Grid>
-                <Grid Grid.Row="3" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Middle Button" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb3ComboVm}" />
-                </Grid>
-                <Grid Grid.Row="4" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Mouse Button 4" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb4ComboVm}" />
-                </Grid>
-                <Grid Grid.Row="5" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Mouse Button 5" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding Mb5ComboVm}" />
-                </Grid>
-                <Grid Grid.Row="6" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Wheel Up" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwuComboVm}" />
-                </Grid>
-                <Grid Grid.Row="7" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Wheel Down" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwdComboVm}" />
-                </Grid>
-                <Grid Grid.Row="8" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Tilt Wheel Left" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwlComboVm}" />
-                </Grid>
-                <Grid Grid.Row="9" ColumnDefinitions="150,*,Auto" Margin="5">
-                    <Label Content="Tilt Wheel Right" />
-                    <views:MouseButtonComboControl Grid.Column="1" DataContext="{Binding MwrComboVm}" />
-                </Grid>
+                <views:MouseButtonComboControl Grid.Row="1" DataContext="{Binding Mb1ComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="2" DataContext="{Binding Mb2ComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="3" DataContext="{Binding Mb3ComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="4" DataContext="{Binding Mb4ComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="5" DataContext="{Binding Mb5ComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="6" DataContext="{Binding MwuComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="7" DataContext="{Binding MwdComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="8" DataContext="{Binding MwlComboVm}" />
+                <views:MouseButtonComboControl Grid.Row="9" DataContext="{Binding MwrComboVm}" />
             </Grid>
         </TabItem>
         <TabItem Header="Layer 2"></TabItem>

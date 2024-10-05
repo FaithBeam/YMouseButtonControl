@@ -7,7 +7,7 @@ namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
 
 public interface IMouseComboViewModelFactory
 {
-    IMouseComboViewModel CreateWithMouseButton(MouseButton mouseButton);
+    IMouseComboViewModel CreateWithMouseButton(MouseButton mouseButton, string labelTxt);
 }
 
 public class MouseComboViewModelFactory(
@@ -17,12 +17,15 @@ public class MouseComboViewModelFactory(
     IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService
 ) : IMouseComboViewModelFactory
 {
-    public IMouseComboViewModel CreateWithMouseButton(MouseButton mouseButton) =>
+    public IMouseComboViewModel CreateWithMouseButton(MouseButton mouseButton, string labelTxt) =>
         new MouseComboViewModel(
             profilesService,
             mouseListener,
             themeService,
             mouseButton,
             showSimulatedKeystrokesDialogService
-        );
+        )
+        {
+            LabelTxt = labelTxt,
+        };
 }

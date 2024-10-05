@@ -34,6 +34,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     private readonly IDisposable? _mWheelDisposable;
     private IBrush _backgroundColor;
     private readonly Timer _wheelTimer = new() { Interval = 200, AutoReset = false };
+    private string? _labelTxt;
 
     public MouseComboViewModel(
         IProfilesService profilesService,
@@ -178,6 +179,12 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     {
         get => _selectedBtnMap;
         set => this.RaiseAndSetIfChanged(ref _selectedBtnMap, value);
+    }
+
+    public string? LabelTxt
+    {
+        get => _labelTxt;
+        set => this.RaiseAndSetIfChanged(ref _labelTxt, value);
     }
 
     public ReadOnlyObservableCollection<BaseButtonMappingVm> BtnMappings => _btnMappings;
