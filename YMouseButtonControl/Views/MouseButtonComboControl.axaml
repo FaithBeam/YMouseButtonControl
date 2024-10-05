@@ -8,6 +8,12 @@
     <Design.DataContext>
         <vm:MouseComboViewModel />
     </Design.DataContext>
+    
+    <UserControl.Styles>
+        <Style Selector="Label">
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+    </UserControl.Styles>
 
     <Grid ColumnDefinitions="150,*,Auto" Margin="5">
         <Label Content="{Binding LabelTxt}" />
