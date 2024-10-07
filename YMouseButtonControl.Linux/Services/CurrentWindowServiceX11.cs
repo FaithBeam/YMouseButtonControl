@@ -10,7 +10,11 @@ public class CurrentWindowServiceX11 : ICurrentWindowService
     private string GetForegroundWindow()
     {
         var startInfo = new ProcessStartInfo
-            { FileName = "/bin/bash", Arguments = "-c \"xdotool getwindowfocus getwindowpid\"", RedirectStandardOutput = true };
+        {
+            FileName = "/bin/bash",
+            Arguments = "-c \"xdotool getwindowfocus getwindowpid\"",
+            RedirectStandardOutput = true,
+        };
         using var xdoProc = new Process();
         xdoProc.StartInfo = startInfo;
         xdoProc.Start();
@@ -21,9 +25,13 @@ public class CurrentWindowServiceX11 : ICurrentWindowService
         {
             return "";
         }
-        
+
         startInfo = new ProcessStartInfo
-            { FileName = "/bin/bash", Arguments = $"-c \"ls -l /proc/{pid}/exe\"", RedirectStandardOutput = true };
+        {
+            FileName = "/bin/bash",
+            Arguments = $"-c \"ls -l /proc/{pid}/exe\"",
+            RedirectStandardOutput = true,
+        };
         using var proc = new Process();
         proc.StartInfo = startInfo;
         proc.Start();

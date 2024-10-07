@@ -60,7 +60,7 @@ public static class ServicesBootstrapper
                 FileName = "/bin/bash",
                 Arguments = "-c \"xdotool\"",
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
             };
             using var proc = new Process();
             proc.StartInfo = startInfo;
