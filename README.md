@@ -7,9 +7,9 @@ This is an attempt at a cross-platform clone of X-Mouse-Button-Control.
 ## Usage
 
 1. Download the latest release from the [Releases](https://github.com/FaithBeam/YMouseButtonControl/releases) page for your platform
-     * Alternatively download the latest build from the [Actions tab](https://github.com/FaithBeam/YMouseButtonControl/actions)
-3. Extract the archive
-4. Run YMouseButtonControl
+     * Alternatively, download the latest build from the [Actions tab](https://github.com/FaithBeam/YMouseButtonControl/actions)
+2. Extract the archive
+3. Run YMouseButtonControl
 
 ## OS Compatibility
 
@@ -23,6 +23,14 @@ Anything that can install .NET 8 should be able to run YMouseButtonControl
 | Windows 11           | 22000+      |
 | Ubuntu               | 20.04+      |
 | macOS                | 12.0+       |
+
+##  Linux Recommended Software
+
+* xdotool (x11 only)
+  * ```sudo apt install xdotool```
+  * This is used to retrieve the foreground window name
+
+If you don't install xdotool or use wayland, every window will match when doing a mouse press.
 
 ## Build
 
