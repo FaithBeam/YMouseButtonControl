@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
@@ -51,8 +52,33 @@ public static class ServicesBootstrapper
         services
             .AddScoped<IStartupInstallerService, Linux.Services.StartupInstallerService>()
             .AddScoped<IProcessMonitorService, Linux.Services.ProcessMonitorService>()
-            .AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowService>()
             .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
+        if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "/bin/bash",
+                Arguments = "-c \"xdotool\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            using var proc = new Process();
+            proc.StartInfo = startInfo;
+            proc.Start();
+            proc.WaitForExit();
+            if (proc.ExitCode == 1)
+            {
+                services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowServiceX11>();
+            }
+            else
+            {
+                services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowService>();
+            }
+        }
+        else
+        {
+            services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowService>();
+        }
     }
 
     [SupportedOSPlatform("windows5.1.2600")]
