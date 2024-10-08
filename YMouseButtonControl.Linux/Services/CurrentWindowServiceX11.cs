@@ -43,9 +43,23 @@ public class CurrentWindowServiceX11 : ICurrentWindowService
         var prop = X11.XInternAtom(display, Marshal.StringToHGlobalAnsi("_NET_ACTIVE_WINDOW"), 0);
         var pidProp = X11.XInternAtom(display, Marshal.StringToHGlobalAnsi("_NET_WM_PID"), 1);
 
-        if (X11.XGetWindowProperty(display, root, prop, 0, sizeof(ulong), 0, 0,
-                out _, out _, out _,
-                out _, out var outProp) != 0 || outProp == nint.Zero)
+        if (
+            X11.XGetWindowProperty(
+                display,
+                root,
+                prop,
+                0,
+                sizeof(ulong),
+                0,
+                0,
+                out _,
+                out _,
+                out _,
+                out _,
+                out var outProp
+            ) != 0
+            || outProp == nint.Zero
+        )
         {
             return null;
         }
@@ -53,8 +67,23 @@ public class CurrentWindowServiceX11 : ICurrentWindowService
         var activeWindow = *(nint*)outProp;
         X11.XFree(outProp);
 
-        if (X11.XGetWindowProperty(display, activeWindow, pidProp, 0, sizeof(int), 0, 0, out _, out _, out _, out _,
-                out var prop2) != 0 || prop2 == nint.Zero)
+        if (
+            X11.XGetWindowProperty(
+                display,
+                activeWindow,
+                pidProp,
+                0,
+                sizeof(int),
+                0,
+                0,
+                out _,
+                out _,
+                out _,
+                out _,
+                out var prop2
+            ) != 0
+            || prop2 == nint.Zero
+        )
         {
             return null;
         }
@@ -95,5 +124,6 @@ internal static partial class X11
         out int actualFormatReturn,
         out ulong nItemsReturn,
         out ulong bytesAfterReturn,
-        out IntPtr propReturn);
+        out IntPtr propReturn
+    );
 }
