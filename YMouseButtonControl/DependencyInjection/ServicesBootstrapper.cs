@@ -55,25 +55,7 @@ public static class ServicesBootstrapper
             .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
         {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "/bin/bash",
-                Arguments = "-c \"xdotool\"",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-            };
-            using var proc = new Process();
-            proc.StartInfo = startInfo;
-            proc.Start();
-            proc.WaitForExit();
-            if (proc.ExitCode == 1)
-            {
-                services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowServiceX11>();
-            }
-            else
-            {
-                services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowService>();
-            }
+            services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowServiceX11>();
         }
         else
         {
