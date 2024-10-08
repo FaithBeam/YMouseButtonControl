@@ -24,14 +24,6 @@ Anything that can install .NET 8 should be able to run YMouseButtonControl
 | Ubuntu               | 20.04+      |
 | macOS                | 12.0+       |
 
-##  Linux Recommended Software
-
-* xdotool (x11 only)
-  * ```sudo apt install xdotool```
-  * This is used to retrieve the foreground window name
-
-If you don't install xdotool or use wayland, every window will match when doing a mouse press.
-
 ## Build
 
 ### Requirements
