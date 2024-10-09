@@ -9,5 +9,8 @@ public class ProcessMonitorService : IProcessMonitorService
         Process
             .GetProcesses()
             .Select(x => new ProcessModel(x))
-            .Where(x => !string.IsNullOrWhiteSpace(x.Process.MainModule?.ModuleName) && !string.IsNullOrWhiteSpace(x.Process.ProcessName));
+            .Where(x =>
+                !string.IsNullOrWhiteSpace(x.Process.MainModule?.ModuleName)
+                && !string.IsNullOrWhiteSpace(x.Process.ProcessName)
+            );
 }
