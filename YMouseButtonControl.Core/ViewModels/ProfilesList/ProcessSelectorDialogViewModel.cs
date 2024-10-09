@@ -119,6 +119,5 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         set => this.RaiseAndSetIfChanged(ref _processModel, value);
     }
 
-    private void RefreshProcessList() =>
-        _sourceProcessModels.EditDiff(_processMonitorService.GetProcesses());
+    private void RefreshProcessList() => _sourceProcessModels.EditDiff(_processMonitorService.GetProcesses());
 }
