@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using YMouseButtonControl.Core.Mappings;
+using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Context;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.Repositories;
 
 public interface IGenericRepository<TEntity, TVm>
-    where TEntity : class
-    where TVm : class
 {
     TVm? Add(TVm vm);
     Task<TVm?> AddAsync(TVm vm);
@@ -20,8 +20,9 @@ public interface IGenericRepository<TEntity, TVm>
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = ""
     );
-    Task<IEnumerable<TVm>> GetAllAsync();
-    Task<IEnumerable<TVm>> GetAllAsync(Expression<Func<TEntity, bool>> filter);
+
+    IEnumerable<ProfileVm> GetAll();
+    IQueryable<ProfileVm> GetAll(Expression<Func<TEntity, bool>> filter);
     Task<TVm?> GetAsync(Expression<Func<TEntity, bool>> filter);
     TVm? GetById(int id);
     Task<TVm?> GetByIdAsync(int id);
@@ -31,22 +32,30 @@ public interface IGenericRepository<TEntity, TVm>
     Task<TVm?> UpdateAsync(int id, TVm vm);
 }
 
-public class GenericRepository<TEntity, TVm>(YMouseButtonControlDbContext context, IMapper mapper)
-    : IGenericRepository<TEntity, TVm>
-    where TEntity : class
-    where TVm : class
+public class ProfileRepository(YMouseButtonControlDbContext context)
+    : IGenericRepository<Profile, ProfileVm>
 {
-    private readonly YMouseButtonControlDbContext _context = context;
-    private readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
-    private readonly IMapper _mapper = mapper;
+    private readonly DbSet<Profile> _dbSet = context.Set<Profile>();
 
-    public virtual IEnumerable<TVm> Get(
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+    public ProfileVm? Add(ProfileVm vm)
+    {
+        var entity = _dbSet.Add(ProfileMapper.Map(vm)).Entity;
+        return ProfileMapper.Map(entity);
+    }
+
+    public async Task<ProfileVm?> AddAsync(ProfileVm vm)
+    {
+        var entity = (await _dbSet.AddAsync(ProfileMapper.Map(vm))).Entity;
+        return ProfileMapper.Map(entity);
+    }
+
+    public IEnumerable<ProfileVm> Get(
+        Expression<Func<Profile, bool>>? filter = null,
+        Func<IQueryable<Profile>, IOrderedQueryable<Profile>>? orderBy = null,
         string includeProperties = ""
     )
     {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<Profile> query = _dbSet;
 
         if (filter != null)
         {
@@ -54,80 +63,73 @@ public class GenericRepository<TEntity, TVm>(YMouseButtonControlDbContext contex
         }
 
         query = includeProperties
-            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            .Split([','], StringSplitOptions.RemoveEmptyEntries)
             .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 
-        // query = query.AsNoTracking();
-
-        return _mapper.Map<IEnumerable<TVm>>(
-            orderBy != null ? orderBy(query).ToList() : query.ToList()
-        );
+        return ProfileMapper.Map(orderBy != null ? orderBy(query) : query);
     }
 
-    public async Task<IEnumerable<TVm>> GetAllAsync() =>
-        _mapper.Map<IEnumerable<TVm>>(await _dbSet.ToListAsync());
-
-    public async Task<IEnumerable<TVm>> GetAllAsync(Expression<Func<TEntity, bool>> filter) =>
-        _mapper.Map<IEnumerable<TVm>>(await _dbSet.Where(filter).ToListAsync());
-
-    public async Task<TVm?> GetAsync(Expression<Func<TEntity, bool>> filter) =>
-        _mapper.Map<TVm?>(await _dbSet.FirstOrDefaultAsync(filter));
-
-    public TVm? GetById(int id) => _mapper.Map<TVm?>(_dbSet.Find(id));
-
-    public async Task<TVm?> GetByIdAsync(int id) => _mapper.Map<TVm?>(await _dbSet.FindAsync(id));
-
-    public TVm? Add(TVm vm)
+    public IEnumerable<ProfileVm> GetAll()
     {
-        var entity = _dbSet.Add(_mapper.Map<TEntity>(vm)).Entity;
-        return _mapper.Map<TVm>(entity);
+        return ProfileMapper.Map(_dbSet);
     }
 
-    public async Task<TVm?> AddAsync(TVm vm)
+    public IQueryable<ProfileVm> GetAll(Expression<Func<Profile, bool>> filter)
     {
-        var entity = (await _dbSet.AddAsync(_mapper.Map<TEntity>(vm))).Entity;
-        return _mapper.Map<TVm>(entity);
+        return ProfileMapper.Map(_dbSet.Where(filter));
     }
 
-    /// <summary>
-    /// Add or update view model
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="vm"></param>
-    /// <returns></returns>
-    public TVm? Update(int id, TVm vm)
+    public async Task<ProfileVm?> GetAsync(Expression<Func<Profile, bool>> filter)
     {
-        var entity = _dbSet.Find(id);
-        return entity is null
-            ? _mapper.Map<TVm>((_dbSet.Add(_mapper.Map<TEntity>(vm))).Entity)
-            : _mapper.Map<TVm>(_mapper.Map<TVm, TEntity>(vm, entity));
+        return ProfileMapper.Map(await _dbSet.FirstOrDefaultAsync(filter));
     }
 
-    public async Task<TVm?> UpdateAsync(int id, TVm vm)
-    {
-        var entity = await _dbSet.FindAsync(id);
-        return entity is null
-            ? _mapper.Map<TVm>((await _dbSet.AddAsync(_mapper.Map<TEntity>(vm))).Entity)
-            : _mapper.Map<TVm>(_mapper.Map<TVm, TEntity>(vm, entity));
-    }
+    public ProfileVm? GetById(int id) => ProfileMapper.Map(_dbSet.Find(id));
 
-    public TVm? Remove(int id)
+    public async Task<ProfileVm?> GetByIdAsync(int id) =>
+        ProfileMapper.Map(await _dbSet.FindAsync(id));
+
+    public ProfileVm? Remove(int id)
     {
         var entity = _dbSet.Find(id);
         if (entity is not null)
         {
             _dbSet.Remove(entity);
         }
-        return _mapper.Map<TVm?>(entity);
+        return ProfileMapper.Map(entity);
     }
 
-    public async Task<TVm?> RemoveAsync(int id)
+    public async Task<ProfileVm?> RemoveAsync(int id)
     {
         var entity = await _dbSet.FindAsync(id);
         if (entity is not null)
         {
             _dbSet.Remove(entity);
         }
-        return _mapper.Map<TVm?>(entity);
+        return ProfileMapper.Map(entity);
+    }
+
+    public ProfileVm? Update(int id, ProfileVm vm)
+    {
+        var entity = _dbSet.Find(id);
+        if (entity is null)
+        {
+            return ProfileMapper.Map(_dbSet.Add(ProfileMapper.Map(vm)).Entity);
+        }
+
+        ProfileMapper.Map(vm, entity);
+        return ProfileMapper.Map(entity);
+    }
+
+    public async Task<ProfileVm?> UpdateAsync(int id, ProfileVm vm)
+    {
+        var entity = await _dbSet.FindAsync(id);
+        if (entity is null)
+        {
+            return ProfileMapper.Map(_dbSet.Add(ProfileMapper.Map(vm)).Entity);
+        }
+
+        ProfileMapper.Map(vm, entity);
+        return ProfileMapper.Map(entity);
     }
 }

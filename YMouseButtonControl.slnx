@@ -1,0 +1,11 @@
+﻿<Solution>
+  <Project Path="YMouseButtonControl.Core.Tests\YMouseButtonControl.Core.Tests.csproj" Type="Classic C#" />
+  <Project Path="YMouseButtonControl.Core\YMouseButtonControl.Core.csproj" />
+  <Project Path="YMouseButtonControl.DataAccess\YMouseButtonControl.DataAccess.csproj" Type="Classic C#" />
+  <Project Path="YMouseButtonControl.Linux.Tests\YMouseButtonControl.Linux.Tests.csproj" Type="Classic C#" />
+  <Project Path="YMouseButtonControl.Linux\YMouseButtonControl.Linux.csproj" Type="Classic C#" />
+  <Project Path="YMouseButtonControl.MacOS\YMouseButtonControl.MacOS.csproj" />
+  <Project Path="YMouseButtonControl.Windows.Tests\YMouseButtonControl.Windows.Tests.csproj" Type="Classic C#" />
+  <Project Path="YMouseButtonControl.Windows\YMouseButtonControl.Windows.csproj" />
+  <Project Path="YMouseButtonControl\YMouseButtonControl.csproj" />
+</Solution>
