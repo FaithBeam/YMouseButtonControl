@@ -1,4 +1,6 @@
-﻿using Riok.Mapperly.Abstractions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Riok.Mapperly.Abstractions;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Models;
 
@@ -10,10 +12,20 @@ public static partial class SettingMapper
     [MapDerivedType<SettingString, SettingStringVm>]
     [MapDerivedType<SettingBool, SettingBoolVm>]
     [MapDerivedType<SettingInt, SettingIntVm>]
-    private static partial BaseSettingVm Map(Setting setting);
+    public static partial BaseSettingVm Map(Setting? setting);
 
     [MapDerivedType<SettingStringVm, SettingString>]
     [MapDerivedType<SettingBoolVm, SettingBool>]
     [MapDerivedType<SettingIntVm, SettingInt>]
-    private static partial Setting Map(BaseSettingVm baseSettingVm);
+    public static partial Setting Map(BaseSettingVm baseSettingVm);
+
+    // [MapDerivedType<List<SettingStringVm>, ICollection<SettingString>>]
+    // [MapDerivedType<List<SettingBoolVm>, ICollection<SettingBool>>]
+    // [MapDerivedType<List<SettingIntVm>, ICollection<SettingInt>>]
+    // public static partial ICollection<Setting> Map(List<BaseSettingVm> settings);
+
+    [MapDerivedType<SettingStringVm, SettingString>]
+    [MapDerivedType<SettingBoolVm, SettingBool>]
+    [MapDerivedType<SettingIntVm, SettingInt>]
+    public static partial void Map(BaseSettingVm src, Setting dst);
 }

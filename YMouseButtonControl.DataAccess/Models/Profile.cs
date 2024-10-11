@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace YMouseButtonControl.DataAccess.Models;
+﻿namespace YMouseButtonControl.DataAccess.Models;
 
 public class Profile
 {

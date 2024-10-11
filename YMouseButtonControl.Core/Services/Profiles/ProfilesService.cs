@@ -49,7 +49,9 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             .SortBy(x => x.DisplayPriority)
             .Bind(out _profilesObsCol)
             .Subscribe();
-        _profiles.AddOrUpdate(_unitOfWork.ProfileRepo.Get(includeProperties: "ButtonMappings"));
+        _profiles.AddOrUpdate(
+            _unitOfWork.ProfileRepo.Get(includeProperties: "ButtonMappings").ToList()
+        );
         //
         // CurrentProfile =
         //     _profiles.Items.MinBy(x => x.DisplayPriority)

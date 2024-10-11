@@ -12,9 +12,6 @@ public interface IUnitOfWork
     IGenericRepository<Profile, ProfileVm> ProfileRepo { get; init; }
     IGenericRepository<ButtonMapping, BaseButtonMappingVm> ButtonMappingRepo { get; init; }
     IGenericRepository<Setting, BaseSettingVm> SettingRepo { get; init; }
-    IGenericRepository<SettingBool, SettingBoolVm> SettingBoolRepo { get; init; }
-    IGenericRepository<SettingString, SettingStringVm> SettingStringRepo { get; init; }
-    IGenericRepository<SettingInt, SettingIntVm> SettingIntRepo { get; init; }
     void Save();
     Task SaveAsync();
     void Dispose();
@@ -24,10 +21,7 @@ public class UnitOfWork(
     YMouseButtonControlDbContext context,
     IGenericRepository<Profile, ProfileVm> profileRepo,
     IGenericRepository<ButtonMapping, BaseButtonMappingVm> buttonMappingRepo,
-    IGenericRepository<Setting, BaseSettingVm> settingRepo,
-    IGenericRepository<SettingBool, SettingBoolVm> settingBoolRepo,
-    IGenericRepository<SettingString, SettingStringVm> settingStringRepo,
-    IGenericRepository<SettingInt, SettingIntVm> settingIntRepo
+    IGenericRepository<Setting, BaseSettingVm> settingRepo
 ) : IUnitOfWork
 {
     private readonly YMouseButtonControlDbContext _context = context;
@@ -35,12 +29,6 @@ public class UnitOfWork(
     public IGenericRepository<ButtonMapping, BaseButtonMappingVm> ButtonMappingRepo { get; init; } =
         buttonMappingRepo;
     public IGenericRepository<Setting, BaseSettingVm> SettingRepo { get; init; } = settingRepo;
-    public IGenericRepository<SettingBool, SettingBoolVm> SettingBoolRepo { get; init; } =
-        settingBoolRepo;
-    public IGenericRepository<SettingString, SettingStringVm> SettingStringRepo { get; init; } =
-        settingStringRepo;
-    public IGenericRepository<SettingInt, SettingIntVm> SettingIntRepo { get; init; } =
-        settingIntRepo;
 
     public void Save() => _context.SaveChanges();
 

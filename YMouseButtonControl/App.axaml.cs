@@ -55,7 +55,6 @@ public class App : Application
                 resolver.InitializeSplat();
                 resolver.InitializeReactiveUI();
 
-                services.AddAutoMapper(typeof(MappingProfile));
                 Bootstrapper.Register(services);
 
                 services.AddSingleton<

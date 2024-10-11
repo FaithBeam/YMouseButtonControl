@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Riok.Mapperly.Abstractions;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Models;
@@ -12,15 +14,29 @@ public static partial class ButtonMappingMapper
     [MapDerivedType<NothingMapping, NothingMappingVm>]
     [MapDerivedType<SimulatedKeystroke, SimulatedKeystrokeVm>]
     [MapDerivedType<RightClick, RightClickVm>]
-    private static partial BaseButtonMappingVm Map(ButtonMapping buttonMapping);
+    public static partial BaseButtonMappingVm Map(ButtonMapping? buttonMapping);
 
     [MapDerivedType<DisabledMappingVm, DisabledMapping>]
     [MapDerivedType<NothingMappingVm, NothingMapping>]
     [MapDerivedType<SimulatedKeystrokeVm, SimulatedKeystroke>]
     [MapDerivedType<RightClickVm, RightClick>]
-    private static partial ButtonMapping Map(BaseButtonMappingVm buttonMapping);
+    public static partial ButtonMapping Map(BaseButtonMappingVm buttonMapping);
 
-    private static BaseSimulatedKeystrokeTypeVm MapSimulatedKeystrokeType(
+    [MapDerivedType<IEnumerable<DisabledMapping>, IEnumerable<DisabledMappingVm>>]
+    [MapDerivedType<IEnumerable<NothingMapping>, IEnumerable<NothingMappingVm>>]
+    [MapDerivedType<IEnumerable<SimulatedKeystroke>, IEnumerable<SimulatedKeystrokeVm>>]
+    [MapDerivedType<IEnumerable<RightClick>, IEnumerable<RightClickVm>>]
+    public static partial IEnumerable<BaseButtonMappingVm> Map(
+        IEnumerable<ButtonMapping> buttonMappings
+    );
+
+    [MapDerivedType<DisabledMappingVm, DisabledMapping>]
+    [MapDerivedType<NothingMappingVm, NothingMapping>]
+    [MapDerivedType<SimulatedKeystrokeVm, SimulatedKeystroke>]
+    [MapDerivedType<RightClickVm, RightClick>]
+    public static partial void Map(BaseButtonMappingVm src, ButtonMapping dst);
+
+    public static BaseSimulatedKeystrokeTypeVm MapSimulatedKeystrokeType(
         SimulatedKeystrokeType simulatedKeystrokeType
     ) =>
         simulatedKeystrokeType switch
@@ -47,7 +63,7 @@ public static partial class ButtonMappingMapper
             ),
         };
 
-    private static SimulatedKeystrokeType? MapSimulatedKeystrokeTypeVm(
+    public static SimulatedKeystrokeType? MapSimulatedKeystrokeTypeVm(
         BaseSimulatedKeystrokeTypeVm? baseSimulatedKeystrokeVm
     ) =>
         baseSimulatedKeystrokeVm switch
