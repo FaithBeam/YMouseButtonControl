@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.DataAccess.Models;
@@ -22,6 +21,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
 
     [JsonIgnore]
     public int Id { get; set; }
+
+    public int ProfileId { get; set; }
 
     public MouseButton MouseButton { get; set; }
 

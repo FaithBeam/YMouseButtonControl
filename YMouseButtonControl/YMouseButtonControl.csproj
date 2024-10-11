@@ -45,9 +45,6 @@
         <AvaloniaResource Include="Resources\mouse.ico" />
         <None Remove="Resources\crosshair.png" />
         <AvaloniaResource Include="Resources\crosshair.png" />
-        <None Update="YMouseButtonControlContext-71b0de61-4c45-4680-b3d3-c603b1260ede.db">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
@@ -66,10 +63,6 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.3" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
         <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />

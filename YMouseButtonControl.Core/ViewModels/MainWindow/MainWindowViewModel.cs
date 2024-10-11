@@ -19,6 +19,7 @@ using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -39,11 +40,11 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
+    private readonly IRepository<Profile, ProfileVm> _profileRepository;
     private readonly IProfilesService _ps;
     private readonly IThemeService _themeService;
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ObservableAsPropertyHelper<bool>? _isExecutingSave;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profileVms;
     private bool _canSave;
@@ -60,12 +61,12 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         IProfilesInformationViewModel profilesInformationViewModel,
         IGlobalSettingsDialogViewModel globalSettingsDialogViewModel,
         IApply apply,
-        IUnitOfWork unitOfWork
+        IRepository<Profile, ProfileVm> profileRepository
     )
     {
+        _profileRepository = profileRepository;
         _profilesListViewModel = profilesListViewModel;
         _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
-        _unitOfWork = unitOfWork;
         _ps = ps;
         _themeService = themeService;
         LayerViewModel = layerViewModel;
@@ -99,9 +100,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     {
         foreach (var cs in changeSet)
         {
-            var entity = _unitOfWork
-                .ProfileRepo.Get(x => x.Id == cs.Current.Id, includeProperties: "ButtonMappings")
-                .FirstOrDefault();
+            var entity = _profileRepository.GetById(cs.Current.Id);
             switch (cs.Reason)
             {
                 case ChangeReason.Add:

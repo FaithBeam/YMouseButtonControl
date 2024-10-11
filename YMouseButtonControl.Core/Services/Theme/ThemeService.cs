@@ -81,7 +81,7 @@ public class ThemeService : ReactiveObject, IThemeService
 
     private ThemeVariant GetThemeVariant()
     {
-        var theme = (ThemeEnum)_themeSetting.Value;
+        var theme = (ThemeEnum)_themeSetting.IntValue;
         return theme switch
         {
             ThemeEnum.Default => ThemeVariant.Default,
@@ -93,7 +93,7 @@ public class ThemeService : ReactiveObject, IThemeService
 
     private IBrush GetCurrentThemeBackground()
     {
-        var theme = (ThemeEnum)_themeSetting.Value;
+        var theme = (ThemeEnum)_themeSetting.IntValue;
 
         return theme switch
         {
@@ -109,7 +109,7 @@ public class ThemeService : ReactiveObject, IThemeService
 
     private IBrush GetCurrentThemeHighlight()
     {
-        var theme = (ThemeEnum)_themeSetting.Value;
+        var theme = (ThemeEnum)_themeSetting.IntValue;
 
         return theme switch
         {

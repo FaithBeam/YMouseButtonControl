@@ -12,6 +12,7 @@ using ReactiveUI;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles.Exceptions;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.Services.Profiles;
 
@@ -33,15 +34,14 @@ public interface IProfilesService
 
 public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRepository<Profile, ProfileVm> _profileRepository;
     private ProfileVm? _currentProfile;
     private readonly SourceCache<ProfileVm, int> _profiles;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profilesObsCol;
 
-    public ProfilesService(IUnitOfWork unitOfWork)
+    public ProfilesService(IRepository<Profile, ProfileVm> profileRepository)
     {
-        _unitOfWork = unitOfWork;
-
+        _profileRepository = profileRepository;
         _profiles = new SourceCache<ProfileVm, int>(x => x.Id);
         _profiles
             .Connect()
@@ -49,11 +49,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             .SortBy(x => x.DisplayPriority)
             .Bind(out _profilesObsCol)
             .Subscribe();
-        _profiles.AddOrUpdate(_unitOfWork.ProfileRepo.Get(includeProperties: "ButtonMappings"));
-        //
-        // CurrentProfile =
-        //     _profiles.Items.MinBy(x => x.DisplayPriority)
-        //     ?? throw new Exception("Unable to retrieve current profile");
+        _profiles.AddOrUpdate(profileRepository.GetAll().ToList());
     }
 
     /// <summary>
@@ -85,7 +81,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
 
     public bool IsUnsavedChanges()
     {
-        var dbProfiles = _unitOfWork.ProfileRepo.Get().ToList();
+        var dbProfiles = _profileRepository.GetAll().ToList();
         return !dbProfiles.SequenceEqual(_profiles.Items);
     }
 
