@@ -4,14 +4,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.ViewModels.AppViewModel;
@@ -43,19 +41,13 @@ public class App : Application
             .ConfigureServices(services =>
             {
                 services.UseMicrosoftDependencyResolver();
-                services.AddDbContext<YMouseButtonControlDbContext>(o =>
-                {
-                    o.UseSqlite(
-                        configuration.GetConnectionString("YMouseButtonControlContext"),
-                        sqliteOptionsAction: so =>
-                            so.MigrationsAssembly("YMouseButtonControl.DataAccess")
-                    );
-                });
+                services.AddScoped(_ => configuration);
+                services.AddScoped<YMouseButtonControlDbContext>();
+
                 var resolver = Locator.CurrentMutable;
                 resolver.InitializeSplat();
                 resolver.InitializeReactiveUI();
 
-                services.AddAutoMapper(typeof(MappingProfile));
                 Bootstrapper.Register(services);
 
                 services.AddSingleton<
@@ -67,10 +59,9 @@ public class App : Application
             .Build();
         Container = host.Services;
         Container.UseMicrosoftDependencyResolver();
-#if (!DEBUG)
-        // ensure db is created
-        Container.GetRequiredService<YMouseButtonControlDbContext>().Database.Migrate();
-#endif
+
+        Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
+
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
 
@@ -88,7 +79,7 @@ public class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            if (!startMinimized.Value)
+            if (!startMinimized.BoolValue)
             {
                 var mainWindow = (Window)Container.GetRequiredService<IMainWindow>();
                 mainWindow.DataContext = Container.GetRequiredService<IMainWindowViewModel>();

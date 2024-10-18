@@ -8,15 +8,22 @@ public abstract class Setting
 
 public class SettingBool : Setting
 {
-    public bool Value { get; set; }
+    public bool BoolValue { get; set; }
 }
 
 public class SettingString : Setting
 {
-    public string? Value { get; set; }
+    public string? StringValue { get; set; }
 }
 
 public class SettingInt : Setting
 {
-    public int Value { get; set; }
+    public int IntValue { get; set; }
+}
+
+public enum SettingType
+{
+    SettingBool = 1,
+    SettingString = 2,
+    SettingInt = 3,
 }

@@ -21,11 +21,11 @@
 
     <Grid Margin="6" RowDefinitions="Auto,Auto,*">
         <CheckBox Grid.Row="0" Content="Start Minimized"
-                  IsChecked="{Binding StartMinimized.Value}" />
+                  IsChecked="{Binding StartMinimized.BoolValue}" />
         <StackPanel Grid.Row="1">
             <Label Content="Theme" />
             <ComboBox ItemsSource="{Binding ThemeCollection}"
-                      SelectedItem="{Binding ThemeSetting.Value, Converter={StaticResource ThemeConverter}}" />
+                      SelectedItem="{Binding ThemeSetting.IntValue, Converter={StaticResource ThemeConverter}}" />
             <ToolTip.Tip>
                 <TextBlock>
                     The application theme. Restart the application the see the change.

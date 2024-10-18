@@ -1,24 +1,21 @@
-﻿using System.Linq;
-using ReactiveUI;
+﻿using ReactiveUI;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.Services.Settings;
 
 public interface ISettingsService
 {
     BaseSettingVm? GetSetting(string name);
-    BaseSettingVm? UpdateSetting(BaseSettingVm vm);
-    void Save();
+    int UpdateSetting(BaseSettingVm vm);
 }
 
-public class SettingsService(IUnitOfWork unitOfWork) : ReactiveObject, ISettingsService
+public class SettingsService(IRepository<Setting, BaseSettingVm> settingRepository)
+    : ReactiveObject,
+        ISettingsService
 {
-    public BaseSettingVm? GetSetting(string name) =>
-        unitOfWork.SettingRepo.Get(x => x.Name == name).FirstOrDefault();
+    public BaseSettingVm? GetSetting(string name) => settingRepository.GetByName(name);
 
-    public BaseSettingVm? UpdateSetting(BaseSettingVm vm) =>
-        unitOfWork.SettingRepo.Update(vm.Id, vm);
-
-    public void Save() => unitOfWork.Save();
+    public int UpdateSetting(BaseSettingVm vm) => settingRepository.Update(vm);
 }

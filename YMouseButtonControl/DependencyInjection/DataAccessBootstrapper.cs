@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Repositories;
-using IUnitOfWork = YMouseButtonControl.Core.Repositories.IUnitOfWork;
+using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.DataAccess.Queries;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -9,7 +11,11 @@ public static class DataAccessBootstrapper
     public static void RegisterDataAccess(IServiceCollection services)
     {
         services
-            .AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>))
-            .AddScoped<IUnitOfWork, UnitOfWork>();
+            .AddScoped<ProfileQueries>()
+            .AddScoped<ButtonMappingQueries>()
+            .AddScoped<SettingQueries>()
+            .AddScoped<IRepository<Profile, ProfileVm>, ProfileRepository>()
+            .AddScoped<IRepository<ButtonMapping, BaseButtonMappingVm>, ButtonMappingRepository>()
+            .AddScoped<IRepository<Setting, BaseSettingVm>, SettingRepository>();
     }
 }

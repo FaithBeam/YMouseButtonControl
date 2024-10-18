@@ -37,7 +37,7 @@ public abstract class BaseSettingVm : ReactiveObject, IEquatable<BaseSettingVm>
 public class SettingBoolVm : BaseSettingVm, IEquatable<SettingBoolVm>
 {
     private bool _value;
-    public bool Value
+    public bool BoolValue
     {
         get => _value;
         set => this.RaiseAndSetIfChanged(ref _value, value);
@@ -72,7 +72,7 @@ public class SettingBoolVm : BaseSettingVm, IEquatable<SettingBoolVm>
 public class SettingStringVm : BaseSettingVm, IEquatable<SettingStringVm>
 {
     private string? _value;
-    public string? Value
+    public string? StringValue
     {
         get => _value;
         set => this.RaiseAndSetIfChanged(ref _value, value);
@@ -108,7 +108,7 @@ public class SettingIntVm : BaseSettingVm, IEquatable<SettingIntVm>
 {
     private int _value;
 
-    public int Value
+    public int IntValue
     {
         get => _value;
         set => this.RaiseAndSetIfChanged(ref _value, value);

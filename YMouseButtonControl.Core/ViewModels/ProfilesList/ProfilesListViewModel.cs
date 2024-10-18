@@ -1,10 +1,8 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
@@ -88,7 +86,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         EditButtonCommand = ReactiveCommand.CreateFromTask(EditButtonClickedAsync, editCanExecute);
         CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
 
-        // _profilesService.CurrentProfile = _profilesService.Profiles[SelectedIndex];
         SelectedIndex = _profilesService.Profiles.First(x => x.IsDefault).DisplayPriority;
         this.WhenAnyValue(x => x.SelectedIndex)
             .Subscribe(x =>
@@ -107,9 +104,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
                     {
                         if (_profilesService.Profiles.Count <= x)
                         {
-                            // _profilesService.CurrentProfile = _profilesService.Profiles.First(y =>
-                            //     y.IsDefault
-                            // );
                             SelectedIndex = _profilesService
                                 .Profiles.First(y => y.IsDefault)
                                 .DisplayPriority;

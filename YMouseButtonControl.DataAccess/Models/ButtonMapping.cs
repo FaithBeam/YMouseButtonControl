@@ -23,6 +23,7 @@ public abstract class ButtonMapping
     public SimulatedKeystrokeType? SimulatedKeystrokeType { get; set; }
     public bool Selected { get; set; }
     public bool BlockOriginalMouseInput { get; set; }
+    public ButtonMappingType ButtonMappingType { get; set; }
 }
 
 public class DisabledMapping : ButtonMapping;
@@ -38,3 +39,11 @@ public class SimulatedKeystroke : ButtonMapping
 }
 
 public class RightClick : ButtonMapping;
+
+public enum ButtonMappingType
+{
+    Disabled,
+    Nothing,
+    SimulatedKeystroke,
+    RightClick,
+}

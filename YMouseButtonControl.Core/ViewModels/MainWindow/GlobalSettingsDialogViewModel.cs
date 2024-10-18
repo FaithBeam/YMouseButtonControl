@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Transactions;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
@@ -31,24 +32,19 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         _themeSetting =
             settingsService.GetSetting("Theme") as SettingIntVm
             ?? throw new Exception("Error retrieving Theme setting");
-        _themeCollection = new ObservableCollection<ThemeEnum>
-        {
-            ThemeEnum.Default,
-            ThemeEnum.Light,
-            ThemeEnum.Dark,
-        };
+        _themeCollection = [ThemeEnum.Default, ThemeEnum.Light, ThemeEnum.Dark];
 
         var startMinimizedChanged = this.WhenAnyValue(
-            x => x.StartMinimized.Value,
+            x => x.StartMinimized.BoolValue,
             selector: val =>
                 settingsService.GetSetting("StartMinimized") is not SettingBoolVm curVal
-                || curVal.Value != val
+                || curVal.BoolValue != val
         );
         var themeChanged = this.WhenAnyValue(
-            x => x.ThemeSetting.Value,
+            x => x.ThemeSetting.IntValue,
             selector: val =>
                 settingsService.GetSetting("Theme") is not SettingIntVm curVal
-                || curVal.Value != val
+                || curVal.IntValue != val
         );
 
         var applyIsExecObs = this.WhenAnyValue(x => x.AppIsExec);
@@ -56,10 +52,10 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         ApplyCommand = ReactiveCommand.Create(
             () =>
             {
+                using var trn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 settingsService.UpdateSetting(StartMinimized);
                 settingsService.UpdateSetting(ThemeSetting);
-
-                settingsService.Save();
+                trn.Complete();
             },
             canSave
         );
