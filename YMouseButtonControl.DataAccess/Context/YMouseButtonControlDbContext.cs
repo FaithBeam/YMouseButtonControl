@@ -21,6 +21,7 @@ public class YMouseButtonControlDbContext(IConfigurationRoot? configuration)
         using var conn = CreateConnection();
         InitProfiles();
         InitSettings();
+        InitThemes();
         InitButtonMappings();
         return;
 
@@ -61,7 +62,24 @@ public class YMouseButtonControlDbContext(IConfigurationRoot? configuration)
                     SettingType INTEGER NOT NULL
                 );
                 INSERT OR IGNORE INTO Settings (Id, Name, BoolValue, SettingType) VALUES ('1', 'StartMinimized', 0, '1');
-                INSERT OR IGNORE INTO Settings (Id, Name, IntValue, SettingType) VALUES ('2', 'Theme', '0', '3');
+                INSERT OR IGNORE INTO Settings (Id, Name, IntValue, SettingType) VALUES ('2', 'Theme', '1', '3');
+                """;
+            conn.Execute(sql);
+        }
+
+        void InitThemes()
+        {
+            const string sql = """
+                CREATE TABLE IF NOT EXISTS
+                Themes (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Background TEXT NOT NULL,
+                    Highlight TEXT NOT NULL
+                );
+                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('1', 'Default', 'SystemAltHighColor','SystemAccentColor');
+                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('2', 'Light', 'White', '#3f3f3f');
+                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('3', 'Dark', 'Black', '#3f3f3f');
                 """;
             conn.Execute(sql);
         }
