@@ -1,4 +1,4 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.Services.Processes;
@@ -6,17 +6,18 @@ using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.MacOS.Services;
 
-public class SkipProfileService(ICurrentWindowService currentWindowService) : ISkipProfileService
+public partial class SkipProfileService(
+    ILogger<SkipProfileService> logger,
+    ICurrentWindowService currentWindowService
+) : ISkipProfileService
 {
-    private readonly ILogger _myLog = Log.Logger.ForContext<SkipProfileService>();
-
     // Returns whether this profile should be skipped on mouse events
     public bool ShouldSkipProfile(ProfileVm p, NewMouseHookEventArgs e)
     {
         // If the profile's checkbox is checked in the profiles list
         if (!p.Checked)
         {
-            _myLog.Information("Not checked");
+            LogNotChecked(logger);
             return true;
         }
 
@@ -30,11 +31,17 @@ public class SkipProfileService(ICurrentWindowService currentWindowService) : IS
             return false;
         }
 
-        _myLog.Information(
-            "Foreground window: {ForegroundWindow}",
-            currentWindowService.ForegroundWindow
-        );
-        _myLog.Information("Couldn't find foreground window {Process}", p.Process);
+        LogForegroundWindow(logger, currentWindowService.ForegroundWindow);
+        LogCouldNotFindForegroundWindow(logger, p.Process);
         return true;
     }
+
+    [LoggerMessage(LogLevel.Information, "Couldn't find foreground window {Process}")]
+    private static partial void LogCouldNotFindForegroundWindow(ILogger logger, string process);
+
+    [LoggerMessage(LogLevel.Information, "Foreground window: {ForegroundWindow}")]
+    private static partial void LogForegroundWindow(ILogger logger, string foregroundWindow);
+
+    [LoggerMessage(LogLevel.Information, "Not checked")]
+    private static partial void LogNotChecked(ILogger logger);
 }

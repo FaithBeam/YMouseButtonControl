@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
+using YMouseButtonControl.Core.Services.Logging;
 using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Settings;
@@ -22,6 +23,7 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         services
+            .AddScoped<IEnableLoggingService, EnableLoggingService>()
             .AddScoped<IThemeService, ThemeService>()
             .AddScoped<IProfilesService, ProfilesService>()
             .AddScoped<ISettingsService, SettingsService>();

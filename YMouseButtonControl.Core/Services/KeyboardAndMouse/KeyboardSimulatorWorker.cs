@@ -1,5 +1,5 @@
 ﻿using System;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
@@ -11,7 +11,8 @@ using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse;
 
-public class KeyboardSimulatorWorker(
+public partial class KeyboardSimulatorWorker(
+    ILogger<KeyboardSimulatorWorker> logger,
     IProfilesService profilesService,
     IMouseListener mouseListener,
     ISkipProfileService skipProfileService,
@@ -24,7 +25,6 @@ public class KeyboardSimulatorWorker(
     IRightClick rightClick
 ) : IDisposable
 {
-    private readonly ILogger _log = Log.Logger.ForContext<KeyboardSimulatorWorker>();
     private IDisposable? _onMousePressedDisposable;
     private IDisposable? _onMouseReleasedDisposable;
     private IDisposable? _onMouseWheelDisposable;
@@ -51,11 +51,10 @@ public class KeyboardSimulatorWorker(
         {
             if (skipProfileService.ShouldSkipProfile(p, e))
             {
-                _log.Information("Skipped {Profile}", p.Name);
+                LogSkippedProfile(logger, p.Name);
                 continue;
             }
-
-            _log.Information("{Profile}, Route {Button}", p.Name, e.Button);
+            LogMousePressedRoute(logger, p.Name, e.Button);
             RouteMouseButton(e.Button, p, MouseButtonState.Pressed);
         }
     }
@@ -151,4 +150,14 @@ public class KeyboardSimulatorWorker(
     }
 
     private void OnMouseWheel(NewMouseWheelEventArgs e) { }
+
+    [LoggerMessage(LogLevel.Information, "Skipped {Profile}")]
+    private static partial void LogSkippedProfile(ILogger logger, string profile);
+
+    [LoggerMessage(LogLevel.Information, "{Profile}, Route {Button}")]
+    private static partial void LogMousePressedRoute(
+        ILogger logger,
+        string profile,
+        YMouseButton button
+    );
 }
