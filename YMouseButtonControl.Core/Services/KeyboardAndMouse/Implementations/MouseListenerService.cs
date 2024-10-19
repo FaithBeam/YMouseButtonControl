@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using SharpHook;
 using SharpHook.Native;
 using SharpHook.Reactive;
@@ -11,6 +11,7 @@ using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Profiles;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 
@@ -27,12 +28,12 @@ public interface IMouseListener : IDisposable
 /// Wrapper around sharphook for listening to mouse events
 /// Converts mouse events to NewMouseHookEventArgs
 /// </summary>
-public class MouseListener : IMouseListener
+public partial class MouseListener : IMouseListener
 {
+    private readonly ILogger<MouseListener> _logger;
     private readonly IReactiveGlobalHook _hook;
     private readonly IProfilesService _profilesService;
     private readonly ICurrentWindowService _currentWindowService;
-    private readonly ILogger _log = Log.Logger.ForContext<MouseListener>();
     private Thread? _thread;
     private readonly IDisposable? _mouseMovedDisposable;
     private readonly IDisposable? _mousePressedDisposable;
@@ -44,11 +45,13 @@ public class MouseListener : IMouseListener
     private readonly Subject<NewMouseWheelEventArgs> _mouseWheelSubject;
 
     public MouseListener(
+        ILogger<MouseListener> logger,
         IReactiveGlobalHook hook,
         IProfilesService profilesService,
         ICurrentWindowService currentWindowService
     )
     {
+        _logger = logger;
         _hook = hook;
         _profilesService = profilesService;
         _currentWindowService = currentWindowService;
@@ -78,7 +81,7 @@ public class MouseListener : IMouseListener
     {
         _thread = new Thread(() =>
         {
-            _log.Information("Starting mouse listener");
+            LogStartup(_logger);
             _hook.Run();
         });
         _thread.Start();
@@ -175,8 +178,9 @@ public class MouseListener : IMouseListener
         {
             return;
         }
-        _log.Information("Translate release {Button}", e.Data.Button);
-        _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
+
+        LogTranslateRelease(_logger, e.Data.Button);
+        LogActiveWindow(_logger, _currentWindowService.ForegroundWindow);
         var args = new NewMouseHookEventArgs(
             (YMouseButton)e.Data.Button,
             e.Data.X,
@@ -185,12 +189,12 @@ public class MouseListener : IMouseListener
         );
         if (ShouldSuppressEvent(args))
         {
-            _log.Information("Suppressing {Button}: Release", e.Data.Button);
+            LogSuppressingButtonRelease(_logger, e.Data.Button);
             e.SuppressEvent = true;
         }
         else
         {
-            _log.Information("Not suppressing {Button}: Release", e.Data.Button);
+            LogNotSuppressingButtonRelease(_logger, e.Data.Button);
         }
         _mouseReleasedSubject.OnNext(args);
     }
@@ -201,8 +205,8 @@ public class MouseListener : IMouseListener
         {
             return;
         }
-        _log.Information("Translate press {Button}", e.Data.Button);
-        _log.Information("ACTIVE WINDOW {Foreground}", _currentWindowService.ForegroundWindow);
+        LogTranslateButton(_logger, e.Data.Button);
+        LogActiveWindow(_logger, _currentWindowService.ForegroundWindow);
 
         var args = new NewMouseHookEventArgs(
             (YMouseButton)e.Data.Button,
@@ -212,12 +216,12 @@ public class MouseListener : IMouseListener
         );
         if (ShouldSuppressEvent(args))
         {
-            _log.Information("Suppressing {Button}: Press", e.Data.Button);
+            LogSuppressingButtonRelease(_logger, e.Data.Button);
             e.SuppressEvent = true;
         }
         else
         {
-            _log.Information("Not suppressing {Button}: Press", e.Data.Button);
+            LogNotSuppressingButtonRelease(_logger, e.Data.Button);
         }
         _mousePressedSubject.OnNext(args);
     }
@@ -242,4 +246,28 @@ public class MouseListener : IMouseListener
 
         _thread?.Join();
     }
+
+    [LoggerMessage(LogLevel.Information, "Translate press {Button}")]
+    private static partial void LogTranslateButton(ILogger logger, MouseButton button);
+
+    [LoggerMessage(LogLevel.Information, "Suppressing {Button}: Press")]
+    private static partial void LogSuppressingButtonPress(ILogger logger, MouseButton button);
+
+    [LoggerMessage(LogLevel.Information, "Not suppressing {Button}: Press")]
+    private static partial void LogNotSuppressingButtonPress(ILogger logger, MouseButton button);
+
+    [LoggerMessage(LogLevel.Information, "Not suppressing {Button}: Release")]
+    public static partial void LogNotSuppressingButtonRelease(ILogger logger, MouseButton button);
+
+    [LoggerMessage(LogLevel.Information, "Suppressing {Button}: Release")]
+    public static partial void LogSuppressingButtonRelease(ILogger logger, MouseButton button);
+
+    [LoggerMessage(LogLevel.Information, "ACTIVE WINDOW {Foreground}")]
+    private static partial void LogActiveWindow(ILogger logger, string foreground);
+
+    [LoggerMessage(LogLevel.Information, "Translate release {Button}")]
+    private static partial void LogTranslateRelease(ILogger logger, MouseButton button);
+
+    [LoggerMessage(LogLevel.Information, "Starting mouse listener")]
+    private static partial void LogStartup(ILogger logger);
 }

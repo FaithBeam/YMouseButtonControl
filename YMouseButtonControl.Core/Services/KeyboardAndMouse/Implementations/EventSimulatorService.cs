@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using SharpHook;
 using SharpHook.Native;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 
@@ -34,10 +35,11 @@ public interface IEventSimulatorService
     void TapKeys(string? keys, int delay, CancellationToken cancellationToken);
 }
 
-public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimulatorService
+public partial class EventSimulatorService(
+    ILogger<EventSimulatorService> logger,
+    IEventSimulator eventSimulator
+) : IEventSimulatorService
 {
-    private readonly ILogger _logger = Log.Logger.ForContext<EventSimulatorService>();
-
     public void SimulateMousePress(MouseButton mb)
     {
         var t = new Thread(() => eventSimulator.SimulateMousePress(mb));
@@ -52,13 +54,13 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
 
     public void SimulateKeyPress(string? key)
     {
-        _logger.Information("Simulate press {Key}", key);
+        LogSimulateKeyPress(logger, key);
         eventSimulator.SimulateKeyPress(KeyCodes[key ?? throw new NullReferenceException(key)]);
     }
 
     public void SimulateKeyRelease(string? key)
     {
-        _logger.Information("Simulate release {Key}", key);
+        LogSimulateKeyRelease(logger, key);
         eventSimulator.SimulateKeyRelease(KeyCodes[key ?? throw new NullReferenceException(key)]);
     }
 
@@ -69,7 +71,7 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
     /// <returns></returns>
     public void SimulateKeyTap(string? key)
     {
-        _logger.Information("Simulate key tap {Key}", key);
+        LogSimulateKeyTap(logger, key);
         var keyCode = KeyCodes[key ?? throw new NullReferenceException(key)];
         eventSimulator.SimulateKeyPress(keyCode);
         eventSimulator.SimulateKeyRelease(keyCode);
@@ -198,7 +200,7 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                _logger.Information("========STOPPING TAP KEYS===========");
+                LogStopTappingKeys(logger);
                 return;
             }
             if (delay > -1)
@@ -244,7 +246,7 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                _logger.Information("========STOPPING TAP KEYS===========");
+                LogStopTappingKeys(logger);
                 return;
             }
             switch (poppedPk.Value)
@@ -520,6 +522,18 @@ public class EventSimulatorService(IEventSimulator eventSimulator) : IEventSimul
             { "mb4", MouseButton.Button4 },
             { "mb5", MouseButton.Button5 },
         };
+
+    [LoggerMessage(LogLevel.Information, "========STOPPING TAP KEYS===========")]
+    private static partial void LogStopTappingKeys(ILogger logger);
+
+    [LoggerMessage(LogLevel.Information, "Simulate key tap {Key}")]
+    private static partial void LogSimulateKeyTap(ILogger logger, string? key);
+
+    [LoggerMessage(LogLevel.Information, "Simulate press {Key}")]
+    private static partial void LogSimulateKeyPress(ILogger logger, string? key);
+
+    [LoggerMessage(LogLevel.Information, "Simulate release {Key}")]
+    private static partial void LogSimulateKeyRelease(ILogger logger, string? key);
 }
 
 internal class ParsedKey

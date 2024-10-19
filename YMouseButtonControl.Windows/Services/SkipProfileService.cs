@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Versioning;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -7,16 +7,14 @@ using YMouseButtonControl.Core.ViewModels.Models;
 namespace YMouseButtonControl.Windows.Services;
 
 [SupportedOSPlatform("windows5.1.2600")]
-public class SkipProfileService : ISkipProfileService
+public partial class SkipProfileService(ILogger<SkipProfileService> logger) : ISkipProfileService
 {
-    private readonly ILogger _log = Log.Logger.ForContext<SkipProfileService>();
-
     public bool ShouldSkipProfile(ProfileVm p, NewMouseHookEventArgs e)
     {
         // If the profile's checkbox is checked in the profiles list
         if (!p.Checked)
         {
-            _log.Information("Not checked");
+            LogNotChecked(logger);
             return true;
         }
 
@@ -27,4 +25,7 @@ public class SkipProfileService : ISkipProfileService
 
         return !(e.ActiveWindow?.Contains(p.Process) ?? false);
     }
+
+    [LoggerMessage(LogLevel.Information, "Not checked")]
+    private static partial void LogNotChecked(ILogger logger);
 }

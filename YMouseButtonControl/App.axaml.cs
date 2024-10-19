@@ -7,6 +7,8 @@ using Avalonia.ReactiveUI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NReco.Logging.File;
 using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
@@ -18,10 +20,12 @@ using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.Views;
 using YMouseButtonControl.DataAccess.Context;
 using YMouseButtonControl.DependencyInjection;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace YMouseButtonControl;
 
-public class App : Application
+public partial class App : Application
 {
     public IServiceProvider? Container { get; private set; }
     private IBackgroundTasksRunner? _backgroundTasksRunner;
@@ -50,11 +54,22 @@ public class App : Application
 
                 Bootstrapper.Register(services);
 
+                services.AddLogging(lb => lb.AddFile(configuration.GetSection("Logging")));
+
                 services.AddSingleton<
                     IActivationForViewFetcher,
                     AvaloniaActivationForViewFetcher
                 >();
                 services.AddSingleton<IPropertyBindingHook, AutoDataTemplateBindingHook>();
+            })
+            .ConfigureLogging(x =>
+            {
+#if !DEBUG
+                if (!configuration.GetSection("Logging").Exists())
+                {
+                    x.ClearProviders();
+                }
+#endif
             })
             .Build();
         Container = host.Services;
@@ -68,32 +83,52 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         Init();
-        DataContext = Container?.GetRequiredService<IAppViewModel>();
-        _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
-        var settingsService =
-            Container?.GetRequiredService<ISettingsService>()
-            ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
-        var startMinimized =
-            settingsService.GetSetting("StartMinimized") as SettingBoolVm
-            ?? throw new Exception($"Error retrieving setting StartMinimized");
+        var logger =
+            Container?.GetRequiredService<ILogger<App>>()
+            ?? throw new Exception("Error activating logger");
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        try
         {
-            if (!startMinimized.BoolValue)
+            DataContext = Container?.GetRequiredService<IAppViewModel>();
+            _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
+            var settingsService =
+                Container?.GetRequiredService<ISettingsService>()
+                ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
+            var startMinimized =
+                settingsService.GetSetting("StartMinimized") as SettingBoolVm
+                ?? throw new Exception("Error retrieving setting StartMinimized");
+
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = (Window)Container.GetRequiredService<IMainWindow>();
-                mainWindow.DataContext = Container.GetRequiredService<IMainWindowViewModel>();
-                desktop.MainWindow = mainWindow;
+                if (!startMinimized.BoolValue)
+                {
+                    var mainWindow = (Window)Container.GetRequiredService<IMainWindow>();
+                    mainWindow.DataContext = Container.GetRequiredService<IMainWindowViewModel>();
+                    desktop.MainWindow = mainWindow;
+                }
+
+                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+                desktop.Exit += (sender, args) =>
+                {
+                    _backgroundTasksRunner?.Dispose();
+                };
             }
 
-            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-            desktop.Exit += (sender, args) =>
-            {
-                _backgroundTasksRunner?.Dispose();
-            };
+            base.OnFrameworkInitializationCompleted();
         }
-
-        base.OnFrameworkInitializationCompleted();
+        catch (Exception e)
+        {
+            LogError(logger, e.Message, e.InnerException?.Message, e.StackTrace);
+            throw;
+        }
     }
+
+    [LoggerMessage(LogLevel.Error, "{Message}\r{InnerException}\r{StackTrace}")]
+    private static partial void LogError(
+        ILogger logger,
+        string message,
+        string? innerException,
+        string? stackTrace
+    );
 }

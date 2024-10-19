@@ -1,7 +1,6 @@
 ﻿using System.Threading;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;
@@ -11,15 +10,16 @@ public interface IStickyRepeatService
     void StickyRepeat(BaseButtonMappingVm mapping, MouseButtonState state);
 }
 
-public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
-    : IStickyRepeatService
+public partial class StickyRepeatService(
+    ILogger<StickyRepeatService> logger,
+    IEventSimulatorService eventSimulatorService
+) : IStickyRepeatService
 {
     private Thread? _thread;
     private bool _shouldStop;
     private readonly object _lock = new();
     private const int RepeatRateMs = 33;
     private CancellationTokenSource? _cts;
-    private readonly ILogger _log = Log.Logger.ForContext<StickyRepeatService>();
 
     public void StickyRepeat(BaseButtonMappingVm mapping, MouseButtonState state)
     {
@@ -36,7 +36,7 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
         {
             lock (_lock)
             {
-                _log.Information("=====CANCELLATION REQUESTED=======");
+                LogCancellationRequested(logger);
                 _cts?.Cancel();
                 _shouldStop = true;
             }
@@ -63,7 +63,7 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
                 {
                     if (_shouldStop)
                     {
-                        _log.Information("=====CANCELLATION REQUESTED=======");
+                        LogCancellationRequested(logger);
                         _cts.Cancel();
                         break;
                     }
@@ -75,4 +75,7 @@ public class StickyRepeatService(IEventSimulatorService eventSimulatorService)
 
         _thread.Start();
     }
+
+    [LoggerMessage(LogLevel.Information, "=====CANCELLATION REQUESTED=======")]
+    private static partial void LogCancellationRequested(ILogger logger);
 }

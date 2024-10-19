@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
 using YMouseButtonControl.Core.Services.Processes;
@@ -9,10 +9,9 @@ using YMouseButtonControl.Core.Services.Processes;
 namespace YMouseButtonControl.Windows.Services;
 
 [SupportedOSPlatform("windows5.1.2600")]
-public class CurrentWindowService : ICurrentWindowService
+public partial class CurrentWindowService(ILogger<CurrentWindowService> logger)
+    : ICurrentWindowService
 {
-    private readonly ILogger _log = Log.Logger.ForContext<CurrentWindowService>();
-
     public string ForegroundWindow => GetWindowTitleFromHWnd();
 
     private unsafe string GetWindowTitleFromHWnd()
@@ -20,7 +19,7 @@ public class CurrentWindowService : ICurrentWindowService
         var hWnd = PInvoke.GetForegroundWindow();
         if (hWnd.IsNull)
         {
-            _log.Information("HWND is null");
+            LogHwndNull(logger);
             return "";
         }
 
@@ -40,10 +39,10 @@ public class CurrentWindowService : ICurrentWindowService
         {
             var lastWin32Err = Marshal.GetLastWin32Error();
             if (lastWin32Err != 5)
+            {
                 throw new Win32Exception(lastWin32Err);
-            _log.Warning(
-                "ERROR_ACCESS_DENIED, likely tried to open an admin process without admin permissions. Try opening YMouseButtonControl as admin."
-            );
+            }
+            LogErrorAccessDenied(logger);
             return "";
         }
 
@@ -58,4 +57,13 @@ public class CurrentWindowService : ICurrentWindowService
             return new string(pText);
         }
     }
+
+    [LoggerMessage(
+        LogLevel.Information,
+        "ERROR_ACCESS_DENIED, likely tried to open an admin process without admin permissions. Try opening YMouseButtonControl as admin."
+    )]
+    private static partial void LogErrorAccessDenied(ILogger logger);
+
+    [LoggerMessage(LogLevel.Information, "HWND is null")]
+    private static partial void LogHwndNull(ILogger logger);
 }

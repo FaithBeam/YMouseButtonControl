@@ -5,9 +5,11 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Transactions;
 using ReactiveUI;
+using YMouseButtonControl.Core.Services.Logging;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -16,12 +18,14 @@ public interface IGlobalSettingsDialogViewModel;
 public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogViewModel
 {
     private SettingBoolVm _startMinimizedSetting;
+    private bool _loggingEnabled;
     private SettingIntVm _themeSetting;
     private ObservableCollection<ThemeVm> _themeCollection;
     private ThemeVm _selectedTheme;
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
 
     public GlobalSettingsDialogViewModel(
+        IEnableLoggingService enableLoggingService,
         ISettingsService settingsService,
         IThemeService themeService
     )
@@ -30,6 +34,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         _startMinimizedSetting =
             settingsService.GetSetting("StartMinimized") as SettingBoolVm
             ?? throw new Exception("Error retrieving StartMinimized setting");
+        _loggingEnabled = enableLoggingService.GetLoggingState();
         _themeSetting =
             settingsService.GetSetting("Theme") as SettingIntVm
             ?? throw new Exception("Error retrieving Theme setting");
@@ -45,6 +50,10 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                 settingsService.GetSetting("StartMinimized") is not SettingBoolVm curVal
                 || curVal.BoolValue != val
         );
+        var loggingChanged = this.WhenAnyValue(
+            x => x.LoggingEnabled,
+            selector: val => val != enableLoggingService.GetLoggingState()
+        );
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
             selector: val =>
@@ -53,10 +62,24 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         );
 
         var applyIsExecObs = this.WhenAnyValue(x => x.AppIsExec);
-        var canSave = startMinimizedChanged.Merge(applyIsExecObs).Merge(themeChanged);
+        var canSave = startMinimizedChanged
+            .Merge(loggingChanged)
+            .Merge(applyIsExecObs)
+            .Merge(themeChanged);
         ApplyCommand = ReactiveCommand.Create(
             () =>
             {
+                if (LoggingEnabled != enableLoggingService.GetLoggingState())
+                {
+                    if (LoggingEnabled)
+                    {
+                        enableLoggingService.EnableLogging();
+                    }
+                    else
+                    {
+                        enableLoggingService.DisableLogging();
+                    }
+                }
                 using var trn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 settingsService.UpdateSetting(StartMinimized);
                 settingsService.UpdateSetting(ThemeSetting);
@@ -73,6 +96,12 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     {
         get => _startMinimizedSetting;
         set => this.RaiseAndSetIfChanged(ref _startMinimizedSetting, value);
+    }
+
+    public bool LoggingEnabled
+    {
+        get => _loggingEnabled;
+        set => this.RaiseAndSetIfChanged(ref _loggingEnabled, value);
     }
 
     public ThemeVm SelectedTheme
