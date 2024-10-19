@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
-        xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
         WindowStartupLocation="CenterOwner"
         Width="400"
         SizeToContent="Height"
@@ -15,17 +14,19 @@
         <mainWindow:GlobalSettingsDialogViewModel />
     </Design.DataContext>
 
-    <Window.Resources>
-        <converters:SettingIntToThemeConverter x:Key="ThemeConverter" />
-    </Window.Resources>
-
     <Grid Margin="6" RowDefinitions="Auto,Auto,*">
         <CheckBox Grid.Row="0" Content="Start Minimized"
                   IsChecked="{Binding StartMinimized.BoolValue}" />
         <StackPanel Grid.Row="1">
             <Label Content="Theme" />
-            <ComboBox ItemsSource="{Binding ThemeCollection}"
-                      SelectedItem="{Binding ThemeSetting.IntValue, Converter={StaticResource ThemeConverter}}" />
+			<ComboBox ItemsSource="{Binding ThemeCollection}"
+                      SelectedItem="{Binding SelectedTheme}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
             <ToolTip.Tip>
                 <TextBlock>
                     The application theme. Restart the application the see the change.

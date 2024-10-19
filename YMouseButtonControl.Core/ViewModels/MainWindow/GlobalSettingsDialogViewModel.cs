@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Transactions;
@@ -7,7 +8,6 @@ using ReactiveUI;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -17,7 +17,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 {
     private SettingBoolVm _startMinimizedSetting;
     private SettingIntVm _themeSetting;
-    private ObservableCollection<ThemeEnum> _themeCollection;
+    private ObservableCollection<ThemeVm> _themeCollection;
+    private ThemeVm _selectedTheme;
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
 
     public GlobalSettingsDialogViewModel(
@@ -32,7 +33,11 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         _themeSetting =
             settingsService.GetSetting("Theme") as SettingIntVm
             ?? throw new Exception("Error retrieving Theme setting");
-        _themeCollection = [ThemeEnum.Default, ThemeEnum.Light, ThemeEnum.Dark];
+        _themeCollection = [.. themeService.Themes];
+        _selectedTheme = _themeCollection.First(x => x.Id == _themeSetting.IntValue);
+
+        // Update the theme setting selected theme value
+        this.WhenAnyValue(x => x.SelectedTheme).Subscribe(x => ThemeSetting.IntValue = x.Id);
 
         var startMinimizedChanged = this.WhenAnyValue(
             x => x.StartMinimized.BoolValue,
@@ -70,13 +75,19 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         set => this.RaiseAndSetIfChanged(ref _startMinimizedSetting, value);
     }
 
+    public ThemeVm SelectedTheme
+    {
+        get => _selectedTheme;
+        set => this.RaiseAndSetIfChanged(ref _selectedTheme, value);
+    }
+
     public SettingIntVm ThemeSetting
     {
         get => _themeSetting;
         set => this.RaiseAndSetIfChanged(ref _themeSetting, value);
     }
 
-    public ObservableCollection<ThemeEnum> ThemeCollection
+    public ObservableCollection<ThemeVm> ThemeCollection
     {
         get => _themeCollection;
         set => this.RaiseAndSetIfChanged(ref _themeCollection, value);

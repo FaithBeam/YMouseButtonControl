@@ -44,7 +44,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
         IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService
     )
     {
-        _backgroundColor = themeService.CurBackground;
+        _backgroundColor = themeService.Background;
         switch (mouseButton)
         {
             case MouseButton.Mb1:
@@ -56,14 +56,14 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                 {
                     if (next.Button == (YMouseButton)(mouseButton + 1))
                     {
-                        BackgroundColor = themeService.CurHighlight;
+                        BackgroundColor = themeService.Highlight;
                     }
                 });
                 _mbUpDisposable = mouseListener.OnMouseReleasedChanged.Subscribe(next =>
                 {
                     if (next.Button == (YMouseButton)(mouseButton + 1))
                     {
-                        BackgroundColor = themeService.CurBackground;
+                        BackgroundColor = themeService.Background;
                     }
                 });
                 break;
@@ -73,7 +73,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
             case MouseButton.Mwr:
                 _wheelTimer.Elapsed += delegate
                 {
-                    BackgroundColor = themeService.CurBackground;
+                    BackgroundColor = themeService.Background;
                 };
                 _mWheelDisposable = mouseListener.OnMouseWheelChanged.Subscribe(next =>
                 {
@@ -149,7 +149,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
 
         void MouseWheelDoHighlight()
         {
-            BackgroundColor = themeService.CurHighlight;
+            BackgroundColor = themeService.Highlight;
             if (!_wheelTimer.Enabled)
             {
                 _wheelTimer.Start();

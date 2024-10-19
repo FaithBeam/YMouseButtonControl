@@ -14,8 +14,10 @@ public static class DataAccessBootstrapper
             .AddScoped<ProfileQueries>()
             .AddScoped<ButtonMappingQueries>()
             .AddScoped<SettingQueries>()
+            .AddScoped<ThemeQueries>()
             .AddScoped<IRepository<Profile, ProfileVm>, ProfileRepository>()
             .AddScoped<IRepository<ButtonMapping, BaseButtonMappingVm>, ButtonMappingRepository>()
-            .AddScoped<IRepository<Setting, BaseSettingVm>, SettingRepository>();
+            .AddScoped<IRepository<Setting, BaseSettingVm>, SettingRepository>()
+            .AddScoped<IRepository<Theme, ThemeVm>, ThemeRepository>();
     }
 }
