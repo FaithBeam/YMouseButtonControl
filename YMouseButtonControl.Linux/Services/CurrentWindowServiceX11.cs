@@ -96,22 +96,22 @@ public class CurrentWindowServiceX11 : ICurrentWindowService
 
 internal static partial class X11
 {
-    [LibraryImport("libX11.so")]
+    [LibraryImport("libX11.so.6")]
     internal static partial int XFree(nint data);
 
-    [LibraryImport("libX11.so")]
+    [LibraryImport("libX11.so.6")]
     internal static partial nint XOpenDisplay(nint display);
 
-    [LibraryImport("libX11.so")]
+    [LibraryImport("libX11.so.6")]
     internal static partial void XCloseDisplay(nint display);
 
-    [LibraryImport("libX11.so")]
+    [LibraryImport("libX11.so.6")]
     internal static partial nint XDefaultRootWindow(nint display);
 
-    [LibraryImport("libX11.so")]
+    [LibraryImport("libX11.so.6")]
     internal static partial nint XInternAtom(nint display, nint atomName, int onlyIfExists);
 
-    [LibraryImport("libX11.so")]
+    [LibraryImport("libX11.so.6")]
     internal static partial int XGetWindowProperty(
         IntPtr display,
         IntPtr window,

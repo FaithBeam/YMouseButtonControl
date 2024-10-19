@@ -12,6 +12,5 @@ public class ProcessMonitorService : IProcessMonitorService
             .Where(x =>
                 !string.IsNullOrWhiteSpace(x.Process.MainModule?.ModuleName)
                 && !string.IsNullOrWhiteSpace(x.Process.ProcessName)
-            )
-            .DistinctBy(x => x.Process.MainModule?.FileName);
+            );
 }
