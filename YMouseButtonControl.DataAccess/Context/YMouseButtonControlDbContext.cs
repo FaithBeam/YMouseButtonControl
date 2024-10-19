@@ -78,8 +78,8 @@ public class YMouseButtonControlDbContext(IConfigurationRoot? configuration)
                     Highlight TEXT NOT NULL
                 );
                 INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('1', 'Default', 'SystemAltHighColor','SystemAccentColor');
-                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('2', 'Light', 'White', '#3f3f3f');
-                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('3', 'Dark', 'Black', '#3f3f3f');
+                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('2', 'Light', 'White', 'Yellow');
+                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('3', 'Dark', 'Black', '#3700b3');
                 """;
             conn.Execute(sql);
         }
