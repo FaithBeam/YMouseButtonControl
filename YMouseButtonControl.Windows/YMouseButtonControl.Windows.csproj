@@ -24,6 +24,7 @@
       </PackageReference>
       <PackageReference Include="ReactiveUI" Version="20.1.1" />
       <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
+      <PackageReference Include="WindowsShortcutFactory" Version="1.2.0" />
     </ItemGroup>
 
 </Project>

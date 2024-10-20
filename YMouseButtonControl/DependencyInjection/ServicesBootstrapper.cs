@@ -71,6 +71,7 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         services
+            .AddScoped<IStartMenuInstallerService, Windows.Services.StartMenuInstallerService>()
             .AddScoped<IStartupInstallerService, Windows.Services.StartupInstallerService>()
             .AddScoped<IProcessMonitorService, Windows.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, Windows.Services.CurrentWindowService>()
