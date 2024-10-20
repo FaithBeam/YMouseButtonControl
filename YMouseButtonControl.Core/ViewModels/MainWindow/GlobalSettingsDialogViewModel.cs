@@ -61,7 +61,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         );
         var startMenuChanged = this.WhenAnyValue(
             x => x.StartMenuChecked,
-            selector: val => val != startMenuInstallerService.InstallStatus()
+            selector: val => StartMenuEnabled && val != startMenuInstallerService.InstallStatus()
         );
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
@@ -90,7 +90,10 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                     }
                 }
 
-                if (StartMenuChecked != startMenuInstallerService.InstallStatus())
+                if (
+                    StartMenuEnabled
+                    && StartMenuChecked != startMenuInstallerService.InstallStatus()
+                )
                 {
                     if (StartMenuChecked)
                     {
