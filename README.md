@@ -24,6 +24,10 @@ Anything that can install .NET 8 should be able to run YMouseButtonControl
 | Ubuntu               | 20.04+      |
 | macOS                | 12.0+       |
 
+### Linux X11 vs. Wayland Considerations
+
+* X11 is preferred when running this software: [More information](https://github.com/FaithBeam/YMouseButtonControl/wiki/Linux-X11-vs-Wayland-Considerations)
+
 ## Build
 
 ### Requirements
