@@ -1,5 +1,3 @@
-using System.Reflection;
-using YMouseButtonControl.Core.Services;
 using YMouseButtonControl.Core.Services.StartupInstaller;
 
 namespace YMouseButtonControl.Linux.Services;
@@ -10,6 +8,7 @@ public class StartupInstallerService : IStartupInstallerService
         [Desktop Entry]
         Type=Application
         Exec={0}
+        Path={1}
         Hidden=false
         NoDisplay=false
         X-GNOME-Autostart-enabled=true
@@ -46,15 +45,17 @@ public class StartupInstallerService : IStartupInstallerService
         return File.ReadAllText(_desktopFilePath).Contains(expectedExecLine);
     }
 
-    public void Install()
-    {
-        File.WriteAllText(_desktopFilePath, string.Format(DesktopFile, GetCurExePath()));
-    }
+    public void Install() =>
+        File.WriteAllText(
+            _desktopFilePath,
+            string.Format(DesktopFile, GetCurExePath(), GetCurExeParentPath())
+        );
 
-    public void Uninstall()
-    {
-        File.Delete(_desktopFilePath);
-    }
+    public void Uninstall() => File.Delete(_desktopFilePath);
+
+    private static string GetCurExeParentPath() =>
+        Path.GetDirectoryName(GetCurExePath())
+        ?? throw new Exception("Error retrieving parent of process path");
 
     private static string GetCurExePath() =>
         Environment.ProcessPath ?? throw new Exception("Error retrieving process path");
