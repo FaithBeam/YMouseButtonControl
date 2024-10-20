@@ -20,7 +20,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 {
     private SettingBoolVm _startMinimizedSetting;
     private bool _loggingEnabled;
-    private bool _startMenuEnabled;
+    private bool _startMenuChecked;
     private SettingIntVm _themeSetting;
     private ObservableCollection<ThemeVm> _themeCollection;
     private ThemeVm _selectedTheme;
@@ -34,7 +34,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     )
         : base(themeService)
     {
-        _startMenuEnabled = startMenuInstallerService.InstallStatus();
+        StartMenuEnabled = !OperatingSystem.IsMacOS();
+        _startMenuChecked = StartMenuEnabled && startMenuInstallerService.InstallStatus();
         _startMinimizedSetting =
             settingsService.GetSetting("StartMinimized") as SettingBoolVm
             ?? throw new Exception("Error retrieving StartMinimized setting");
@@ -58,7 +59,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
             x => x.LoggingEnabled,
             selector: val => val != enableLoggingService.GetLoggingState()
         );
-        var startMenuChanged = this.WhenAnyValue(x => x.StartMenuEnabled,
+        var startMenuChanged = this.WhenAnyValue(x => x.StartMenuChecked,
             selector: val => val != startMenuInstallerService.InstallStatus());
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
@@ -87,9 +88,9 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                     }
                 }
 
-                if (StartMenuEnabled != startMenuInstallerService.InstallStatus())
+                if (StartMenuChecked != startMenuInstallerService.InstallStatus())
                 {
-                    if (StartMenuEnabled)
+                    if (StartMenuChecked)
                     {
                         startMenuInstallerService.Install();
                     }
@@ -111,11 +112,13 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
     private bool AppIsExec => _applyIsExec?.Value ?? false;
 
-    public bool StartMenuEnabled
+    public bool StartMenuChecked
     {
-        get => _startMenuEnabled;
-        set => this.RaiseAndSetIfChanged(ref _startMenuEnabled, value);
+        get => _startMenuChecked;
+        set => this.RaiseAndSetIfChanged(ref _startMenuChecked, value);
     }
+    
+    public bool StartMenuEnabled { get; init; }
 
     public SettingBoolVm StartMinimized
     {

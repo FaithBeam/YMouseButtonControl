@@ -20,10 +20,13 @@
                   IsChecked="{Binding StartMinimized.BoolValue}" />
         <CheckBox Grid.Row="1"
                   Content="Start Menu"
-                  IsChecked="{Binding StartMenuEnabled}">
+                  IsEnabled="{Binding StartMenuEnabled}"
+                  IsChecked="{Binding StartMenuChecked}">
             <ToolTip.Tip>
                 <TextBlock>
-                    Add YMouseButtonControl to the start menu
+                    Add YMouseButtonControl to the start menu.
+                    <LineBreak />
+                    Disabled for macOS.
                 </TextBlock>
             </ToolTip.Tip>
         </CheckBox>
