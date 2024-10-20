@@ -7,6 +7,7 @@ using YMouseButtonControl.Core.Services.Logging;
 using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Settings;
+using YMouseButtonControl.Core.Services.StartMenuInstaller;
 using YMouseButtonControl.Core.Services.StartupInstaller;
 using YMouseButtonControl.Core.Services.Theme;
 
@@ -53,6 +54,7 @@ public static class ServicesBootstrapper
     {
         services
             .AddScoped<IStartupInstallerService, Linux.Services.StartupInstallerService>()
+            .AddScoped<IStartMenuInstallerService, Linux.Services.StartMenuInstallerService>()
             .AddScoped<IProcessMonitorService, Linux.Services.ProcessMonitorService>()
             .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")

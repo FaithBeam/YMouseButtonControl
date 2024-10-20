@@ -7,6 +7,7 @@ using System.Transactions;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Logging;
 using YMouseButtonControl.Core.Services.Settings;
+using YMouseButtonControl.Core.Services.StartMenuInstaller;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.DataAccess.Models;
@@ -19,18 +20,21 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 {
     private SettingBoolVm _startMinimizedSetting;
     private bool _loggingEnabled;
+    private bool _startMenuEnabled;
     private SettingIntVm _themeSetting;
     private ObservableCollection<ThemeVm> _themeCollection;
     private ThemeVm _selectedTheme;
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
 
     public GlobalSettingsDialogViewModel(
+        IStartMenuInstallerService startMenuInstallerService,
         IEnableLoggingService enableLoggingService,
         ISettingsService settingsService,
         IThemeService themeService
     )
         : base(themeService)
     {
+        _startMenuEnabled = startMenuInstallerService.InstallStatus();
         _startMinimizedSetting =
             settingsService.GetSetting("StartMinimized") as SettingBoolVm
             ?? throw new Exception("Error retrieving StartMinimized setting");
@@ -54,16 +58,18 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
             x => x.LoggingEnabled,
             selector: val => val != enableLoggingService.GetLoggingState()
         );
+        var startMenuChanged = this.WhenAnyValue(x => x.StartMenuEnabled,
+            selector: val => val != startMenuInstallerService.InstallStatus());
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
             selector: val =>
                 settingsService.GetSetting("Theme") is not SettingIntVm curVal
                 || curVal.IntValue != val
         );
-
         var applyIsExecObs = this.WhenAnyValue(x => x.AppIsExec);
         var canSave = startMinimizedChanged
             .Merge(loggingChanged)
+            .Merge(startMenuChanged)
             .Merge(applyIsExecObs)
             .Merge(themeChanged);
         ApplyCommand = ReactiveCommand.Create(
@@ -80,6 +86,19 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                         enableLoggingService.DisableLogging();
                     }
                 }
+
+                if (StartMenuEnabled != startMenuInstallerService.InstallStatus())
+                {
+                    if (StartMenuEnabled)
+                    {
+                        startMenuInstallerService.Install();
+                    }
+                    else
+                    {
+                        startMenuInstallerService.Uninstall();
+                    }
+                }
+
                 using var trn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 settingsService.UpdateSetting(StartMinimized);
                 settingsService.UpdateSetting(ThemeSetting);
@@ -91,6 +110,12 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     }
 
     private bool AppIsExec => _applyIsExec?.Value ?? false;
+
+    public bool StartMenuEnabled
+    {
+        get => _startMenuEnabled;
+        set => this.RaiseAndSetIfChanged(ref _startMenuEnabled, value);
+    }
 
     public SettingBoolVm StartMinimized
     {
