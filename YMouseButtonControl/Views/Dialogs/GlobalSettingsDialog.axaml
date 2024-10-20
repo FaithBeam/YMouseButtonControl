@@ -14,10 +14,24 @@
         <mainWindow:GlobalSettingsDialogViewModel />
     </Design.DataContext>
 
-    <Grid Margin="6" RowDefinitions="Auto,Auto,Auto,*">
-        <CheckBox Grid.Row="0" Content="Start Minimized"
+    <Grid Margin="6" RowDefinitions="Auto,Auto,Auto,Auto,*">
+        <CheckBox Grid.Row="0"
+                  Content="Start Minimized"
                   IsChecked="{Binding StartMinimized.BoolValue}" />
-        <CheckBox Grid.Row="1" Content="Logging"
+        <CheckBox Grid.Row="1"
+                  Content="Start Menu"
+                  IsEnabled="{Binding StartMenuEnabled}"
+                  IsChecked="{Binding StartMenuChecked}">
+            <ToolTip.Tip>
+                <TextBlock>
+                    Add YMouseButtonControl to the start menu.
+                    <LineBreak />
+                    Disabled for macOS.
+                </TextBlock>
+            </ToolTip.Tip>
+        </CheckBox>
+        <CheckBox Grid.Row="2"
+                  Content="Logging"
                   IsChecked="{Binding LoggingEnabled}">
 			<ToolTip.Tip>
 				<TextBlock>
@@ -25,7 +39,7 @@
 				</TextBlock>
 			</ToolTip.Tip>
 		</CheckBox>
-        <StackPanel Grid.Row="2">
+        <StackPanel Grid.Row="3">
             <Label Content="Theme" />
 			<ComboBox ItemsSource="{Binding ThemeCollection}"
                       SelectedItem="{Binding SelectedTheme}">
@@ -47,7 +61,7 @@
                 </TextBlock>
             </ToolTip.Tip>
         </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="Apply" Command="{Binding ApplyCommand}" />
             <Button Content="Cancel" Click="Cancel_OnClick"></Button>
         </StackPanel>
