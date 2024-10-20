@@ -59,8 +59,10 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
             x => x.LoggingEnabled,
             selector: val => val != enableLoggingService.GetLoggingState()
         );
-        var startMenuChanged = this.WhenAnyValue(x => x.StartMenuChecked,
-            selector: val => val != startMenuInstallerService.InstallStatus());
+        var startMenuChanged = this.WhenAnyValue(
+            x => x.StartMenuChecked,
+            selector: val => val != startMenuInstallerService.InstallStatus()
+        );
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
             selector: val =>
@@ -117,7 +119,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         get => _startMenuChecked;
         set => this.RaiseAndSetIfChanged(ref _startMenuChecked, value);
     }
-    
+
     public bool StartMenuEnabled { get; init; }
 
     public SettingBoolVm StartMinimized

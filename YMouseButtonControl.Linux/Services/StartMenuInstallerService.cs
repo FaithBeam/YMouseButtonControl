@@ -5,16 +5,16 @@ namespace YMouseButtonControl.Linux.Services;
 public class StartMenuInstallerService : IStartMenuInstallerService
 {
     private const string DesktopFile = """
-                                       [Desktop Entry]
-                                       Type=Application
-                                       Exec={0}
-                                       Path={1}
-                                       Hidden=false
-                                       NoDisplay=false
-                                       X-GNOME-Autostart-enabled=true
-                                       Name=YMouseButtonControl
-                                       Comment=YMouseButtonControl
-                                       """;
+        [Desktop Entry]
+        Type=Application
+        Exec={0}
+        Path={1}
+        Hidden=false
+        NoDisplay=false
+        X-GNOME-Autostart-enabled=true
+        Name=YMouseButtonControl
+        Comment=YMouseButtonControl
+        """;
 
     private readonly string _localShare = Environment.GetFolderPath(
         Environment.SpecialFolder.LocalApplicationData
@@ -28,8 +28,9 @@ public class StartMenuInstallerService : IStartMenuInstallerService
         _desktopFilePath = Path.Combine(applicationsDir, "YMouseButtonControl.desktop");
     }
 
-    public bool InstallStatus() => File.Exists(_desktopFilePath) &&
-                                   File.ReadAllText(_desktopFilePath).Contains($"Exec={GetCurExePath()}");
+    public bool InstallStatus() =>
+        File.Exists(_desktopFilePath)
+        && File.ReadAllText(_desktopFilePath).Contains($"Exec={GetCurExePath()}");
 
     public void Install() =>
         File.WriteAllText(
