@@ -82,6 +82,7 @@ public static class ServicesBootstrapper
     {
         services
             .AddScoped<IStartupInstallerService, MacOS.Services.StartupInstallerService>()
+            .AddScoped<IStartMenuInstallerService, MacOS.Services.StartMenuInstaller>()
             .AddScoped<IProcessMonitorService, MacOS.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, MacOS.Services.CurrentWindowService>()
             .AddScoped<IBackgroundTasksRunner, MacOS.Services.BackgroundTasksRunner>();
