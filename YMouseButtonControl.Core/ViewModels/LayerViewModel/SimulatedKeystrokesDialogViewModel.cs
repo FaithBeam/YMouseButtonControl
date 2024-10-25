@@ -61,7 +61,9 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         SimulatedKeystrokesType =
             currentMapping.SimulatedKeystrokeType ?? new MouseButtonPressedActionTypeVm();
         _autoRepeatEnabled =
-            SimulatedKeystrokesType is RepeatedlyWhileButtonDownActionTypeVm or StickyRepeatActionTypeVm;
+            SimulatedKeystrokesType
+                is RepeatedlyWhileButtonDownActionTypeVm
+                    or StickyRepeatActionTypeVm;
         _autoRepeatRandomizeDelayEnabled = _autoRepeatEnabled;
         _caretIndex = 0;
 
@@ -69,7 +71,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         this.WhenAnyValue(x => x.SimulatedKeystrokesType)
             .Subscribe(x =>
             {
-                AutoRepeatEnabled = x is RepeatedlyWhileButtonDownActionTypeVm or StickyRepeatActionTypeVm;
+                AutoRepeatEnabled =
+                    x is RepeatedlyWhileButtonDownActionTypeVm or StickyRepeatActionTypeVm;
                 AutoRepeatRandomizeDelayEnabled = AutoRepeatEnabled;
             });
 

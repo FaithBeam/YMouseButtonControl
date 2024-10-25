@@ -26,9 +26,11 @@ public partial class StickyRepeatService(
     private static int GetThreadSleepTime(BaseButtonMappingVm mapping)
     {
         var delay = mapping.AutoRepeatDelay ?? DefaultAutoRepeatDelay;
-        
-        if (mapping.AutoRepeatRandomizeDelayEnabled is null ||
-            !(bool)mapping.AutoRepeatRandomizeDelayEnabled)
+
+        if (
+            mapping.AutoRepeatRandomizeDelayEnabled is null
+            || !(bool)mapping.AutoRepeatRandomizeDelayEnabled
+        )
         {
             return delay;
         }
@@ -93,7 +95,11 @@ public partial class StickyRepeatService(
                     }
                 }
 
-                eventSimulatorService.TapKeys(mapping.Keys, GetThreadSleepTime(mapping), _cts.Token);
+                eventSimulatorService.TapKeys(
+                    mapping.Keys,
+                    GetThreadSleepTime(mapping),
+                    _cts.Token
+                );
             }
         });
 

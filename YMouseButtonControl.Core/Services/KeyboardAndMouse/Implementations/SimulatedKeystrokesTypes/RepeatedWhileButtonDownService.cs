@@ -13,8 +13,8 @@ public interface IRepeatedWhileButtonDownService
 
 public partial class RepeatedWhileButtonDownService(
     ILogger<RepeatedWhileButtonDownService> logger,
-    IEventSimulatorService eventSimulatorService)
-    : IRepeatedWhileButtonDownService
+    IEventSimulatorService eventSimulatorService
+) : IRepeatedWhileButtonDownService
 {
     private Thread? _thread;
     private bool _shouldStop;
@@ -25,9 +25,11 @@ public partial class RepeatedWhileButtonDownService(
     private static int GetThreadSleepTime(BaseButtonMappingVm mapping)
     {
         var delay = mapping.AutoRepeatDelay ?? DefaultAutoRepeatDelay;
-        
-        if (mapping.AutoRepeatRandomizeDelayEnabled is null ||
-            !(bool)mapping.AutoRepeatRandomizeDelayEnabled)
+
+        if (
+            mapping.AutoRepeatRandomizeDelayEnabled is null
+            || !(bool)mapping.AutoRepeatRandomizeDelayEnabled
+        )
         {
             return delay;
         }
