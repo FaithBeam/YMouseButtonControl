@@ -13,6 +13,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
     private bool _enabled;
     private string? _description;
     private string? _priorityDescription;
+    private int? _autoAutoRepeatDelay;
+    private bool? _autoRepeatRandomizeDelayEnabled;
     private bool _state;
     private bool _blockOriginalMouseInput;
     private BaseSimulatedKeystrokeTypeVm? _simulatedKeystrokeTypeVm;
@@ -66,6 +68,18 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         set => this.RaiseAndSetIfChanged(ref _priorityDescription, value);
     }
 
+    public int? AutoRepeatDelay
+    {
+        get => _autoAutoRepeatDelay;
+        set => this.RaiseAndSetIfChanged(ref _autoAutoRepeatDelay, value);
+    }
+
+    public bool? AutoRepeatRandomizeDelayEnabled
+    {
+        get => _autoRepeatRandomizeDelayEnabled;
+        set => this.RaiseAndSetIfChanged(ref _autoRepeatRandomizeDelayEnabled, value);
+    }
+
     public string? Keys
     {
         get => _keys;
@@ -107,6 +121,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
             && Keys == other.Keys
             && State == other.State
             && CanRaiseDialog == other.CanRaiseDialog
+            && AutoRepeatDelay == other.AutoRepeatDelay
+            && AutoRepeatRandomizeDelayEnabled == other.AutoRepeatRandomizeDelayEnabled
             && Equals(SimulatedKeystrokeType, other.SimulatedKeystrokeType)
             && BlockOriginalMouseInput == other.BlockOriginalMouseInput;
     }
@@ -117,7 +133,7 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
             return false;
         if (ReferenceEquals(this, obj))
             return true;
-        if (obj.GetType() != this.GetType())
+        if (obj.GetType() != GetType())
             return false;
         return Equals((BaseButtonMappingVm)obj);
     }
@@ -129,6 +145,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         hashCode.Add(Enabled);
         hashCode.Add(Description);
         hashCode.Add(PriorityDescription);
+        hashCode.Add(AutoRepeatDelay);
+        hashCode.Add(AutoRepeatRandomizeDelayEnabled);
         hashCode.Add(Keys);
         hashCode.Add(State);
         hashCode.Add(SimulatedKeystrokeType);

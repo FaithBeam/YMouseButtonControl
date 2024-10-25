@@ -96,6 +96,8 @@ public class YMouseButtonControlDbContext(IConfigurationRoot? configuration)
                     SimulatedKeystrokeType INTEGER,
                     Selected BOOLEAN,
                     BlockOriginalMouseInput BOOLEAN,
+                    AutoRepeatDelay INTEGER,
+                    AutoRepeatRandomizeDelayEnabled BOOLEAN,
                     ButtonMappingType INTEGER NOT NULL,
                     FOREIGN KEY (ProfileId) REFERENCES Profiles (Id) ON DELETE CASCADE
                 );

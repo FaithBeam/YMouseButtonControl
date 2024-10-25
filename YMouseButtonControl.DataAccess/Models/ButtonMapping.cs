@@ -21,6 +21,8 @@ public abstract class ButtonMapping
     public int ProfileId { get; set; }
     public virtual Profile? Profile { get; set; }
     public SimulatedKeystrokeType? SimulatedKeystrokeType { get; set; }
+    public int? AutoRepeatDelay { get; set; }
+    public bool? AutoRepeatRandomizeDelayEnabled { get; set; }
     public bool Selected { get; set; }
     public bool BlockOriginalMouseInput { get; set; }
     public ButtonMappingType ButtonMappingType { get; set; }

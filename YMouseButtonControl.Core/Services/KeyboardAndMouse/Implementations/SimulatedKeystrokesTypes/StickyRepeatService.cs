@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -18,8 +19,31 @@ public partial class StickyRepeatService(
     private Thread? _thread;
     private bool _shouldStop;
     private readonly object _lock = new();
-    private const int RepeatRateMs = 33;
+    private const int DefaultAutoRepeatDelay = 33;
     private CancellationTokenSource? _cts;
+    private static readonly Random Random = new();
+
+    private static int GetThreadSleepTime(BaseButtonMappingVm mapping)
+    {
+        var delay = mapping.AutoRepeatDelay ?? DefaultAutoRepeatDelay;
+        
+        if (mapping.AutoRepeatRandomizeDelayEnabled is null ||
+            !(bool)mapping.AutoRepeatRandomizeDelayEnabled)
+        {
+            return delay;
+        }
+
+        var randPercent = Random.NextDouble() * 0.1;
+        var toAddOrSub = Math.Round(delay * randPercent);
+        if (Random.Next(0, 2) == 0)
+        {
+            // Add
+            return delay + (int)toAddOrSub;
+        }
+
+        // Subtract
+        return delay - (int)toAddOrSub;
+    }
 
     public void StickyRepeat(BaseButtonMappingVm mapping, MouseButtonState state)
     {
@@ -69,7 +93,7 @@ public partial class StickyRepeatService(
                     }
                 }
 
-                eventSimulatorService.TapKeys(mapping.Keys, RepeatRateMs, _cts.Token);
+                eventSimulatorService.TapKeys(mapping.Keys, GetThreadSleepTime(mapping), _cts.Token);
             }
         });
 

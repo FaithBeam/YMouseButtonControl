@@ -2,13 +2,13 @@
 
 public class ButtonMappingQueries : BaseQueries
 {
-    public string GetByProfileId() => $"SELECT * FROM ButtonMappings WHERE ProfileId = @Id;";
+    public string GetByProfileId() => "SELECT * FROM ButtonMappings WHERE ProfileId = @Id;";
 
     public override string Add() =>
         """
             INSERT INTO ButtonMappings 
-                (Keys, MouseButton, ProfileId, SimulatedKeystrokeType, Selected, BlockOriginalMouseInput, ButtonMappingType) 
-            VALUES (@Keys, @MouseButton, @ProfileId, @SimulatedKeystrokeType, @Selected, @BlockOriginalMouseInput, @ButtonMappingType);
+                (Keys, MouseButton, ProfileId, SimulatedKeystrokeType, Selected, BlockOriginalMouseInput, ButtonMappingType, AutoRepeatDelay, AutoRepeatRandomizeDelayEnabled) 
+            VALUES (@Keys, @MouseButton, @ProfileId, @SimulatedKeystrokeType, @Selected, @BlockOriginalMouseInput, @ButtonMappingType, @AutoRepeatDelay, @AutoRepeatRandomizeDelayEnabled);
             """;
 
     public override string Update() =>
@@ -19,6 +19,8 @@ public class ButtonMappingQueries : BaseQueries
                 ProfileId = @ProfileId,
                 SimulatedKeystrokeType = @SimulatedKeystrokeType,
                 Selected = @Selected,
+                AutoRepeatDelay = @AutoRepeatDelay,
+                AutoRepeatRandomizeDelayEnabled = @AutoRepeatRandomizeDelayEnabled,
                 BlockOriginalMouseInput = @BlockOriginalMouseInput;
             """;
 }
