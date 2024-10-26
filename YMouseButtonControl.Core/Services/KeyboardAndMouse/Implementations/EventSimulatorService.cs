@@ -505,6 +505,18 @@ public partial class EventSimulatorService(
             // {"charundefined", KeyCode.CharUndefined},
         };
 
+#if OS_LINUX
+    // rmb and mmb are flipped in X11 Linux
+    private static readonly Dictionary<string, MouseButton> MouseButtons =
+        new()
+        {
+            { "lmb", MouseButton.Button1 },
+            { "rmb", MouseButton.Button3 },
+            { "mmb", MouseButton.Button2 },
+            { "mb4", MouseButton.Button4 },
+            { "mb5", MouseButton.Button5 },
+        };
+#else
     private static readonly Dictionary<string, MouseButton> MouseButtons =
         new()
         {
@@ -514,6 +526,7 @@ public partial class EventSimulatorService(
             { "mb4", MouseButton.Button4 },
             { "mb5", MouseButton.Button5 },
         };
+#endif
 
     [LoggerMessage(LogLevel.Information, "========STOPPING TAP KEYS===========")]
     private static partial void LogStopTappingKeys(ILogger logger);
