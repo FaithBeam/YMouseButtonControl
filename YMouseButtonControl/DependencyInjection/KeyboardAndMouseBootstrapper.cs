@@ -42,6 +42,7 @@ public static class KeyboardAndMouseBootstrapper
     private static void RegisterCommonKeyboardAndMouseServices(IServiceCollection services)
     {
         services
+            .AddScoped<IMouseButtonMappingService, MouseButtonMappingService>()
             .AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
             .AddScoped<IMouseListener, MouseListener>()
             .AddScoped<IEventSimulator, EventSimulator>()

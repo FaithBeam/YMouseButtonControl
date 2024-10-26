@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using SharpHook;
@@ -36,6 +37,7 @@ public interface IEventSimulatorService
 }
 
 public partial class EventSimulatorService(
+    IMouseButtonMappingService mappingService,
     ILogger<EventSimulatorService> logger,
     IEventSimulator eventSimulator
 ) : IEventSimulatorService
@@ -262,7 +264,7 @@ public partial class EventSimulatorService(
     /// </summary>
     /// <param name="keys"></param>
     /// <returns></returns>
-    private static List<ParsedKey> ParseKeys(string? keys)
+    private List<ParsedKey> ParseKeys(string? keys)
     {
         var newKeys = new List<ParsedKey>();
         var i = 0;
@@ -279,7 +281,7 @@ public partial class EventSimulatorService(
 
                     var substr = keys.Substring(i + 1, j - i - 1).ToLower();
                     var pk = new ParsedKey { Key = substr };
-                    if (MouseButtons.TryGetValue(substr, out var mbVal))
+                    if (mappingService.MouseButtons.TryGetValue(substr, out var mbVal))
                     {
                         pk.Value = (ushort)mbVal;
                         pk.IsModifier = false;
@@ -504,29 +506,6 @@ public partial class EventSimulatorService(
             { "undefined", KeyCode.VcUndefined },
             // {"charundefined", KeyCode.CharUndefined},
         };
-
-#if OS_LINUX
-    // rmb and mmb are flipped in X11 Linux
-    private static readonly Dictionary<string, MouseButton> MouseButtons =
-        new()
-        {
-            { "lmb", MouseButton.Button1 },
-            { "rmb", MouseButton.Button3 },
-            { "mmb", MouseButton.Button2 },
-            { "mb4", MouseButton.Button4 },
-            { "mb5", MouseButton.Button5 },
-        };
-#else
-    private static readonly Dictionary<string, MouseButton> MouseButtons =
-        new()
-        {
-            { "lmb", MouseButton.Button1 },
-            { "rmb", MouseButton.Button2 },
-            { "mmb", MouseButton.Button3 },
-            { "mb4", MouseButton.Button4 },
-            { "mb5", MouseButton.Button5 },
-        };
-#endif
 
     [LoggerMessage(LogLevel.Information, "========STOPPING TAP KEYS===========")]
     private static partial void LogStopTappingKeys(ILogger logger);
