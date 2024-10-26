@@ -29,9 +29,14 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
     private string _description;
     private readonly string _title;
     private int _caretIndex;
-    private bool _blockOriginalMouseInput = true;
+    private bool _blockOriginalMouseInput;
+    private bool _blockOriginalMouseInputEnabled;
     private short _x;
     private short _y;
+    private int _autoRepeatDelay;
+    private bool _autoRepeatRandomizeDelayChecked;
+    private bool _autoRepeatRandomizeDelayEnabled;
+    private bool _autoRepeatEnabled;
     private BaseSimulatedKeystrokeTypeVm? _currentSimulatedKeystrokesType;
     private readonly IMouseListener _mouseListener;
     private BaseButtonMappingVm? _currentMapping;
@@ -52,19 +57,44 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         _mouseListener.OnMouseMovedChanged.Subscribe(MouseListenerOnOnMouseMovedEventHandler);
         _description = currentMapping.PriorityDescription ?? string.Empty;
         _customKeys = currentMapping.Keys ?? string.Empty;
+        _autoRepeatDelay = currentMapping.AutoRepeatDelay ?? 33;
+        _autoRepeatRandomizeDelayChecked = currentMapping.AutoRepeatRandomizeDelayEnabled ?? false;
+        _blockOriginalMouseInput =
+            !OperatingSystem.IsLinux() && (currentMapping.BlockOriginalMouseInput ?? true);
+        _blockOriginalMouseInputEnabled = !OperatingSystem.IsLinux();
         SimulatedKeystrokesType =
             currentMapping.SimulatedKeystrokeType ?? new MouseButtonPressedActionTypeVm();
+        _autoRepeatEnabled =
+            SimulatedKeystrokesType
+                is RepeatedlyWhileButtonDownActionTypeVm
+                    or StickyRepeatActionTypeVm;
+        _autoRepeatRandomizeDelayEnabled = _autoRepeatEnabled;
         _caretIndex = 0;
+
+        // enable/disable Auto Repeat Spinner and Randomize Delay checkbox
+        this.WhenAnyValue(x => x.SimulatedKeystrokesType)
+            .Subscribe(x =>
+            {
+                AutoRepeatEnabled =
+                    x is RepeatedlyWhileButtonDownActionTypeVm or StickyRepeatActionTypeVm;
+                AutoRepeatRandomizeDelayEnabled = AutoRepeatEnabled;
+            });
 
         var canExecuteOkCmd = this.WhenAnyValue(
             property1: x => x.CustomKeys,
             property2: x => x.SimulatedKeystrokesType,
-            selector: (keys, skt) =>
+            property3: x => x.AutoRepeatDelay,
+            property4: x => x.AutoRepeatRandomizeDelayChecked,
+            property5: x => x.BlockOriginalMouseInput,
+            selector: (keys, skt, autoRepeatDelay, autoRepeatChecked, blockOriginalMouseInput) =>
                 !string.IsNullOrWhiteSpace(keys)
                 && skt is not null
                 && (
                     keys != currentMapping?.Keys
                     || !Equals(skt, currentMapping.SimulatedKeystrokeType)
+                    || autoRepeatDelay != currentMapping?.AutoRepeatDelay
+                    || autoRepeatChecked != currentMapping?.AutoRepeatRandomizeDelayEnabled
+                    || blockOriginalMouseInput != currentMapping?.BlockOriginalMouseInput
                 )
         );
         OkCommand = ReactiveCommand.Create(
@@ -75,6 +105,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
                 newMapping.MouseButton = mouseButton;
                 newMapping.SimulatedKeystrokeType = SimulatedKeystrokesType;
                 newMapping.BlockOriginalMouseInput = BlockOriginalMouseInput;
+                newMapping.AutoRepeatDelay = AutoRepeatDelay;
+                newMapping.AutoRepeatRandomizeDelayEnabled = AutoRepeatRandomizeDelayChecked;
                 return newMapping;
             },
             canExecuteOkCmd
@@ -141,6 +173,36 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
     {
         get => _blockOriginalMouseInput;
         set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);
+    }
+
+    public bool BlockOriginalMouseInputEnabled
+    {
+        get => _blockOriginalMouseInputEnabled;
+        set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInputEnabled, value);
+    }
+
+    public int AutoRepeatDelay
+    {
+        get => _autoRepeatDelay;
+        set => this.RaiseAndSetIfChanged(ref _autoRepeatDelay, value);
+    }
+
+    public bool AutoRepeatRandomizeDelayChecked
+    {
+        get => _autoRepeatRandomizeDelayChecked;
+        set => this.RaiseAndSetIfChanged(ref _autoRepeatRandomizeDelayChecked, value);
+    }
+
+    public bool AutoRepeatRandomizeDelayEnabled
+    {
+        get => _autoRepeatRandomizeDelayEnabled;
+        set => this.RaiseAndSetIfChanged(ref _autoRepeatRandomizeDelayEnabled, value);
+    }
+
+    public bool AutoRepeatEnabled
+    {
+        get => _autoRepeatEnabled;
+        set => this.RaiseAndSetIfChanged(ref _autoRepeatEnabled, value);
     }
 
     public AvaloniaList<BaseSimulatedKeystrokeTypeVm> SimulatedKeystrokesTypes { get; set; } =

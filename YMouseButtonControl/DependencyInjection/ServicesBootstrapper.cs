@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Services.BackgroundTasks;

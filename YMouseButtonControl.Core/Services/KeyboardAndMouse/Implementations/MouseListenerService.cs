@@ -62,10 +62,17 @@ public partial class MouseListener : IMouseListener
 
         _mouseMovedDisposable = _hook
             .MouseMoved.Sample(TimeSpan.FromMilliseconds(100))
+            .Where(x => !x.IsEventSimulated)
             .Subscribe(ConvertMouseMovedEvent);
-        _mousePressedDisposable = _hook.MousePressed.Subscribe(ConvertMousePressedEvent);
-        _mouseReleasedDisposable = _hook.MouseReleased.Subscribe(ConvertMouseReleasedEvent);
-        _mouseWheelDisposable = _hook.MouseWheel.Subscribe(ConvertMouseWheelEvent);
+        _mousePressedDisposable = _hook
+            .MousePressed.Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMousePressedEvent);
+        _mouseReleasedDisposable = _hook
+            .MouseReleased.Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMouseReleasedEvent);
+        _mouseWheelDisposable = _hook
+            .MouseWheel.Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMouseWheelEvent);
     }
 
     public IObservable<NewMouseHookEventArgs> OnMousePressedChanged =>
@@ -98,39 +105,39 @@ public partial class MouseListener : IMouseListener
         {
             YMouseButton.MouseButton1 => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseButton1.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseButton2 => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseButton2.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseButton3 => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseButton3.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseButton4 => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseButton4.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseButton5 => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseButton5.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseWheelUp => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseWheelUp.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseWheelDown => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseWheelDown.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseWheelLeft => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseWheelLeft.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             YMouseButton.MouseWheelRight => _profilesService.Profiles.Any(p =>
                 p is { Checked: true, MouseWheelRight.BlockOriginalMouseInput: true }
-                && (args.ActiveWindow?.Contains(p.Process) ?? false)
+                && (p.Process == "*" || (args.ActiveWindow?.Contains(p.Process) ?? false))
             ),
             _ => throw new ArgumentOutOfRangeException(),
         };
