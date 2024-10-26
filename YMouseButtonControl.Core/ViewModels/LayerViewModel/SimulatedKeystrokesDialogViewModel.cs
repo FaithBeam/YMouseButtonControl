@@ -85,7 +85,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
             property2: x => x.SimulatedKeystrokesType,
             property3: x => x.AutoRepeatDelay,
             property4: x => x.AutoRepeatRandomizeDelayChecked,
-            selector: (keys, skt, autoRepeatDelay, autoRepeatChecked) =>
+            property5: x => x.BlockOriginalMouseInput,
+            selector: (keys, skt, autoRepeatDelay, autoRepeatChecked, blockOriginalMouseInput) =>
                 !string.IsNullOrWhiteSpace(keys)
                 && skt is not null
                 && (
@@ -93,6 +94,7 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
                     || !Equals(skt, currentMapping.SimulatedKeystrokeType)
                     || autoRepeatDelay != currentMapping?.AutoRepeatDelay
                     || autoRepeatChecked != currentMapping?.AutoRepeatRandomizeDelayEnabled
+                    || blockOriginalMouseInput != currentMapping?.BlockOriginalMouseInput
                 )
         );
         OkCommand = ReactiveCommand.Create(
