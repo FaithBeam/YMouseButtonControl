@@ -84,13 +84,15 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
             property1: x => x.CustomKeys,
             property2: x => x.SimulatedKeystrokesType,
             property3: x => x.AutoRepeatDelay,
-            selector: (keys, skt, autoRepeatDelay) =>
+            property4: x => x.AutoRepeatRandomizeDelayChecked,
+            selector: (keys, skt, autoRepeatDelay, autoRepeatChecked) =>
                 !string.IsNullOrWhiteSpace(keys)
                 && skt is not null
                 && (
                     keys != currentMapping?.Keys
                     || !Equals(skt, currentMapping.SimulatedKeystrokeType)
                     || autoRepeatDelay != currentMapping?.AutoRepeatDelay
+                    || autoRepeatChecked != currentMapping?.AutoRepeatRandomizeDelayEnabled
                 )
         );
         OkCommand = ReactiveCommand.Create(
