@@ -42,9 +42,17 @@ public partial class EventSimulatorService(
     IEventSimulator eventSimulator
 ) : IEventSimulatorService
 {
-    public void SimulateMousePress(MouseButton mb) => eventSimulator.SimulateMousePress(mb);
+    public void SimulateMousePress(MouseButton mb)
+    {
+        var t = new Thread(() => eventSimulator.SimulateMousePress(mb));
+        t.Start();
+    }
 
-    public void SimulateMouseRelease(MouseButton mb) => eventSimulator.SimulateMouseRelease(mb);
+    public void SimulateMouseRelease(MouseButton mb)
+    {
+        var t = new Thread(() => eventSimulator.SimulateMouseRelease(mb));
+        t.Start();
+    }
 
     public void SimulateKeyPress(string? key)
     {

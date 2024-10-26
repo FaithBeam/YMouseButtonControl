@@ -62,10 +62,17 @@ public partial class MouseListener : IMouseListener
 
         _mouseMovedDisposable = _hook
             .MouseMoved.Sample(TimeSpan.FromMilliseconds(100))
+            .Where(x => !x.IsEventSimulated)
             .Subscribe(ConvertMouseMovedEvent);
-        _mousePressedDisposable = _hook.MousePressed.Subscribe(ConvertMousePressedEvent);
-        _mouseReleasedDisposable = _hook.MouseReleased.Subscribe(ConvertMouseReleasedEvent);
-        _mouseWheelDisposable = _hook.MouseWheel.Subscribe(ConvertMouseWheelEvent);
+        _mousePressedDisposable = _hook
+            .MousePressed.Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMousePressedEvent);
+        _mouseReleasedDisposable = _hook
+            .MouseReleased.Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMouseReleasedEvent);
+        _mouseWheelDisposable = _hook
+            .MouseWheel.Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMouseWheelEvent);
     }
 
     public IObservable<NewMouseHookEventArgs> OnMousePressedChanged =>
