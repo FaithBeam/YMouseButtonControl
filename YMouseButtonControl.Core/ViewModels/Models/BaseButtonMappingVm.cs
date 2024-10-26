@@ -16,7 +16,7 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
     private int? _autoAutoRepeatDelay;
     private bool? _autoRepeatRandomizeDelayEnabled;
     private bool _state;
-    private bool _blockOriginalMouseInput;
+    private bool? _blockOriginalMouseInput;
     private BaseSimulatedKeystrokeTypeVm? _simulatedKeystrokeTypeVm;
     private bool _selected;
     private bool _hasSettingsPopped;
@@ -96,7 +96,7 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         get => _simulatedKeystrokeTypeVm;
         set => this.RaiseAndSetIfChanged(ref _simulatedKeystrokeTypeVm, value);
     }
-    public bool BlockOriginalMouseInput
+    public bool? BlockOriginalMouseInput
     {
         get => _blockOriginalMouseInput;
         set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);

@@ -25,7 +25,7 @@
                VerticalContentAlignment="Center" />
 
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-            <TextBox Text="{Binding CustomKeys}"
+            <TextBox VerticalContentAlignment="Center" Text="{Binding CustomKeys}"
                      CaretIndex="{Binding CaretIndex, Mode=TwoWay}" />
             <SplitButton Grid.Column="1"
                          Content="\{\}"
@@ -91,26 +91,46 @@
                       ItemsSource="{Binding SimulatedKeystrokesTypes}"
                       SelectedItem="{Binding SimulatedKeystrokesType}"
                       HorizontalAlignment="Stretch" />
+            <ToolTip.Tip>
+                <TextBlock>
+                    Mode 6 (repeat while mouse down) does not work on Linux.
+                </TextBlock>
+            </ToolTip.Tip>
         </Grid>
 
         <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
-            <CheckBox IsChecked="{Binding BlockOriginalMouseInput}" Content="Block original mouse input" />
+            <!-- Checkbox surrounded with grid to allow tooltip to show even when the control is disabled -->
+            <Grid>
+                <CheckBox IsEnabled="{Binding BlockOriginalMouseInputEnabled}"
+                          IsChecked="{Binding BlockOriginalMouseInput}" Content="Block original mouse input">
+                </CheckBox>
+                <ToolTip.Tip>
+                    <TextBlock>
+                        Suppress the original mouse click or not.
+                        <LineBreak />
+                        Windows and macOS only.
+                    </TextBlock>
+                </ToolTip.Tip>
+            </Grid>
             <StackPanel Grid.Column="1">
                 <Label Content="Auto Repeat Delay" />
-                <NumericUpDown Value="{Binding AutoRepeatDelay}" IsEnabled="{Binding AutoRepeatEnabled}" VerticalContentAlignment="Center" Minimum="0" FormatString="0">
+                <NumericUpDown Value="{Binding AutoRepeatDelay}" IsEnabled="{Binding AutoRepeatEnabled}"
+                               VerticalContentAlignment="Center" Minimum="0" FormatString="0">
                     <ToolTip.Tip>
                         <TextBlock>
                             The delay in milliseconds before repeating. 33 is the default.
-                            <LineBreak/>
+                            <LineBreak />
                             The lower the number, the quicker the repeat. The higher the number, the slower the repeat.
                         </TextBlock>
                     </ToolTip.Tip>
                 </NumericUpDown>
             </StackPanel>
         </Grid>
-        
+
         <Grid Grid.Row="4">
-            <CheckBox Content="Randomize auto repeat delay 0%-10%" IsEnabled="{Binding AutoRepeatRandomizeDelayEnabled}" IsChecked="{Binding AutoRepeatRandomizeDelayChecked}" />
+            <CheckBox Content="Randomize auto repeat delay 0%-10%"
+                      IsEnabled="{Binding AutoRepeatRandomizeDelayEnabled}"
+                      IsChecked="{Binding AutoRepeatRandomizeDelayChecked}" />
         </Grid>
 
         <Grid Grid.Row="5">

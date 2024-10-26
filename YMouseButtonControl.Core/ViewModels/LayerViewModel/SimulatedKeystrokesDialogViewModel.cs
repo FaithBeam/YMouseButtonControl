@@ -29,7 +29,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
     private string _description;
     private readonly string _title;
     private int _caretIndex;
-    private bool _blockOriginalMouseInput = true;
+    private bool _blockOriginalMouseInput;
+    private bool _blockOriginalMouseInputEnabled;
     private short _x;
     private short _y;
     private int _autoRepeatDelay;
@@ -58,6 +59,9 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         _customKeys = currentMapping.Keys ?? string.Empty;
         _autoRepeatDelay = currentMapping.AutoRepeatDelay ?? 33;
         _autoRepeatRandomizeDelayChecked = currentMapping.AutoRepeatRandomizeDelayEnabled ?? false;
+        _blockOriginalMouseInput =
+            !OperatingSystem.IsLinux() && (currentMapping.BlockOriginalMouseInput ?? true);
+        _blockOriginalMouseInputEnabled = !OperatingSystem.IsLinux();
         SimulatedKeystrokesType =
             currentMapping.SimulatedKeystrokeType ?? new MouseButtonPressedActionTypeVm();
         _autoRepeatEnabled =
@@ -165,6 +169,12 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
     {
         get => _blockOriginalMouseInput;
         set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);
+    }
+
+    public bool BlockOriginalMouseInputEnabled
+    {
+        get => _blockOriginalMouseInputEnabled;
+        set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInputEnabled, value);
     }
 
     public int AutoRepeatDelay
