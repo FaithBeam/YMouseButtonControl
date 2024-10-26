@@ -42,17 +42,13 @@ public partial class EventSimulatorService(
     IEventSimulator eventSimulator
 ) : IEventSimulatorService
 {
-    public void SimulateMousePress(MouseButton mb)
-    {
-        var t = new Thread(() => eventSimulator.SimulateMousePress(mb));
-        t.Start();
-    }
+    // needs to be ran from another thread in windows due to mouse button suppress behavior
+    public void SimulateMousePress(MouseButton mb) =>
+        new Thread(() => eventSimulator.SimulateMousePress(mb)).Start();
 
-    public void SimulateMouseRelease(MouseButton mb)
-    {
-        var t = new Thread(() => eventSimulator.SimulateMouseRelease(mb));
-        t.Start();
-    }
+    // needs to be ran from another thread in windows due to mouse button suppress behavior
+    public void SimulateMouseRelease(MouseButton mb) =>
+        new Thread(() => eventSimulator.SimulateMouseRelease(mb)).Start();
 
     public void SimulateKeyPress(string? key)
     {
