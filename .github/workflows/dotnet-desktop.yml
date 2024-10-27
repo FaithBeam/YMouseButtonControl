@@ -81,14 +81,14 @@ jobs:
         
       - name: Tar to Preserve Executable Bit
         if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: tar -cvf ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar bin/
+        run: tar -cv bin/ | xz -9 > ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar.xz
 
       - name: Upload build artifacts
         if: ${{ startsWith(matrix.rid, 'osx') }}
         uses: actions/upload-artifact@v4.3.1
         with:
           name: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}"
-          path: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar"
+          path: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar.xz"
       
       - name: Upload build artifacts
         if: ${{ ! startsWith(matrix.rid, 'osx') }}
@@ -96,3 +96,4 @@ jobs:
         with:
           name: "${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}"
           path: bin/
+          compression-level: 9
