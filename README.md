@@ -11,6 +11,19 @@ This is an attempt at a cross-platform clone of X-Mouse-Button-Control.
 2. Extract the archive
 3. Run YMouseButtonControl
 
+## Requirements
+
+* [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+  * On windows if you run YMouseButtonControl.exe, it will take you to the download automatically
+
+### Linux
+
+*Ubuntu*: ```sudo apt install dotnet-runtime-8.0```
+
+*Fedora*: ```sudo dnf install dotnet-runtime-8.0```
+
+*Arch*: ```sudo pacman -S dotnet-runtime```
+
 ## OS Compatibility
 
 Anything that can install .NET 8 should be able to run YMouseButtonControl
@@ -46,12 +59,6 @@ Anything that can install .NET 8 should be able to run YMouseButtonControl
    dotnet publish YMouseButtonControl/YMouseButtonControl.csproj \
     -c Release \
     -r YOUR_PLATFORM \
-    --self-contained true \
-    -p:PublishSingleFile=true \
-    -p:DebugType=embedded \
-    -p:IncludeNativeLibrariesForSelfExtract=true \
-    -p:IncludeAllContentForSelfExtract=true \
-    -p:EnableCompressionInSingleFile=true \
     -o bin
    ```
     * YOUR_PLATFORM: win-x64, linux-x64, osx-x64, [more runtimes here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog)
