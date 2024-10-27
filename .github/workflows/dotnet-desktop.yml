@@ -71,12 +71,6 @@ jobs:
           dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
           -c ${{ env.CONFIGURATION }} \
           -r ${{ matrix.rid }} \
-          -p:PublishSingleFile=true \
-          -p:IncludeNativeLibrariesForSelfExtract=true \
-          -p:IncludeAllContentForSelfExtract=true \
-          -p:SelfContained=true \
-          -p:EnableCompressionInSingleFile=true \
-          -p:DebugType=embedded \
           -p:Version=${{ steps.gitversion.outputs.SemVer }} \
           -p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemFileVer }} \
           -o bin
