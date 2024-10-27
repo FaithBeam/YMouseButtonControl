@@ -67,6 +67,7 @@ jobs:
         run: dotnet restore -r ${{ matrix.rid }}  
 
       - name: Publish
+        if: ${{ ! startsWith(matrix.rid, 'osx') }}
         run: |
           dotnet publish ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
           -c ${{ env.CONFIGURATION }} \
@@ -78,7 +79,7 @@ jobs:
       - name: Publish
         if: ${{ startsWith(matrix.rid, 'osx') }}
         run: |
-          dotnet msbuild ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }}.csproj \
+          dotnet msbuild ${{ env.PROJECT_FOLDER}}/${{ env.PROJECT_NAME }} \
           -t:BundleApp \
           -p:RuntimeIdentifier=${{ matrix.rid }} \
           -p:UseAppHost=true \
@@ -87,11 +88,11 @@ jobs:
           
       - name: Set Executable Bit
         if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: chmod -R +x ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION }}/net8.0/${{ matrix.rid }}/publish/${{ env.PROJECT_NAME }}.app
+        run: chmod -R +x ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION }}/net8.0/${{ matrix.rid }}/publish/${{ env.APP_NAME }}.app
         
       - name: Tar to Preserve Executable Bit
         if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: tar -cvf ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION }}/net8.0/${{ matrix.rid }}/publish/${{ env.PROJECT_NAME }}.app
+        run: tar -cvf ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION }}/net8.0/${{ matrix.rid }}/publish/${{ env.APP_NAME }}.app
 
       - name: Upload build artifacts
         if: ${{ startsWith(matrix.rid, 'osx') }}
