@@ -92,7 +92,7 @@ jobs:
         
       - name: Tar to Preserve Executable Bit
         if: ${{ startsWith(matrix.rid, 'osx') }}
-        run: tar -cvf ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION }}/net8.0/${{ matrix.rid }}/publish/${{ env.APP_NAME }}.app
+        run: tar -C ${{ env.PROJECT_FOLDER}}/bin/${{ env.CONFIGURATION }}/net8.0/${{ matrix.rid }}/publish -cvf ${{ env.APP_NAME }}.${{ steps.gitversion.outputs.semVer }}+${{ matrix.rid }}.tar ${{ env.APP_NAME }}.app
 
       - name: Upload build artifacts
         if: ${{ startsWith(matrix.rid, 'osx') }}
