@@ -1,10 +1,13 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.ReactiveUI;
 
 namespace YMouseButtonControl;
 
-internal static class Program
+public static class Program
 {
+    public static IServiceProvider? Container { get; set; }
+
     public static void Main(string[] args)
     {
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);

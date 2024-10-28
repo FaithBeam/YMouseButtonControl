@@ -22,8 +22,8 @@
       <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="ReactiveUI" Version="20.1.1" />
-      <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
+      <PackageReference Include="ReactiveUI" Version="20.1.63" />
+      <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
       <PackageReference Include="WindowsShortcutFactory" Version="1.2.0" />
     </ItemGroup>
 

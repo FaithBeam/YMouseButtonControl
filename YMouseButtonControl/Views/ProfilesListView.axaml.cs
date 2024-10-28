@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
@@ -14,6 +15,8 @@ namespace YMouseButtonControl.Views;
 
 public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewModel>
 {
+    private readonly IMainWindowProvider _mainWindowProvider;
+
     public ProfilesListView()
     {
         InitializeComponent();
@@ -30,6 +33,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
             d(ViewModel.ShowExportFileDialog.RegisterHandler(ShowExportFileDialog));
             d(ViewModel.ShowImportFileDialog.RegisterHandler(ShowImportFileDialog));
         });
+        _mainWindowProvider = Program.Container!.GetRequiredService<IMainWindowProvider>();
     }
 
     private static async Task ShowImportFileDialog(
@@ -41,10 +45,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
             {
                 Title = "Open",
                 AllowMultiple = false,
-                FileTypeFilter = new[]
-                {
-                    new FilePickerFileType(".json") { Patterns = new[] { "*.json" } },
-                },
+                FileTypeFilter = [new FilePickerFileType(".json") { Patterns = ["*.json"] }],
             }
         );
         if (result.Any())
@@ -69,10 +70,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
                 Title = "Save As",
                 DefaultExtension = ".json",
                 SuggestedFileName = $"{interactionContext.Input}.json",
-                FileTypeChoices = new[]
-                {
-                    new FilePickerFileType("json") { Patterns = new[] { "*.json" } },
-                },
+                FileTypeChoices = [new FilePickerFileType("json") { Patterns = ["*.json"] }],
             }
         );
         if (file is not null)
@@ -86,13 +84,14 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         interactionContext.SetOutput(string.Empty);
     }
 
-    private static async Task ShowProcessSelectorDialogAsync(
+    private async Task ShowProcessSelectorDialogAsync(
         IInteractionContext<IProcessSelectorDialogViewModel, ProfileVm?> interaction
     )
     {
         interaction.Input.RefreshButtonCommand.Execute(null);
         var dialog = new ProcessSelectorDialog { DataContext = interaction.Input };
-        var result = await dialog.ShowDialog<ProfileVm?>(MainWindowProvider.GetMainWindow());
+        var mw = _mainWindowProvider.GetMainWindow();
+        var result = await dialog.ShowDialog<ProfileVm?>(_mainWindowProvider.GetMainWindow());
         interaction.SetOutput(result);
     }
 }

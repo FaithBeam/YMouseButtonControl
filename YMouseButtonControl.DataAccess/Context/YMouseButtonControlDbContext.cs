@@ -1,24 +1,12 @@
-﻿using System.Data;
-using Dapper;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Configuration;
+﻿using Dapper;
 
 namespace YMouseButtonControl.DataAccess.Context;
 
-public class YMouseButtonControlDbContext(IConfigurationRoot? configuration)
+public class YMouseButtonControlDbContext(IConnectionProvider connectionProvider)
 {
-    public IConfigurationRoot? Configuration { get; } = configuration;
-
-    public IDbConnection CreateConnection()
-    {
-        return new SqliteConnection(
-            Configuration?.GetConnectionString("YMouseButtonControlContext")
-        );
-    }
-
     public void Init()
     {
-        using var conn = CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         InitProfiles();
         InitSettings();
         InitThemes();

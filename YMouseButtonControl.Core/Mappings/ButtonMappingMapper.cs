@@ -5,7 +5,7 @@ using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.Mappings;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public static partial class ButtonMappingMapper
 {
     [MapDerivedType<DisabledMapping, DisabledMappingVm>]

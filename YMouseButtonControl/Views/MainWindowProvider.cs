@@ -5,9 +5,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 
 namespace YMouseButtonControl.Views;
 
-public static class MainWindowProvider
+public class MainWindowProvider : IMainWindowProvider
 {
-    public static Window GetMainWindow()
+    public Window GetMainWindow()
     {
         var lifetime = (IClassicDesktopStyleApplicationLifetime)(
             Application.Current?.ApplicationLifetime

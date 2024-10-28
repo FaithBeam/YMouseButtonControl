@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using SharpHook;
 using SharpHook.Reactive;
+using SharpHook.Testing;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;
@@ -41,9 +43,27 @@ public static class KeyboardAndMouseBootstrapper
 
     private static void RegisterCommonKeyboardAndMouseServices(IServiceCollection services)
     {
+        if (
+            AppDomain
+                .CurrentDomain.GetAssemblies()
+                .Any(a =>
+                    a.FullName?.StartsWith(
+                        "xunit.runner",
+                        StringComparison.InvariantCultureIgnoreCase
+                    ) ?? false
+                )
+        )
+        {
+            services.AddScoped<IReactiveGlobalHook>(
+                (_) => new SimpleReactiveGlobalHook(globalHookProvider: new TestProvider())
+            );
+        }
+        else
+        {
+            services.AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>();
+        }
         services
             .AddScoped<IMouseButtonMappingService, MouseButtonMappingService>()
-            .AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
             .AddScoped<IMouseListener, MouseListener>()
             .AddScoped<IEventSimulator, EventSimulator>()
             .AddScoped<IEventSimulatorService, EventSimulatorService>()

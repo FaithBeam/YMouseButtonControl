@@ -24,10 +24,10 @@
         <Grid ColumnDefinitions="400,*">
             <Grid RowDefinitions="Auto,*">
                 <Label Content="Application / Window Profiles" />
-                <views:ProfilesListView Grid.Row="1" DataContext="{Binding ProfilesListViewModel}" />
+                <views:ProfilesListView Name="ProfilesListView" Grid.Row="1" DataContext="{Binding ProfilesListViewModel}" />
             </Grid>
             <Grid Grid.Column="1" RowDefinitions="Auto,Auto">
-                <views:LayerView DataContext="{Binding LayerViewModel}" />
+                <views:LayerView Name="LayerView" DataContext="{Binding LayerViewModel}" />
 			    <Grid Grid.Row="1" RowDefinitions="Auto,*">
 					<Label>Profile Information</Label>
                     <views:ProfileInformationView Grid.Row="1" DataContext="{Binding ProfilesInformationViewModel}" />
@@ -37,13 +37,13 @@
 
         <Grid Grid.Row="1"
               ColumnDefinitions="*,*,*,*,*,*">
-            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding SettingsCommand}">Settings</Button>
-            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Save Profile</Button>
-            <Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Load Profile</Button>
-            <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Text="{Binding CurrentProfile.Name, FallbackValue=''}" IsReadOnly="True" />
-            <Button Grid.Column="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Apply"
+            <Button Name="SettingsBtn" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding SettingsCommand}">Settings</Button>
+            <Button Name="SaveProfileBtn" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Save Profile</Button>
+            <Button Name="LoadProfileBtn" Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Load Profile</Button>
+            <TextBox Name="CurrentProfileNameTextBox" Grid.Column="3" HorizontalAlignment="Stretch" Text="{Binding CurrentProfile.Name, FallbackValue=''}" IsReadOnly="True" />
+            <Button Name="ApplyButton" Grid.Column="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Apply"
                     Command="{Binding ApplyCommand}" />
-            <Button Grid.Column="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Close"
+            <Button Name="CloseBtn" Grid.Column="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Close"
                     Command="{Binding CloseCommand}" />
         </Grid>
     </Grid>

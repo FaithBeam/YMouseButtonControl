@@ -12,14 +12,14 @@ using YMouseButtonControl.DataAccess.Queries;
 
 namespace YMouseButtonControl.Core.Repositories;
 
-public class ThemeRepository(YMouseButtonControlDbContext ctx, ThemeQueries queries)
+public class ThemeRepository(IConnectionProvider connectionProvider, ThemeQueries queries)
     : IRepository<Theme, ThemeVm>
 {
     private const string TblName = "Themes";
 
     public int Add(ThemeVm vm)
     {
-        using var conn = ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Query<int>(queries.Add(), ThemeMapper.Map(vm)).Single();
     }
 
@@ -30,7 +30,7 @@ public class ThemeRepository(YMouseButtonControlDbContext ctx, ThemeQueries quer
 
     public int Delete(ThemeVm vm)
     {
-        using var conn = ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.DeleteById(TblName), new { ThemeMapper.Map(vm).Id });
     }
 
@@ -41,7 +41,7 @@ public class ThemeRepository(YMouseButtonControlDbContext ctx, ThemeQueries quer
 
     public IEnumerable<ThemeVm> GetAll()
     {
-        using var conn = ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Query<Theme>(queries.GetAll(TblName)).Select(ThemeMapper.Map);
     }
 
@@ -52,7 +52,7 @@ public class ThemeRepository(YMouseButtonControlDbContext ctx, ThemeQueries quer
 
     public ThemeVm? GetById(int id)
     {
-        using var conn = ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return ThemeMapper.Map(
             conn.QueryFirstOrDefault<Theme>(queries.GetById(TblName), new { Id = id })
         );
@@ -65,7 +65,7 @@ public class ThemeRepository(YMouseButtonControlDbContext ctx, ThemeQueries quer
 
     public ThemeVm? GetByName(string name)
     {
-        using var conn = ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return ThemeMapper.Map(
             conn.QuerySingleOrDefault<Theme>(queries.GetByName(TblName), new { Name = name })
         );
@@ -73,7 +73,7 @@ public class ThemeRepository(YMouseButtonControlDbContext ctx, ThemeQueries quer
 
     public int Update(ThemeVm vm)
     {
-        using var conn = ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.Update(), ThemeMapper.Map(vm));
     }
 

@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -12,6 +10,8 @@ namespace YMouseButtonControl.Views;
 
 public partial class MouseButtonComboControl : ReactiveUserControl<IMouseComboViewModel>
 {
+    private readonly IMainWindowProvider _mainWindowProvider;
+
     public MouseButtonComboControl()
     {
         InitializeComponent();
@@ -28,6 +28,7 @@ public partial class MouseButtonComboControl : ReactiveUserControl<IMouseComboVi
                 )
             );
         });
+        _mainWindowProvider = Program.Container!.GetRequiredService<IMainWindowProvider>();
     }
 
     private async Task ShowSimulateKeystrokesPicker(
@@ -37,7 +38,7 @@ public partial class MouseButtonComboControl : ReactiveUserControl<IMouseComboVi
         var dialog = new SimulatedKeystrokesDialog { DataContext = context.Input };
 
         var result = await dialog.ShowDialog<SimulatedKeystrokeVm?>(
-            MainWindowProvider.GetMainWindow()
+            _mainWindowProvider.GetMainWindow()
         );
         context.SetOutput(result);
     }

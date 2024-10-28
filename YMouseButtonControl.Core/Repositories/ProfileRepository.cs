@@ -12,29 +12,28 @@ using YMouseButtonControl.DataAccess.Queries;
 namespace YMouseButtonControl.Core.Repositories;
 
 public class ProfileRepository(
-    YMouseButtonControlDbContext ctx,
+    IConnectionProvider connectionProvider,
     ProfileQueries queries,
     ButtonMappingQueries btnMappingQueries
 ) : IRepository<Profile, ProfileVm>
 {
-    private readonly YMouseButtonControlDbContext _ctx = ctx;
     private const string TblName = "Profiles";
 
     public int Add(ProfileVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Query<int>(queries.Add(), vm).Single();
     }
 
     public async Task<int> AddAsync(ProfileVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return await conn.ExecuteAsync(queries.Add(), vm);
     }
 
     public ProfileVm? GetById(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         var profile = conn.QueryFirstOrDefault<Profile>(queries.GetById(TblName), new { Id = id });
         if (profile == null)
         {
@@ -46,7 +45,7 @@ public class ProfileRepository(
 
     public async Task<ProfileVm?> GetByIdAsync(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return ProfileMapper.Map(
             await conn.QueryFirstOrDefaultAsync<Profile>(queries.GetById(TblName), id)
         );
@@ -54,7 +53,7 @@ public class ProfileRepository(
 
     public IEnumerable<ProfileVm> GetAll()
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Query<Profile>(queries.GetAll(TblName))
             .Select(p =>
             {
@@ -65,37 +64,37 @@ public class ProfileRepository(
 
     public async Task<IEnumerable<ProfileVm>> GetAllAsync()
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return (await conn.QueryAsync<Profile>(queries.GetAll(TblName))).Select(ProfileMapper.Map);
     }
 
     public int Update(ProfileVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.Update(), vm);
     }
 
     public async Task<int> UpdateAsync(ProfileVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return await conn.ExecuteAsync(queries.Update(), vm);
     }
 
     public int Delete(ProfileVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.DeleteById(TblName), vm);
     }
 
     public Task<int> DeleteAsync(ProfileVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.ExecuteAsync(queries.DeleteById(TblName), vm);
     }
 
     private List<ButtonMapping> GetButtonMappingsForProfileId(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         using var reader = conn.ExecuteReader(btnMappingQueries.GetByProfileId(), new { Id = id });
         var nothingParser = reader.GetRowParser<NothingMapping>();
         var disabledParser = reader.GetRowParser<DisabledMapping>();
@@ -132,7 +131,7 @@ public class ProfileRepository(
 
     public ProfileVm? GetByName(string name)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return ProfileMapper.Map(
             conn.QuerySingleOrDefault<Profile>(queries.GetByName(TblName), name)
         );

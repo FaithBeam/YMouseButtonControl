@@ -6,7 +6,7 @@ using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.Mappings;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public static partial class ProfileMapper
 {
     public static partial ProfileVm Map(Profile? profile);

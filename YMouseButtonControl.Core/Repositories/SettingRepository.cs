@@ -13,33 +13,32 @@ using static Dapper.SqlMapper;
 
 namespace YMouseButtonControl.Core.Repositories;
 
-public class SettingRepository(YMouseButtonControlDbContext ctx, SettingQueries queries)
+public class SettingRepository(IConnectionProvider connectionProvider, SettingQueries queries)
     : IRepository<Setting, BaseSettingVm>
 {
-    private readonly YMouseButtonControlDbContext _ctx = ctx;
     private const string TblName = "Settings";
 
     public int Add(BaseSettingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.Add(), vm);
     }
 
     public async Task<int> AddAsync(BaseSettingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return await conn.ExecuteAsync(queries.Add(), vm);
     }
 
     public BaseSettingVm? GetById(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return SettingMapper.Map(conn.QueryFirstOrDefault<Setting>(queries.GetById(TblName), id));
     }
 
     public async Task<BaseSettingVm?> GetByIdAsync(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return SettingMapper.Map(
             await conn.QueryFirstOrDefaultAsync<Setting>(queries.GetById(TblName), id)
         );
@@ -47,7 +46,7 @@ public class SettingRepository(YMouseButtonControlDbContext ctx, SettingQueries 
 
     public IEnumerable<BaseSettingVm> GetAll()
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         using var reader = conn.ExecuteReader(queries.GetAll(TblName));
         var settings = new List<Setting>();
         var settingBoolParser = reader.GetRowParser<SettingBool>();
@@ -77,7 +76,7 @@ public class SettingRepository(YMouseButtonControlDbContext ctx, SettingQueries 
 
     public BaseSettingVm? GetByName(string name)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         using var reader = conn.ExecuteReader(queries.GetByName(TblName), new { Name = name });
         var settingBoolParser = reader.GetRowParser<SettingBool>();
         var settingIntParser = reader.GetRowParser<SettingInt>();
@@ -95,13 +94,13 @@ public class SettingRepository(YMouseButtonControlDbContext ctx, SettingQueries 
 
     public async Task<IEnumerable<BaseSettingVm>> GetAllAsync()
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return (await conn.QueryAsync<Setting>(queries.GetAll(TblName))).Select(SettingMapper.Map);
     }
 
     public int Update(BaseSettingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         var ent = SettingMapper.Map(vm);
         return ent switch
         {
@@ -144,19 +143,19 @@ public class SettingRepository(YMouseButtonControlDbContext ctx, SettingQueries 
 
     public async Task<int> UpdateAsync(BaseSettingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return await conn.ExecuteAsync(queries.Update(), vm);
     }
 
     public int Delete(BaseSettingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.DeleteById(TblName), vm.Id);
     }
 
     public Task<int> DeleteAsync(BaseSettingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.ExecuteAsync(queries.DeleteById(TblName), vm.Id);
     }
 }

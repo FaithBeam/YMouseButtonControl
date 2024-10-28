@@ -11,15 +11,16 @@ using YMouseButtonControl.DataAccess.Queries;
 
 namespace YMouseButtonControl.Core.Repositories;
 
-public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMappingQueries queries)
-    : IRepository<ButtonMapping, BaseButtonMappingVm>
+public class ButtonMappingRepository(
+    IConnectionProvider connectionProvider,
+    ButtonMappingQueries queries
+) : IRepository<ButtonMapping, BaseButtonMappingVm>
 {
-    private readonly YMouseButtonControlDbContext _ctx = ctx;
     private const string TblName = "ButtonMappings";
 
     public int Add(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         var ent = ButtonMappingMapper.Map(vm);
         ent.ButtonMappingType = ent switch
         {
@@ -34,13 +35,13 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMap
 
     public async Task<int> AddAsync(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return await conn.ExecuteAsync(queries.Add(), vm);
     }
 
     public BaseButtonMappingVm? GetById(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return ButtonMappingMapper.Map(
             conn.QueryFirstOrDefault<ButtonMapping>(queries.GetById(TblName), id)
         );
@@ -48,7 +49,7 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMap
 
     public async Task<BaseButtonMappingVm?> GetByIdAsync(int id)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return ButtonMappingMapper.Map(
             await conn.QueryFirstOrDefaultAsync<ButtonMapping>(queries.GetById(TblName), id)
         );
@@ -56,13 +57,13 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMap
 
     public IEnumerable<BaseButtonMappingVm> GetAll()
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Query<ButtonMapping>(queries.GetAll(TblName)).Select(ButtonMappingMapper.Map);
     }
 
     public async Task<IEnumerable<BaseButtonMappingVm>> GetAllAsync()
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return (await conn.QueryAsync<ButtonMapping>(queries.GetAll(TblName))).Select(
             ButtonMappingMapper.Map
         );
@@ -70,25 +71,25 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMap
 
     public int Update(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.Update(), vm);
     }
 
     public async Task<int> UpdateAsync(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return await conn.ExecuteAsync(queries.Update(), vm);
     }
 
     public int Delete(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.Execute(queries.DeleteById(TblName), vm.Id);
     }
 
     public Task<int> DeleteAsync(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
+        using var conn = connectionProvider.CreateConnection();
         return conn.ExecuteAsync(queries.DeleteById(TblName), vm.Id);
     }
 

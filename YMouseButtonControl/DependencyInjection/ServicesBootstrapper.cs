@@ -9,6 +9,7 @@ using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.StartMenuInstaller;
 using YMouseButtonControl.Core.Services.StartupInstaller;
 using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Views;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -23,6 +24,7 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         services
+            .AddScoped<IMainWindowProvider, MainWindowProvider>()
             .AddScoped<IEnableLoggingService, EnableLoggingService>()
             .AddScoped<IThemeService, ThemeService>()
             .AddScoped<IProfilesService, ProfilesService>()

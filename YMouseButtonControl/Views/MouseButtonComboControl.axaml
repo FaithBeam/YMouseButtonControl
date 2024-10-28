@@ -17,12 +17,12 @@
 
     <Grid ColumnDefinitions="150,*,Auto" Margin="5">
         <Label Content="{Binding LabelTxt}" />
-        <ComboBox Grid.Column="1" ItemsSource="{Binding BtnMappings}"
+        <ComboBox Name="BtnMappingsCombo" Grid.Column="1" ItemsSource="{Binding BtnMappings}"
                   SelectedItem="{Binding SelectedBtnMap}"
                   HorizontalAlignment="Stretch"
                   Background="{Binding BackgroundColor}">
         </ComboBox>
-        <Button Grid.Column="2" Background="White" Command="{Binding UserClickedEditSettingButton}">
+        <Button Name="SettingBtn" Grid.Column="2" Background="White" Command="{Binding UserClickedEditSettingButton}">
             <Image Source="../Resources/gear_icon1.png" />
         </Button>
     </Grid>

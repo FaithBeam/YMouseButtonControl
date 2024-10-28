@@ -32,15 +32,15 @@
                     <Button Grid.Column="3" IsEnabled="False">Swap</Button>
                     <Button Grid.Column="4" IsEnabled="False">Reset</Button>
                 </Grid>
-                <views:MouseButtonComboControl Grid.Row="1" DataContext="{Binding Mb1ComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="2" DataContext="{Binding Mb2ComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="3" DataContext="{Binding Mb3ComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="4" DataContext="{Binding Mb4ComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="5" DataContext="{Binding Mb5ComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="6" DataContext="{Binding MwuComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="7" DataContext="{Binding MwdComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="8" DataContext="{Binding MwlComboVm}" />
-                <views:MouseButtonComboControl Grid.Row="9" DataContext="{Binding MwrComboVm}" />
+                <views:MouseButtonComboControl Name="Mb1ComboVm" Grid.Row="1" DataContext="{Binding Mb1ComboVm}" />
+                <views:MouseButtonComboControl Name="Mb2ComboVm" Grid.Row="2" DataContext="{Binding Mb2ComboVm}" />
+				<views:MouseButtonComboControl Name="Mb3ComboVm" Grid.Row="3" DataContext="{Binding Mb3ComboVm}" />
+				<views:MouseButtonComboControl Name="Mb4ComboVm" Grid.Row="4" DataContext="{Binding Mb4ComboVm}" />
+				<views:MouseButtonComboControl Name="Mb5ComboVm" Grid.Row="5" DataContext="{Binding Mb5ComboVm}" />
+                <views:MouseButtonComboControl Name="MwuComboVm" Grid.Row="6" DataContext="{Binding MwuComboVm}" />
+                <views:MouseButtonComboControl Name="MwdComboVm" Grid.Row="7" DataContext="{Binding MwdComboVm}" />
+				<views:MouseButtonComboControl Name="MwlComboVm" Grid.Row="8" DataContext="{Binding MwlComboVm}" />
+				<views:MouseButtonComboControl Name="MwrComboVm" Grid.Row="9" DataContext="{Binding MwrComboVm}" />
             </Grid>
         </TabItem>
         <TabItem Header="Layer 2"></TabItem>

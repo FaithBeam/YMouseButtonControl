@@ -16,7 +16,7 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">
-        <ListBox ItemsSource="{Binding ProfilesService.Profiles}" SelectedIndex="{Binding SelectedIndex}">
+        <ListBox Name="ProfilesList" ItemsSource="{Binding ProfilesService.Profiles}" SelectedIndex="{Binding SelectedIndex}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <Setter Property="Padding" Value="6 0 6 0"></Setter>
@@ -40,6 +40,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0"
                     Grid.Column="0"
+					Name="AddBtn"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     Content="Add"

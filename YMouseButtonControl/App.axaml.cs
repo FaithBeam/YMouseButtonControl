@@ -27,7 +27,6 @@ namespace YMouseButtonControl;
 
 public partial class App : Application
 {
-    public IServiceProvider? Container { get; private set; }
     private IBackgroundTasksRunner? _backgroundTasksRunner;
 
     public override void Initialize()
@@ -46,6 +45,7 @@ public partial class App : Application
             {
                 services.UseMicrosoftDependencyResolver();
                 services.AddScoped(_ => configuration);
+                services.AddScoped<IConnectionProvider, ConnectionProvider>();
                 services.AddScoped<YMouseButtonControlDbContext>();
 
                 var resolver = Locator.CurrentMutable;
@@ -72,10 +72,10 @@ public partial class App : Application
 #endif
             })
             .Build();
-        Container = host.Services;
-        Container.UseMicrosoftDependencyResolver();
+        Program.Container = host.Services;
+        Program.Container.UseMicrosoftDependencyResolver();
 
-        Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
+        Program.Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
 
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
@@ -84,15 +84,16 @@ public partial class App : Application
     {
         Init();
         var logger =
-            Container?.GetRequiredService<ILogger<App>>()
+            Program.Container?.GetRequiredService<ILogger<App>>()
             ?? throw new Exception("Error activating logger");
 
         try
         {
-            DataContext = Container?.GetRequiredService<IAppViewModel>();
-            _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
+            DataContext = Program.Container?.GetRequiredService<IAppViewModel>();
+            _backgroundTasksRunner =
+                Program.Container?.GetRequiredService<IBackgroundTasksRunner>();
             var settingsService =
-                Container?.GetRequiredService<ISettingsService>()
+                Program.Container?.GetRequiredService<ISettingsService>()
                 ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
             var startMinimized =
                 settingsService.GetSetting("StartMinimized") as SettingBoolVm
@@ -102,8 +103,9 @@ public partial class App : Application
             {
                 if (!startMinimized.BoolValue)
                 {
-                    var mainWindow = (Window)Container.GetRequiredService<IMainWindow>();
-                    mainWindow.DataContext = Container.GetRequiredService<IMainWindowViewModel>();
+                    var mainWindow = (Window)Program.Container.GetRequiredService<IMainWindow>();
+                    mainWindow.DataContext =
+                        Program.Container.GetRequiredService<IMainWindowViewModel>();
                     desktop.MainWindow = mainWindow;
                 }
 
