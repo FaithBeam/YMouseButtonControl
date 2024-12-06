@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.DataAccess.Models;
+﻿namespace YMouseButtonControl.Domain.Models;
 
 public enum MouseButton
 {

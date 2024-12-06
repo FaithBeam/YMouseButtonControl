@@ -1,4 +1,4 @@
-﻿namespace YMouseButtonControl.DataAccess.Models;
+﻿namespace YMouseButtonControl.Domain.Models;
 
 public class Profile
 {
@@ -14,5 +14,5 @@ public class Profile
     public required string ParentClass { get; set; }
     public required string MatchType { get; set; }
 
-    public virtual ICollection<ButtonMapping>? ButtonMappings { get; set; }
+    public virtual ICollection<ButtonMapping> ButtonMappings { get; set; } = [];
 }

@@ -1,117 +1,128 @@
 ﻿using System.Data;
 using Dapper;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using YMouseButtonControl.Domain.Models;
 
-namespace YMouseButtonControl.DataAccess.Context;
+namespace YMouseButtonControl.Infrastructure.Context;
 
-public class YMouseButtonControlDbContext(IConfigurationRoot? configuration)
+public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDbContext> opts)
+    : DbContext(opts)
 {
-    public IConfigurationRoot? Configuration { get; } = configuration;
+    public DbSet<Profile> Profiles { get; set; } = null!;
+    public DbSet<Setting> Settings { get; set; } = null!;
+    public DbSet<SettingBool> SettingBools { get; set; } = null!;
+    public DbSet<SettingString> SettingStrings { get; set; } = null!;
+    public DbSet<SettingInt> SettingInts { get; set; } = null!;
+    public DbSet<Theme> Themes { get; set; } = null!;
+    public DbSet<ButtonMapping> ButtonMappings { get; set; } = null!;
+    public DbSet<DisabledMapping> DisabledMappings { get; set; } = null!;
+    public DbSet<NothingMapping> NothingMappings { get; set; } = null!;
+    public DbSet<SimulatedKeystroke> SimulatedKeystrokeMappings { get; set; } = null!;
+    public DbSet<RightClick> RightClickMappings { get; set; } = null!;
 
-    public IDbConnection CreateConnection()
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        return new SqliteConnection(
-            Configuration?.GetConnectionString("YMouseButtonControlContext")
-        );
-    }
+        modelBuilder
+            .Entity<Profile>()
+            .HasData(
+                new Profile
+                {
+                    Id = 1,
+                    IsDefault = true,
+                    Checked = true,
+                    DisplayPriority = 1,
+                    Name = "Default",
+                    Description = "Default description",
+                    WindowCaption = "N/A",
+                    Process = "*",
+                    MatchType = "N/A",
+                    ParentClass = "N/A",
+                    WindowClass = "N/A",
+                }
+            );
 
-    public void Init()
-    {
-        using var conn = CreateConnection();
-        InitProfiles();
-        InitSettings();
-        InitThemes();
-        InitButtonMappings();
-        return;
+        modelBuilder
+            .Entity<NothingMapping>()
+            .HasData(
+                [
+                    new NothingMapping
+                    {
+                        Id = 1,
+                        MouseButton = MouseButton.Mb1,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 2,
+                        MouseButton = MouseButton.Mb2,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 3,
+                        MouseButton = MouseButton.Mb3,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 4,
+                        MouseButton = MouseButton.Mb4,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 5,
+                        MouseButton = MouseButton.Mb5,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 6,
+                        MouseButton = MouseButton.Mwu,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 7,
+                        MouseButton = MouseButton.Mwd,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 8,
+                        MouseButton = MouseButton.Mwl,
+                        ProfileId = 1,
+                    },
+                    new NothingMapping
+                    {
+                        Id = 9,
+                        MouseButton = MouseButton.Mwr,
+                        ProfileId = 1,
+                    },
+                ]
+            );
 
-        void InitProfiles()
-        {
-            const string sql = """
-                CREATE TABLE IF NOT EXISTS
-                Profiles (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                IsDefault BOOLEAN,
-                Checked BOOLEAN,
-                DisplayPriority INTEGER,
-                Name TEXT NOT NULL,
-                Description TEXT NOT NULL,
-                WindowCaption TEXT NOT NULL,
-                Process TEXT NOT NULL,
-                WindowClass TEXT NOT NULL,
-                ParentClass TEXT NOT NULL,
-                MatchType TEXT NOT NULL
-                );
-                INSERT OR IGNORE INTO Profiles (
-                Id, IsDefault, Checked, Name, Description, WindowCaption, Process, WindowClass, ParentClass, MatchType)
-                VALUES ('1', '1', '1', 'Default', 'Default description', 'N/A', '*', 'N/A', 'N/A', 'N/A');
-                """;
-            conn.Execute(sql);
-        }
-
-        void InitSettings()
-        {
-            const string sql = """
-                CREATE TABLE IF NOT EXISTS
-                Settings (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
-                    BoolValue BOOLEAN,
-                    StringValue TEXT,
-                    IntValue INTEGER,
-                    SettingType INTEGER NOT NULL
-                );
-                INSERT OR IGNORE INTO Settings (Id, Name, BoolValue, SettingType) VALUES ('1', 'StartMinimized', 0, '1');
-                INSERT OR IGNORE INTO Settings (Id, Name, IntValue, SettingType) VALUES ('2', 'Theme', '1', '3');
-                """;
-            conn.Execute(sql);
-        }
-
-        void InitThemes()
-        {
-            const string sql = """
-                CREATE TABLE IF NOT EXISTS
-                Themes (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
-                    Background TEXT NOT NULL,
-                    Highlight TEXT NOT NULL
-                );
-                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('1', 'Default', 'SystemAltHighColor','SystemAccentColor');
-                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('2', 'Light', 'White', 'Yellow');
-                INSERT OR IGNORE INTO Themes (Id, Name, Background, Highlight) VALUES ('3', 'Dark', 'Black', '#3700b3');
-                """;
-            conn.Execute(sql);
-        }
-
-        void InitButtonMappings()
-        {
-            const string sql = """
-                CREATE TABLE IF NOT EXISTS
-                ButtonMappings (
-                  Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Keys TEXT,
-                    MouseButton INTEGER NOT NULL,
-                    ProfileId INTEGER NOT NULL,
-                    SimulatedKeystrokeType INTEGER,
-                    Selected BOOLEAN,
-                    BlockOriginalMouseInput BOOLEAN,
-                    AutoRepeatDelay INTEGER,
-                    AutoRepeatRandomizeDelayEnabled BOOLEAN,
-                    ButtonMappingType INTEGER NOT NULL,
-                    FOREIGN KEY (ProfileId) REFERENCES Profiles (Id) ON DELETE CASCADE
-                );
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('1', '0', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('2', '1', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('3', '2', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('4', '3', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('5', '4', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('6', '5', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('7', '6', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('8', '7', '1', '1');
-                INSERT OR IGNORE INTO ButtonMappings (Id, MouseButton, ProfileId, ButtonMappingType) VALUES ('9', '8', '1', '1');
-                """;
-            conn.Execute(sql);
-        }
+        modelBuilder
+            .Entity<SettingBool>()
+            .HasData(
+                new SettingBool
+                {
+                    Id = 1,
+                    Name = "StartMinimized",
+                    BoolValue = false,
+                }
+            );
+        modelBuilder
+            .Entity<SettingInt>()
+            .HasData(
+                new SettingInt
+                {
+                    Id = 2,
+                    Name = "Theme",
+                    IntValue = 3,
+                }
+            );
     }
 }

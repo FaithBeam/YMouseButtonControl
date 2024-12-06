@@ -18,8 +18,8 @@ using YMouseButtonControl.Core.ViewModels.AppViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.Views;
-using YMouseButtonControl.DataAccess.Context;
 using YMouseButtonControl.DependencyInjection;
+using YMouseButtonControl.Infrastructure.Context;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 

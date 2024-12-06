@@ -10,7 +10,6 @@ using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.StartMenuInstaller;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 

@@ -7,9 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Dapper" Version="2.1.35" />
       <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\YMouseButtonControl.Domain\YMouseButtonControl.Domain.csproj" />
     </ItemGroup>
 
 </Project>

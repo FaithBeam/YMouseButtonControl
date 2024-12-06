@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Dapper;
 using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Context;
 using YMouseButtonControl.DataAccess.Models;
 using YMouseButtonControl.DataAccess.Queries;
+using YMouseButtonControl.Infrastructure.Context;
 
 namespace YMouseButtonControl.Core.Repositories;
 

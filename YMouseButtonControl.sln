@@ -1,10 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Core.Tests", "YMouseButtonControl.Core.Tests\YMouseButtonControl.Core.Tests.csproj", "{0F770391-A4A1-611D-4FBA-125A6EB42834}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Core", "YMouseButtonControl.Core\YMouseButtonControl.Core.csproj", "{CEB84FCC-DB49-6456-7173-1F508E465D31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.DataAccess", "YMouseButtonControl.DataAccess\YMouseButtonControl.DataAccess.csproj", "{A4C2C9B9-43FA-ACCF-4C5B-E79ECC6F61BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Infrastructure", "YMouseButtonControl.DataAccess\YMouseButtonControl.Infrastructure.csproj", "{A4C2C9B9-43FA-ACCF-4C5B-E79ECC6F61BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Linux.Tests", "YMouseButtonControl.Linux.Tests\YMouseButtonControl.Linux.Tests.csproj", "{BD4EFA4F-A2CD-2BDE-BAA5-C55B4B220A84}"
 EndProject
@@ -17,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Windows", "YMouseButtonControl.Windows\YMouseButtonControl.Windows.csproj", "{71DBAE95-A199-1248-A4B2-AA579ED0354B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl", "YMouseButtonControl\YMouseButtonControl.csproj", "{9E275480-14AB-A39F-C3FB-ED2FDB97361F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Domain", "YMouseButtonControl.Domain\YMouseButtonControl.Domain.csproj", "{4DE55456-2875-4979-BB42-8D57B0FDE353}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,5 +65,12 @@ Global
 		{9E275480-14AB-A39F-C3FB-ED2FDB97361F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E275480-14AB-A39F-C3FB-ED2FDB97361F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E275480-14AB-A39F-C3FB-ED2FDB97361F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DE55456-2875-4979-BB42-8D57B0FDE353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DE55456-2875-4979-BB42-8D57B0FDE353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DE55456-2875-4979-BB42-8D57B0FDE353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DE55456-2875-4979-BB42-8D57B0FDE353}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
