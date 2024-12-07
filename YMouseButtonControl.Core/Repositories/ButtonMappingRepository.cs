@@ -1,25 +1,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
 using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
-using YMouseButtonControl.DataAccess.Queries;
+using YMouseButtonControl.Domain.Models;
 using YMouseButtonControl.Infrastructure.Context;
 
 namespace YMouseButtonControl.Core.Repositories;
 
-public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMappingQueries queries)
+public class ButtonMappingRepository(YMouseButtonControlDbContext ctx)
     : IRepository<ButtonMapping, BaseButtonMappingVm>
 {
     private readonly YMouseButtonControlDbContext _ctx = ctx;
-    private const string TblName = "ButtonMappings";
 
     public int Add(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
         var ent = ButtonMappingMapper.Map(vm);
         ent.ButtonMappingType = ent switch
         {
@@ -29,67 +24,56 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx, ButtonMap
             RightClick => ButtonMappingType.RightClick,
             _ => throw new System.NotImplementedException(),
         };
-        return conn.Execute(queries.Add(), ent);
-    }
-
-    public async Task<int> AddAsync(BaseButtonMappingVm vm)
-    {
-        using var conn = _ctx.CreateConnection();
-        return await conn.ExecuteAsync(queries.Add(), vm);
+        var id = _ctx.ButtonMappings.Add(ent).Entity.Id;
+        _ctx.SaveChanges();
+        return id;
     }
 
     public BaseButtonMappingVm? GetById(int id)
     {
-        using var conn = _ctx.CreateConnection();
-        return ButtonMappingMapper.Map(
-            conn.QueryFirstOrDefault<ButtonMapping>(queries.GetById(TblName), id)
-        );
-    }
-
-    public async Task<BaseButtonMappingVm?> GetByIdAsync(int id)
-    {
-        using var conn = _ctx.CreateConnection();
-        return ButtonMappingMapper.Map(
-            await conn.QueryFirstOrDefaultAsync<ButtonMapping>(queries.GetById(TblName), id)
-        );
+        return ButtonMappingMapper.Map(_ctx.ButtonMappings.Find(id));
     }
 
     public IEnumerable<BaseButtonMappingVm> GetAll()
     {
-        using var conn = _ctx.CreateConnection();
-        return conn.Query<ButtonMapping>(queries.GetAll(TblName)).Select(ButtonMappingMapper.Map);
-    }
-
-    public async Task<IEnumerable<BaseButtonMappingVm>> GetAllAsync()
-    {
-        using var conn = _ctx.CreateConnection();
-        return (await conn.QueryAsync<ButtonMapping>(queries.GetAll(TblName))).Select(
-            ButtonMappingMapper.Map
-        );
+        return _ctx.ButtonMappings.Select(ButtonMappingMapper.Map);
     }
 
     public int Update(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
-        return conn.Execute(queries.Update(), vm);
-    }
-
-    public async Task<int> UpdateAsync(BaseButtonMappingVm vm)
-    {
-        using var conn = _ctx.CreateConnection();
-        return await conn.ExecuteAsync(queries.Update(), vm);
+        var ent = _ctx.ButtonMappings.Find(vm.Id);
+        if (ent is not null)
+        {
+            ent.MouseButton = vm.MouseButton;
+            ent.Keys = vm.Keys;
+            ent.Selected = vm.Selected;
+            ent.ProfileId = vm.ProfileId;
+            ent.BlockOriginalMouseInput = vm.BlockOriginalMouseInput;
+            ent.AutoRepeatDelay = vm.AutoRepeatDelay;
+            ent.AutoRepeatRandomizeDelayEnabled = vm.AutoRepeatRandomizeDelayEnabled;
+            ent.ButtonMappingType = ent.ButtonMappingType = ent switch
+            {
+                DisabledMapping => ButtonMappingType.Disabled,
+                NothingMapping => ButtonMappingType.Nothing,
+                SimulatedKeystroke => ButtonMappingType.SimulatedKeystroke,
+                RightClick => ButtonMappingType.RightClick,
+                _ => throw new System.NotImplementedException(),
+            };
+            _ctx.SaveChanges();
+        }
+        return ent?.Id ?? -1;
     }
 
     public int Delete(BaseButtonMappingVm vm)
     {
-        using var conn = _ctx.CreateConnection();
-        return conn.Execute(queries.DeleteById(TblName), vm.Id);
-    }
+        var ent = _ctx.ButtonMappings.Find(vm.Id);
+        if (ent is not null)
+        {
+            _ctx.ButtonMappings.Remove(ent);
+            _ctx.SaveChanges();
+        }
 
-    public Task<int> DeleteAsync(BaseButtonMappingVm vm)
-    {
-        using var conn = _ctx.CreateConnection();
-        return conn.ExecuteAsync(queries.DeleteById(TblName), vm.Id);
+        return ent?.Id ?? -1;
     }
 
     public BaseButtonMappingVm? GetByName(string name)

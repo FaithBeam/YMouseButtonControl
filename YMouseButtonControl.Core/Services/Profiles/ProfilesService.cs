@@ -4,15 +4,14 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using Avalonia.Media.TextFormatting.Unicode;
 using DynamicData;
-using DynamicData.Binding;
 using Newtonsoft.Json;
 using ReactiveUI;
+using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles.Exceptions;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.Services.Profiles;
 
@@ -20,6 +19,8 @@ public interface IProfilesService
 {
     ProfileVm? CurrentProfile { get; set; }
     ReadOnlyObservableCollection<ProfileVm> Profiles { get; }
+    bool Dirty { get; set; }
+
     IObservable<IChangeSet<ProfileVm, int>> Connect();
     ProfileVm CopyProfile(ProfileVm p);
     void WriteProfileToFile(ProfileVm p, string path);
@@ -30,6 +31,7 @@ public interface IProfilesService
     void MoveProfileDown(ProfileVm p);
     void RemoveProfile(ProfileVm profileVm);
     void AddOrUpdate(ProfileVm profileVm);
+    void CheckForDirty();
 }
 
 public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
@@ -38,6 +40,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
     private ProfileVm? _currentProfile;
     private readonly SourceCache<ProfileVm, int> _profiles;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profilesObsCol;
+    private bool _dirty;
 
     public ProfilesService(IRepository<Profile, ProfileVm> profileRepository)
     {
@@ -48,8 +51,75 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             .AutoRefresh()
             .SortBy(x => x.DisplayPriority)
             .Bind(out _profilesObsCol)
-            .Subscribe();
+            .Subscribe(IsDirty);
         _profiles.AddOrUpdate(profileRepository.GetAll().ToList());
+    }
+
+    private void IsDirty(IChangeSet<ProfileVm, int> set)
+    {
+        foreach (var cs in set.Where(x => x.Reason != ChangeReason.Refresh))
+        {
+            if (cs.Reason == ChangeReason.Add)
+            {
+                if (_profileRepository.GetById(cs.Current.Id) is null)
+                {
+                    Dirty = true;
+                    return;
+                }
+            }
+            else if (cs.Reason == ChangeReason.Update)
+            {
+                var ent =
+                    _profileRepository.GetById(cs.Current.Id)
+                    ?? throw new Exception("Null entity on update reason");
+                var mapped = ProfileMapper.Map(cs.Current);
+                if (!ent.Equals(mapped))
+                {
+                    Dirty = true;
+                    return;
+                }
+            }
+            else if (cs.Reason == ChangeReason.Remove)
+            {
+                if (_profileRepository.GetById(cs.Current.Id) is null)
+                {
+                    Dirty = false;
+                }
+                else
+                {
+                    Dirty = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    public void CheckForDirty()
+    {
+        var dbProfiles = _profileRepository.GetAll();
+        foreach (var dbProf in dbProfiles)
+        {
+            if (_profilesObsCol.All(x => !x.Equals(dbProf)))
+            {
+                Dirty = true;
+                return;
+            }
+        }
+        foreach (var prof in _profilesObsCol)
+        {
+            if (dbProfiles.All(x => !x.Equals(prof)))
+            {
+                Dirty = true;
+                return;
+            }
+        }
+        Dirty = false;
+    }
+
+    public bool Dirty
+    {
+        get => _dirty;
+        set => this.RaiseAndSetIfChanged(ref _dirty, value);
     }
 
     /// <summary>

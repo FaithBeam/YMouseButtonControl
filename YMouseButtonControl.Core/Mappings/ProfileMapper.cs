@@ -2,7 +2,7 @@
 using System.Linq;
 using Riok.Mapperly.Abstractions;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.Mappings;
 

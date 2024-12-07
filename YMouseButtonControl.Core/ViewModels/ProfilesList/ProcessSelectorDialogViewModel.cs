@@ -10,7 +10,7 @@ using ReactiveUI;
 using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.ProfilesList;
 

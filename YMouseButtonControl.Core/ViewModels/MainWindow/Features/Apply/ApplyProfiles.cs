@@ -1,8 +1,9 @@
-﻿using System.Transactions;
+﻿using System.Linq;
+using System.Transactions;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 
@@ -13,29 +14,30 @@ public interface IApply
 
 public class Apply(
     IRepository<Profile, ProfileVm> profileRepository,
-    IRepository<ButtonMapping, BaseButtonMappingVm> buttonMappingRepository,
+    //IRepository<ButtonMapping, BaseButtonMappingVm> buttonMappingRepository,
     IProfilesService profilesService
 ) : IApply
 {
     public void ApplyProfiles()
     {
-        using var trn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        foreach (var dbVm in profileRepository.GetAll())
-        {
-            profileRepository.Delete(dbVm);
-        }
-        foreach (var vm in profilesService.Profiles)
-        {
-            var profileId = profileRepository.Add(vm);
-            foreach (var bm in vm.ButtonMappings)
-            {
-                if (bm.ProfileId <= 0)
-                {
-                    bm.ProfileId = profileId;
-                }
-                buttonMappingRepository.Add(bm);
-            }
-        }
-        trn.Complete();
+        var dbProfiles = profileRepository.GetAll();
+
+        // delete profiles
+        dbProfiles
+            .Where(x => !profilesService.Profiles.Any(y => y.Id == x.Id))
+            .ToList()
+            .ForEach(x => profileRepository.Delete(x));
+
+        // update profiles
+        profilesService
+            .Profiles.Where(x => dbProfiles.Any(y => y.Id == x.Id))
+            .ToList()
+            .ForEach(x => profileRepository.Update(x));
+
+        // add profiles
+        profilesService
+            .Profiles.Where(x => !dbProfiles.Any(y => y.Id == x.Id))
+            .ToList()
+            .ForEach(x => profileRepository.Add(x));
     }
 }

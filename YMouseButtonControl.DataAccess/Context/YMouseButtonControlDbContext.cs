@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +6,7 @@ using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Infrastructure.Context;
 
-public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDbContext> opts)
-    : DbContext(opts)
+public class YMouseButtonControlDbContext : DbContext
 {
     public DbSet<Profile> Profiles { get; set; } = null!;
     public DbSet<Setting> Settings { get; set; } = null!;
@@ -22,6 +20,12 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
     public DbSet<SimulatedKeystroke> SimulatedKeystrokeMappings { get; set; } = null!;
     public DbSet<RightClick> RightClickMappings { get; set; } = null!;
 
+    public YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDbContext> opts)
+        : base(opts)
+    {
+        Database.EnsureCreated();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -32,7 +36,7 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
                     Id = 1,
                     IsDefault = true,
                     Checked = true,
-                    DisplayPriority = 1,
+                    DisplayPriority = 0,
                     Name = "Default",
                     Description = "Default description",
                     WindowCaption = "N/A",
@@ -102,6 +106,32 @@ public class YMouseButtonControlDbContext(DbContextOptions<YMouseButtonControlDb
                         ProfileId = 1,
                     },
                 ]
+            );
+
+        modelBuilder
+            .Entity<Theme>()
+            .HasData(
+                new Theme
+                {
+                    Id = 1,
+                    Name = "Default",
+                    Background = "SystemAltHighColor",
+                    Highlight = "SystemAccentColor",
+                },
+                new Theme
+                {
+                    Id = 2,
+                    Name = "Light",
+                    Background = "White",
+                    Highlight = "Yellow",
+                },
+                new Theme
+                {
+                    Id = 3,
+                    Name = "Dark",
+                    Background = "Black",
+                    Highlight = "#3700b3",
+                }
             );
 
         modelBuilder

@@ -4,7 +4,7 @@ using System.Linq;
 using DynamicData;
 using Newtonsoft.Json;
 using ReactiveUI;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.Models;
 

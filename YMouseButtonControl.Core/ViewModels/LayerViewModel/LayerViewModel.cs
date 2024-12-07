@@ -1,7 +1,7 @@
 using System;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
 

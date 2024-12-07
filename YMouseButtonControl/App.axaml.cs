@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,8 +46,11 @@ public partial class App : Application
             .ConfigureServices(services =>
             {
                 services.UseMicrosoftDependencyResolver();
+                services.AddDbContext<YMouseButtonControlDbContext>(opts =>
+                    opts.UseSqlite(configuration.GetConnectionString("YMouseButtonControlContext"))
+                );
                 services.AddScoped(_ => configuration);
-                services.AddScoped<YMouseButtonControlDbContext>();
+                //services.AddScoped<YMouseButtonControlDbContext>();
 
                 var resolver = Locator.CurrentMutable;
                 resolver.InitializeSplat();
@@ -75,7 +79,7 @@ public partial class App : Application
         Container = host.Services;
         Container.UseMicrosoftDependencyResolver();
 
-        Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
+        //Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
 
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }

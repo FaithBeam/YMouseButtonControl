@@ -17,7 +17,7 @@ public static class ViewModelsBootstrapper
     private static void RegisterCommonViewModels(IServiceCollection services)
     {
         services
-            .AddScoped<IMouseComboViewModel, MouseComboViewModel>()
+            //.AddScoped<IMouseComboViewModel, MouseComboViewModel>()
             .AddScoped<IProcessSelectorDialogViewModel, ProcessSelectorDialogViewModel>()
             .AddScoped<IGlobalSettingsDialogViewModel, GlobalSettingsDialogViewModel>()
             .AddScoped<IProfilesInformationViewModel, ProfilesInformationViewModel>()

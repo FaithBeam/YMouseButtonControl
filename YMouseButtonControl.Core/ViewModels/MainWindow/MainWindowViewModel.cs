@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using DynamicData;
-using DynamicData.Binding;
 using ReactiveUI;
-using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles;
-using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
-using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -40,14 +34,11 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private readonly IRepository<Profile, ProfileVm> _profileRepository;
     private readonly IProfilesService _ps;
     private readonly IThemeService _themeService;
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
-    private readonly ObservableAsPropertyHelper<bool>? _isExecutingSave;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profileVms;
-    private bool _canSave;
 
     #endregion
 
@@ -60,11 +51,9 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         IProfilesListViewModel profilesListViewModel,
         IProfilesInformationViewModel profilesInformationViewModel,
         IGlobalSettingsDialogViewModel globalSettingsDialogViewModel,
-        IApply apply,
-        IRepository<Profile, ProfileVm> profileRepository
+        IApply apply
     )
     {
-        _profileRepository = profileRepository;
         _profilesListViewModel = profilesListViewModel;
         _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
         _ps = ps;
@@ -88,49 +77,15 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             .RefCount()
             .Bind(out _profileVms)
             .DisposeMany()
-            .Subscribe(CanSaveHelper);
-        var isExecutingObservable = this.WhenAnyValue(x => x.IsExecutingSave)
-            .Subscribe(_ => CanSave = false);
-        var canSaveCmd = this.WhenAnyValue(x => x.CanSave);
-        ApplyCommand = ReactiveCommand.Create(apply.ApplyProfiles, canSaveCmd);
-        _isExecutingSave = ApplyCommand.IsExecuting.ToProperty(this, x => x.IsExecutingSave);
-    }
-
-    private void CanSaveHelper(IChangeSet<ProfileVm, int> changeSet)
-    {
-        foreach (var cs in changeSet)
-        {
-            var entity = _profileRepository.GetById(cs.Current.Id);
-            switch (cs.Reason)
-            {
-                case ChangeReason.Add:
-                    CanSave = entity is null;
-                    break;
-                case ChangeReason.Update:
-                    CanSave = !entity?.Equals(cs.Current) ?? true;
-                    break;
-                case ChangeReason.Remove:
-                    CanSave = entity is not null;
-                    break;
-                case ChangeReason.Refresh:
-                    CanSave = !entity?.Equals(cs.Current) ?? true;
-                    break;
-                case ChangeReason.Moved:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+            .Subscribe();
+        var canExecuteApply = this.WhenAnyValue(x => x._ps.Dirty);
+        ApplyCommand = ReactiveCommand.Create(apply.ApplyProfiles, canExecuteApply);
+        var isExecutingObservable = this.WhenAnyObservable(x => x.ApplyCommand.IsExecuting);
+        canExecuteApply = canExecuteApply.Merge(isExecutingObservable);
+        isExecutingObservable.Skip(1).Where(x => !x).Subscribe(x => _ps.Dirty = false);
     }
 
     public ProfileVm? CurrentProfile => _ps.CurrentProfile;
-
-    public bool CanSave
-    {
-        get => _canSave;
-        set => this.RaiseAndSetIfChanged(ref _canSave, value);
-    }
-    public bool IsExecutingSave => _isExecutingSave?.Value ?? false;
 
     #endregion
 

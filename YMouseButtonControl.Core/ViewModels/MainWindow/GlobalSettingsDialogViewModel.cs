@@ -104,10 +104,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                     }
                 }
 
-                using var trn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 settingsService.UpdateSetting(StartMinimized);
                 settingsService.UpdateSetting(ThemeSetting);
-                trn.Complete();
             },
             canSave
         );

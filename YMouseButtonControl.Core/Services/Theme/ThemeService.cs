@@ -21,7 +21,7 @@ public interface IThemeService
 
 public class ThemeService : ReactiveObject, IThemeService
 {
-    private readonly IRepository<DataAccess.Models.Theme, ThemeVm> _themeRepo;
+    private readonly IRepository<Domain.Models.Theme, ThemeVm> _themeRepo;
     private readonly SettingIntVm _themeSetting;
     private readonly ThemeVm _themeVm;
     private IBrush _background;
@@ -29,7 +29,7 @@ public class ThemeService : ReactiveObject, IThemeService
     private readonly ThemeVariant _themeVariant;
 
     public ThemeService(
-        IRepository<DataAccess.Models.Theme, ThemeVm> themeRepo,
+        IRepository<Domain.Models.Theme, ThemeVm> themeRepo,
         ISettingsService settingsService
     )
     {
