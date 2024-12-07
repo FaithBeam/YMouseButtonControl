@@ -31,7 +31,6 @@ public interface IProfilesService
     void MoveProfileDown(ProfileVm p);
     void RemoveProfile(ProfileVm profileVm);
     void AddOrUpdate(ProfileVm profileVm);
-    void CheckForDirty();
 }
 
 public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
@@ -94,28 +93,6 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
         }
     }
 
-    public void CheckForDirty()
-    {
-        var dbProfiles = _profileRepository.GetAll();
-        foreach (var dbProf in dbProfiles)
-        {
-            if (_profilesObsCol.All(x => !x.Equals(dbProf)))
-            {
-                Dirty = true;
-                return;
-            }
-        }
-        foreach (var prof in _profilesObsCol)
-        {
-            if (dbProfiles.All(x => !x.Equals(prof)))
-            {
-                Dirty = true;
-                return;
-            }
-        }
-        Dirty = false;
-    }
-
     public bool Dirty
     {
         get => _dirty;
@@ -147,12 +124,6 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
                 jsonString,
                 new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
             ) ?? throw new JsonSerializationException("Error deserializing profile");
-    }
-
-    public bool IsUnsavedChanges()
-    {
-        var dbProfiles = _profileRepository.GetAll().ToList();
-        return !dbProfiles.SequenceEqual(_profiles.Items);
     }
 
     public void WriteProfileToFile(ProfileVm p, string path)

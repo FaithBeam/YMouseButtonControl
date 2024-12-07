@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using System.Transactions;
-using YMouseButtonControl.Core.Repositories;
+using Microsoft.EntityFrameworkCore;
+using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.Services.Profiles;
-using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.Domain.Models;
+using YMouseButtonControl.Infrastructure.Context;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 
@@ -13,31 +12,63 @@ public interface IApply
 }
 
 public class Apply(
-    IRepository<Profile, ProfileVm> profileRepository,
+    YMouseButtonControlDbContext db,
     //IRepository<ButtonMapping, BaseButtonMappingVm> buttonMappingRepository,
     IProfilesService profilesService
 ) : IApply
 {
     public void ApplyProfiles()
     {
-        var dbProfiles = profileRepository.GetAll();
+        var dbProfiles = db.Profiles.AsNoTracking().ToList();
 
         // delete profiles
         dbProfiles
             .Where(x => !profilesService.Profiles.Any(y => y.Id == x.Id))
             .ToList()
-            .ForEach(x => profileRepository.Delete(x));
+            .ForEach(x =>
+            {
+                var ent = db.Profiles.Find(x.Id);
+                if (ent is not null)
+                {
+                    db.Profiles.Remove(ent);
+                }
+            });
 
         // update profiles
         profilesService
             .Profiles.Where(x => dbProfiles.Any(y => y.Id == x.Id))
             .ToList()
-            .ForEach(x => profileRepository.Update(x));
+            .ForEach(x =>
+            {
+                var ent = db.Profiles.Find(x.Id);
+                if (ent is not null)
+                {
+                    ent.Checked = x.Checked;
+                    ent.Description = x.Description;
+                    ent.DisplayPriority = x.DisplayPriority;
+                    ent.IsDefault = x.IsDefault;
+                    ent.MatchType = x.MatchType;
+                    ent.Name = x.Name;
+                    ent.ParentClass = x.ParentClass;
+                    ent.Process = x.Process;
+                    ent.WindowCaption = x.WindowCaption;
+                    ent.WindowClass = x.WindowClass;
+                }
+            });
 
         // add profiles
         profilesService
             .Profiles.Where(x => !dbProfiles.Any(y => y.Id == x.Id))
             .ToList()
-            .ForEach(x => profileRepository.Add(x));
+            .ForEach(x =>
+            {
+                var ent = ProfileMapper.Map(x);
+                if (ent is not null)
+                {
+                    db.Profiles.Add(ent);
+                }
+            });
+
+        db.SaveChanges();
     }
 }
