@@ -19,7 +19,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     private IProfilesService _profilesService;
     private readonly IProcessSelectorDialogViewModel _processSelectorDialogViewModel;
     private readonly IAddProfile _addProfile;
-    private int _selectedIndex;
 
     public ICommand AddButtonCommand { get; }
     public ReactiveCommand<Unit, Unit> EditButtonCommand { get; }
@@ -86,41 +85,35 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         EditButtonCommand = ReactiveCommand.CreateFromTask(EditButtonClickedAsync, editCanExecute);
         CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
 
-        SelectedIndex = _profilesService.Profiles.First(x => x.IsDefault).DisplayPriority;
-        this.WhenAnyValue(x => x.SelectedIndex)
-            .Subscribe(x =>
-            {
-                if (_profilesService.CurrentProfile is null)
-                {
-                    _profilesService.CurrentProfile = _profilesService.Profiles[x];
-                }
-                else
-                {
-                    if (SelectedIndex < 0)
-                    {
-                        SelectedIndex = _profilesService.CurrentProfile!.DisplayPriority;
-                    }
-                    else
-                    {
-                        if (_profilesService.Profiles.Count <= x)
-                        {
-                            SelectedIndex = _profilesService
-                                .Profiles.First(y => y.IsDefault)
-                                .DisplayPriority;
-                        }
-                        else
-                        {
-                            _profilesService.CurrentProfile = _profilesService.Profiles[x];
-                        }
-                    }
-                }
-            });
-    }
-
-    public int SelectedIndex
-    {
-        get => _selectedIndex;
-        set => this.RaiseAndSetIfChanged(ref _selectedIndex, value);
+        //SelectedIndex = _profilesService.Profiles.First(x => x.IsDefault).DisplayPriority;
+        //this.WhenAnyValue(x => x.SelectedIndex)
+        //    .Subscribe(x =>
+        //    {
+        //        if (_profilesService.CurrentProfile is null)
+        //        {
+        //            _profilesService.CurrentProfile = _profilesService.Profiles[x];
+        //        }
+        //        else
+        //        {
+        //            if (SelectedIndex < 0)
+        //            {
+        //                SelectedIndex = _profilesService.CurrentProfile!.DisplayPriority;
+        //            }
+        //            else
+        //            {
+        //                if (_profilesService.Profiles.Count <= x)
+        //                {
+        //                    SelectedIndex = _profilesService
+        //                        .Profiles.First(y => y.IsDefault)
+        //                        .DisplayPriority;
+        //                }
+        //                else
+        //                {
+        //                    _profilesService.CurrentProfile = _profilesService.Profiles[x];
+        //                }
+        //            }
+        //        }
+        //    });
     }
 
     public Interaction<string, string> ShowExportFileDialog { get; }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SharpHook;
 using SharpHook.Reactive;
+using SharpHook.Testing;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;
@@ -43,7 +44,10 @@ public static class KeyboardAndMouseBootstrapper
     {
         services
             .AddScoped<IMouseButtonMappingService, MouseButtonMappingService>()
-            .AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
+            //.AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
+            .AddScoped<IReactiveGlobalHook>(
+                (_) => new SimpleReactiveGlobalHook(globalHookProvider: new TestProvider())
+            )
             .AddScoped<IMouseListener, MouseListener>()
             .AddScoped<IEventSimulator, EventSimulator>()
             .AddScoped<IEventSimulatorService, EventSimulatorService>()

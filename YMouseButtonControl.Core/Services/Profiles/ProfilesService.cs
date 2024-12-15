@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -52,11 +53,12 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             .Bind(out _profilesObsCol)
             .Subscribe(IsDirty);
         _profiles.AddOrUpdate(profileRepository.GetAll().ToList());
+        CurrentProfile ??= Profiles.FirstOrDefault();
     }
 
     private void IsDirty(IChangeSet<ProfileVm, int> set)
     {
-        foreach (var cs in set.Where(x => x.Reason != ChangeReason.Refresh))
+        foreach (var cs in set.Where(x => x.Reason is not ChangeReason.Refresh))
         {
             if (cs.Reason == ChangeReason.Add)
             {
@@ -68,11 +70,8 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             }
             else if (cs.Reason == ChangeReason.Update)
             {
-                var ent =
-                    _profileRepository.GetById(cs.Current.Id)
-                    ?? throw new Exception("Null entity on update reason");
-                var mapped = ProfileMapper.Map(cs.Current);
-                if (!ent.Equals(mapped))
+                var ent = _profileRepository.GetById(cs.Current.Id);
+                if (ent is null || !ent.Equals(cs.Current))
                 {
                     Dirty = true;
                     return;
@@ -80,17 +79,14 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             }
             else if (cs.Reason == ChangeReason.Remove)
             {
-                if (_profileRepository.GetById(cs.Current.Id) is null)
-                {
-                    Dirty = false;
-                }
-                else
+                if (_profileRepository.GetById(cs.Current.Id) is not null)
                 {
                     Dirty = true;
                     return;
                 }
             }
         }
+        Dirty = false;
     }
 
     public bool Dirty
