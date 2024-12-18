@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using DynamicData;
 using Newtonsoft.Json;
 using ReactiveUI;
-using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles.Exceptions;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -58,35 +54,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
 
     private void IsDirty(IChangeSet<ProfileVm, int> set)
     {
-        foreach (var cs in set.Where(x => x.Reason is not ChangeReason.Refresh))
-        {
-            if (cs.Reason == ChangeReason.Add)
-            {
-                if (_profileRepository.GetById(cs.Current.Id) is null)
-                {
-                    Dirty = true;
-                    return;
-                }
-            }
-            else if (cs.Reason == ChangeReason.Update)
-            {
-                var ent = _profileRepository.GetById(cs.Current.Id);
-                if (ent is null || !ent.Equals(cs.Current))
-                {
-                    Dirty = true;
-                    return;
-                }
-            }
-            else if (cs.Reason == ChangeReason.Remove)
-            {
-                if (_profileRepository.GetById(cs.Current.Id) is not null)
-                {
-                    Dirty = true;
-                    return;
-                }
-            }
-        }
-        Dirty = false;
+        Dirty = !Profiles.SequenceEqual(_profileRepository.GetAll());
     }
 
     public bool Dirty
