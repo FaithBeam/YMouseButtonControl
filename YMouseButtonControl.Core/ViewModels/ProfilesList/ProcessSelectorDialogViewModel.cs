@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
@@ -8,6 +9,7 @@ using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
@@ -29,7 +31,8 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     public ProcessSelectorDialogViewModel(
         IProcessMonitorService processMonitorService,
-        IThemeService themeService
+        IThemeService themeService,
+        IProfilesService profilesService
     )
         : base(themeService)
     {
@@ -51,15 +54,125 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         OkCommand = ReactiveCommand.Create(
             () =>
             {
-                var mb1 = new NothingMappingVm { MouseButton = MouseButton.Mb1, Selected = true };
-                var mb2 = new NothingMappingVm { MouseButton = MouseButton.Mb2, Selected = true };
-                var mb3 = new NothingMappingVm { MouseButton = MouseButton.Mb3, Selected = true };
-                var mb4 = new NothingMappingVm { MouseButton = MouseButton.Mb4, Selected = true };
-                var mb5 = new NothingMappingVm { MouseButton = MouseButton.Mb5, Selected = true };
-                var mwu = new NothingMappingVm { MouseButton = MouseButton.Mwu, Selected = true };
-                var mwd = new NothingMappingVm { MouseButton = MouseButton.Mwd, Selected = true };
-                var mwl = new NothingMappingVm { MouseButton = MouseButton.Mwl, Selected = true };
-                var mwr = new NothingMappingVm { MouseButton = MouseButton.Mwr, Selected = true };
+                var maxBmId = profilesService
+                    .Profiles.SelectMany(x => x.ButtonMappings)
+                    .Max(x => x.Id);
+                var mb1 = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mb1,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mb1, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb1, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mb1, Id = ++maxBmId },
+                };
+
+                var mb2 = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mb2,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mb2, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb2, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mb2, Id = ++maxBmId },
+                };
+
+                var mb3 = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mb3,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mb3, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb3, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mb3, Id = ++maxBmId },
+                };
+
+                var mb4 = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mb4,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mb4, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb4, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mb4, Id = ++maxBmId },
+                };
+
+                var mb5 = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mb5,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mb5, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb5, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mb5, Id = ++maxBmId },
+                };
+
+                var mwu = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mwu,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mwu, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwu, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mwu, Id = ++maxBmId },
+                };
+
+                var mwd = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mwd,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mwd, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwd, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mwd, Id = ++maxBmId },
+                };
+
+                var mwl = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mwl,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mwl, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwl, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mwl, Id = ++maxBmId },
+                };
+
+                var mwr = new List<BaseButtonMappingVm>
+                {
+                    new NothingMappingVm
+                    {
+                        MouseButton = MouseButton.Mwr,
+                        Selected = true,
+                        Id = ++maxBmId,
+                    },
+                    new DisabledMappingVm { MouseButton = MouseButton.Mwr, Id = ++maxBmId },
+                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwr, Id = ++maxBmId },
+                    new RightClickVm { MouseButton = MouseButton.Mwr, Id = ++maxBmId },
+                };
 
                 var buttonMappings = new List<BaseButtonMappingVm>
                 {
