@@ -170,8 +170,10 @@ public class ProfileVm : ReactiveObject, IEquatable<ProfileVm>
             .ToProperty(this, x => x.MouseWheelRight);
     }
 
-    public void AddOrUpdateBtnMapping(params BaseButtonMappingVm[] buttonMappingVms) =>
+    public void AddOrUpdateBtnMapping(IEnumerable<BaseButtonMappingVm> buttonMappingVms) =>
         _btnSc.AddOrUpdate(buttonMappingVms);
+
+    public SourceCache<BaseButtonMappingVm, int> BtnSc => _btnSc;
 
     [JsonIgnore]
     public int Id { get; set; }

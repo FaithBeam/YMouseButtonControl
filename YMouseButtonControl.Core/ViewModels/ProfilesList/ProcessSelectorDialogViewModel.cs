@@ -18,7 +18,7 @@ namespace YMouseButtonControl.Core.ViewModels.ProfilesList;
 
 public interface IProcessSelectorDialogViewModel
 {
-    ICommand RefreshButtonCommand { get; }
+    ReactiveCommand<Unit, Unit> RefreshButtonCommand { get; }
 }
 
 public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
@@ -119,7 +119,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         set => this.RaiseAndSetIfChanged(ref _processFilter, value);
     }
 
-    public ICommand RefreshButtonCommand { get; }
+    public ReactiveCommand<Unit, Unit> RefreshButtonCommand { get; }
 
     public ReactiveCommand<Unit, ProfileVm> OkCommand { get; }
 

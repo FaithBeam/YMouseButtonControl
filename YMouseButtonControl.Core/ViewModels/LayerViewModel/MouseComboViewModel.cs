@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Timers;
 using Avalonia.Media;
 using ReactiveUI;
@@ -96,6 +97,25 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
         }
 
         SelectedBtnMap = BtnMappings.First(x => x.Selected);
+        this.WhenAnyValue(x => x.SelectedBtnMap)
+            .DistinctUntilChanged()
+            .WhereNotNull()
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(current =>
+            {
+                profileVm.BtnSc.Edit(inner =>
+                {
+                    var previous = inner.Items.FirstOrDefault(x =>
+                        x.Selected && x.MouseButton == current.MouseButton && !x.Equals(current)
+                    );
+                    if (previous != null)
+                    {
+                        previous.Selected = false;
+                    }
+                    var target = inner.Items.First(x => x.Id == current.Id);
+                    target.Selected = true;
+                });
+            });
         ShowSimulatedKeystrokesDialogService = showSimulatedKeystrokesDialogService;
         var canClickUserClickedSettingsBtn = this.WhenAnyValue(
             x => x.SelectedBtnMap,
@@ -128,11 +148,11 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                     )
                     {
                         previouslySelectedBtnMap.Selected = false;
-                        _profileVm.AddOrUpdateBtnMapping(previouslySelectedBtnMap, newMapping);
+                        _profileVm.AddOrUpdateBtnMapping([previouslySelectedBtnMap, newMapping]);
                     }
                     else
                     {
-                        _profileVm.AddOrUpdateBtnMapping(newMapping);
+                        _profileVm.AddOrUpdateBtnMapping([newMapping]);
                     }
                     SelectedBtnMap = newMapping;
                 }
@@ -163,20 +183,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     public BaseButtonMappingVm? SelectedBtnMap
     {
         get => _selectedBtnMap;
-        set
-        {
-            // if (_selectedBtnMap is not null)
-            // {
-            //     _selectedBtnMap.Selected = false;
-            // }
-
-            if (value is not null)
-            {
-                value.Selected = true;
-            }
-
-            this.RaiseAndSetIfChanged(ref _selectedBtnMap, value);
-        }
+        set => this.RaiseAndSetIfChanged(ref _selectedBtnMap, value);
     }
 
     public string? LabelTxt
