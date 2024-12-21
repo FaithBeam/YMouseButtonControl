@@ -43,6 +43,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         var filteredDisposable = _sourceProcessModels
             .Connect()
             .Filter(dynamicFilter)
+            .Sort(SortExpressionComparer<ProcessModel>.Ascending(x => x.Process.ProcessName))
             .Bind(out _filtered)
             .Subscribe();
         RefreshProcessList();
