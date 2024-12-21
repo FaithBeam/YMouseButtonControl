@@ -57,136 +57,18 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
                 var maxBmId = profilesService
                     .Profiles.SelectMany(x => x.ButtonMappings)
                     .Max(x => x.Id);
-                var mb1 = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mb1,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mb1, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb1, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mb1, Id = ++maxBmId },
-                };
-
-                var mb2 = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mb2,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mb2, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb2, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mb2, Id = ++maxBmId },
-                };
-
-                var mb3 = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mb3,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mb3, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb3, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mb3, Id = ++maxBmId },
-                };
-
-                var mb4 = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mb4,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mb4, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb4, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mb4, Id = ++maxBmId },
-                };
-
-                var mb5 = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mb5,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mb5, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mb5, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mb5, Id = ++maxBmId },
-                };
-
-                var mwu = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mwu,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mwu, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwu, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mwu, Id = ++maxBmId },
-                };
-
-                var mwd = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mwd,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mwd, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwd, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mwd, Id = ++maxBmId },
-                };
-
-                var mwl = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mwl,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mwl, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwl, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mwl, Id = ++maxBmId },
-                };
-
-                var mwr = new List<BaseButtonMappingVm>
-                {
-                    new NothingMappingVm
-                    {
-                        MouseButton = MouseButton.Mwr,
-                        Selected = true,
-                        Id = ++maxBmId,
-                    },
-                    new DisabledMappingVm { MouseButton = MouseButton.Mwr, Id = ++maxBmId },
-                    new SimulatedKeystrokeVm { MouseButton = MouseButton.Mwr, Id = ++maxBmId },
-                    new RightClickVm { MouseButton = MouseButton.Mwr, Id = ++maxBmId },
-                };
-
                 var buttonMappings = new List<BaseButtonMappingVm>
                 {
-                    mb1,
-                    mb2,
-                    mb3,
-                    mb4,
-                    mb5,
-                    mwu,
-                    mwd,
-                    mwl,
-                    mwr,
+                    CreateButtonMappings(maxBmId, MouseButton.Mb1),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mb2),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mb3),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mb4),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mb5),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mwu),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mwd),
+                    CreateButtonMappings(maxBmId += 4, MouseButton.Mwl),
+                    CreateButtonMappings(maxBmId + 4, MouseButton.Mwr),
                 };
-
                 return new ProfileVm(buttonMappings)
                 {
                     Name = SelectedProcessModel!.Process.MainModule!.ModuleName,
@@ -201,6 +83,22 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             canExecuteOkCommand
         );
     }
+
+    private static List<BaseButtonMappingVm> CreateButtonMappings(
+        int id,
+        MouseButton mouseButton
+    ) =>
+        [
+            new NothingMappingVm
+            {
+                Id = ++id,
+                MouseButton = mouseButton,
+                Selected = true,
+            },
+            new DisabledMappingVm { Id = ++id, MouseButton = mouseButton },
+            new SimulatedKeystrokeVm { Id = ++id, MouseButton = mouseButton },
+            new RightClickVm { Id = ++id, MouseButton = mouseButton },
+        ];
 
     private Func<ProcessModel, bool> CreateProcessFilterPredicate(string? txt)
     {
