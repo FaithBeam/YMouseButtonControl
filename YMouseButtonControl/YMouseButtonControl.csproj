@@ -39,9 +39,6 @@
         <None Update="appsettings.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="YMouseButtonControl.db">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
         <None Remove="Resources\gear_icon1.png" />
         <AvaloniaResource Include="Resources\gear_icon1.png" />
         <None Remove="Resources\mouse.ico" />

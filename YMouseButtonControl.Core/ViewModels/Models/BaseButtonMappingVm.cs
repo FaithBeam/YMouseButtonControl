@@ -102,6 +102,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);
     }
 
+    public BaseButtonMappingVm Clone() => (BaseButtonMappingVm)MemberwiseClone();
+
     public override string? ToString()
     {
         return Description;
@@ -124,7 +126,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
             && AutoRepeatDelay == other.AutoRepeatDelay
             && AutoRepeatRandomizeDelayEnabled == other.AutoRepeatRandomizeDelayEnabled
             && Equals(SimulatedKeystrokeType, other.SimulatedKeystrokeType)
-            && BlockOriginalMouseInput == other.BlockOriginalMouseInput;
+            && BlockOriginalMouseInput == other.BlockOriginalMouseInput
+            && Selected == other.Selected;
     }
 
     public override bool Equals(object? obj)

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Timers;
 using Avalonia.Media;
-using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
-using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
@@ -21,11 +17,13 @@ public interface IMouseComboViewModel
 {
     BaseButtonMappingVm? SelectedBtnMap { get; }
     IShowSimulatedKeystrokesDialogService ShowSimulatedKeystrokesDialogService { get; }
+    ReadOnlyObservableCollection<BaseButtonMappingVm> BtnMappings { get; }
 }
 
 public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDisposable
 {
-    private readonly IProfilesService _profilesService;
+    private readonly ProfileVm _profileVm;
+    private readonly MouseButton _mouseButton;
     private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _btnMappings;
     private BaseButtonMappingVm? _selectedBtnMap;
     private readonly IDisposable? _mbDownDisposable;
@@ -36,13 +34,17 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     private string? _labelTxt;
 
     public MouseComboViewModel(
-        IProfilesService profilesService,
+        ProfileVm profileVm,
         IMouseListener mouseListener,
         IThemeService themeService,
         MouseButton mouseButton,
-        IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService
+        IShowSimulatedKeystrokesDialogService showSimulatedKeystrokesDialogService,
+        ReadOnlyObservableCollection<BaseButtonMappingVm> btnMappings
     )
     {
+        _profileVm = profileVm;
+        _mouseButton = mouseButton;
+        _btnMappings = btnMappings;
         _backgroundColor = themeService.Background;
         switch (mouseButton)
         {
@@ -93,29 +95,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                 throw new ArgumentOutOfRangeException(nameof(mouseButton), mouseButton, null);
         }
 
-        _profilesService = profilesService;
-        SourceCache<BaseButtonMappingVm, int> sourceButtonMappings = new(x => x.Index);
-        var myOp = sourceButtonMappings.Connect().AutoRefresh().Bind(out _btnMappings).Subscribe();
-        sourceButtonMappings.AddOrUpdate(GetButtonMappings(mouseButton));
-        this.WhenAnyValue(x => x._profilesService.CurrentProfile)
-            .WhereNotNull()
-            .DistinctUntilChanged()
-            .Subscribe(newProfile =>
-            {
-                sourceButtonMappings.Edit(updater =>
-                {
-                    updater.Clear();
-                    updater.AddOrUpdate(GetButtonMappings(mouseButton));
-
-                    var src =
-                        newProfile.ButtonMappings.First(x => x.MouseButton == mouseButton)
-                        ?? throw new Exception("Error retrieving button mapping");
-                    updater.AddOrUpdate(src);
-                });
-
-                var found = _btnMappings.FirstOrDefault(x => x.Selected);
-                SelectedBtnMap = found ?? _btnMappings.MinBy(x => x.Index);
-            });
+        SelectedBtnMap = BtnMappings.First(x => x.Selected);
         ShowSimulatedKeystrokesDialogService = showSimulatedKeystrokesDialogService;
         var canClickUserClickedSettingsBtn = this.WhenAnyValue(
             x => x.SelectedBtnMap,
@@ -137,13 +117,29 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                     );
                 if (newMapping is not null)
                 {
+                    // SelectedBtnMap is already SimulatedKeystroke here
                     newMapping.Selected = true;
-                    sourceButtonMappings.AddOrUpdate(newMapping);
+                    var previouslySelectedBtnMap = BtnMappings
+                        .FirstOrDefault(x => x.Selected && x.Id != newMapping.Id)
+                        ?.Clone();
+                    if (
+                        previouslySelectedBtnMap is not null
+                        && !previouslySelectedBtnMap.Equals(newMapping)
+                    )
+                    {
+                        previouslySelectedBtnMap.Selected = false;
+                        _profileVm.AddOrUpdateBtnMapping(previouslySelectedBtnMap, newMapping);
+                    }
+                    else
+                    {
+                        _profileVm.AddOrUpdateBtnMapping(newMapping);
+                    }
                     SelectedBtnMap = newMapping;
                 }
             },
             canClickUserClickedSettingsBtn
         );
+
         return;
 
         void MouseWheelDoHighlight()
@@ -167,7 +163,20 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     public BaseButtonMappingVm? SelectedBtnMap
     {
         get => _selectedBtnMap;
-        set => this.RaiseAndSetIfChanged(ref _selectedBtnMap, value);
+        set
+        {
+            // if (_selectedBtnMap is not null)
+            // {
+            //     _selectedBtnMap.Selected = false;
+            // }
+
+            if (value is not null)
+            {
+                value.Selected = true;
+            }
+
+            this.RaiseAndSetIfChanged(ref _selectedBtnMap, value);
+        }
     }
 
     public string? LabelTxt
@@ -179,41 +188,6 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     public ReadOnlyObservableCollection<BaseButtonMappingVm> BtnMappings => _btnMappings;
 
     public ReactiveCommand<Unit, Unit> UserClickedEditSettingButton { get; set; }
-
-    private static IEnumerable<BaseButtonMappingVm> GetButtonMappings(MouseButton mouseButton) =>
-        ButtonMappingDictionary.Select(x => x.Value(mouseButton));
-
-    private static readonly Dictionary<
-        ButtonMappings,
-        Func<MouseButton, BaseButtonMappingVm>
-    > ButtonMappingDictionary =
-        new()
-        {
-            {
-                ButtonMappings.Nothing,
-                mb => new NothingMappingVm { MouseButton = mb }
-            },
-            {
-                ButtonMappings.Disabled,
-                mb => new DisabledMappingVm { MouseButton = mb }
-            },
-            {
-                ButtonMappings.SimulatedKeystrokes,
-                mb => new SimulatedKeystrokeVm { MouseButton = mb }
-            },
-            {
-                ButtonMappings.RightClick,
-                mb => new RightClickVm { MouseButton = mb }
-            },
-        };
-
-    private enum ButtonMappings
-    {
-        Nothing,
-        Disabled,
-        SimulatedKeystrokes,
-        RightClick,
-    }
 
     public void Dispose()
     {

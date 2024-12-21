@@ -16,14 +16,14 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx)
     public int Add(BaseButtonMappingVm vm)
     {
         var ent = ButtonMappingMapper.Map(vm);
-        ent.ButtonMappingType = ent switch
-        {
-            DisabledMapping => ButtonMappingType.Disabled,
-            NothingMapping => ButtonMappingType.Nothing,
-            SimulatedKeystroke => ButtonMappingType.SimulatedKeystroke,
-            RightClick => ButtonMappingType.RightClick,
-            _ => throw new System.NotImplementedException(),
-        };
+        // ent.ButtonMappingType = ent switch
+        // {
+        //     DisabledMapping => ButtonMappingType.Disabled,
+        //     NothingMapping => ButtonMappingType.Nothing,
+        //     SimulatedKeystroke => ButtonMappingType.SimulatedKeystroke,
+        //     RightClick => ButtonMappingType.RightClick,
+        //     _ => throw new System.NotImplementedException(),
+        // };
         var id = _ctx.ButtonMappings.Add(ent).Entity.Id;
         _ctx.SaveChanges();
         return id;
@@ -51,14 +51,14 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx)
             ent.BlockOriginalMouseInput = vm.BlockOriginalMouseInput;
             ent.AutoRepeatDelay = vm.AutoRepeatDelay;
             ent.AutoRepeatRandomizeDelayEnabled = vm.AutoRepeatRandomizeDelayEnabled;
-            ent.ButtonMappingType = ent.ButtonMappingType = ent switch
-            {
-                DisabledMapping => ButtonMappingType.Disabled,
-                NothingMapping => ButtonMappingType.Nothing,
-                SimulatedKeystroke => ButtonMappingType.SimulatedKeystroke,
-                RightClick => ButtonMappingType.RightClick,
-                _ => throw new System.NotImplementedException(),
-            };
+            // ent.ButtonMappingType = ent.ButtonMappingType = ent switch
+            // {
+            //     DisabledMapping => ButtonMappingType.Disabled,
+            //     NothingMapping => ButtonMappingType.Nothing,
+            //     SimulatedKeystroke => ButtonMappingType.SimulatedKeystroke,
+            //     RightClick => ButtonMappingType.RightClick,
+            //     _ => throw new System.NotImplementedException(),
+            // };
             _ctx.SaveChanges();
         }
         return ent?.Id ?? -1;
@@ -76,7 +76,7 @@ public class ButtonMappingRepository(YMouseButtonControlDbContext ctx)
         return ent?.Id ?? -1;
     }
 
-    public BaseButtonMappingVm? GetByName(string name)
+    public BaseButtonMappingVm GetByName(string name)
     {
         throw new System.NotImplementedException();
     }

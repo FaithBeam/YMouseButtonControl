@@ -25,7 +25,6 @@ public abstract class ButtonMapping
     public bool? AutoRepeatRandomizeDelayEnabled { get; set; }
     public bool Selected { get; set; }
     public bool? BlockOriginalMouseInput { get; set; }
-    public ButtonMappingType ButtonMappingType { get; set; }
 }
 
 public class DisabledMapping : ButtonMapping;

@@ -1,4 +1,5 @@
 using System;
+using System.Reactive.Linq;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Domain.Models;
@@ -9,127 +10,134 @@ public interface ILayerViewModel;
 
 public class LayerViewModel : ViewModelBase, ILayerViewModel
 {
+    private IMouseComboViewModel? _mb1ComboVm;
+    private IMouseComboViewModel? _mb2ComboVm;
+    private IMouseComboViewModel? _mb3ComboVm;
+    private IMouseComboViewModel? _mb4ComboVm;
+    private IMouseComboViewModel? _mb5ComboVm;
+    private IMouseComboViewModel? _mwrComboVm;
+    private IMouseComboViewModel? _mwlComboVm;
+    private IMouseComboViewModel? _mwdComboVm;
+    private IMouseComboViewModel? _mwuComboVm;
+
     public LayerViewModel(
         IMouseComboViewModelFactory mbComboViewModelFactory,
         IProfilesService profilesService
     )
     {
-        Mb1ComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mb1, "Left Button");
-        Mb2ComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mb2, "Right Button");
-        Mb3ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-            MouseButton.Mb3,
-            "Middle Button"
-        );
-        Mb4ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-            MouseButton.Mb4,
-            "Mouse Button 4"
-        );
-        Mb5ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-            MouseButton.Mb5,
-            "Mouse Button 5"
-        );
-        MwuComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mwu, "Wheel Up");
-        MwdComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mwd, "Wheel Down");
-        MwlComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mwl, "Wheel Left");
-        MwrComboVm = mbComboViewModelFactory.CreateWithMouseButton(MouseButton.Mwr, "Wheel Right");
-
-        this.WhenAnyValue(x => x.Mb1ComboVm.SelectedBtnMap)
+        profilesService
+            .WhenAnyValue(x => x.CurrentProfile)
             .WhereNotNull()
-            .Subscribe(x =>
+            .Subscribe(profileVm =>
             {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseButton1 = x;
-                }
-            });
-        this.WhenAnyValue(x => x.Mb2ComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseButton2 = x;
-                }
-            });
-        this.WhenAnyValue(x => x.Mb3ComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseButton3 = x;
-                }
-            });
-        this.WhenAnyValue(x => x.Mb4ComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseButton4 = x;
-                }
-            });
-        this.WhenAnyValue(x => x.Mb5ComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseButton5 = x;
-                }
-            });
-        this.WhenAnyValue(x => x.MwuComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseWheelUp = x;
-                }
-            });
-        this.WhenAnyValue(x => x.MwdComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseWheelDown = x;
-                }
-            });
-        this.WhenAnyValue(x => x.MwlComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseWheelLeft = x;
-                }
-            });
-        this.WhenAnyValue(x => x.MwrComboVm.SelectedBtnMap)
-            .WhereNotNull()
-            .Subscribe(x =>
-            {
-                if (profilesService.CurrentProfile is not null)
-                {
-                    profilesService.CurrentProfile.MouseWheelRight = x;
-                }
+                Mb1ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mb1,
+                    "Left Button",
+                    profileVm.Mb1Mappings
+                );
+                Mb2ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mb2,
+                    "Right Button",
+                    profileVm.Mb2Mappings
+                );
+                Mb3ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mb3,
+                    "Middle Button",
+                    profileVm.Mb3Mappings
+                );
+                Mb4ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mb4,
+                    "Mouse Button 4",
+                    profileVm.Mb4Mappings
+                );
+                Mb5ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mb5,
+                    "Mouse Button 5",
+                    profileVm.Mb5Mappings
+                );
+                MwuComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mwu,
+                    "Wheel Up",
+                    profileVm.MwuMappings
+                );
+                MwdComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mwd,
+                    "Wheel Down",
+                    profileVm.MwdMappings
+                );
+                MwlComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mwl,
+                    "Wheel Left",
+                    profileVm.MwlMappings
+                );
+                MwrComboVm = mbComboViewModelFactory.CreateWithMouseButton(
+                    profileVm,
+                    MouseButton.Mwr,
+                    "Wheel Right",
+                    profileVm.MwrMappings
+                );
             });
     }
 
-    public IMouseComboViewModel Mb1ComboVm { get; }
+    public IMouseComboViewModel? Mb1ComboVm
+    {
+        get => _mb1ComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mb1ComboVm, value);
+    }
 
-    public IMouseComboViewModel Mb2ComboVm { get; }
+    public IMouseComboViewModel? Mb2ComboVm
+    {
+        get => _mb2ComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mb2ComboVm, value);
+    }
 
-    public IMouseComboViewModel Mb3ComboVm { get; }
+    public IMouseComboViewModel? Mb3ComboVm
+    {
+        get => _mb3ComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mb3ComboVm, value);
+    }
 
-    public IMouseComboViewModel Mb4ComboVm { get; }
+    public IMouseComboViewModel? Mb4ComboVm
+    {
+        get => _mb4ComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mb4ComboVm, value);
+    }
 
-    public IMouseComboViewModel Mb5ComboVm { get; }
-    public IMouseComboViewModel MwrComboVm { get; }
+    public IMouseComboViewModel? Mb5ComboVm
+    {
+        get => _mb5ComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mb5ComboVm, value);
+    }
 
-    public IMouseComboViewModel MwlComboVm { get; }
+    public IMouseComboViewModel? MwrComboVm
+    {
+        get => _mwrComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mwrComboVm, value);
+    }
 
-    public IMouseComboViewModel MwdComboVm { get; }
+    public IMouseComboViewModel? MwlComboVm
+    {
+        get => _mwlComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mwlComboVm, value);
+    }
 
-    public IMouseComboViewModel MwuComboVm { get; }
+    public IMouseComboViewModel? MwdComboVm
+    {
+        get => _mwdComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mwdComboVm, value);
+    }
+
+    public IMouseComboViewModel? MwuComboVm
+    {
+        get => _mwuComboVm;
+        set => this.RaiseAndSetIfChanged(ref _mwuComboVm, value);
+    }
 }

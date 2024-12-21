@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using DynamicData;
 using Newtonsoft.Json;
 using ReactiveUI;
@@ -21,13 +23,155 @@ public class ProfileVm : ReactiveObject, IEquatable<ProfileVm>
     private string _matchType = "N/A";
     private int _displayPriority;
 
-    private readonly SourceCache<BaseButtonMappingVm, MouseButton> _btnSc;
+    private readonly SourceCache<BaseButtonMappingVm, int> _btnSc;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _btnsMappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mb1Mappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mb2Mappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mb3Mappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mb4Mappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mb5Mappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mwuMappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mwdMappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mwlMappings;
+    private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _mwrMappings;
+
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mb1;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mb2;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mb3;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mb4;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mb5;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mwu;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mwd;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mwl;
+    private readonly ObservableAsPropertyHelper<BaseButtonMappingVm> _mwr;
 
     public ProfileVm(List<BaseButtonMappingVm> buttonMappings)
     {
-        _btnSc = new SourceCache<BaseButtonMappingVm, MouseButton>(x => x.MouseButton);
+        _btnSc = new SourceCache<BaseButtonMappingVm, int>(x => x.Id);
         _btnSc.Edit(x => x.AddOrUpdate(buttonMappings));
+        _btnSc.Connect().AutoRefresh().Bind(out _btnsMappings).Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb1)
+            .AutoRefresh()
+            .Bind(out _mb1Mappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb2)
+            .AutoRefresh()
+            .Bind(out _mb2Mappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb3)
+            .AutoRefresh()
+            .Bind(out _mb3Mappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb4)
+            .AutoRefresh()
+            .Bind(out _mb4Mappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb5)
+            .AutoRefresh()
+            .Bind(out _mb5Mappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwu)
+            .AutoRefresh()
+            .Bind(out _mwuMappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwd)
+            .AutoRefresh()
+            .Bind(out _mwdMappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwl)
+            .AutoRefresh()
+            .Bind(out _mwlMappings)
+            .Subscribe();
+        _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwr)
+            .AutoRefresh()
+            .Bind(out _mwrMappings)
+            .Subscribe();
+
+        _mb1 = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb1)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseButton1);
+        _mb2 = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb2)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseButton2);
+        _mb3 = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb3)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseButton3);
+        _mb4 = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb4)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseButton4);
+        _mb5 = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mb5)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseButton5);
+        _mwu = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwu)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseWheelUp);
+        _mwd = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwd)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseWheelDown);
+        _mwl = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwl)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseWheelLeft);
+        _mwr = _btnSc
+            .Connect()
+            .Filter(x => x.MouseButton == MouseButton.Mwr)
+            .WhenPropertyChanged(x => x.Selected)
+            .Where(x => x.Value)
+            .Select(x => x.Sender)
+            .ToProperty(this, x => x.MouseWheelRight);
     }
+
+    public void AddOrUpdateBtnMapping(params BaseButtonMappingVm[] buttonMappingVms) =>
+        _btnSc.AddOrUpdate(buttonMappingVms);
 
     [JsonIgnore]
     public int Id { get; set; }
@@ -84,106 +228,61 @@ public class ProfileVm : ReactiveObject, IEquatable<ProfileVm>
         set => this.RaiseAndSetIfChanged(ref _matchType, value);
     }
 
-    public List<BaseButtonMappingVm> ButtonMappings => _btnSc.Items.ToList();
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> ButtonMappings => _btnsMappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseButton1
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mb1);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> Mb1Mappings => _mb1Mappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseButton2
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mb2);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> Mb2Mappings => _mb2Mappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseButton3
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mb3);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> Mb3Mappings => _mb3Mappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseButton4
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mb4);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> Mb4Mappings => _mb4Mappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseButton5
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mb5);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> Mb5Mappings => _mb5Mappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseWheelUp
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mwu);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> MwuMappings => _mwuMappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseWheelDown
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mwd);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> MwdMappings => _mwdMappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseWheelLeft
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mwl);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> MwlMappings => _mwlMappings;
 
     [JsonIgnore]
-    public BaseButtonMappingVm MouseWheelRight
-    {
-        get => _btnSc.Items.First(x => x.MouseButton == MouseButton.Mwr);
-        set
-        {
-            _btnSc.Edit(updater => updater.AddOrUpdate(value));
-            this.RaisePropertyChanged();
-        }
-    }
+    public ReadOnlyObservableCollection<BaseButtonMappingVm> MwrMappings => _mwrMappings;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseButton1 => _mb1.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseButton2 => _mb2.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseButton3 => _mb3.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseButton4 => _mb4.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseButton5 => _mb5.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseWheelUp => _mwu.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseWheelDown => _mwd.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseWheelLeft => _mwl.Value;
+
+    [JsonIgnore]
+    public BaseButtonMappingVm MouseWheelRight => _mwr.Value;
 
     public int DisplayPriority
     {

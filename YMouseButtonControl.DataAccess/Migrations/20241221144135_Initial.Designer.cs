@@ -11,8 +11,8 @@ using YMouseButtonControl.Infrastructure.Context;
 namespace YMouseButtonControl.Infrastructure.Migrations
 {
     [DbContext(typeof(YMouseButtonControlDbContext))]
-    [Migration("20241207142135_CorrectDefaultProfileDisplayPriority")]
-    partial class CorrectDefaultProfileDisplayPriority
+    [Migration("20241221144135_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,6 @@ namespace YMouseButtonControl.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool?>("BlockOriginalMouseInput")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ButtonMappingType")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Discriminator")
@@ -208,6 +205,71 @@ namespace YMouseButtonControl.Infrastructure.Migrations
                     b.HasBaseType("YMouseButtonControl.Domain.Models.ButtonMapping");
 
                     b.HasDiscriminator().HasValue("DisabledMapping");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            MouseButton = 0,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 6,
+                            MouseButton = 1,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 10,
+                            MouseButton = 2,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 14,
+                            MouseButton = 3,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 18,
+                            MouseButton = 4,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 22,
+                            MouseButton = 5,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 26,
+                            MouseButton = 6,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 30,
+                            MouseButton = 7,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 34,
+                            MouseButton = 8,
+                            ProfileId = 1,
+                            Selected = false
+                        });
                 });
 
             modelBuilder.Entity("YMouseButtonControl.Domain.Models.NothingMapping", b =>
@@ -220,74 +282,65 @@ namespace YMouseButtonControl.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            ButtonMappingType = 0,
                             MouseButton = 0,
                             ProfileId = 1,
-                            Selected = false
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ButtonMappingType = 0,
-                            MouseButton = 1,
-                            ProfileId = 1,
-                            Selected = false
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ButtonMappingType = 0,
-                            MouseButton = 2,
-                            ProfileId = 1,
-                            Selected = false
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ButtonMappingType = 0,
-                            MouseButton = 3,
-                            ProfileId = 1,
-                            Selected = false
+                            Selected = true
                         },
                         new
                         {
                             Id = 5,
-                            ButtonMappingType = 0,
-                            MouseButton = 4,
+                            MouseButton = 1,
                             ProfileId = 1,
-                            Selected = false
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ButtonMappingType = 0,
-                            MouseButton = 5,
-                            ProfileId = 1,
-                            Selected = false
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ButtonMappingType = 0,
-                            MouseButton = 6,
-                            ProfileId = 1,
-                            Selected = false
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ButtonMappingType = 0,
-                            MouseButton = 7,
-                            ProfileId = 1,
-                            Selected = false
+                            Selected = true
                         },
                         new
                         {
                             Id = 9,
-                            ButtonMappingType = 0,
+                            MouseButton = 2,
+                            ProfileId = 1,
+                            Selected = true
+                        },
+                        new
+                        {
+                            Id = 13,
+                            MouseButton = 3,
+                            ProfileId = 1,
+                            Selected = true
+                        },
+                        new
+                        {
+                            Id = 17,
+                            MouseButton = 4,
+                            ProfileId = 1,
+                            Selected = true
+                        },
+                        new
+                        {
+                            Id = 21,
+                            MouseButton = 5,
+                            ProfileId = 1,
+                            Selected = true
+                        },
+                        new
+                        {
+                            Id = 25,
+                            MouseButton = 6,
+                            ProfileId = 1,
+                            Selected = true
+                        },
+                        new
+                        {
+                            Id = 29,
+                            MouseButton = 7,
+                            ProfileId = 1,
+                            Selected = true
+                        },
+                        new
+                        {
+                            Id = 33,
                             MouseButton = 8,
                             ProfileId = 1,
-                            Selected = false
+                            Selected = true
                         });
                 });
 
@@ -296,6 +349,71 @@ namespace YMouseButtonControl.Infrastructure.Migrations
                     b.HasBaseType("YMouseButtonControl.Domain.Models.ButtonMapping");
 
                     b.HasDiscriminator().HasValue("RightClick");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            MouseButton = 0,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 8,
+                            MouseButton = 1,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 12,
+                            MouseButton = 2,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 16,
+                            MouseButton = 3,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 20,
+                            MouseButton = 4,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 24,
+                            MouseButton = 5,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 28,
+                            MouseButton = 6,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 32,
+                            MouseButton = 7,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 36,
+                            MouseButton = 8,
+                            ProfileId = 1,
+                            Selected = false
+                        });
                 });
 
             modelBuilder.Entity("YMouseButtonControl.Domain.Models.SimulatedKeystroke", b =>
@@ -303,6 +421,80 @@ namespace YMouseButtonControl.Infrastructure.Migrations
                     b.HasBaseType("YMouseButtonControl.Domain.Models.ButtonMapping");
 
                     b.HasDiscriminator().HasValue("SimulatedKeystroke");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 0,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 1,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 2,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 3,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 19,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 4,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 23,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 5,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 27,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 6,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 31,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 7,
+                            ProfileId = 1,
+                            Selected = false
+                        },
+                        new
+                        {
+                            Id = 35,
+                            BlockOriginalMouseInput = true,
+                            MouseButton = 8,
+                            ProfileId = 1,
+                            Selected = false
+                        });
                 });
 
             modelBuilder.Entity("YMouseButtonControl.Domain.Models.SettingBool", b =>

@@ -11,7 +11,7 @@
     
     <UserControl.Styles>
         <Style Selector="Label">
-            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Styles>
 

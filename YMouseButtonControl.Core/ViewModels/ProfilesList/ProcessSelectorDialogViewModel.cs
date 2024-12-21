@@ -51,17 +51,17 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         OkCommand = ReactiveCommand.Create(
             () =>
             {
-                var mb1 = new NothingMappingVm { MouseButton = MouseButton.Mb1 };
-                var mb2 = new NothingMappingVm { MouseButton = MouseButton.Mb2 };
-                var mb3 = new NothingMappingVm { MouseButton = MouseButton.Mb3 };
-                var mb4 = new NothingMappingVm { MouseButton = MouseButton.Mb4 };
-                var mb5 = new NothingMappingVm { MouseButton = MouseButton.Mb5 };
-                var mwu = new NothingMappingVm { MouseButton = MouseButton.Mwu };
-                var mwd = new NothingMappingVm { MouseButton = MouseButton.Mwd };
-                var mwl = new NothingMappingVm { MouseButton = MouseButton.Mwl };
-                var mwr = new NothingMappingVm { MouseButton = MouseButton.Mwr };
+                var mb1 = new NothingMappingVm { MouseButton = MouseButton.Mb1, Selected = true };
+                var mb2 = new NothingMappingVm { MouseButton = MouseButton.Mb2, Selected = true };
+                var mb3 = new NothingMappingVm { MouseButton = MouseButton.Mb3, Selected = true };
+                var mb4 = new NothingMappingVm { MouseButton = MouseButton.Mb4, Selected = true };
+                var mb5 = new NothingMappingVm { MouseButton = MouseButton.Mb5, Selected = true };
+                var mwu = new NothingMappingVm { MouseButton = MouseButton.Mwu, Selected = true };
+                var mwd = new NothingMappingVm { MouseButton = MouseButton.Mwd, Selected = true };
+                var mwl = new NothingMappingVm { MouseButton = MouseButton.Mwl, Selected = true };
+                var mwr = new NothingMappingVm { MouseButton = MouseButton.Mwr, Selected = true };
 
-                var buttonMappings = new List<BaseButtonMappingVm>()
+                var buttonMappings = new List<BaseButtonMappingVm>
                 {
                     mb1,
                     mb2,

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Riok.Mapperly.Abstractions;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -20,6 +21,6 @@ public static partial class ProfileMapper
     ) => buttonMappings.Select(ButtonMappingMapper.Map).ToList();
 
     private static ICollection<ButtonMapping> MapButtonMappingVms(
-        List<BaseButtonMappingVm> buttonMappings
+        ReadOnlyObservableCollection<BaseButtonMappingVm> buttonMappings
     ) => buttonMappings.Select(ButtonMappingMapper.Map).ToList();
 }
