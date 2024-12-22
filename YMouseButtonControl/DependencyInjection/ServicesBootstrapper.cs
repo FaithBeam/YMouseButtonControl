@@ -10,7 +10,9 @@ using YMouseButtonControl.Core.Services.StartupInstaller;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.UpdateStartsMinimized;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartsMinimized;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -25,6 +27,8 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         services
+            .AddScoped<IStartsMinimized, StartsMinimized>()
+            .AddScoped<IUpdateStartsMinimized, UpdateStartsMinimized>()
             .AddScoped<IEnableLoggingService, EnableLoggingService>()
             .AddScoped<IThemeService, ThemeService>()
             .AddScoped<IProfilesService, ProfilesService>()

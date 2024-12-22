@@ -17,7 +17,7 @@
     <Grid Margin="6" RowDefinitions="Auto,Auto,Auto,Auto,*">
         <CheckBox Grid.Row="0"
                   Content="Start Minimized"
-                  IsChecked="{Binding StartMinimized.BoolValue}" />
+                  IsChecked="{Binding StartMinimized.Value}" />
         <CheckBox Grid.Row="1"
                   Content="Start Menu"
                   IsEnabled="{Binding StartMenuEnabled}"

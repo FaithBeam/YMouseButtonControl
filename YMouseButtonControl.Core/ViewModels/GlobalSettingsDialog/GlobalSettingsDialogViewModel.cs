@@ -9,7 +9,9 @@ using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.UpdateStartsMinimized;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartsMinimized;
 using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
@@ -18,7 +20,7 @@ public interface IGlobalSettingsDialogViewModel;
 
 public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogViewModel
 {
-    private SettingBoolVm _startMinimizedSetting;
+    private StartsMinimized.StartsMinimizedResponse _startMinimizedSetting;
     private bool _loggingEnabled;
     private bool _startMenuChecked;
     private SettingIntVm _themeSetting;
@@ -27,6 +29,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
 
     public GlobalSettingsDialogViewModel(
+        IStartsMinimized startsMinimized,
+        IUpdateStartsMinimized updateStartsMinimized,
         IStartMenuInstallerStatus startupMenuInstallerStatus,
         IStartMenuInstall startMenuInstall,
         IStartMenuUninstall startMenuUninstall,
@@ -38,9 +42,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     {
         StartMenuEnabled = !OperatingSystem.IsMacOS();
         _startMenuChecked = StartMenuEnabled && startupMenuInstallerStatus.InstallStatus();
-        _startMinimizedSetting =
-            settingsService.GetSetting("StartMinimized") as SettingBoolVm
-            ?? throw new Exception("Error retrieving StartMinimized setting");
+        _startMinimizedSetting = startsMinimized.GetStartsMinimized();
         _loggingEnabled = enableLoggingService.GetLoggingState();
         _themeSetting =
             settingsService.GetSetting("Theme") as SettingIntVm
@@ -52,10 +54,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         this.WhenAnyValue(x => x.SelectedTheme).Subscribe(x => ThemeSetting.IntValue = x.Id);
 
         var startMinimizedChanged = this.WhenAnyValue(
-            x => x.StartMinimized.BoolValue,
-            selector: val =>
-                settingsService.GetSetting("StartMinimized") is not SettingBoolVm curVal
-                || curVal.BoolValue != val
+            x => x.StartMinimized.Value,
+            selector: val => startsMinimized.GetStartsMinimized().Value != val
         );
         var loggingChanged = this.WhenAnyValue(
             x => x.LoggingEnabled,
@@ -77,8 +77,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
             .Merge(startMenuChanged)
             .Merge(applyIsExecObs)
             .Merge(themeChanged);
-        ApplyCommand = ReactiveCommand.Create(
-            () =>
+        ApplyCommand = ReactiveCommand.CreateFromTask(
+            async () =>
             {
                 if (LoggingEnabled != enableLoggingService.GetLoggingState())
                 {
@@ -107,7 +107,9 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                     }
                 }
 
-                settingsService.UpdateSetting(StartMinimized);
+                await updateStartsMinimized.ExecuteAsync(
+                    new UpdateStartsMinimized.Command(_startMinimizedSetting.Value)
+                );
                 settingsService.UpdateSetting(ThemeSetting);
             },
             canSave
@@ -125,7 +127,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
     public bool StartMenuEnabled { get; init; }
 
-    public SettingBoolVm StartMinimized
+    public StartsMinimized.StartsMinimizedResponse StartMinimized
     {
         get => _startMinimizedSetting;
         set => this.RaiseAndSetIfChanged(ref _startMinimizedSetting, value);
