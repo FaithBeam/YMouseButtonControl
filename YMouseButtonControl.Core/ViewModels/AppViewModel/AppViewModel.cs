@@ -4,6 +4,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.StartupInstaller;
+using YMouseButtonControl.Core.ViewModels.AppViewModel.Commands.StartupInstaller.Install;
+using YMouseButtonControl.Core.ViewModels.AppViewModel.Commands.StartupInstaller.Uninstall;
+using YMouseButtonControl.Core.ViewModels.AppViewModel.Queries.StartupInstaller.CanBeInstalled;
+using YMouseButtonControl.Core.ViewModels.AppViewModel.Queries.StartupInstaller.IsInstalled;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.Views;
 
@@ -21,13 +25,16 @@ public class AppViewModel : ViewModelBase, IAppViewModel
     private string _runAtStartupHeader = "";
 
     public AppViewModel(
-        IStartupInstallerService startupInstallerService,
+        ICanBeInstalledHandler canBeInstalledHandler,
+        IIsInstalledHandler isInstalledHandler,
+        IInstallHandler installHandler,
+        IUninstallHandler uninstallHandler,
         IMainWindow mainWindow,
         IMainWindowViewModel mainWindowViewModel
     )
     {
-        RunAtStartupIsEnabled = startupInstallerService.ButtonEnabled();
-        RunAtStartupIsChecked = startupInstallerService.InstallStatus();
+        RunAtStartupIsEnabled = canBeInstalledHandler.Execute();
+        RunAtStartupIsChecked = isInstalledHandler.Execute();
         RunAtStartupHeader = RunAtStartupIsChecked
             ? string.Format(RunAtStartupHeaderFmt, RunAtStartupChecked)
             : string.Format(RunAtStartupHeaderFmt, RunAtStartupNotChecked);
@@ -61,10 +68,10 @@ public class AppViewModel : ViewModelBase, IAppViewModel
         RunAtStartupCommand = ReactiveCommand.Create(
             () =>
             {
-                if (startupInstallerService.InstallStatus())
+                if (isInstalledHandler.Execute())
                 {
                     // uninstall
-                    startupInstallerService.Uninstall();
+                    uninstallHandler.Execute();
                     RunAtStartupIsChecked = false;
                     RunAtStartupHeader = string.Format(
                         RunAtStartupHeaderFmt,
@@ -74,7 +81,7 @@ public class AppViewModel : ViewModelBase, IAppViewModel
                 else
                 {
                     // install
-                    startupInstallerService.Install();
+                    installHandler.Execute();
                     RunAtStartupIsChecked = true;
                     RunAtStartupHeader = string.Format(RunAtStartupHeaderFmt, RunAtStartupChecked);
                 }

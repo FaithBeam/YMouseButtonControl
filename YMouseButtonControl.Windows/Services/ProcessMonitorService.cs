@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ public class ProcessMonitorService : IProcessMonitorService
                         cb.Add(p);
                     }
                 }
-                catch (Win32Exception) { }
+                catch (Exception ex) when (ex is Win32Exception or AggregateException) { }
             }
         );
         return cb.DistinctBy(x => x.MainModule!.FileName)
