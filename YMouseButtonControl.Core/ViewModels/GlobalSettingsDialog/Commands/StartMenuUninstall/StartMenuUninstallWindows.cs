@@ -3,29 +3,35 @@ using System.IO;
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
 
-public class StartMenuUninstallWindows : IStartMenuUninstall
+public static class StartMenuUninstallWindows
 {
-    private readonly string _roamingAppDataFolder = Environment.GetFolderPath(
-        Environment.SpecialFolder.ApplicationData
-    );
-    private readonly string _roamingYMouseButtonsFolder;
-    private readonly string _roamingYmouseButtonsShortcutPath;
-
-    public StartMenuUninstallWindows()
+    public sealed class Handler : IStartMenuUninstallHandler
     {
-        _roamingYMouseButtonsFolder = Path.Combine(
-            _roamingAppDataFolder,
-            "Microsoft",
-            "Windows",
-            "Start Menu",
-            "Programs",
-            "YMouseButtonControl"
+        private readonly string _roamingAppDataFolder = Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData
         );
-        _roamingYmouseButtonsShortcutPath = Path.Combine(
-            _roamingYMouseButtonsFolder,
-            "YMouseButtonControl.lnk"
-        );
-    }
+        private readonly string _roamingYMouseButtonsFolder;
+        private readonly string _roamingYmouseButtonsShortcutPath;
 
-    public void Uninstall() => File.Delete(_roamingYmouseButtonsShortcutPath);
+        public Handler()
+        {
+            _roamingYMouseButtonsFolder = Path.Combine(
+                _roamingAppDataFolder,
+                "Microsoft",
+                "Windows",
+                "Start Menu",
+                "Programs",
+                "YMouseButtonControl"
+            );
+            _roamingYmouseButtonsShortcutPath = Path.Combine(
+                _roamingYMouseButtonsFolder,
+                "YMouseButtonControl.lnk"
+            );
+        }
+
+        public void Execute()
+        {
+            File.Delete(_roamingYmouseButtonsShortcutPath);
+        }
+    }
 }

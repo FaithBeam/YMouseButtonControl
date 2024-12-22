@@ -27,8 +27,8 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         services
-            .AddScoped<IStartsMinimized, StartsMinimized>()
-            .AddScoped<IUpdateStartsMinimized, UpdateStartsMinimized>()
+            .AddScoped<StartsMinimized.Handler>()
+            .AddScoped<UpdateStartsMinimized.Handler>()
             .AddScoped<IEnableLoggingService, EnableLoggingService>()
             .AddScoped<IThemeService, ThemeService>()
             .AddScoped<IProfilesService, ProfilesService>()
@@ -58,9 +58,9 @@ public static class ServicesBootstrapper
     private static void RegisterLinuxServices(IServiceCollection services)
     {
         services
-            .AddScoped<IStartMenuInstallerStatus, StartMenuInstallerStatusLinux>()
-            .AddScoped<IStartMenuUninstall, StartMenuUninstallLinux>()
-            .AddScoped<IStartMenuInstall, StartMenuInstallLinux>()
+            .AddScoped<IStartMenuInstallerStatusHandler, StartMenuInstallerStatusLinux.Handler>()
+            .AddScoped<IStartMenuUninstallHandler, StartMenuUninstallLinux.Handler>()
+            .AddScoped<IStartMenuInstallHandler, StartMenuInstallLinux.Handler>()
             .AddScoped<IStartupInstallerService, Linux.Services.StartupInstallerService>()
             .AddScoped<IProcessMonitorService, Linux.Services.ProcessMonitorService>()
             .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
@@ -78,9 +78,9 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         services
-            .AddScoped<IStartMenuInstallerStatus, StartMenuInstallerStatusWindows>()
-            .AddScoped<IStartMenuUninstall, StartMenuUninstallWindows>()
-            .AddScoped<IStartMenuInstall, StartMenuInstallWindows>()
+            .AddScoped<IStartMenuInstallerStatusHandler, StartMenuInstallerStatusWindows.Handler>()
+            .AddScoped<IStartMenuUninstallHandler, StartMenuUninstallWindows.Handler>()
+            .AddScoped<IStartMenuInstallHandler, StartMenuInstallWindows.Handler>()
             .AddScoped<IStartupInstallerService, Windows.Services.StartupInstallerService>()
             .AddScoped<IProcessMonitorService, Windows.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, Windows.Services.CurrentWindowService>()
@@ -90,9 +90,9 @@ public static class ServicesBootstrapper
     private static void RegisterMacOsServices(IServiceCollection services)
     {
         services
-            .AddScoped<IStartMenuInstallerStatus, StartMenuInstallerStatusOsx>()
-            .AddScoped<IStartMenuUninstall, StartMenuUninstallOsx>()
-            .AddScoped<IStartMenuInstall, StartMenuInstallOsx>()
+            .AddScoped<IStartMenuInstallerStatusHandler, StartMenuInstallerStatusOsx.Handler>()
+            .AddScoped<IStartMenuUninstallHandler, StartMenuUninstallOsx.Handler>()
+            .AddScoped<IStartMenuInstallHandler, StartMenuInstallOsx.Handler>()
             .AddScoped<IStartupInstallerService, MacOS.Services.StartupInstallerService>()
             .AddScoped<IProcessMonitorService, MacOS.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, MacOS.Services.CurrentWindowService>()

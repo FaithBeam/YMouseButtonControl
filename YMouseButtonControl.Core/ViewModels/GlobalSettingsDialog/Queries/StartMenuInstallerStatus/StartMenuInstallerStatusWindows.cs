@@ -4,40 +4,34 @@ using WindowsShortcutFactory;
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
 
-public class StartMenuInstallerStatusWindows : IStartMenuInstallerStatus
+public static class StartMenuInstallerStatusWindows
 {
-    private readonly string _roamingAppDataFolder = Environment.GetFolderPath(
-        Environment.SpecialFolder.ApplicationData
-    );
-
-    private readonly string _roamingYMouseButtonsFolder;
-
-    private readonly string _roamingYmouseButtonsShortcutPath;
-
-    public StartMenuInstallerStatusWindows()
+    public sealed class Handler : IStartMenuInstallerStatusHandler
     {
-        _roamingYMouseButtonsFolder = Path.Combine(
-            _roamingAppDataFolder,
-            "Microsoft",
-            "Windows",
-            "Start Menu",
-            "Programs",
-            "YMouseButtonControl"
-        );
-        _roamingYmouseButtonsShortcutPath = Path.Combine(
-            _roamingYMouseButtonsFolder,
-            "YMouseButtonControl.lnk"
-        );
-    }
-
-    public bool InstallStatus()
-    {
-        if (!File.Exists(_roamingYmouseButtonsShortcutPath))
+        public bool Execute()
         {
-            return false;
+            var roamingAppDataFolder = Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData
+            );
+            var roamingYMouseButtonsFolder = Path.Combine(
+                roamingAppDataFolder,
+                "Microsoft",
+                "Windows",
+                "Start Menu",
+                "Programs",
+                "YMouseButtonControl"
+            );
+            var roamingYmouseButtonsShortcutPath = Path.Combine(
+                roamingYMouseButtonsFolder,
+                "YMouseButtonControl.lnk"
+            );
+            if (!File.Exists(roamingYmouseButtonsShortcutPath))
+            {
+                return false;
+            }
+            using var shortcut = WindowsShortcut.Load(roamingYmouseButtonsShortcutPath);
+            return shortcut.Path == GetCurExePath();
         }
-        using var shortcut = WindowsShortcut.Load(_roamingYmouseButtonsShortcutPath);
-        return shortcut.Path == GetCurExePath();
     }
 
     private static string GetCurExePath() =>

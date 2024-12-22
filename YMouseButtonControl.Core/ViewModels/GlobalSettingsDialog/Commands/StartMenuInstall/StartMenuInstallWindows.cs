@@ -4,54 +4,57 @@ using WindowsShortcutFactory;
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
 
-public class StartMenuInstallWindows : IStartMenuInstall
+public static class StartMenuInstallWindows
 {
-    private readonly string _roamingAppDataFolder = Environment.GetFolderPath(
-        Environment.SpecialFolder.ApplicationData
-    );
-
-    private readonly string _roamingYMouseButtonsFolder;
-
-    private readonly string _roamingYmouseButtonsShortcutPath;
-
-    public StartMenuInstallWindows()
+    public sealed class Handler : IStartMenuInstallHandler
     {
-        _roamingYMouseButtonsFolder = Path.Combine(
-            _roamingAppDataFolder,
-            "Microsoft",
-            "Windows",
-            "Start Menu",
-            "Programs",
-            "YMouseButtonControl"
+        private readonly string _roamingAppDataFolder = Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData
         );
-        _roamingYmouseButtonsShortcutPath = Path.Combine(
-            _roamingYMouseButtonsFolder,
-            "YMouseButtonControl.lnk"
-        );
-    }
 
-    public void Install()
-    {
-        if (File.Exists(_roamingYmouseButtonsShortcutPath))
+        private readonly string _roamingYMouseButtonsFolder;
+
+        private readonly string _roamingYmouseButtonsShortcutPath;
+
+        public Handler()
         {
-            File.Delete(_roamingYmouseButtonsShortcutPath);
+            _roamingYMouseButtonsFolder = Path.Combine(
+                _roamingAppDataFolder,
+                "Microsoft",
+                "Windows",
+                "Start Menu",
+                "Programs",
+                "YMouseButtonControl"
+            );
+            _roamingYmouseButtonsShortcutPath = Path.Combine(
+                _roamingYMouseButtonsFolder,
+                "YMouseButtonControl.lnk"
+            );
         }
 
-        if (!Directory.Exists(_roamingYMouseButtonsFolder))
+        public void Execute()
         {
-            Directory.CreateDirectory(_roamingYMouseButtonsFolder);
+            if (File.Exists(_roamingYmouseButtonsShortcutPath))
+            {
+                File.Delete(_roamingYmouseButtonsShortcutPath);
+            }
+
+            if (!Directory.Exists(_roamingYMouseButtonsFolder))
+            {
+                Directory.CreateDirectory(_roamingYMouseButtonsFolder);
+            }
+
+            using var shortcut = new WindowsShortcut();
+            shortcut.Path = GetCurExePath();
+            shortcut.WorkingDirectory = GetCurExeParentPath();
+            shortcut.Save(_roamingYmouseButtonsShortcutPath);
         }
 
-        using var shortcut = new WindowsShortcut();
-        shortcut.Path = GetCurExePath();
-        shortcut.WorkingDirectory = GetCurExeParentPath();
-        shortcut.Save(_roamingYmouseButtonsShortcutPath);
+        private static string GetCurExeParentPath() =>
+            Path.GetDirectoryName(GetCurExePath())
+            ?? throw new Exception("Error retrieving parent of process path");
+
+        private static string GetCurExePath() =>
+            Environment.ProcessPath ?? throw new Exception("Error retrieving process path");
     }
-
-    private static string GetCurExeParentPath() =>
-        Path.GetDirectoryName(GetCurExePath())
-        ?? throw new Exception("Error retrieving parent of process path");
-
-    private static string GetCurExePath() =>
-        Environment.ProcessPath ?? throw new Exception("Error retrieving process path");
 }

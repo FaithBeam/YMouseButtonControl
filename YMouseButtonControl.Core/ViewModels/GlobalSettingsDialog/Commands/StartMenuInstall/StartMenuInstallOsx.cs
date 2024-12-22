@@ -2,10 +2,13 @@
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
 
-public class StartMenuInstallOsx : IStartMenuInstall
+public static class StartMenuInstallOsx
 {
-    public void Install()
+    public sealed class Handler : IStartMenuInstallHandler
     {
-        throw new NotImplementedException();
+        public void Execute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

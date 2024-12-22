@@ -2,10 +2,13 @@
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
 
-public class StartMenuUninstallOsx : IStartMenuUninstall
+public static class StartMenuUninstallOsx
 {
-    public void Uninstall()
+    public sealed class Handler : IStartMenuUninstallHandler
     {
-        throw new NotImplementedException();
+        public void Execute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

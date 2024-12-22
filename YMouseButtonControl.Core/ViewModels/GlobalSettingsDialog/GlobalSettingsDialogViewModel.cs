@@ -20,7 +20,7 @@ public interface IGlobalSettingsDialogViewModel;
 
 public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogViewModel
 {
-    private StartsMinimized.StartsMinimizedResponse _startMinimizedSetting;
+    private StartsMinimized.StartsMinimizedVm _startMinimizedSetting;
     private bool _loggingEnabled;
     private bool _startMenuChecked;
     private SettingIntVm _themeSetting;
@@ -29,11 +29,11 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
 
     public GlobalSettingsDialogViewModel(
-        IStartsMinimized startsMinimized,
-        IUpdateStartsMinimized updateStartsMinimized,
-        IStartMenuInstallerStatus startupMenuInstallerStatus,
-        IStartMenuInstall startMenuInstall,
-        IStartMenuUninstall startMenuUninstall,
+        StartsMinimized.Handler startsMinimizedHandler,
+        UpdateStartsMinimized.Handler updateStartsMinimizedHandler,
+        IStartMenuInstallerStatusHandler startupMenuInstallerStatusHandler,
+        IStartMenuInstallHandler startMenuInstallHandler,
+        IStartMenuUninstallHandler startMenuUninstallHandler,
         IEnableLoggingService enableLoggingService,
         ISettingsService settingsService,
         IThemeService themeService
@@ -41,8 +41,8 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         : base(themeService)
     {
         StartMenuEnabled = !OperatingSystem.IsMacOS();
-        _startMenuChecked = StartMenuEnabled && startupMenuInstallerStatus.InstallStatus();
-        _startMinimizedSetting = startsMinimized.GetStartsMinimized();
+        _startMenuChecked = StartMenuEnabled && startupMenuInstallerStatusHandler.Execute();
+        _startMinimizedSetting = startsMinimizedHandler.Execute();
         _loggingEnabled = enableLoggingService.GetLoggingState();
         _themeSetting =
             settingsService.GetSetting("Theme") as SettingIntVm
@@ -55,7 +55,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
         var startMinimizedChanged = this.WhenAnyValue(
             x => x.StartMinimized.Value,
-            selector: val => startsMinimized.GetStartsMinimized().Value != val
+            selector: val => startsMinimizedHandler.Execute().Value != val
         );
         var loggingChanged = this.WhenAnyValue(
             x => x.LoggingEnabled,
@@ -63,7 +63,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         );
         var startMenuChanged = this.WhenAnyValue(
             x => x.StartMenuChecked,
-            selector: val => StartMenuEnabled && val != startupMenuInstallerStatus.InstallStatus()
+            selector: val => StartMenuEnabled && val != startupMenuInstallerStatusHandler.Execute()
         );
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
@@ -94,20 +94,20 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
                 if (
                     StartMenuEnabled
-                    && StartMenuChecked != startupMenuInstallerStatus.InstallStatus()
+                    && StartMenuChecked != startupMenuInstallerStatusHandler.Execute()
                 )
                 {
                     if (StartMenuChecked)
                     {
-                        startMenuInstall.Install();
+                        startMenuInstallHandler.Execute();
                     }
                     else
                     {
-                        startMenuUninstall.Uninstall();
+                        startMenuUninstallHandler.Execute();
                     }
                 }
 
-                await updateStartsMinimized.ExecuteAsync(
+                await updateStartsMinimizedHandler.ExecuteAsync(
                     new UpdateStartsMinimized.Command(_startMinimizedSetting.Value)
                 );
                 settingsService.UpdateSetting(ThemeSetting);
@@ -127,7 +127,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
     public bool StartMenuEnabled { get; init; }
 
-    public StartsMinimized.StartsMinimizedResponse StartMinimized
+    public StartsMinimized.StartsMinimizedVm StartMinimized
     {
         get => _startMinimizedSetting;
         set => this.RaiseAndSetIfChanged(ref _startMinimizedSetting, value);

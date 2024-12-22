@@ -1,7 +1,7 @@
 ﻿namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall
 {
-    public interface IStartMenuUninstall
+    public interface IStartMenuUninstallHandler
     {
-        void Uninstall();
+        void Execute();
     }
 }

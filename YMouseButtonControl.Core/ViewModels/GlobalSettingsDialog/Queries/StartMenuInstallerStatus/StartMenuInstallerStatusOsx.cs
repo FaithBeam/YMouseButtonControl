@@ -1,9 +1,12 @@
 ﻿namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
 
-public class StartMenuInstallerStatusOsx : IStartMenuInstallerStatus
+public static class StartMenuInstallerStatusOsx
 {
-    public bool InstallStatus()
+    public sealed class Handler : IStartMenuInstallerStatusHandler
     {
-        throw new System.NotImplementedException();
+        public bool Execute()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -3,22 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using YMouseButtonControl.Domain.Models;
 using YMouseButtonControl.Infrastructure.Context;
-using static YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartsMinimized.StartsMinimized;
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartsMinimized;
 
-public interface IStartsMinimized
+public static class StartsMinimized
 {
-    StartsMinimizedResponse GetStartsMinimized();
-}
-
-public class StartsMinimized(YMouseButtonControlDbContext db) : IStartsMinimized
-{
-    public class StartsMinimizedResponse : ReactiveObject
+    public sealed class StartsMinimizedVm : ReactiveObject
     {
         private bool _value;
 
-        public StartsMinimizedResponse(SettingBool settingBool)
+        public StartsMinimizedVm(SettingBool settingBool)
         {
             Value = settingBool.BoolValue;
         }
@@ -30,6 +24,9 @@ public class StartsMinimized(YMouseButtonControlDbContext db) : IStartsMinimized
         }
     }
 
-    public StartsMinimizedResponse GetStartsMinimized() =>
-        new(db.SettingBools.AsNoTracking().First(x => x.Name == "StartMinimized"));
+    public sealed class Handler(YMouseButtonControlDbContext db)
+    {
+        public StartsMinimizedVm Execute() =>
+            new(db.SettingBools.AsNoTracking().First(x => x.Name == "StartMinimized"));
+    }
 }
