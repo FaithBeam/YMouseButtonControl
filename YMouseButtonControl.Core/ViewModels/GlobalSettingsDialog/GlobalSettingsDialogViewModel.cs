@@ -3,16 +3,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using Avalonia.Styling;
 using ReactiveUI;
-using YMouseButtonControl.Core.Services.Logging;
-using YMouseButtonControl.Core.Services.Settings;
-using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.Logging;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.Settings;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
-using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.UpdateStartsMinimized;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.Logging;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.Settings;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
-using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartsMinimized;
-using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.Themes;
 
 namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
 
@@ -20,56 +20,64 @@ public interface IGlobalSettingsDialogViewModel;
 
 public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogViewModel
 {
-    private StartsMinimized.StartsMinimizedVm _startMinimizedSetting;
+    private GetBoolSetting.BoolSettingVm _startMinimizedSetting;
     private bool _loggingEnabled;
     private bool _startMenuChecked;
-    private SettingIntVm _themeSetting;
-    private ObservableCollection<ThemeVm> _themeCollection;
-    private ThemeVm _selectedTheme;
+    private GetIntSetting.IntSettingVm _themeSetting;
+    private ObservableCollection<ListThemes.ThemeVm> _themeCollection;
+    private ListThemes.ThemeVm _selectedTheme;
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
+    private readonly ThemeVariant _themeVariant;
 
     public GlobalSettingsDialogViewModel(
-        StartsMinimized.Handler startsMinimizedHandler,
-        UpdateStartsMinimized.Handler updateStartsMinimizedHandler,
+        GetBoolSetting.Handler getBoolSettingHandler,
         IStartMenuInstallerStatusHandler startupMenuInstallerStatusHandler,
         IStartMenuInstallHandler startMenuInstallHandler,
         IStartMenuUninstallHandler startMenuUninstallHandler,
-        IEnableLoggingService enableLoggingService,
-        ISettingsService settingsService,
-        IThemeService themeService
+        EnableLogging.Handler enableLoggingHandler,
+        DisableLogging.Handler disableLoggingHandler,
+        GetLoggingState.Handler loggingStateHandler,
+        GetIntSetting.Handler getIntSettingHandler,
+        UpdateSetting<int>.Handler updateSettingIntHandler,
+        UpdateSetting<bool>.Handler updateSettingBoolHandler,
+        GetThemeVariant.Handler getThemeVariantHandler,
+        ListThemes.Handler listThemesHandler
     )
-        : base(themeService)
     {
+        _themeVariant = getThemeVariantHandler.Execute();
         StartMenuEnabled = !OperatingSystem.IsMacOS();
         _startMenuChecked = StartMenuEnabled && startupMenuInstallerStatusHandler.Execute();
-        _startMinimizedSetting = startsMinimizedHandler.Execute();
-        _loggingEnabled = enableLoggingService.GetLoggingState();
-        _themeSetting =
-            settingsService.GetSetting("Theme") as SettingIntVm
-            ?? throw new Exception("Error retrieving Theme setting");
-        _themeCollection = [.. themeService.Themes];
-        _selectedTheme = _themeCollection.First(x => x.Id == _themeSetting.IntValue);
+        _startMinimizedSetting = getBoolSettingHandler.Execute(
+            new Queries.Settings.Models.Query("StartMinimized")
+        );
+        _loggingEnabled = loggingStateHandler.Execute();
+        _themeSetting = getIntSettingHandler.Execute(new Queries.Settings.Models.Query("Theme"));
+        _themeCollection = [.. listThemesHandler.Execute()];
+        _selectedTheme = _themeCollection.First(x => x.Id == _themeSetting.Value);
 
         // Update the theme setting selected theme value
-        this.WhenAnyValue(x => x.SelectedTheme).Subscribe(x => ThemeSetting.IntValue = x.Id);
+        this.WhenAnyValue(x => x.SelectedTheme).Subscribe(x => ThemeSetting.Value = x.Id);
 
         var startMinimizedChanged = this.WhenAnyValue(
             x => x.StartMinimized.Value,
-            selector: val => startsMinimizedHandler.Execute().Value != val
+            selector: val =>
+                getBoolSettingHandler
+                    .Execute(new Queries.Settings.Models.Query("StartMinimized"))
+                    .Value != val
         );
         var loggingChanged = this.WhenAnyValue(
             x => x.LoggingEnabled,
-            selector: val => val != enableLoggingService.GetLoggingState()
+            selector: val => val != loggingStateHandler.Execute()
         );
         var startMenuChanged = this.WhenAnyValue(
             x => x.StartMenuChecked,
             selector: val => StartMenuEnabled && val != startupMenuInstallerStatusHandler.Execute()
         );
         var themeChanged = this.WhenAnyValue(
-            x => x.ThemeSetting.IntValue,
+            x => x.ThemeSetting.Value,
             selector: val =>
-                settingsService.GetSetting("Theme") is not SettingIntVm curVal
-                || curVal.IntValue != val
+                getIntSettingHandler.Execute(new Queries.Settings.Models.Query("Theme")).Value
+                != val
         );
         var applyIsExecObs = this.WhenAnyValue(x => x.AppIsExec);
         var canSave = startMinimizedChanged
@@ -80,15 +88,15 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         ApplyCommand = ReactiveCommand.CreateFromTask(
             async () =>
             {
-                if (LoggingEnabled != enableLoggingService.GetLoggingState())
+                if (LoggingEnabled != loggingStateHandler.Execute())
                 {
                     if (LoggingEnabled)
                     {
-                        enableLoggingService.EnableLogging();
+                        enableLoggingHandler.Execute();
                     }
                     else
                     {
-                        enableLoggingService.DisableLogging();
+                        disableLoggingHandler.Execute();
                     }
                 }
 
@@ -107,10 +115,12 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
                     }
                 }
 
-                await updateStartsMinimizedHandler.ExecuteAsync(
-                    new UpdateStartsMinimized.Command(_startMinimizedSetting.Value)
+                await updateSettingBoolHandler.ExecuteAsync(
+                    new UpdateSetting<bool>.Command("StartMinimized", StartMinimized.Value)
                 );
-                settingsService.UpdateSetting(ThemeSetting);
+                await updateSettingIntHandler.ExecuteAsync(
+                    new UpdateSetting<int>.Command("Theme", ThemeSetting.Value)
+                );
             },
             canSave
         );
@@ -127,7 +137,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
     public bool StartMenuEnabled { get; init; }
 
-    public StartsMinimized.StartsMinimizedVm StartMinimized
+    public GetBoolSetting.BoolSettingVm StartMinimized
     {
         get => _startMinimizedSetting;
         set => this.RaiseAndSetIfChanged(ref _startMinimizedSetting, value);
@@ -139,23 +149,25 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         set => this.RaiseAndSetIfChanged(ref _loggingEnabled, value);
     }
 
-    public ThemeVm SelectedTheme
+    public ListThemes.ThemeVm SelectedTheme
     {
         get => _selectedTheme;
         set => this.RaiseAndSetIfChanged(ref _selectedTheme, value);
     }
 
-    public SettingIntVm ThemeSetting
+    public GetIntSetting.IntSettingVm ThemeSetting
     {
         get => _themeSetting;
         set => this.RaiseAndSetIfChanged(ref _themeSetting, value);
     }
 
-    public ObservableCollection<ThemeVm> ThemeCollection
+    public ObservableCollection<ListThemes.ThemeVm> ThemeCollection
     {
         get => _themeCollection;
         set => this.RaiseAndSetIfChanged(ref _themeCollection, value);
     }
 
     public ReactiveCommand<Unit, Unit> ApplyCommand { get; init; }
+
+    public ThemeVariant ThemeVariant => _themeVariant;
 }

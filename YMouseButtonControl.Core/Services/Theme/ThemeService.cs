@@ -129,9 +129,8 @@ public class ThemeService : ReactiveObject, IThemeService
         return Brush.Parse(_themeVm.Highlight);
     }
 
-    private ThemeVariant GetThemeVariant()
-    {
-        return _themeSetting.IntValue switch
+    private ThemeVariant GetThemeVariant() =>
+        _themeSetting.IntValue switch
         {
             1 => Application.Current!.ActualThemeVariant == ThemeVariant.Light
                 ? ThemeVariant.Light
@@ -142,5 +141,4 @@ public class ThemeService : ReactiveObject, IThemeService
                 $"Invalid theme id: {_themeSetting.IntValue}"
             ),
         };
-    }
 }

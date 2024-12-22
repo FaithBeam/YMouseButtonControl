@@ -10,7 +10,6 @@ using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Profiles;
-using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
@@ -31,10 +30,8 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     public ProcessSelectorDialogViewModel(
         IProcessMonitorService processMonitorService,
-        IThemeService themeService,
         IProfilesService profilesService
     )
-        : base(themeService)
     {
         _sourceProcessModels = new SourceList<ProcessModel>();
         _processMonitorService = processMonitorService;

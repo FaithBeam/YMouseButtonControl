@@ -43,12 +43,10 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
 
     public SimulatedKeystrokesDialogViewModel(
         IMouseListener mouseListener,
-        IThemeService themeService,
         string buttonName,
         MouseButton mouseButton,
         SimulatedKeystrokeVm? currentMapping = null
     )
-        : base(themeService)
     {
         _title = $"SimulatedKeystrokes - {buttonName}";
         _mouseListener = mouseListener;
