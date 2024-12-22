@@ -6,9 +6,11 @@ using YMouseButtonControl.Core.Services.Logging;
 using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Settings;
-using YMouseButtonControl.Core.Services.StartMenuInstaller;
 using YMouseButtonControl.Core.Services.StartupInstaller;
 using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -52,8 +54,10 @@ public static class ServicesBootstrapper
     private static void RegisterLinuxServices(IServiceCollection services)
     {
         services
+            .AddScoped<IStartMenuInstallerStatus, StartMenuInstallerStatusLinux>()
+            .AddScoped<IStartMenuUninstall, StartMenuUninstallLinux>()
+            .AddScoped<IStartMenuInstall, StartMenuInstallLinux>()
             .AddScoped<IStartupInstallerService, Linux.Services.StartupInstallerService>()
-            .AddScoped<IStartMenuInstallerService, Linux.Services.StartMenuInstallerService>()
             .AddScoped<IProcessMonitorService, Linux.Services.ProcessMonitorService>()
             .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
@@ -70,7 +74,9 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         services
-            .AddScoped<IStartMenuInstallerService, Windows.Services.StartMenuInstallerService>()
+            .AddScoped<IStartMenuInstallerStatus, StartMenuInstallerStatusWindows>()
+            .AddScoped<IStartMenuUninstall, StartMenuUninstallWindows>()
+            .AddScoped<IStartMenuInstall, StartMenuInstallWindows>()
             .AddScoped<IStartupInstallerService, Windows.Services.StartupInstallerService>()
             .AddScoped<IProcessMonitorService, Windows.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, Windows.Services.CurrentWindowService>()
@@ -80,8 +86,10 @@ public static class ServicesBootstrapper
     private static void RegisterMacOsServices(IServiceCollection services)
     {
         services
+            .AddScoped<IStartMenuInstallerStatus, StartMenuInstallerStatusOsx>()
+            .AddScoped<IStartMenuUninstall, StartMenuUninstallOsx>()
+            .AddScoped<IStartMenuInstall, StartMenuInstallOsx>()
             .AddScoped<IStartupInstallerService, MacOS.Services.StartupInstallerService>()
-            .AddScoped<IStartMenuInstallerService, MacOS.Services.StartMenuInstaller>()
             .AddScoped<IProcessMonitorService, MacOS.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, MacOS.Services.CurrentWindowService>()
             .AddScoped<IBackgroundTasksRunner, MacOS.Services.BackgroundTasksRunner>();

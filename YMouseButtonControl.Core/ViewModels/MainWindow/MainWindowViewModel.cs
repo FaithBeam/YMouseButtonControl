@@ -9,6 +9,7 @@ using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
 using YMouseButtonControl.Core.ViewModels.Models;

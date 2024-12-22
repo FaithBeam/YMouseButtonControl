@@ -1,8 +1,9 @@
-using YMouseButtonControl.Core.Services.StartMenuInstaller;
+﻿using System;
+using System.IO;
 
-namespace YMouseButtonControl.Linux.Services;
+namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
 
-public class StartMenuInstallerService : IStartMenuInstallerService
+public class StartMenuInstallLinux : IStartMenuInstall
 {
     private const string DesktopFile = """
         [Desktop Entry]
@@ -22,23 +23,17 @@ public class StartMenuInstallerService : IStartMenuInstallerService
 
     private readonly string _desktopFilePath;
 
-    public StartMenuInstallerService()
+    public StartMenuInstallLinux()
     {
         var applicationsDir = Path.Combine(_localShare, "applications");
         _desktopFilePath = Path.Combine(applicationsDir, "YMouseButtonControl.desktop");
     }
-
-    public bool InstallStatus() =>
-        File.Exists(_desktopFilePath)
-        && File.ReadAllText(_desktopFilePath).Contains($"Exec={GetCurExePath()}");
 
     public void Install() =>
         File.WriteAllText(
             _desktopFilePath,
             string.Format(DesktopFile, GetCurExePath(), GetCurExeParentPath())
         );
-
-    public void Uninstall() => File.Delete(_desktopFilePath);
 
     private static string GetCurExeParentPath() =>
         Path.GetDirectoryName(GetCurExePath())

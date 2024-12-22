@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using WindowsShortcutFactory;
-using YMouseButtonControl.Core.Services.StartMenuInstaller;
 
-namespace YMouseButtonControl.Windows.Services;
+namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
 
-public class StartMenuInstallerService : IStartMenuInstallerService
+public class StartMenuInstallerStatusWindows : IStartMenuInstallerStatus
 {
     private readonly string _roamingAppDataFolder = Environment.GetFolderPath(
         Environment.SpecialFolder.ApplicationData
@@ -15,7 +14,7 @@ public class StartMenuInstallerService : IStartMenuInstallerService
 
     private readonly string _roamingYmouseButtonsShortcutPath;
 
-    public StartMenuInstallerService()
+    public StartMenuInstallerStatusWindows()
     {
         _roamingYMouseButtonsFolder = Path.Combine(
             _roamingAppDataFolder,
@@ -40,30 +39,6 @@ public class StartMenuInstallerService : IStartMenuInstallerService
         using var shortcut = WindowsShortcut.Load(_roamingYmouseButtonsShortcutPath);
         return shortcut.Path == GetCurExePath();
     }
-
-    public void Install()
-    {
-        if (File.Exists(_roamingYmouseButtonsShortcutPath))
-        {
-            File.Delete(_roamingYmouseButtonsShortcutPath);
-        }
-
-        if (!Directory.Exists(_roamingYMouseButtonsFolder))
-        {
-            Directory.CreateDirectory(_roamingYMouseButtonsFolder);
-        }
-
-        using var shortcut = new WindowsShortcut();
-        shortcut.Path = GetCurExePath();
-        shortcut.WorkingDirectory = GetCurExeParentPath();
-        shortcut.Save(_roamingYmouseButtonsShortcutPath);
-    }
-
-    public void Uninstall() => File.Delete(_roamingYmouseButtonsShortcutPath);
-
-    private static string GetCurExeParentPath() =>
-        Path.GetDirectoryName(GetCurExePath())
-        ?? throw new Exception("Error retrieving parent of process path");
 
     private static string GetCurExePath() =>
         Environment.ProcessPath ?? throw new Exception("Error retrieving process path");

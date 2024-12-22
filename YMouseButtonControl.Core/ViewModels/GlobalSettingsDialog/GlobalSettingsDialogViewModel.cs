@@ -3,15 +3,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Transactions;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Logging;
 using YMouseButtonControl.Core.Services.Settings;
-using YMouseButtonControl.Core.Services.StartMenuInstaller;
 using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuInstall;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Commands.StartMenuUninstall;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog.Queries.StartMenuInstallerStatus;
 using YMouseButtonControl.Core.ViewModels.Models;
 
-namespace YMouseButtonControl.Core.ViewModels.MainWindow;
+namespace YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
 
 public interface IGlobalSettingsDialogViewModel;
 
@@ -26,7 +27,9 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
     private readonly ObservableAsPropertyHelper<bool>? _applyIsExec;
 
     public GlobalSettingsDialogViewModel(
-        IStartMenuInstallerService startMenuInstallerService,
+        IStartMenuInstallerStatus startupMenuInstallerStatus,
+        IStartMenuInstall startMenuInstall,
+        IStartMenuUninstall startMenuUninstall,
         IEnableLoggingService enableLoggingService,
         ISettingsService settingsService,
         IThemeService themeService
@@ -34,7 +37,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         : base(themeService)
     {
         StartMenuEnabled = !OperatingSystem.IsMacOS();
-        _startMenuChecked = StartMenuEnabled && startMenuInstallerService.InstallStatus();
+        _startMenuChecked = StartMenuEnabled && startupMenuInstallerStatus.InstallStatus();
         _startMinimizedSetting =
             settingsService.GetSetting("StartMinimized") as SettingBoolVm
             ?? throw new Exception("Error retrieving StartMinimized setting");
@@ -60,7 +63,7 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
         );
         var startMenuChanged = this.WhenAnyValue(
             x => x.StartMenuChecked,
-            selector: val => StartMenuEnabled && val != startMenuInstallerService.InstallStatus()
+            selector: val => StartMenuEnabled && val != startupMenuInstallerStatus.InstallStatus()
         );
         var themeChanged = this.WhenAnyValue(
             x => x.ThemeSetting.IntValue,
@@ -91,16 +94,16 @@ public class GlobalSettingsDialogViewModel : DialogBase, IGlobalSettingsDialogVi
 
                 if (
                     StartMenuEnabled
-                    && StartMenuChecked != startMenuInstallerService.InstallStatus()
+                    && StartMenuChecked != startupMenuInstallerStatus.InstallStatus()
                 )
                 {
                     if (StartMenuChecked)
                     {
-                        startMenuInstallerService.Install();
+                        startMenuInstall.Install();
                     }
                     else
                     {
-                        startMenuInstallerService.Uninstall();
+                        startMenuUninstall.Uninstall();
                     }
                 }
 

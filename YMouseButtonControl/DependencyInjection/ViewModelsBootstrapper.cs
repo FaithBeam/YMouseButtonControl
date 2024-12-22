@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.ViewModels.AppViewModel;
+using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;

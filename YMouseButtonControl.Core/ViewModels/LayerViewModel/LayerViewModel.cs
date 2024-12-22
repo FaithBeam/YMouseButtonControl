@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Linq;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
+using YMouseButtonControl.Core.ViewModels.MouseComboViewModel;
 using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;

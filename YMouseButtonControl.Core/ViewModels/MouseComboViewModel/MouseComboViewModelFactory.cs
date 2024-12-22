@@ -2,11 +2,12 @@
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 using YMouseButtonControl.Infrastructure.Context;
 
-namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
+namespace YMouseButtonControl.Core.ViewModels.MouseComboViewModel;
 
 public interface IMouseComboViewModelFactory
 {

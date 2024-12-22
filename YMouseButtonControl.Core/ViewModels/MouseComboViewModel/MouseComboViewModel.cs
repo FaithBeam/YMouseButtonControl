@@ -9,10 +9,11 @@ using ReactiveUI;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.Services.Theme;
+using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
-namespace YMouseButtonControl.Core.ViewModels.LayerViewModel;
+namespace YMouseButtonControl.Core.ViewModels.MouseComboViewModel;
 
 public interface IMouseComboViewModel
 {
@@ -24,7 +25,6 @@ public interface IMouseComboViewModel
 public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDisposable
 {
     private readonly ProfileVm _profileVm;
-    private readonly MouseButton _mouseButton;
     private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _btnMappings;
     private BaseButtonMappingVm? _selectedBtnMap;
     private readonly IDisposable? _mbDownDisposable;
@@ -44,7 +44,6 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     )
     {
         _profileVm = profileVm;
-        _mouseButton = mouseButton;
         _btnMappings = btnMappings;
         _backgroundColor = themeService.Background;
         switch (mouseButton)
@@ -100,7 +99,6 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
         this.WhenAnyValue(x => x.SelectedBtnMap)
             .DistinctUntilChanged()
             .WhereNotNull()
-            .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(current =>
             {
                 profileVm.BtnSc.Edit(inner =>
@@ -137,11 +135,10 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                     );
                 if (newMapping is not null)
                 {
-                    // SelectedBtnMap is already SimulatedKeystroke here
                     newMapping.Selected = true;
-                    var previouslySelectedBtnMap = BtnMappings
-                        .FirstOrDefault(x => x.Selected && x.Id != newMapping.Id)
-                        ?.Clone();
+                    var previouslySelectedBtnMap = BtnMappings.FirstOrDefault(x =>
+                        x.Selected && x.Id != newMapping.Id
+                    );
                     if (
                         previouslySelectedBtnMap is not null
                         && !previouslySelectedBtnMap.Equals(newMapping)

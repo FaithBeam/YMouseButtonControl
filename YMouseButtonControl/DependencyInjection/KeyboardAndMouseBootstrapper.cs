@@ -44,10 +44,13 @@ public static class KeyboardAndMouseBootstrapper
     {
         services
             .AddScoped<IMouseButtonMappingService, MouseButtonMappingService>()
-            //.AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
+#if DEBUG
             .AddScoped<IReactiveGlobalHook>(
                 (_) => new SimpleReactiveGlobalHook(globalHookProvider: new TestProvider())
             )
+#else
+            .AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
+#endif
             .AddScoped<IMouseListener, MouseListener>()
             .AddScoped<IEventSimulator, EventSimulator>()
             .AddScoped<IEventSimulatorService, EventSimulatorService>()

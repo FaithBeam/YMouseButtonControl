@@ -6,6 +6,7 @@ using Avalonia.ReactiveUI;
 using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.MouseComboViewModel;
 using YMouseButtonControl.Views.Dialogs;
 
 namespace YMouseButtonControl.Views;

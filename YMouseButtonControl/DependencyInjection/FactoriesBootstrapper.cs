@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.ViewModels.LayerViewModel;
+using YMouseButtonControl.Core.ViewModels.MouseComboViewModel;
 
 namespace YMouseButtonControl.DependencyInjection;
 
