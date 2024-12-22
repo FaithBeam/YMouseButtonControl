@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
-using YMouseButtonControl.Core.Services.StartupInstaller;
 using YMouseButtonControl.Core.ViewModels.AppViewModel.Commands.StartupInstaller.Install;
 using YMouseButtonControl.Core.ViewModels.AppViewModel.Commands.StartupInstaller.Uninstall;
 using YMouseButtonControl.Core.ViewModels.AppViewModel.Queries.StartupInstaller.CanBeInstalled;
