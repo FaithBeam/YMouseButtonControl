@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
@@ -13,7 +12,7 @@ using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
-namespace YMouseButtonControl.Core.ViewModels.ProfilesList;
+namespace YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
 
 public interface IProcessSelectorDialogViewModel
 {

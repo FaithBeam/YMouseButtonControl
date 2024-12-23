@@ -8,6 +8,7 @@ using System.Windows.Input;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
 using YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
 
 namespace YMouseButtonControl.Core.ViewModels.ProfilesList;

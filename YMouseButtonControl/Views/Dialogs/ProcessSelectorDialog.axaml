@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
         xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
+        xmlns:processSelectorDialogVm="clr-namespace:YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;assembly=YMouseButtonControl.Core"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="600"
@@ -16,7 +17,7 @@
         RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
 
     <Design.DataContext>
-        <profilesList:ProcessSelectorDialogViewModel />
+        <processSelectorDialogVm:ProcessSelectorDialogViewModel />
     </Design.DataContext>
     
     <Window.Resources>
