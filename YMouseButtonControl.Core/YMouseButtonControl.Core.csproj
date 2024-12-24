@@ -31,10 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ViewModels\MainWindow\Features\Apply\Commands\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\YMouseButtonControl.DataAccess\YMouseButtonControl.Infrastructure.csproj" />
     </ItemGroup>
 

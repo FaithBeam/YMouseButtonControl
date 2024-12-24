@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -7,17 +6,14 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using DynamicData;
 using ReactiveUI;
-using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
-using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
+using YMouseButtonControl.Core.ViewModels.MainWindow.Commands.Profiles;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Queries.Profiles;
-using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
-using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -58,7 +54,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         IProfilesListViewModel profilesListViewModel,
         IProfilesInformationViewModel profilesInformationViewModel,
         IGlobalSettingsDialogViewModel globalSettingsDialogViewModel,
-        IApply apply,
+        ApplyProfiles.Handler applyProfilesHandler,
         IsCacheDirty.Handler isCacheDirtyHandler
     )
     {
@@ -84,7 +80,10 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
             .DisposeMany()
             .Subscribe((_) => Dirty = isCacheDirtyHandler.Execute());
         var canExecuteApply = this.WhenAnyValue(x => x.Dirty);
-        ApplyCommand = ReactiveCommand.Create(apply.ApplyProfiles, canExecuteApply);
+        ApplyCommand = ReactiveCommand.CreateFromTask(
+            applyProfilesHandler.ExecuteAsync,
+            canExecuteApply
+        );
         var isExecutingObservable = this.WhenAnyObservable(x => x.ApplyCommand.IsExecuting);
         canExecuteApply = canExecuteApply.Merge(isExecutingObservable);
         isExecutingObservable.Skip(1).Where(x => !x).Subscribe(x => Dirty = false);
