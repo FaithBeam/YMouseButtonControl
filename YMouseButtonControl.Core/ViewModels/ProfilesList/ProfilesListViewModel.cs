@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
@@ -103,20 +102,41 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             selector: (curProf, curProfDisplayPriority) =>
                 curProf is not null
                 && !curProf.IsDefault
-                && listCacheProfilesHandler
-                    .Execute()
-                    .Any(p => !p.IsDefault && p.DisplayPriority < curProfDisplayPriority)
+                && Profiles.Any(p => !p.IsDefault && p.DisplayPriority < curProfDisplayPriority)
         );
-        UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
+        UpCommand = ReactiveCommand.Create(
+            () =>
+            {
+                var profileOfNextSmallerDisplayPriority =
+                    Profiles
+                        .Where(x => x.DisplayPriority < CurrentProfile!.DisplayPriority)
+                        .MaxBy(x => x.DisplayPriority)
+                    ?? throw new Exception("Unable to find profile to move down the profiles list");
+                if (profileOfNextSmallerDisplayPriority.IsDefault)
+                {
+                    throw new InvalidOperationException(
+                        "You cannot move the Default profile in the profiles list"
+                    );
+                }
+
+                // swap display priorities
+                (
+                    profileOfNextSmallerDisplayPriority.DisplayPriority,
+                    CurrentProfile!.DisplayPriority
+                ) = (
+                    CurrentProfile.DisplayPriority,
+                    profileOfNextSmallerDisplayPriority.DisplayPriority
+                );
+            },
+            upCommandCanExecute
+        );
         var downCommandCanExecute = this.WhenAnyValue(
             x => x.CurrentProfile,
             x => x.CurrentProfile!.DisplayPriority,
-            selector: (curProf, _) =>
+            selector: (curProf, curProfDisplayPriority) =>
                 curProf is not null
                 && !curProf.IsDefault
-                && listCacheProfilesHandler
-                    .Execute()
-                    .Any(p => p.DisplayPriority > curProf.DisplayPriority)
+                && Profiles.Any(p => p.DisplayPriority > curProfDisplayPriority)
         );
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
 
@@ -176,6 +196,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         get => _currentProfile;
         set => this.RaiseAndSetIfChanged(ref _currentProfile, value);
     }
+
     public ReadOnlyObservableCollection<ProfilesListProfileModel> Profiles { get; }
 
     private async Task OnImportClickedAsync()
@@ -202,15 +223,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         }
 
         _profilesService.WriteProfileToFile(_profilesService.CurrentProfile, result);
-    }
-
-    private void UpButtonClicked()
-    {
-        Debug.Assert(
-            _profilesService.CurrentProfile != null,
-            "_profilesService.CurrentProfile != null"
-        );
-        _profilesService.MoveProfileUp(_profilesService.CurrentProfile);
     }
 
     private void DownButtonClicked()

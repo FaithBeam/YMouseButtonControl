@@ -20,7 +20,6 @@ public interface IProfilesService
     bool Dirty { get; set; }
 
     IObservable<IChangeSet<ProfileVm, int>> Connect();
-    ProfileVm CopyProfile(ProfileVm p);
     void WriteProfileToFile(ProfileVm p, string path);
     void ImportProfileFromPath(string path);
     void AddProfile(ProfileVm profileVm);
@@ -79,18 +78,6 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
     }
 
     public SourceCache<ProfileVm, int> ProfilesSc => _profilesSc;
-
-    public ProfileVm CopyProfile(ProfileVm p)
-    {
-        var jsonString = JsonConvert.SerializeObject(
-            p,
-            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
-        );
-        return JsonConvert.DeserializeObject<ProfileVm>(
-                jsonString,
-                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
-            ) ?? throw new JsonSerializationException("Error deserializing profile");
-    }
 
     public void WriteProfileToFile(ProfileVm p, string path)
     {

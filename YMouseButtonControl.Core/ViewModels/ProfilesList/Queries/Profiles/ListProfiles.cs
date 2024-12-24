@@ -1,6 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Reactive.Linq;
 using DynamicData;
+using DynamicData.Binding;
+using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.ProfilesList.Models;
 
@@ -15,9 +18,16 @@ public static class ListProfiles
         public ReadOnlyObservableCollection<ProfilesListProfileModel> Execute()
         {
             _disposable = profilesService
-                .Connect()
+                .ProfilesSc.Connect()
+                .AutoRefresh()
                 .Transform(x => new ProfilesListProfileModel(x, profilesService))
-                .Bind(out ReadOnlyObservableCollection<ProfilesListProfileModel> profiles)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .SortAndBind(
+                    out var profiles,
+                    SortExpressionComparer<ProfilesListProfileModel>.Ascending(x =>
+                        x.DisplayPriority
+                    )
+                )
                 .DisposeMany()
                 .Subscribe();
             return profiles;

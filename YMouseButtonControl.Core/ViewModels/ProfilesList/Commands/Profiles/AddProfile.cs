@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
 
