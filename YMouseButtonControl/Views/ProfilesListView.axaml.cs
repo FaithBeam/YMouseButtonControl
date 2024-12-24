@@ -91,7 +91,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         IInteractionContext<IProcessSelectorDialogViewModel, ProfileVm?> interaction
     )
     {
-        interaction.Input.RefreshButtonCommand.Execute();
+        //interaction.Input.RefreshButtonCommand.Execute();
         var dialog = new ProcessSelectorDialog { DataContext = interaction.Input };
         var result = await dialog.ShowDialog<ProfileVm?>(MainWindowProvider.GetMainWindow());
         interaction.SetOutput(result);

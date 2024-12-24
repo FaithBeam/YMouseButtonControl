@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
@@ -19,7 +20,10 @@ public interface IProcessSelectorDialogViewModel
     ReactiveCommand<Unit, Unit> RefreshButtonCommand { get; }
 }
 
-public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
+public class ProcessSelectorDialogViewModel
+    : DialogBase,
+        IProcessSelectorDialogViewModel,
+        IActivatableViewModel
 {
     private readonly SourceList<Queries.Processes.Models.ProcessModel> _sourceProcessModels;
     private string? _processFilter;
@@ -34,6 +38,8 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         string? selectedProcessModuleName
     )
     {
+        Activator = new ViewModelActivator();
+
         _sourceProcessModels = new SourceList<Queries.Processes.Models.ProcessModel>();
         var dynamicFilter = this.WhenValueChanged(x => x.ProcessFilter)
             .Select(CreateProcessFilterPredicate);
@@ -47,7 +53,6 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             )
             .Bind(out _filtered)
             .Subscribe();
-        _sourceProcessModels.EditDiff(listProcessesHandler.Execute());
         RefreshButtonCommand = ReactiveCommand.Create(
             () => _sourceProcessModels.EditDiff(listProcessesHandler.Execute())
         );
@@ -100,6 +105,12 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
                 SelectedProcessModel = foundProc;
             }
         }
+
+        this.WhenActivated(disposables =>
+        {
+            _sourceProcessModels.EditDiff(listProcessesHandler.Execute());
+            Disposable.Create(() => { }).DisposeWith(disposables);
+        });
     }
 
     private static List<BaseButtonMappingVm> CreateButtonMappings(
@@ -162,4 +173,6 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         get => _selectedProcessMainWindowTitle;
         set => this.RaiseAndSetIfChanged(ref _selectedProcessMainWindowTitle, value);
     }
+
+    public ViewModelActivator Activator { get; }
 }
