@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using DynamicData;
-using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -19,8 +17,6 @@ public interface IProfilesCache
     bool Dirty { get; set; }
 
     IObservable<IChangeSet<ProfileVm, int>> Connect();
-    void ImportProfileFromPath(string path);
-    void AddProfile(ProfileVm profileVm);
 }
 
 public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
@@ -70,22 +66,6 @@ public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
     }
 
     public SourceCache<ProfileVm, int> ProfilesSc => _profilesSc;
-
-    public void ImportProfileFromPath(string path)
-    {
-        var f = File.ReadAllText(path);
-        var deserializedProfile =
-            JsonConvert.DeserializeObject<ProfileVm>(
-                f,
-                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
-            ) ?? throw new JsonSerializationException("Error deserializing profile");
-        AddProfile(deserializedProfile);
-    }
-
-    public void AddProfile(ProfileVm profile)
-    {
-        _profilesSc.AddOrUpdate(profile);
-    }
 
     public void Dispose()
     {
