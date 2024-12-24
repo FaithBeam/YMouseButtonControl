@@ -21,7 +21,6 @@ public interface IProfilesCache
     IObservable<IChangeSet<ProfileVm, int>> Connect();
     void ImportProfileFromPath(string path);
     void AddProfile(ProfileVm profileVm);
-    void AddOrUpdate(ProfileVm profileVm);
 }
 
 public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
@@ -61,8 +60,6 @@ public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
     /// Read only collection of profiles
     /// </summary>
     public ReadOnlyObservableCollection<ProfileVm> Profiles => _profilesObsCol;
-
-    public void AddOrUpdate(ProfileVm profile) => _profilesSc.AddOrUpdate(profile);
 
     public IObservable<IChangeSet<ProfileVm, int>> Connect() => _profilesSc.Connect();
 

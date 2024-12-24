@@ -1,13 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
-using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
 using YMouseButtonControl.Core.ViewModels.ProfilesList.Commands.Profiles;
@@ -20,7 +17,6 @@ public interface IProfilesListViewModel;
 
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
-    private IProfilesCache _profilesService;
     private ProfilesListProfileModel? _currentProfile;
 
     public ICommand AddButtonCommand { get; }
@@ -37,7 +33,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     > ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(
-        IProfilesCache profilesService,
         ListProfiles.Handler listCacheProfilesHandler,
         GetCurrentProfile.Handler getCurrentProfileHandler,
         SetCurrentProfile.Handler setCurrentProfileHandler,
@@ -45,10 +40,10 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         IProcessSelectorDialogVmFactory processSelectorDialogVmFactory,
         AddProfile.Handler addProfileHandler,
         ExportProfile.Handler exportProfileHandler,
-        CopyProfile.Handler copyProfileHandler
+        CopyProfile.Handler copyProfileHandler,
+        ImportProfile.Handler importProfileHandler
     )
     {
-        _profilesService = profilesService;
         CurrentProfile = getCurrentProfileHandler.Execute();
         Profiles = listCacheProfilesHandler.Execute();
         this.WhenAnyValue(x => x.CurrentProfile)
@@ -70,7 +65,16 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         });
         ShowExportFileDialog = new Interaction<string, string>();
         ShowImportFileDialog = new Interaction<Unit, string?>();
-        ImportCommand = ReactiveCommand.CreateFromTask(OnImportClickedAsync);
+        ImportCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var result = await ShowImportFileDialog.Handle(Unit.Default);
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return;
+            }
+
+            importProfileHandler.Execute(new ImportProfile.Command(result));
+        });
         var exportCanExecute = this.WhenAnyValue(
             x => x.CurrentProfile,
             curProf => !curProf?.IsDefault ?? false
@@ -234,15 +238,4 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     }
 
     public ReadOnlyObservableCollection<ProfilesListProfileModel> Profiles { get; }
-
-    private async Task OnImportClickedAsync()
-    {
-        var result = await ShowImportFileDialog.Handle(Unit.Default);
-        if (string.IsNullOrWhiteSpace(result))
-        {
-            return;
-        }
-
-        _profilesService.ImportProfileFromPath(result);
-    }
 }

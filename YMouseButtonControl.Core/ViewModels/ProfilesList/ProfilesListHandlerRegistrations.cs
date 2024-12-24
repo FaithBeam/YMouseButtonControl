@@ -15,6 +15,7 @@ public static class ProfilesListHandlerRegistrations
             .AddScoped<AddProfile.Handler>()
             .AddScoped<RemoveProfile.Handler>()
             .AddScoped<ExportProfile.Handler>()
+            .AddScoped<ImportProfile.Handler>()
             .AddScoped<CopyProfile.Handler>();
     }
 }
