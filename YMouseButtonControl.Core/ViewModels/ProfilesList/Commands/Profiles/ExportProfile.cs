@@ -9,7 +9,7 @@ public static class ExportProfile
 {
     public sealed record Command(int Id, string Path);
 
-    public sealed class Handler(IProfilesService profilesService)
+    public sealed class Handler(IProfilesCache profilesService)
     {
         public void Execute(Command c)
         {

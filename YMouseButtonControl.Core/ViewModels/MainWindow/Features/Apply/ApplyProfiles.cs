@@ -14,7 +14,7 @@ public interface IApply
     void ApplyProfiles();
 }
 
-public class Apply(YMouseButtonControlDbContext db, IProfilesService profilesService) : IApply
+public class Apply(YMouseButtonControlDbContext db, IProfilesCache profilesService) : IApply
 {
     public void ApplyProfiles()
     {

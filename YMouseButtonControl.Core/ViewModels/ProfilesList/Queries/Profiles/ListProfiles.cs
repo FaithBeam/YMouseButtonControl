@@ -11,7 +11,7 @@ namespace YMouseButtonControl.Core.ViewModels.ProfilesList.Queries.Profiles;
 
 public static class ListProfiles
 {
-    public sealed class Handler(IProfilesService profilesService) : IDisposable
+    public sealed class Handler(IProfilesCache profilesService) : IDisposable
     {
         private IDisposable? _disposable;
 

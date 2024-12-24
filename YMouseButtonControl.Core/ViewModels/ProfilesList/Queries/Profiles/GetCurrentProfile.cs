@@ -6,7 +6,7 @@ namespace YMouseButtonControl.Core.ViewModels.ProfilesList.Queries.Profiles;
 
 public static class GetCurrentProfile
 {
-    public sealed class Handler(IProfilesService profilesService)
+    public sealed class Handler(IProfilesCache profilesService)
     {
         public ProfilesListProfileModel? Execute()
         {

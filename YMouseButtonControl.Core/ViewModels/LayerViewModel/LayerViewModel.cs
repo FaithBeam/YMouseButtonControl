@@ -23,7 +23,7 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
 
     public LayerViewModel(
         IMouseComboViewModelFactory mbComboViewModelFactory,
-        IProfilesService profilesService
+        IProfilesCache profilesService
     )
     {
         profilesService

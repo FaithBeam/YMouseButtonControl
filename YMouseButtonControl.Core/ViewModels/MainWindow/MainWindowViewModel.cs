@@ -35,7 +35,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private readonly IProfilesService _ps;
+    private readonly IProfilesCache _ps;
     private readonly IThemeService _themeService;
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
@@ -46,7 +46,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #region Constructor
 
     public MainWindowViewModel(
-        IProfilesService ps,
+        IProfilesCache ps,
         IThemeService themeService,
         ILayerViewModel layerViewModel,
         IProfilesListViewModel profilesListViewModel,

@@ -29,7 +29,7 @@ public static class ServicesBootstrapper
         GlobalSettingsDialogHandlerRegistrations.RegisterCommon(services);
         services
             .AddScoped<IThemeService, ThemeService>()
-            .AddScoped<IProfilesService, ProfilesService>()
+            .AddScoped<IProfilesCache, ProfilesCache>()
             .AddScoped<ISettingsService, SettingsService>();
     }
 

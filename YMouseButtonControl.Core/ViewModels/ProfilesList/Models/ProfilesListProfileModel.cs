@@ -17,7 +17,7 @@ public sealed class ProfilesListProfileModel : ReactiveObject
     private string? _process;
     private string? _name;
 
-    public ProfilesListProfileModel(ProfileVm profileVm, IProfilesService profilesService)
+    public ProfilesListProfileModel(ProfileVm profileVm, IProfilesCache profilesService)
     {
         _id = profileVm.Id;
         _description = profileVm.Description;

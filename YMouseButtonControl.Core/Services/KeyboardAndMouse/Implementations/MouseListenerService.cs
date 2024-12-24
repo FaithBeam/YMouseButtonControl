@@ -32,7 +32,7 @@ public partial class MouseListener : IMouseListener
 {
     private readonly ILogger<MouseListener> _logger;
     private readonly IReactiveGlobalHook _hook;
-    private readonly IProfilesService _profilesService;
+    private readonly IProfilesCache _profilesService;
     private readonly ICurrentWindowService _currentWindowService;
     private Thread? _thread;
     private readonly IDisposable? _mouseMovedDisposable;
@@ -47,7 +47,7 @@ public partial class MouseListener : IMouseListener
     public MouseListener(
         ILogger<MouseListener> logger,
         IReactiveGlobalHook hook,
-        IProfilesService profilesService,
+        IProfilesCache profilesService,
         ICurrentWindowService currentWindowService
     )
     {

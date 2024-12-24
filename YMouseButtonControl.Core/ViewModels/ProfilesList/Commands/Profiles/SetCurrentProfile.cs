@@ -11,7 +11,7 @@ public static class SetCurrentProfile
 {
     public sealed record Command(ProfilesListProfileModel? Profile);
 
-    public sealed class Handler(IProfilesService profilesService)
+    public sealed class Handler(IProfilesCache profilesService)
     {
         public void Execute(Command c)
         {

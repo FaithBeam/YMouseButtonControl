@@ -14,7 +14,7 @@ namespace YMouseButtonControl.Core.Services.KeyboardAndMouse;
 
 public partial class KeyboardSimulatorWorker(
     ILogger<KeyboardSimulatorWorker> logger,
-    IProfilesService profilesService,
+    IProfilesCache profilesService,
     IMouseListener mouseListener,
     ISkipProfileService skipProfileService,
     IAsMouseButtonPressedService asMouseButtonPressedService,

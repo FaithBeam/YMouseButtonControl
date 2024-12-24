@@ -5,7 +5,7 @@ namespace YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm.Queries.Pr
 
 public static class GetMaxProfileId
 {
-    public sealed class Handler(IProfilesService profilesService)
+    public sealed class Handler(IProfilesCache profilesService)
     {
         public int Execute() =>
             profilesService.Profiles.SelectMany(x => x.ButtonMappings).Max(x => x.Id);

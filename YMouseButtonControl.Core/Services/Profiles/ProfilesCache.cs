@@ -6,13 +6,12 @@ using DynamicData;
 using Newtonsoft.Json;
 using ReactiveUI;
 using YMouseButtonControl.Core.Repositories;
-using YMouseButtonControl.Core.Services.Profiles.Exceptions;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.Services.Profiles;
 
-public interface IProfilesService
+public interface IProfilesCache
 {
     SourceCache<ProfileVm, int> ProfilesSc { get; }
     ProfileVm? CurrentProfile { get; set; }
@@ -22,11 +21,10 @@ public interface IProfilesService
     IObservable<IChangeSet<ProfileVm, int>> Connect();
     void ImportProfileFromPath(string path);
     void AddProfile(ProfileVm profileVm);
-    void ReplaceProfile(ProfileVm oldProfileVm, ProfileVm newProfileVm);
     void AddOrUpdate(ProfileVm profileVm);
 }
 
-public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
+public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
 {
     private readonly IRepository<Profile, ProfileVm> _profileRepository;
     private ProfileVm? _currentProfile;
@@ -34,7 +32,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
     private readonly ReadOnlyObservableCollection<ProfileVm> _profilesObsCol;
     private bool _dirty;
 
-    public ProfilesService(IRepository<Profile, ProfileVm> profileRepository)
+    public ProfilesCache(IRepository<Profile, ProfileVm> profileRepository)
     {
         _profileRepository = profileRepository;
         _profilesSc = new SourceCache<ProfileVm, int>(x => x.Id);
@@ -90,17 +88,6 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
     public void AddProfile(ProfileVm profile)
     {
         _profilesSc.AddOrUpdate(profile);
-    }
-
-    public void ReplaceProfile(ProfileVm oldProfile, ProfileVm newProfile)
-    {
-        if (oldProfile.IsDefault || newProfile.IsDefault)
-        {
-            throw new InvalidReplaceException("Cannot replace the default profile");
-        }
-
-        newProfile.Id = oldProfile.Id;
-        _profilesSc.AddOrUpdate(newProfile);
     }
 
     public void Dispose()

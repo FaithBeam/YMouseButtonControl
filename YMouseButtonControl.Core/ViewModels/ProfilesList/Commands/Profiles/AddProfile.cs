@@ -8,7 +8,7 @@ public static class AddProfile
 {
     public sealed record Command(ProfileVm Profile);
 
-    public sealed class Handler(IProfilesService profilesService)
+    public sealed class Handler(IProfilesCache profilesService)
     {
         public void Execute(Command c)
         {

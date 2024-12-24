@@ -19,7 +19,7 @@ public static class CopyProfile
         string WindowClass
     );
 
-    public sealed class Handler(IProfilesService profilesService)
+    public sealed class Handler(IProfilesCache profilesService)
     {
         public ProfilesListProfileModel Execute(Command c)
         {

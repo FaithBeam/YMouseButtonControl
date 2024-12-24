@@ -4,12 +4,12 @@ namespace YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
 
 public interface IProfilesInformationViewModel
 {
-    public IProfilesService ProfilesService { get; }
+    public IProfilesCache ProfilesService { get; }
 }
 
-public class ProfilesInformationViewModel(IProfilesService profilesService)
+public class ProfilesInformationViewModel(IProfilesCache profilesService)
     : ViewModelBase,
         IProfilesInformationViewModel
 {
-    public IProfilesService ProfilesService { get; } = profilesService;
+    public IProfilesCache ProfilesService { get; } = profilesService;
 }

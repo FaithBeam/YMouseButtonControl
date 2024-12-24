@@ -20,7 +20,7 @@ public interface IProfilesListViewModel;
 
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
-    private IProfilesService _profilesService;
+    private IProfilesCache _profilesService;
     private ProfilesListProfileModel? _currentProfile;
 
     public ICommand AddButtonCommand { get; }
@@ -37,7 +37,7 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
     > ShowProcessSelectorInteraction { get; }
 
     public ProfilesListViewModel(
-        IProfilesService profilesService,
+        IProfilesCache profilesService,
         ListProfiles.Handler listCacheProfilesHandler,
         GetCurrentProfile.Handler getCurrentProfileHandler,
         SetCurrentProfile.Handler setCurrentProfileHandler,
