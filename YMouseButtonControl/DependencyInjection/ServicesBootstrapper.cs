@@ -8,6 +8,7 @@ using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.AppViewModel;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
+using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
@@ -28,6 +29,7 @@ public static class ServicesBootstrapper
         ProcessSelectorDialogHandlerRegistrations.RegisterCommon(services);
         ProfilesListHandlerRegistrations.RegisterCommon(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterCommon(services);
+        MainWindowHandlerRegistrations.RegisterCommon(services);
         services
             .AddScoped<ProfileVmConverter>()
             .AddScoped<IThemeService, ThemeService>()

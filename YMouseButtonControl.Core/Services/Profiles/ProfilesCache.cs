@@ -14,42 +14,21 @@ public interface IProfilesCache
     SourceCache<ProfileVm, int> ProfilesSc { get; }
     ProfileVm? CurrentProfile { get; set; }
     ReadOnlyObservableCollection<ProfileVm> Profiles { get; }
-    bool Dirty { get; set; }
-
     IObservable<IChangeSet<ProfileVm, int>> Connect();
 }
 
 public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
 {
-    private readonly IRepository<Profile, ProfileVm> _profileRepository;
     private ProfileVm? _currentProfile;
     private readonly SourceCache<ProfileVm, int> _profilesSc;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profilesObsCol;
-    private bool _dirty;
 
     public ProfilesCache(IRepository<Profile, ProfileVm> profileRepository)
     {
-        _profileRepository = profileRepository;
         _profilesSc = new SourceCache<ProfileVm, int>(x => x.Id);
-        _profilesSc
-            .Connect()
-            .AutoRefresh()
-            .SortBy(x => x.DisplayPriority)
-            .Bind(out _profilesObsCol)
-            .Subscribe(IsDirty);
+        _profilesSc.Connect().AutoRefresh().Bind(out _profilesObsCol).Subscribe();
         _profilesSc.AddOrUpdate(profileRepository.GetAll().ToList());
         CurrentProfile ??= Profiles.FirstOrDefault();
-    }
-
-    private void IsDirty(IChangeSet<ProfileVm, int> set)
-    {
-        Dirty = !Profiles.SequenceEqual(_profileRepository.GetAll());
-    }
-
-    public bool Dirty
-    {
-        get => _dirty;
-        set => this.RaiseAndSetIfChanged(ref _dirty, value);
     }
 
     /// <summary>

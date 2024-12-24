@@ -7,14 +7,17 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using DynamicData;
 using ReactiveUI;
+using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.LayerViewModel;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
+using YMouseButtonControl.Core.ViewModels.MainWindow.Queries.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -27,7 +30,6 @@ public interface IMainWindowViewModel
     ReactiveCommand<Unit, Unit> CloseCommand { get; }
     ReactiveCommand<Unit, Unit> SettingsCommand { get; }
     Interaction<IGlobalSettingsDialogViewModel, Unit> ShowSettingsDialogInteraction { get; }
-    ProfileVm? CurrentProfile { get; }
     IThemeService ThemeService { get; }
 }
 
@@ -35,29 +37,33 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private readonly IProfilesCache _ps;
     private readonly IThemeService _themeService;
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
-    private readonly ReadOnlyObservableCollection<ProfileVm> _profileVms;
+    private bool _dirty;
+    private bool Dirty
+    {
+        get => _dirty;
+        set => this.RaiseAndSetIfChanged(ref _dirty, value);
+    }
 
     #endregion
 
     #region Constructor
 
     public MainWindowViewModel(
-        IProfilesCache ps,
+        IProfilesCache pc,
         IThemeService themeService,
         ILayerViewModel layerViewModel,
         IProfilesListViewModel profilesListViewModel,
         IProfilesInformationViewModel profilesInformationViewModel,
         IGlobalSettingsDialogViewModel globalSettingsDialogViewModel,
-        IApply apply
+        IApply apply,
+        IsCacheDirty.Handler isCacheDirtyHandler
     )
     {
         _profilesListViewModel = profilesListViewModel;
         _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
-        _ps = ps;
         _themeService = themeService;
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
@@ -73,20 +79,16 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
                 lifetime.MainWindow?.Hide();
             }
         });
-        var myOp = _ps.Connect()
+        var myOp = pc.Connect()
             .AutoRefresh()
-            .RefCount()
-            .Bind(out _profileVms)
             .DisposeMany()
-            .Subscribe();
-        var canExecuteApply = this.WhenAnyValue(x => x._ps.Dirty);
+            .Subscribe((_) => Dirty = isCacheDirtyHandler.Execute());
+        var canExecuteApply = this.WhenAnyValue(x => x.Dirty);
         ApplyCommand = ReactiveCommand.Create(apply.ApplyProfiles, canExecuteApply);
         var isExecutingObservable = this.WhenAnyObservable(x => x.ApplyCommand.IsExecuting);
         canExecuteApply = canExecuteApply.Merge(isExecutingObservable);
-        isExecutingObservable.Skip(1).Where(x => !x).Subscribe(x => _ps.Dirty = false);
+        isExecutingObservable.Skip(1).Where(x => !x).Subscribe(x => Dirty = false);
     }
-
-    public ProfileVm? CurrentProfile => _ps.CurrentProfile;
 
     #endregion
 
