@@ -24,8 +24,6 @@ public interface IProfilesService
     void ImportProfileFromPath(string path);
     void AddProfile(ProfileVm profileVm);
     void ReplaceProfile(ProfileVm oldProfileVm, ProfileVm newProfileVm);
-    void MoveProfileUp(ProfileVm p);
-    void MoveProfileDown(ProfileVm p);
     void AddOrUpdate(ProfileVm profileVm);
 }
 
@@ -117,62 +115,6 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
 
         newProfile.Id = oldProfile.Id;
         _profilesSc.AddOrUpdate(newProfile);
-    }
-
-    public void MoveProfileUp(ProfileVm p)
-    {
-        if (p.IsDefault)
-        {
-            throw new InvalidMoveException("Cannot move the default profile");
-        }
-
-        _profilesSc.Edit(updater =>
-        {
-            var nextSmaller = _profilesSc
-                .Items.Where(x => x.DisplayPriority < p.DisplayPriority)
-                .MaxBy(x => x.DisplayPriority);
-            if (nextSmaller is null)
-            {
-                throw new InvalidMoveException(
-                    "Unable to retrieve max display index from profiles cache"
-                );
-            }
-
-            if (nextSmaller.IsDefault)
-            {
-                throw new InvalidMoveException("Cannot move profile above default profile");
-            }
-
-            // swap priorities
-            (nextSmaller.DisplayPriority, p.DisplayPriority) = (
-                p.DisplayPriority,
-                nextSmaller.DisplayPriority
-            );
-        });
-    }
-
-    public void MoveProfileDown(ProfileVm p)
-    {
-        if (p.IsDefault)
-        {
-            throw new InvalidMoveException("Cannot move the default profile");
-        }
-
-        var nextLargerPriority = _profilesSc
-            .Items.Where(x => x.DisplayPriority > p.DisplayPriority)
-            .MinBy(x => x.DisplayPriority);
-        if (nextLargerPriority is null)
-        {
-            throw new InvalidMoveException(
-                "Unable to retrieve max display index from profiles cache"
-            );
-        }
-
-        // swap priorities
-        (nextLargerPriority.DisplayPriority, p.DisplayPriority) = (
-            p.DisplayPriority,
-            nextLargerPriority.DisplayPriority
-        );
     }
 
     public void Dispose()

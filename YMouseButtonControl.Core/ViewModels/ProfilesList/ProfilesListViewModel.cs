@@ -138,7 +138,32 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
                 && !curProf.IsDefault
                 && Profiles.Any(p => p.DisplayPriority > curProfDisplayPriority)
         );
-        DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
+        DownCommand = ReactiveCommand.Create(
+            () =>
+            {
+                var profileOfNextLargerDisplayPriority =
+                    Profiles
+                        .Where(x => x.DisplayPriority > CurrentProfile!.DisplayPriority)
+                        .MaxBy(x => x.DisplayPriority)
+                    ?? throw new Exception("Unable to find profile to move up the profiles list");
+                if (profileOfNextLargerDisplayPriority.IsDefault)
+                {
+                    throw new InvalidOperationException(
+                        "You cannot move the Default profile in the profiles list"
+                    );
+                }
+
+                // swap display priorities
+                (
+                    profileOfNextLargerDisplayPriority.DisplayPriority,
+                    CurrentProfile!.DisplayPriority
+                ) = (
+                    CurrentProfile.DisplayPriority,
+                    profileOfNextLargerDisplayPriority.DisplayPriority
+                );
+            },
+            downCommandCanExecute
+        );
 
         var editCanExecute = this.WhenAnyValue(
             x => x.CurrentProfile,
@@ -223,14 +248,5 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         }
 
         _profilesService.WriteProfileToFile(_profilesService.CurrentProfile, result);
-    }
-
-    private void DownButtonClicked()
-    {
-        Debug.Assert(
-            _profilesService.CurrentProfile != null,
-            "_profilesService.CurrentProfile != null"
-        );
-        _profilesService.MoveProfileDown(_profilesService.CurrentProfile);
     }
 }
