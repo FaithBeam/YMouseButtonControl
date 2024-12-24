@@ -75,7 +75,18 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             x => x.CurrentProfile,
             curProf => !curProf?.IsDefault ?? false
         );
-        ExportCommand = ReactiveCommand.CreateFromTask(OnExportClickedAsync, exportCanExecute);
+        ExportCommand = ReactiveCommand.CreateFromTask(
+            async () =>
+            {
+                var result = await ShowExportFileDialog.Handle(CurrentProfile!.Name!);
+                if (string.IsNullOrWhiteSpace(result))
+                {
+                    return;
+                }
+                exportProfileHandler.Execute(new ExportProfile.Command(CurrentProfile.Id, result));
+            },
+            exportCanExecute
+        );
 
         var removeCanExecute = this.WhenAnyValue(
             x => x.CurrentProfile,
@@ -233,20 +244,5 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         }
 
         _profilesService.ImportProfileFromPath(result);
-    }
-
-    private async Task OnExportClickedAsync()
-    {
-        Debug.Assert(
-            _profilesService.CurrentProfile != null,
-            "_profilesService.CurrentProfile != null"
-        );
-        var result = await ShowExportFileDialog.Handle(_profilesService.CurrentProfile.Name);
-        if (string.IsNullOrWhiteSpace(result))
-        {
-            return;
-        }
-
-        _profilesService.WriteProfileToFile(_profilesService.CurrentProfile, result);
     }
 }

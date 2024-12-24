@@ -20,7 +20,6 @@ public interface IProfilesService
     bool Dirty { get; set; }
 
     IObservable<IChangeSet<ProfileVm, int>> Connect();
-    void WriteProfileToFile(ProfileVm p, string path);
     void ImportProfileFromPath(string path);
     void AddProfile(ProfileVm profileVm);
     void ReplaceProfile(ProfileVm oldProfileVm, ProfileVm newProfileVm);
@@ -76,19 +75,6 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
     }
 
     public SourceCache<ProfileVm, int> ProfilesSc => _profilesSc;
-
-    public void WriteProfileToFile(ProfileVm p, string path)
-    {
-        var jsonString = JsonConvert.SerializeObject(
-            p,
-            new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Formatting = Formatting.Indented,
-            }
-        );
-        File.WriteAllText(path, jsonString);
-    }
 
     public void ImportProfileFromPath(string path)
     {
