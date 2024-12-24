@@ -8,6 +8,8 @@ using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.AppViewModel;
 using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
+using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
+using YMouseButtonControl.Core.ViewModels.ProfilesList;
 
 namespace YMouseButtonControl.DependencyInjection;
 
@@ -22,6 +24,8 @@ public static class ServicesBootstrapper
     private static void RegisterCommonServices(IServiceCollection services)
     {
         AppHandlerRegistrations.RegisterCommon(services);
+        ProcessSelectorDialogHandlerRegistrations.RegisterCommon(services);
+        ProfilesListHandlerRegistrations.RegisterCommon(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterCommon(services);
         services
             .AddScoped<IThemeService, ThemeService>()
@@ -53,9 +57,8 @@ public static class ServicesBootstrapper
     {
         AppHandlerRegistrations.RegisterLinux(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterLinux(services);
-        services
-            .AddScoped<IProcessMonitorService, Linux.Services.ProcessMonitorService>()
-            .AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
+        ProcessSelectorDialogHandlerRegistrations.RegisterLinux(services);
+        services.AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
         {
             services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowServiceX11>();
@@ -70,9 +73,9 @@ public static class ServicesBootstrapper
     private static void RegisterWindowsServices(IServiceCollection services)
     {
         AppHandlerRegistrations.RegisterWindows(services);
+        ProcessSelectorDialogHandlerRegistrations.RegisterWindows(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterWindows(services);
         services
-            .AddScoped<IProcessMonitorService, Windows.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, Windows.Services.CurrentWindowService>()
             .AddScoped<IBackgroundTasksRunner, Windows.Services.BackgroundTasksRunner>();
     }
@@ -80,9 +83,9 @@ public static class ServicesBootstrapper
     private static void RegisterMacOsServices(IServiceCollection services)
     {
         AppHandlerRegistrations.RegisterOsx(services);
+        ProcessSelectorDialogHandlerRegistrations.RegisterOsx(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterOsx(services);
         services
-            .AddScoped<IProcessMonitorService, MacOS.Services.ProcessMonitorService>()
             .AddScoped<ICurrentWindowService, MacOS.Services.CurrentWindowService>()
             .AddScoped<IBackgroundTasksRunner, MacOS.Services.BackgroundTasksRunner>();
     }

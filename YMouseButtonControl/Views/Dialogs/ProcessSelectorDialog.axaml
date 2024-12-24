@@ -38,7 +38,7 @@
         <!-- Row 2 -->
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding Filtered}"
-                  SelectedItem="{Binding SelectedProcessModel, Mode=OneWayToSource}"
+                  SelectedItem="{Binding SelectedProcessModel, Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"
@@ -69,14 +69,14 @@
         <!-- Row 4 -->
         <Grid Grid.Row="3" ColumnDefinitions="150,*,Auto" VerticalAlignment="Top">
             <Label Content="Application" />
-            <TextBox Grid.Column="1" Text="{Binding SelectedProcessModel.Process.MainModule.ModuleName}" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Column="1" Text="{Binding SelectedProcessModuleName}" HorizontalAlignment="Stretch" />
             <Button Grid.Column="2" Content="..." HorizontalAlignment="Right" />
         </Grid>
 
         <!-- Row 5 -->
         <Grid Grid.Row="4" ColumnDefinitions="150,*" VerticalAlignment="Top">
             <Label Content="Description" />
-            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding SelectedProcessModel.Process.MainWindowTitle}" />
+            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding SelectedProcessMainWindowTitle}" />
         </Grid>
 
         <!-- Row 6 -->

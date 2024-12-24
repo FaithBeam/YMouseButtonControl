@@ -1,15 +1,19 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
-using YMouseButtonControl.Core.ViewModels.ProfilesList.Features.Add;
+using YMouseButtonControl.Core.ViewModels.ProfilesList.Commands.Profiles;
+using YMouseButtonControl.Core.ViewModels.ProfilesList.Models;
+using YMouseButtonControl.Core.ViewModels.ProfilesList.Queries.Profiles;
 
 namespace YMouseButtonControl.Core.ViewModels.ProfilesList;
 
@@ -18,8 +22,7 @@ public interface IProfilesListViewModel;
 public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 {
     private IProfilesService _profilesService;
-    private readonly IProcessSelectorDialogViewModel _processSelectorDialogViewModel;
-    private readonly IAddProfile _addProfile;
+    private ProfilesListProfileModel? _currentProfile;
 
     public ICommand AddButtonCommand { get; }
     public ReactiveCommand<Unit, Unit> EditButtonCommand { get; }
@@ -36,65 +39,144 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
 
     public ProfilesListViewModel(
         IProfilesService profilesService,
-        IProcessSelectorDialogViewModel processSelectorDialogViewModel,
-        IAddProfile addProfile
+        ListProfiles.Handler listCacheProfilesHandler,
+        GetCurrentProfile.Handler getCurrentProfileHandler,
+        SetCurrentProfile.Handler setCurrentProfileHandler,
+        RemoveProfile.Handler removeProfileHandler,
+        IProcessSelectorDialogVmFactory processSelectorDialogVmFactory,
+        AddProfile.Handler addProfileHandler,
+        ExportProfile.Handler exportProfileHandler,
+        CopyProfile.Handler copyProfileHandler
     )
     {
         _profilesService = profilesService;
-        AddButtonCommand = ReactiveCommand.CreateFromTask(ShowProcessPickerDialogAsync);
+        CurrentProfile = getCurrentProfileHandler.Execute();
+        Profiles = listCacheProfilesHandler.Execute();
+        this.WhenAnyValue(x => x.CurrentProfile)
+            .WhereNotNull()
+            .Select(cur => new SetCurrentProfile.Command(cur))
+            .Subscribe(setCurrentProfileHandler.Execute);
+        ShowProcessSelectorInteraction =
+            new Interaction<IProcessSelectorDialogViewModel, ProfileVm?>();
+        AddButtonCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var result = await ShowProcessSelectorInteraction.Handle(
+                processSelectorDialogVmFactory.Create()
+            );
+            if (result is null)
+            {
+                return;
+            }
+            addProfileHandler.Execute(new AddProfile.Command(result));
+        });
         ShowExportFileDialog = new Interaction<string, string>();
         ShowImportFileDialog = new Interaction<Unit, string?>();
         ImportCommand = ReactiveCommand.CreateFromTask(OnImportClickedAsync);
         var exportCanExecute = this.WhenAnyValue(
-            x => x.ProfilesService.CurrentProfile,
+            x => x.CurrentProfile,
             curProf => !curProf?.IsDefault ?? false
         );
         ExportCommand = ReactiveCommand.CreateFromTask(OnExportClickedAsync, exportCanExecute);
+
         var removeCanExecute = this.WhenAnyValue(
-            x => x.ProfilesService.CurrentProfile,
+            x => x.CurrentProfile,
             curProf => !curProf?.IsDefault ?? false
         );
-        RemoveButtonCommand = ReactiveCommand.Create(OnRemoveButtonClicked, removeCanExecute);
+        RemoveButtonCommand = ReactiveCommand.Create(
+            () =>
+            {
+                if (CurrentProfile is not null)
+                {
+                    var curProfileDisplayPriority = CurrentProfile.DisplayPriority;
+                    removeProfileHandler.Execute(new RemoveProfile.Command(CurrentProfile.Id));
+                    CurrentProfile = Profiles
+                        .Where(x => x.DisplayPriority < curProfileDisplayPriority)
+                        .MinBy(x => x.DisplayPriority);
+                }
+            },
+            removeCanExecute
+        );
+
         var upCommandCanExecute = this.WhenAnyValue(
-            x => x.ProfilesService.CurrentProfile,
-            x => x.ProfilesService.CurrentProfile!.DisplayPriority,
-            selector: (curProf, _) =>
+            x => x.CurrentProfile,
+            x => x.CurrentProfile!.DisplayPriority,
+            selector: (curProf, curProfDisplayPriority) =>
                 curProf is not null
                 && !curProf.IsDefault
-                && _profilesService.Profiles.Any(p =>
-                    !p.IsDefault && p.DisplayPriority < curProf.DisplayPriority
-                )
+                && listCacheProfilesHandler
+                    .Execute()
+                    .Any(p => !p.IsDefault && p.DisplayPriority < curProfDisplayPriority)
         );
         UpCommand = ReactiveCommand.Create(UpButtonClicked, upCommandCanExecute);
         var downCommandCanExecute = this.WhenAnyValue(
-            x => x.ProfilesService.CurrentProfile,
-            x => x.ProfilesService.CurrentProfile!.DisplayPriority,
+            x => x.CurrentProfile,
+            x => x.CurrentProfile!.DisplayPriority,
             selector: (curProf, _) =>
                 curProf is not null
                 && !curProf.IsDefault
-                && _profilesService.Profiles.Any(p => p.DisplayPriority > curProf.DisplayPriority)
+                && listCacheProfilesHandler
+                    .Execute()
+                    .Any(p => p.DisplayPriority > curProf.DisplayPriority)
         );
         DownCommand = ReactiveCommand.Create(DownButtonClicked, downCommandCanExecute);
-        _processSelectorDialogViewModel = processSelectorDialogViewModel;
-        _addProfile = addProfile;
-        ShowProcessSelectorInteraction =
-            new Interaction<IProcessSelectorDialogViewModel, ProfileVm?>();
+
         var editCanExecute = this.WhenAnyValue(
-            x => x.ProfilesService.CurrentProfile,
+            x => x.CurrentProfile,
             curProf => !curProf?.IsDefault ?? false
         );
-        EditButtonCommand = ReactiveCommand.CreateFromTask(EditButtonClickedAsync, editCanExecute);
-        CopyCommand = ReactiveCommand.CreateFromTask(OnCopyClickedAsync);
+        EditButtonCommand = ReactiveCommand.CreateFromTask(
+            async () =>
+            {
+                var result = await ShowProcessSelectorInteraction.Handle(
+                    processSelectorDialogVmFactory.Create(CurrentProfile?.Process)
+                );
+                if (result is null)
+                {
+                    return;
+                }
+
+                CurrentProfile!.Process = result.Process;
+                CurrentProfile.Name = result.Name;
+                CurrentProfile.Description = result.Description;
+            },
+            editCanExecute
+        );
+        CopyCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var newProfile = await ShowProcessSelectorInteraction.Handle(
+                processSelectorDialogVmFactory.Create()
+            );
+            if (newProfile is null)
+            {
+                return;
+            }
+
+            var copiedProfile = copyProfileHandler.Execute(
+                new CopyProfile.Command(
+                    CurrentProfile!.Id,
+                    newProfile.Name,
+                    newProfile.Description,
+                    newProfile.Checked,
+                    newProfile.Process,
+                    newProfile.MatchType,
+                    newProfile.ParentClass,
+                    newProfile.WindowClass
+                )
+            );
+            setCurrentProfileHandler.Execute(new SetCurrentProfile.Command(copiedProfile));
+            CurrentProfile = getCurrentProfileHandler.Execute();
+        });
     }
 
     public Interaction<string, string> ShowExportFileDialog { get; }
     public Interaction<Unit, string?> ShowImportFileDialog { get; }
 
-    public IProfilesService ProfilesService
+    public ProfilesListProfileModel? CurrentProfile
     {
-        get => _profilesService;
-        set => _profilesService = value;
+        get => _currentProfile;
+        set => this.RaiseAndSetIfChanged(ref _currentProfile, value);
     }
+    public ReadOnlyObservableCollection<ProfilesListProfileModel> Profiles { get; }
 
     private async Task OnImportClickedAsync()
     {
@@ -122,41 +204,6 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
         _profilesService.WriteProfileToFile(_profilesService.CurrentProfile, result);
     }
 
-    private async Task OnCopyClickedAsync()
-    {
-        var newProfile = await ShowProcessSelectorInteraction.Handle(
-            _processSelectorDialogViewModel
-        );
-        if (newProfile is null)
-        {
-            return;
-        }
-
-        Debug.Assert(
-            _profilesService.CurrentProfile != null,
-            "_profilesService.CurrentProfile != null"
-        );
-        var copiedProfile = _profilesService.CopyProfile(_profilesService.CurrentProfile);
-        copiedProfile.Name = newProfile.Name;
-        copiedProfile.Description = newProfile.Description;
-        copiedProfile.Checked = newProfile.Checked;
-        copiedProfile.Process = newProfile.Process;
-        copiedProfile.MatchType = newProfile.MatchType;
-        copiedProfile.ParentClass = newProfile.ParentClass;
-        copiedProfile.WindowCaption = newProfile.WindowCaption;
-        copiedProfile.WindowClass = newProfile.WindowClass;
-        _profilesService.AddProfile(copiedProfile);
-    }
-
-    private void OnRemoveButtonClicked()
-    {
-        Debug.Assert(
-            _profilesService.CurrentProfile != null,
-            "_profilesService.CurrentProfile != null"
-        );
-        _profilesService.RemoveProfile(_profilesService.CurrentProfile);
-    }
-
     private void UpButtonClicked()
     {
         Debug.Assert(
@@ -173,35 +220,5 @@ public class ProfilesListViewModel : ViewModelBase, IProfilesListViewModel
             "_profilesService.CurrentProfile != null"
         );
         _profilesService.MoveProfileDown(_profilesService.CurrentProfile);
-        // SelectedIndex++;
-    }
-
-    private async Task EditButtonClickedAsync()
-    {
-        var result = await ShowProcessSelectorInteraction.Handle(_processSelectorDialogViewModel);
-        if (result is null)
-        {
-            return;
-        }
-
-        Debug.Assert(
-            _profilesService.CurrentProfile != null,
-            "_profilesService.CurrentProfile != null"
-        );
-        var newProfile = _profilesService.CopyProfile(_profilesService.CurrentProfile);
-        newProfile.Process = result.Process;
-        newProfile.Name = result.Name;
-        newProfile.Description = result.Description;
-        _profilesService.ReplaceProfile(_profilesService.CurrentProfile, newProfile);
-    }
-
-    private async Task ShowProcessPickerDialogAsync()
-    {
-        var result = await ShowProcessSelectorInteraction.Handle(_processSelectorDialogViewModel);
-        if (result is null)
-        {
-            return;
-        }
-        _addProfile.Add(result);
     }
 }

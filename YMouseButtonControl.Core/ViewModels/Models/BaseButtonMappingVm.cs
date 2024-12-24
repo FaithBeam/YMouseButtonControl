@@ -24,6 +24,7 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
     [JsonIgnore]
     public int Id { get; set; }
 
+    [JsonIgnore]
     public int ProfileId { get; set; }
 
     public MouseButton MouseButton { get; set; }
@@ -102,7 +103,29 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);
     }
 
-    public BaseButtonMappingVm Clone() => (BaseButtonMappingVm)MemberwiseClone();
+    protected BaseButtonMappingVm CreateClone(BaseButtonMappingVm clone)
+    {
+        clone.Id = Id;
+        clone.ProfileId = ProfileId;
+        clone.MouseButton = MouseButton;
+        clone.Index = Index;
+        clone.Selected = Selected;
+        clone.HasSettingsPopped = HasSettingsPopped;
+        clone.Enabled = Enabled;
+        clone.Description = Description;
+        clone.PriorityDescription = PriorityDescription;
+        clone.AutoRepeatDelay = AutoRepeatDelay;
+        clone.AutoRepeatRandomizeDelayEnabled = AutoRepeatRandomizeDelayEnabled;
+        clone.Keys = Keys;
+        clone.State = State;
+        clone.CanRaiseDialog = CanRaiseDialog;
+        clone.SimulatedKeystrokeType = SimulatedKeystrokeType?.Clone();
+        clone.BlockOriginalMouseInput = BlockOriginalMouseInput;
+
+        return clone;
+    }
+
+    public abstract BaseButtonMappingVm Clone();
 
     public override string? ToString()
     {
@@ -165,6 +188,8 @@ public class DisabledMappingVm : BaseButtonMappingVm
         Index = 1;
         Description = "Disabled";
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new DisabledMappingVm());
 }
 
 public class NothingMappingVm : BaseButtonMappingVm
@@ -174,6 +199,8 @@ public class NothingMappingVm : BaseButtonMappingVm
         Index = 0;
         Description = "** No Change (Don't Intercept) **";
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new NothingMappingVm());
 }
 
 public class SimulatedKeystrokeVm : BaseButtonMappingVm
@@ -185,6 +212,8 @@ public class SimulatedKeystrokeVm : BaseButtonMappingVm
         CanRaiseDialog = true;
         BlockOriginalMouseInput = true;
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new SimulatedKeystrokeVm());
 
     public override string? ToString()
     {
@@ -213,4 +242,6 @@ public class RightClickVm : BaseButtonMappingVm
         Index = 3;
         Description = "Right Click";
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new RightClickVm());
 }

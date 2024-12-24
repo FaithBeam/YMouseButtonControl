@@ -14,6 +14,7 @@ namespace YMouseButtonControl.Core.Services.Profiles;
 
 public interface IProfilesService
 {
+    SourceCache<ProfileVm, int> ProfilesSc { get; }
     ProfileVm? CurrentProfile { get; set; }
     ReadOnlyObservableCollection<ProfileVm> Profiles { get; }
     bool Dirty { get; set; }
@@ -26,7 +27,6 @@ public interface IProfilesService
     void ReplaceProfile(ProfileVm oldProfileVm, ProfileVm newProfileVm);
     void MoveProfileUp(ProfileVm p);
     void MoveProfileDown(ProfileVm p);
-    void RemoveProfile(ProfileVm profileVm);
     void AddOrUpdate(ProfileVm profileVm);
 }
 
@@ -34,21 +34,21 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
 {
     private readonly IRepository<Profile, ProfileVm> _profileRepository;
     private ProfileVm? _currentProfile;
-    private readonly SourceCache<ProfileVm, int> _profiles;
+    private readonly SourceCache<ProfileVm, int> _profilesSc;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profilesObsCol;
     private bool _dirty;
 
     public ProfilesService(IRepository<Profile, ProfileVm> profileRepository)
     {
         _profileRepository = profileRepository;
-        _profiles = new SourceCache<ProfileVm, int>(x => x.Id);
-        _profiles
+        _profilesSc = new SourceCache<ProfileVm, int>(x => x.Id);
+        _profilesSc
             .Connect()
             .AutoRefresh()
             .SortBy(x => x.DisplayPriority)
             .Bind(out _profilesObsCol)
             .Subscribe(IsDirty);
-        _profiles.AddOrUpdate(profileRepository.GetAll().ToList());
+        _profilesSc.AddOrUpdate(profileRepository.GetAll().ToList());
         CurrentProfile ??= Profiles.FirstOrDefault();
     }
 
@@ -68,15 +68,17 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
     /// </summary>
     public ReadOnlyObservableCollection<ProfileVm> Profiles => _profilesObsCol;
 
-    public void AddOrUpdate(ProfileVm profile) => _profiles.AddOrUpdate(profile);
+    public void AddOrUpdate(ProfileVm profile) => _profilesSc.AddOrUpdate(profile);
 
-    public IObservable<IChangeSet<ProfileVm, int>> Connect() => _profiles.Connect();
+    public IObservable<IChangeSet<ProfileVm, int>> Connect() => _profilesSc.Connect();
 
     public ProfileVm? CurrentProfile
     {
         get => _currentProfile;
         set => this.RaiseAndSetIfChanged(ref _currentProfile, value);
     }
+
+    public SourceCache<ProfileVm, int> ProfilesSc => _profilesSc;
 
     public ProfileVm CopyProfile(ProfileVm p)
     {
@@ -116,7 +118,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
 
     public void AddProfile(ProfileVm profile)
     {
-        _profiles.AddOrUpdate(profile);
+        _profilesSc.AddOrUpdate(profile);
     }
 
     public void ReplaceProfile(ProfileVm oldProfile, ProfileVm newProfile)
@@ -127,7 +129,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
         }
 
         newProfile.Id = oldProfile.Id;
-        _profiles.AddOrUpdate(newProfile);
+        _profilesSc.AddOrUpdate(newProfile);
     }
 
     public void MoveProfileUp(ProfileVm p)
@@ -137,9 +139,9 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             throw new InvalidMoveException("Cannot move the default profile");
         }
 
-        _profiles.Edit(updater =>
+        _profilesSc.Edit(updater =>
         {
-            var nextSmaller = _profiles
+            var nextSmaller = _profilesSc
                 .Items.Where(x => x.DisplayPriority < p.DisplayPriority)
                 .MaxBy(x => x.DisplayPriority);
             if (nextSmaller is null)
@@ -169,7 +171,7 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
             throw new InvalidMoveException("Cannot move the default profile");
         }
 
-        var nextLargerPriority = _profiles
+        var nextLargerPriority = _profilesSc
             .Items.Where(x => x.DisplayPriority > p.DisplayPriority)
             .MinBy(x => x.DisplayPriority);
         if (nextLargerPriority is null)
@@ -186,27 +188,8 @@ public class ProfilesService : ReactiveObject, IProfilesService, IDisposable
         );
     }
 
-    public void RemoveProfile(ProfileVm profile)
-    {
-        if (profile.IsDefault)
-        {
-            throw new Exception("Attempted to remove default profile");
-        }
-
-        var nextSmallerPriority = _profiles
-            .Items.Where(x => x.DisplayPriority < profile.DisplayPriority)
-            .MaxBy(x => x.DisplayPriority);
-        if (nextSmallerPriority is null)
-        {
-            throw new Exception("Unable to find next profile to set as current profile");
-        }
-
-        _profiles.Remove(profile);
-        CurrentProfile = nextSmallerPriority;
-    }
-
     public void Dispose()
     {
-        _profiles.Dispose();
+        _profilesSc.Dispose();
     }
 }

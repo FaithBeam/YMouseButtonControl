@@ -16,7 +16,7 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">
-        <ListBox ItemsSource="{Binding ProfilesService.Profiles}" SelectedItem="{Binding ProfilesService.CurrentProfile}">
+        <ListBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding CurrentProfile}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <Setter Property="Padding" Value="6 0 6 0"></Setter>

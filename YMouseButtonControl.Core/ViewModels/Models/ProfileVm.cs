@@ -173,6 +173,7 @@ public class ProfileVm : ReactiveObject, IEquatable<ProfileVm>
     public void AddOrUpdateBtnMapping(IEnumerable<BaseButtonMappingVm> buttonMappingVms) =>
         _btnSc.AddOrUpdate(buttonMappingVms);
 
+    [JsonIgnore]
     public SourceCache<BaseButtonMappingVm, int> BtnSc => _btnSc;
 
     [JsonIgnore]
@@ -291,6 +292,22 @@ public class ProfileVm : ReactiveObject, IEquatable<ProfileVm>
         get => _displayPriority;
         set => this.RaiseAndSetIfChanged(ref _displayPriority, value);
     }
+
+    public ProfileVm Clone() =>
+        new ProfileVm(ButtonMappings.Select(x => x.Clone()).ToList())
+        {
+            Id = Id,
+            Checked = Checked,
+            DisplayPriority = DisplayPriority,
+            IsDefault = IsDefault,
+            Name = Name,
+            Description = Description,
+            MatchType = MatchType,
+            ParentClass = ParentClass,
+            Process = Process,
+            WindowClass = WindowClass,
+            WindowCaption = WindowCaption,
+        };
 
     public bool Equals(ProfileVm? other)
     {

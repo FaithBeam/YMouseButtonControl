@@ -7,9 +7,9 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
-using YMouseButtonControl.Core.Services.Processes;
-using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm.Queries.Processes;
+using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm.Queries.Profiles;
 using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
@@ -21,29 +21,36 @@ public interface IProcessSelectorDialogViewModel
 
 public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialogViewModel
 {
-    private readonly IProcessMonitorService _processMonitorService;
-    private readonly SourceList<ProcessModel> _sourceProcessModels;
+    private readonly SourceList<Queries.Processes.Models.ProcessModel> _sourceProcessModels;
     private string? _processFilter;
-    private readonly ReadOnlyObservableCollection<ProcessModel> _filtered;
-    private ProcessModel? _processModel;
+    private readonly ReadOnlyObservableCollection<Queries.Processes.Models.ProcessModel> _filtered;
+    private Queries.Processes.Models.ProcessModel? _processModel;
+    private string? _selectedProcessModuleName;
+    private string? _selectedProcessMainWindowTitle;
 
     public ProcessSelectorDialogViewModel(
-        IProcessMonitorService processMonitorService,
-        IProfilesService profilesService
+        IListProcessesHandler listProcessesHandler,
+        GetMaxProfileId.Handler getMaxProfileIdHandler,
+        string? selectedProcessModuleName
     )
     {
-        _sourceProcessModels = new SourceList<ProcessModel>();
-        _processMonitorService = processMonitorService;
+        _sourceProcessModels = new SourceList<Queries.Processes.Models.ProcessModel>();
         var dynamicFilter = this.WhenValueChanged(x => x.ProcessFilter)
             .Select(CreateProcessFilterPredicate);
         var filteredDisposable = _sourceProcessModels
             .Connect()
             .Filter(dynamicFilter)
-            .Sort(SortExpressionComparer<ProcessModel>.Ascending(x => x.Process.ProcessName))
+            .Sort(
+                SortExpressionComparer<Queries.Processes.Models.ProcessModel>.Ascending(x =>
+                    x.Process.ProcessName
+                )
+            )
             .Bind(out _filtered)
             .Subscribe();
-        RefreshProcessList();
-        RefreshButtonCommand = ReactiveCommand.Create(RefreshProcessList);
+        _sourceProcessModels.EditDiff(listProcessesHandler.Execute());
+        RefreshButtonCommand = ReactiveCommand.Create(
+            () => _sourceProcessModels.EditDiff(listProcessesHandler.Execute())
+        );
         var canExecuteOkCommand = this.WhenAnyValue(
             x => x.SelectedProcessModel,
             selector: model => model is not null
@@ -51,9 +58,7 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
         OkCommand = ReactiveCommand.Create(
             () =>
             {
-                var maxBmId = profilesService
-                    .Profiles.SelectMany(x => x.ButtonMappings)
-                    .Max(x => x.Id);
+                var maxBmId = getMaxProfileIdHandler.Execute();
                 var buttonMappings = new List<BaseButtonMappingVm>
                 {
                     CreateButtonMappings(maxBmId, MouseButton.Mb1),
@@ -68,9 +73,9 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
                 };
                 return new ProfileVm(buttonMappings)
                 {
-                    Name = SelectedProcessModel!.Process.MainModule!.ModuleName,
-                    Description = SelectedProcessModel.Process.MainWindowTitle,
-                    Process = SelectedProcessModel.Process.MainModule.ModuleName,
+                    Name = SelectedProcessModuleName ?? string.Empty,
+                    Description = SelectedProcessMainWindowTitle ?? string.Empty,
+                    Process = SelectedProcessModuleName ?? string.Empty,
                     WindowCaption = "N/A",
                     WindowClass = "N/A",
                     ParentClass = "N/A",
@@ -79,6 +84,22 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             },
             canExecuteOkCommand
         );
+        this.WhenAnyValue(x => x.SelectedProcessModel)
+            .Subscribe(x =>
+            {
+                SelectedProcessModuleName = x?.Process.MainModule?.ModuleName;
+                SelectedProcessMainWindowTitle = x?.Process.MainWindowTitle;
+            });
+        if (!string.IsNullOrWhiteSpace(selectedProcessModuleName))
+        {
+            var foundProc = _filtered.FirstOrDefault(x =>
+                x.Process.MainModule?.ModuleName == selectedProcessModuleName
+            );
+            if (foundProc is not null)
+            {
+                SelectedProcessModel = foundProc;
+            }
+        }
     }
 
     private static List<BaseButtonMappingVm> CreateButtonMappings(
@@ -97,7 +118,9 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
             new RightClickVm { Id = ++id, MouseButton = mouseButton },
         ];
 
-    private Func<ProcessModel, bool> CreateProcessFilterPredicate(string? txt)
+    private Func<Queries.Processes.Models.ProcessModel, bool> CreateProcessFilterPredicate(
+        string? txt
+    )
     {
         if (string.IsNullOrWhiteSpace(txt))
         {
@@ -119,14 +142,24 @@ public class ProcessSelectorDialogViewModel : DialogBase, IProcessSelectorDialog
 
     public ReactiveCommand<Unit, ProfileVm> OkCommand { get; }
 
-    public ReadOnlyObservableCollection<ProcessModel> Filtered => _filtered;
+    public ReadOnlyObservableCollection<Queries.Processes.Models.ProcessModel> Filtered =>
+        _filtered;
 
-    public ProcessModel? SelectedProcessModel
+    public Queries.Processes.Models.ProcessModel? SelectedProcessModel
     {
         get => _processModel;
         set => this.RaiseAndSetIfChanged(ref _processModel, value);
     }
 
-    private void RefreshProcessList() =>
-        _sourceProcessModels.EditDiff(_processMonitorService.GetProcesses());
+    public string? SelectedProcessModuleName
+    {
+        get => _selectedProcessModuleName;
+        set => this.RaiseAndSetIfChanged(ref _selectedProcessModuleName, value);
+    }
+
+    public string? SelectedProcessMainWindowTitle
+    {
+        get => _selectedProcessMainWindowTitle;
+        set => this.RaiseAndSetIfChanged(ref _selectedProcessMainWindowTitle, value);
+    }
 }
