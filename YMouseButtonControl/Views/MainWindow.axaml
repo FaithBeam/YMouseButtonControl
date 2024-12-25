@@ -14,7 +14,7 @@
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
         Icon="/Resources/mouse.ico"
-        RequestedThemeVariant="{Binding ThemeService.ThemeVariant }">
+        RequestedThemeVariant="{Binding ThemeVariant }">
 
     <Design.DataContext>
         <mainWindow:MainWindowViewModel />

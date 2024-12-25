@@ -9,10 +9,6 @@ public static class DataAccessBootstrapper
 {
     public static void RegisterDataAccess(IServiceCollection services)
     {
-        services
-            .AddScoped<IRepository<Profile, ProfileVm>, ProfileRepository>()
-            .AddScoped<IRepository<ButtonMapping, BaseButtonMappingVm>, ButtonMappingRepository>()
-            .AddScoped<IRepository<Setting, BaseSettingVm>, SettingRepository>()
-            .AddScoped<IRepository<Theme, ThemeVm>, ThemeRepository>();
+        services.AddScoped<IRepository<Profile, ProfileVm>, ProfileRepository>();
     }
 }

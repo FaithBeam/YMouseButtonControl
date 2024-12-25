@@ -44,8 +44,4 @@
         <ProjectReference Include="..\YMouseButtonControl.DataAccess\YMouseButtonControl.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="ViewModels\MouseCombo\Commands\" />
-    </ItemGroup>
-
 </Project>

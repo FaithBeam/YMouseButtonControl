@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
-using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.MouseCombo.Queries.Theme;
 using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MouseCombo;
@@ -23,8 +23,9 @@ public interface IMouseComboViewModelFactory
 
 public class MouseComboViewModelFactory(
     IMouseListener mouseListener,
-    IThemeService themeService,
-    ISimulatedKeystrokesDialogVmFactory simulatedKeystrokesDialogVmFactory
+    ISimulatedKeystrokesDialogVmFactory simulatedKeystrokesDialogVmFactory,
+    GetThemeBackground.Handler getThemeBackgroundHandler,
+    GetThemeHighlight.Handler getThemeHighlightHandler
 ) : IMouseComboViewModelFactory
 {
     public IMouseComboViewModel CreateWithMouseButton(
@@ -41,7 +42,8 @@ public class MouseComboViewModelFactory(
             profileVm,
             mouseListener,
             simulatedKeystrokesDialogVmFactory,
-            themeService,
+            getThemeBackgroundHandler,
+            getThemeHighlightHandler,
             mouseButton,
             buttonMappings,
             showSimulatedKeystrokesPickerInteraction!

@@ -5,13 +5,14 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Timers;
 using Avalonia.Media;
+using Avalonia.Threading;
 using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
-using YMouseButtonControl.Core.Services.Theme;
 using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;
 using YMouseButtonControl.Core.ViewModels.Models;
+using YMouseButtonControl.Core.ViewModels.MouseCombo.Queries.Theme;
 using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MouseCombo;
@@ -38,7 +39,8 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
         ProfileVm profileVm,
         IMouseListener mouseListener,
         ISimulatedKeystrokesDialogVmFactory simulatedKeystrokesDialogVmFactory,
-        IThemeService themeService,
+        GetThemeBackground.Handler getThemeBackgroundHandler,
+        GetThemeHighlight.Handler getThemeHighlightHandler,
         MouseButton mouseButton,
         ReadOnlyObservableCollection<BaseButtonMappingVm> btnMappings,
         Interaction<
@@ -49,7 +51,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     {
         _profileVm = profileVm;
         _btnMappings = btnMappings;
-        _backgroundColor = themeService.Background;
+        _backgroundColor = getThemeBackgroundHandler.Execute();
 
         switch (mouseButton)
         {
@@ -62,14 +64,18 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                 {
                     if (next.Button == (YMouseButton)(mouseButton + 1))
                     {
-                        BackgroundColor = themeService.Highlight;
+                        Dispatcher.UIThread.Post(
+                            () => BackgroundColor = getThemeHighlightHandler.Execute()
+                        );
                     }
                 });
                 _mbUpDisposable = mouseListener.OnMouseReleasedChanged.Subscribe(next =>
                 {
                     if (next.Button == (YMouseButton)(mouseButton + 1))
                     {
-                        BackgroundColor = themeService.Background;
+                        Dispatcher.UIThread.Post(
+                            () => BackgroundColor = getThemeBackgroundHandler.Execute()
+                        );
                     }
                 });
                 break;
@@ -79,7 +85,9 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
             case MouseButton.Mwr:
                 _wheelTimer.Elapsed += delegate
                 {
-                    BackgroundColor = themeService.Background;
+                    Dispatcher.UIThread.Post(
+                        () => BackgroundColor = getThemeBackgroundHandler.Execute()
+                    );
                 };
                 _mWheelDisposable = mouseListener.OnMouseWheelChanged.Subscribe(next =>
                 {
@@ -91,7 +99,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                             when mouseButton == MouseButton.Mwr:
                         case WheelScrollDirection.HorizontalLeft
                             when mouseButton == MouseButton.Mwl:
-                            BackgroundColor = themeService.Highlight;
+                            BackgroundColor = getThemeHighlightHandler.Execute();
                             if (!_wheelTimer.Enabled)
                             {
                                 _wheelTimer.Start();
