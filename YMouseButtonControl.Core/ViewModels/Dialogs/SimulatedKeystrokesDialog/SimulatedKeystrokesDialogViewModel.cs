@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using Avalonia.Styling;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog.Queries.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
@@ -43,9 +45,11 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
         IMouseListener mouseListener,
         string buttonName,
         MouseButton mouseButton,
+        GetThemeVariant.Handler getThemeVariantHandler,
         SimulatedKeystrokeVm? currentMapping = null
     )
     {
+        ThemeVariant = getThemeVariantHandler.Execute();
         _title = $"SimulatedKeystrokes - {buttonName}";
         _mouseListener = mouseListener;
         currentMapping ??= new SimulatedKeystrokeVm();
@@ -119,6 +123,8 @@ public class SimulatedKeystrokesDialogViewModel : DialogBase, IDisposable
             CaretIndex += insertString.Length;
         });
     }
+
+    public ThemeVariant ThemeVariant { get; }
 
     private void MouseListenerOnOnMouseMovedEventHandler(NewMouseHookMoveEventArgs e)
     {

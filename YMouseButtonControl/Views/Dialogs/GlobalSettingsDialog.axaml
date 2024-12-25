@@ -2,7 +2,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
+        xmlns:globalSettingsDialog="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;assembly=YMouseButtonControl.Core"
+        x:DataType="globalSettingsDialog:GlobalSettingsDialogViewModel"
+        x:CompileBindings="True"
         WindowStartupLocation="CenterOwner"
         Width="400"
         SizeToContent="Height"
@@ -11,7 +13,7 @@
         Title="Global Settings"
         RequestedThemeVariant="{Binding ThemeVariant}">
     <Design.DataContext>
-        <mainWindow:GlobalSettingsDialogViewModel />
+        <globalSettingsDialog:GlobalSettingsDialogViewModel />
     </Design.DataContext>
 
     <Grid Margin="6" RowDefinitions="Auto,Auto,Auto,Auto,*">

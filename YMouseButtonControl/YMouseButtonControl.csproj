@@ -33,6 +33,9 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
+    <PropertyGroup Label="Avalonia">
+      <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />

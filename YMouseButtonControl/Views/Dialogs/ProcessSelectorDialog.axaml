@@ -3,8 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
-        xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
-        xmlns:processSelectorDialogVm="clr-namespace:YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;assembly=YMouseButtonControl.Core"
+        xmlns:processSelectorDialog="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;assembly=YMouseButtonControl.Core"
+        x:DataType="processSelectorDialog:ProcessSelectorDialogViewModel"
+        x:CompileBindings="True"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="600"
@@ -14,10 +15,10 @@
         x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
         CanResize="True"
         Title="Choose Application"
-        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
+        RequestedThemeVariant="{Binding ThemeVariant}">
 
     <Design.DataContext>
-        <processSelectorDialogVm:ProcessSelectorDialogViewModel />
+        <processSelectorDialog:ProcessSelectorDialogViewModel />
     </Design.DataContext>
     
     <Window.Resources>

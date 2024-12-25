@@ -37,63 +37,63 @@ public class LayerViewModel : ViewModelBase, ILayerViewModel
             .Subscribe(profileVm =>
             {
                 Mb1ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mb1,
                     "Left Button",
                     profileVm.Mb1Mappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 Mb2ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mb2,
                     "Right Button",
                     profileVm.Mb2Mappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 Mb3ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mb3,
                     "Middle Button",
                     profileVm.Mb3Mappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 Mb4ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mb4,
                     "Mouse Button 4",
                     profileVm.Mb4Mappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 Mb5ComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mb5,
                     "Mouse Button 5",
                     profileVm.Mb5Mappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 MwuComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mwu,
                     "Wheel Up",
                     profileVm.MwuMappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 MwdComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mwd,
                     "Wheel Down",
                     profileVm.MwdMappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 MwlComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mwl,
                     "Wheel Left",
                     profileVm.MwlMappings,
                     ShowSimulatedKeystrokesPickerInteraction
                 );
                 MwrComboVm = mbComboViewModelFactory.CreateWithMouseButton(
-                    profileVm,
+                    profileVm.BtnSc,
                     MouseButton.Mwr,
                     "Wheel Right",
                     profileVm.MwrMappings,

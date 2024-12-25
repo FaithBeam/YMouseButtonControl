@@ -291,7 +291,7 @@ public class ProfileVm : ReactiveObject, IEquatable<ProfileVm>
     }
 
     public ProfileVm Clone() =>
-        new ProfileVm(ButtonMappings.Select(x => x.Clone()).ToList())
+        new(ButtonMappings.Select(x => x.Clone()).ToList())
         {
             Id = Id,
             Checked = Checked,

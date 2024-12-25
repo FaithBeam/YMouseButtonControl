@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;

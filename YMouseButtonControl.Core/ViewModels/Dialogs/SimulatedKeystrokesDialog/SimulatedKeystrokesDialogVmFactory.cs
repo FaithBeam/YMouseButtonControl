@@ -1,4 +1,5 @@
 ﻿using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog.Queries.Theme;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
@@ -13,12 +14,21 @@ public interface ISimulatedKeystrokesDialogVmFactory
     );
 }
 
-public class SimulatedKeystrokesDialogVmFactory(IMouseListener mouseListener)
-    : ISimulatedKeystrokesDialogVmFactory
+public class SimulatedKeystrokesDialogVmFactory(
+    IMouseListener mouseListener,
+    GetThemeVariant.Handler getThemeVariant
+) : ISimulatedKeystrokesDialogVmFactory
 {
     public SimulatedKeystrokesDialogViewModel Create(
         string buttonName,
         MouseButton mouseButton,
         BaseButtonMappingVm? mapping
-    ) => new(mouseListener, buttonName, mouseButton, mapping as SimulatedKeystrokeVm);
+    ) =>
+        new(
+            mouseListener,
+            buttonName,
+            mouseButton,
+            getThemeVariant,
+            mapping as SimulatedKeystrokeVm
+        );
 }

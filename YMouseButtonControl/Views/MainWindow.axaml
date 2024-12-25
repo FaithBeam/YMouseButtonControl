@@ -4,6 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:YMouseButtonControl.Views"
         xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
+        x:DataType="mainWindow:MainWindowViewModel"
+        x:CompileBindings="True"
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="750"
@@ -14,7 +16,7 @@
         x:Class="YMouseButtonControl.Views.MainWindow"
         Title="YMouseButtonControl"
         Icon="/Resources/mouse.ico"
-        RequestedThemeVariant="{Binding ThemeVariant }">
+        RequestedThemeVariant="{Binding ThemeVariant}">
 
     <Design.DataContext>
         <mainWindow:MainWindowViewModel />
@@ -40,7 +42,7 @@
             <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding SettingsCommand}">Settings</Button>
             <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Save Profile</Button>
             <Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Load Profile</Button>
-            <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Text="{Binding CurrentProfile.Name, FallbackValue=''}" IsReadOnly="True" />
+            <!-- <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Text="{Binding CurrentProfile.Name, FallbackValue=''}" IsReadOnly="True" /> -->
             <Button Grid.Column="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Apply"
                     Command="{Binding ApplyCommand}" />
             <Button Grid.Column="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Close"

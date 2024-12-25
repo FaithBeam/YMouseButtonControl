@@ -5,11 +5,13 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Avalonia.Styling;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Processes;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Profiles;
+using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Themes;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Domain.Models;
 
@@ -35,11 +37,13 @@ public class ProcessSelectorDialogViewModel
     public ProcessSelectorDialogViewModel(
         IListProcessesHandler listProcessesHandler,
         GetMaxProfileId.Handler getMaxProfileIdHandler,
+        GetThemeVariant.Handler getThemeVariantHandler,
         string? selectedProcessModuleName
     )
     {
         Activator = new ViewModelActivator();
 
+        ThemeVariant = getThemeVariantHandler.Execute();
         _sourceProcessModels = new SourceList<Queries.Processes.Models.ProcessModel>();
         var dynamicFilter = this.WhenValueChanged(x => x.ProcessFilter)
             .Select(CreateProcessFilterPredicate);
@@ -173,6 +177,8 @@ public class ProcessSelectorDialogViewModel
         get => _selectedProcessMainWindowTitle;
         set => this.RaiseAndSetIfChanged(ref _selectedProcessMainWindowTitle, value);
     }
+
+    public ThemeVariant ThemeVariant { get; }
 
     public ViewModelActivator Activator { get; }
 }

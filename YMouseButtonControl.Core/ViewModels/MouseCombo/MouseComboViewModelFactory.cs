@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using DynamicData;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -10,7 +11,7 @@ namespace YMouseButtonControl.Core.ViewModels.MouseCombo;
 public interface IMouseComboViewModelFactory
 {
     IMouseComboViewModel? CreateWithMouseButton(
-        ProfileVm profileVm,
+        SourceCache<BaseButtonMappingVm, int> BtnSc,
         MouseButton mouseButton,
         string labelTxt,
         ReadOnlyObservableCollection<BaseButtonMappingVm> buttonMappings,
@@ -29,7 +30,7 @@ public class MouseComboViewModelFactory(
 ) : IMouseComboViewModelFactory
 {
     public IMouseComboViewModel CreateWithMouseButton(
-        ProfileVm profileVm,
+        SourceCache<BaseButtonMappingVm, int> BtnSc,
         MouseButton mouseButton,
         string labelTxt,
         ReadOnlyObservableCollection<BaseButtonMappingVm> buttonMappings,
@@ -39,7 +40,7 @@ public class MouseComboViewModelFactory(
         >? showSimulatedKeystrokesPickerInteraction
     ) =>
         new MouseComboViewModel(
-            profileVm,
+            BtnSc,
             mouseListener,
             simulatedKeystrokesDialogVmFactory,
             getThemeBackgroundHandler,

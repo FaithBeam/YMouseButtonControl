@@ -25,7 +25,6 @@ public interface IMouseComboViewModel
 
 public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDisposable
 {
-    private readonly ProfileVm _profileVm;
     private readonly ReadOnlyObservableCollection<BaseButtonMappingVm> _btnMappings;
     private BaseButtonMappingVm? _selectedBtnMap;
     private readonly IDisposable? _mbDownDisposable;
@@ -36,7 +35,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
     private string? _labelTxt;
 
     public MouseComboViewModel(
-        ProfileVm profileVm,
+        SourceCache<BaseButtonMappingVm, int> BtnSc,
         IMouseListener mouseListener,
         ISimulatedKeystrokesDialogVmFactory simulatedKeystrokesDialogVmFactory,
         GetThemeBackground.Handler getThemeBackgroundHandler,
@@ -49,7 +48,6 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
         > showSimulatedKeystrokesPickerInteraction
     )
     {
-        _profileVm = profileVm;
         _btnMappings = btnMappings;
         _backgroundColor = getThemeBackgroundHandler.Execute();
 
@@ -118,7 +116,7 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
             .WhereNotNull()
             .Subscribe(current =>
             {
-                profileVm.BtnSc.Edit(inner =>
+                BtnSc.Edit(inner =>
                 {
                     var previous = inner.Items.FirstOrDefault(x =>
                         x.Selected && x.MouseButton == current.MouseButton && !x.Equals(current)
@@ -162,11 +160,11 @@ public class MouseComboViewModel : ReactiveObject, IMouseComboViewModel, IDispos
                     )
                     {
                         previouslySelectedBtnMap.Selected = false;
-                        _profileVm.BtnSc.AddOrUpdate([previouslySelectedBtnMap, newMapping]);
+                        BtnSc.AddOrUpdate([previouslySelectedBtnMap, newMapping]);
                     }
                     else
                     {
-                        _profileVm.BtnSc.AddOrUpdate([newMapping]);
+                        BtnSc.AddOrUpdate([newMapping]);
                     }
                     SelectedBtnMap = newMapping;
                 }
