@@ -6,11 +6,11 @@ using YMouseButtonControl.Core.Services.Processes;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
-using YMouseButtonControl.Core.ViewModels.AppViewModel;
-using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
+using YMouseButtonControl.Core.ViewModels.App;
+using YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;
+using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.Core.ViewModels.ProcessSelectorDialogVm;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
 
 namespace YMouseButtonControl.DependencyInjection;

@@ -8,11 +8,11 @@ using DynamicData;
 using ReactiveUI;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Theme;
-using YMouseButtonControl.Core.ViewModels.GlobalSettingsDialog;
-using YMouseButtonControl.Core.ViewModels.LayerViewModel;
+using YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;
+using YMouseButtonControl.Core.ViewModels.Layer;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Commands.Profiles;
 using YMouseButtonControl.Core.ViewModels.MainWindow.Queries.Profiles;
-using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
+using YMouseButtonControl.Core.ViewModels.ProfilesInformation;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;

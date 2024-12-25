@@ -15,7 +15,7 @@ using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.Services.Settings;
-using YMouseButtonControl.Core.ViewModels.AppViewModel;
+using YMouseButtonControl.Core.ViewModels.App;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.Views;
