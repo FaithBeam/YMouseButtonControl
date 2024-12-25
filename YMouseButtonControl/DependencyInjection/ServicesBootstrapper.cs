@@ -4,13 +4,14 @@ using Microsoft.Extensions.DependencyInjection;
 using YMouseButtonControl.BackgroundTaskRunner;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 using YMouseButtonControl.Core.Services.Profiles;
+using YMouseButtonControl.Core.Services.Profiles.Queries.Profiles;
 using YMouseButtonControl.Core.ViewModels.App;
 using YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
-using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.MouseCombo;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
+using YMouseButtonControl.Core.ViewModels.ProfilesList.Commands.Profiles;
 using YMouseButtonControl.Queries.Settings;
 
 namespace YMouseButtonControl.DependencyInjection;
@@ -33,6 +34,7 @@ public static class ServicesBootstrapper
         MouseComboHandlerRegistrations.RegisterCommon(services);
         services
             .AddScoped<ProfileVmConverter>()
+            .AddScoped<ListDbProfiles.Handler>()
             .AddScoped<IProfilesCache, ProfilesCache>()
             .AddScoped<GetBoolSetting.Handler>()
             .AddScoped<IBackgroundTasksRunner, BackgroundTasksRunner>();

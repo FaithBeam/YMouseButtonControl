@@ -2,7 +2,6 @@
 using System.Linq;
 using Newtonsoft.Json;
 using YMouseButtonControl.Core.Services.Profiles;
-using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.ProfilesList.Commands.Profiles;
 

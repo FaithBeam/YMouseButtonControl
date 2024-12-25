@@ -4,8 +4,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using YMouseButtonControl.Core.Services.Profiles;
+using YMouseButtonControl.Core.ViewModels.Models;
 
-namespace YMouseButtonControl.Core.ViewModels.Models;
+namespace YMouseButtonControl.Core.ViewModels.ProfilesList.Commands.Profiles;
 
 public class ProfileVmConverter(IProfilesCache profilesCache) : JsonConverter<ProfileVm>
 {
