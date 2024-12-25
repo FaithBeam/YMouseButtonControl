@@ -1,13 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using YMouseButtonControl.Core.Services.Processes;
 using CFIndex = long;
 
-namespace YMouseButtonControl.MacOS.Services;
+namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
 // a lot of this code was copied from https://stackoverflow.com/a/44669560 and https://github.com/isnowrain/CoreFoundation/blob/master/Project/CFType.cs
-public class CurrentWindowService : ICurrentWindowService
+public class GetCurrentWindowOsx : IGetCurrentWindow
 {
     public string ForegroundWindow => GetForegroundWindow();
 
@@ -33,15 +32,15 @@ public class CurrentWindowService : ICurrentWindowService
         "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
 
     [DllImport(AppKitFramework, CharSet = CharSet.Ansi)]
-    public static extern IntPtr objc_getClass(string name);
+    public static extern nint objc_getClass(string name);
 
     [DllImport(FoundationFramework, EntryPoint = "objc_msgSend")]
-    public static extern IntPtr objc_msgSend_retIntPtr(IntPtr target, IntPtr selector);
+    public static extern nint objc_msgSend_retIntPtr(nint target, nint selector);
 
-    public static IntPtr GetSelector(string name)
+    public static nint GetSelector(string name)
     {
-        IntPtr cfstrSelector = CreateCfString(name);
-        IntPtr selector = NSSelectorFromString(cfstrSelector);
+        nint cfstrSelector = CreateCfString(name);
+        nint selector = NSSelectorFromString(cfstrSelector);
         CFRelease(cfstrSelector);
         return selector;
     }
@@ -56,8 +55,8 @@ public class CurrentWindowService : ICurrentWindowService
     {
         var length = CFStringGetLength(ptr);
         var u = CFStringGetCharactersPtr(ptr);
-        var buffer = IntPtr.Zero;
-        if (u == IntPtr.Zero)
+        var buffer = nint.Zero;
+        if (u == nint.Zero)
         {
             var range = new CfRange(0, length);
             buffer = Marshal.AllocCoTaskMem((int)(length * 2));
@@ -66,28 +65,28 @@ public class CurrentWindowService : ICurrentWindowService
         }
 
         var str = new string((char*)u, 0, (int)length);
-        if (buffer != IntPtr.Zero)
+        if (buffer != nint.Zero)
             Marshal.FreeCoTaskMem(buffer);
         return str;
     }
 
     [DllImport(FoundationFramework)]
-    public static extern void CFRelease(IntPtr handle);
+    public static extern void CFRelease(nint handle);
 
     [DllImport(CoreFoundation)]
     static extern nint CFStringGetCharactersPtr(nint theString);
 
     [DllImport(AppKitFramework)]
-    public static extern IntPtr NSSelectorFromString(IntPtr cfstr);
+    public static extern nint NSSelectorFromString(nint cfstr);
 
-    public static unsafe IntPtr CreateCfString(string aString)
+    public static unsafe nint CreateCfString(string aString)
     {
         var bytes = Encoding.Unicode.GetBytes(aString);
         fixed (byte* b = bytes)
         {
             var cfStr = CFStringCreateWithBytes(
-                IntPtr.Zero,
-                (IntPtr)b,
+                nint.Zero,
+                (nint)b,
                 bytes.Length,
                 CfStringEncoding.Utf16,
                 false
@@ -97,9 +96,9 @@ public class CurrentWindowService : ICurrentWindowService
     }
 
     [DllImport(FoundationFramework)]
-    public static extern IntPtr CFStringCreateWithBytes(
-        IntPtr allocator,
-        IntPtr buffer,
+    public static extern nint CFStringCreateWithBytes(
+        nint allocator,
+        nint buffer,
         long bufferLength,
         CfStringEncoding encoding,
         bool isExternalRepresentation

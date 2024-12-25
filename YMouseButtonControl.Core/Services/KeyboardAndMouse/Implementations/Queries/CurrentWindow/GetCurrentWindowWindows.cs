@@ -4,13 +4,13 @@ using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
-using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
 namespace YMouseButtonControl.Windows.Services;
 
 [SupportedOSPlatform("windows5.1.2600")]
-public partial class CurrentWindowService(ILogger<CurrentWindowService> logger)
-    : ICurrentWindowService
+public partial class GetCurrentWindowWindows(ILogger<GetCurrentWindowWindows> logger)
+    : IGetCurrentWindow
 {
     public string ForegroundWindow => GetWindowTitleFromHWnd();
 

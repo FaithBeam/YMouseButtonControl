@@ -9,7 +9,7 @@ using SharpHook.Native;
 using SharpHook.Reactive;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
-using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 using YMouseButtonControl.Core.Services.Profiles;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -28,12 +28,12 @@ public interface IMouseListener : IDisposable
 /// Wrapper around sharphook for listening to mouse events
 /// Converts mouse events to NewMouseHookEventArgs
 /// </summary>
-public partial class MouseListener : IMouseListener
+public partial class MouseListenerService : IMouseListener
 {
-    private readonly ILogger<MouseListener> _logger;
+    private readonly ILogger<MouseListenerService> _logger;
     private readonly IReactiveGlobalHook _hook;
     private readonly IProfilesCache _profilesService;
-    private readonly ICurrentWindowService _currentWindowService;
+    private readonly IGetCurrentWindow _currentWindowService;
     private Thread? _thread;
     private readonly IDisposable? _mouseMovedDisposable;
     private readonly IDisposable? _mousePressedDisposable;
@@ -44,11 +44,11 @@ public partial class MouseListener : IMouseListener
     private readonly Subject<NewMouseHookMoveEventArgs> _mouseMovedSubject;
     private readonly Subject<NewMouseWheelEventArgs> _mouseWheelSubject;
 
-    public MouseListener(
-        ILogger<MouseListener> logger,
+    public MouseListenerService(
+        ILogger<MouseListenerService> logger,
         IReactiveGlobalHook hook,
         IProfilesCache profilesService,
-        ICurrentWindowService currentWindowService
+        IGetCurrentWindow currentWindowService
     )
     {
         _logger = logger;

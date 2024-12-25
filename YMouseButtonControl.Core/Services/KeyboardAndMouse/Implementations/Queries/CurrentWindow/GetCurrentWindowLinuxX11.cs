@@ -1,9 +1,11 @@
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
-using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
-namespace YMouseButtonControl.Linux.Services;
+namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.MouseListener.Queries.CurrentWindow;
 
-public class CurrentWindowServiceX11 : ICurrentWindowService
+public class GetCurrentWindowLinuxX11 : IGetCurrentWindow
 {
     public string ForegroundWindow => GetForegroundWindow();
 

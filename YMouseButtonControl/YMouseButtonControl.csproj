@@ -79,9 +79,6 @@
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\YMouseButtonControl.Linux\YMouseButtonControl.Linux.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.MacOS\YMouseButtonControl.MacOS.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.Windows\YMouseButtonControl.Windows.csproj" />
       <ProjectReference Include="..\YMouseButtonControl.Core\YMouseButtonControl.Core.csproj" />
     </ItemGroup>
     <ItemGroup>

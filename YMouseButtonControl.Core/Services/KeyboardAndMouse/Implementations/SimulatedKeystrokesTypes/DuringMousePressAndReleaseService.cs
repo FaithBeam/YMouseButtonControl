@@ -1,6 +1,5 @@
 ﻿using System;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.ViewModels.Models;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;

@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedMousePressTypes;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.ViewModels.Models;
 
@@ -16,7 +16,7 @@ public partial class KeyboardSimulatorWorker(
     ILogger<KeyboardSimulatorWorker> logger,
     IProfilesCache profilesService,
     IMouseListener mouseListener,
-    ISkipProfileService skipProfileService,
+    ISkipProfile skipProfileService,
     IAsMouseButtonPressedService asMouseButtonPressedService,
     IAsMouseButtonReleasedService asMouseButtonReleasedService,
     IDuringMousePressAndReleaseService duringMousePressAndReleaseService,

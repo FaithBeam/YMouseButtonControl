@@ -5,9 +5,9 @@ using SharpHook.Reactive;
 using SharpHook.Testing;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedKeystrokesTypes;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedMousePressTypes;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 using YMouseButtonControl.Linux.Services;
 
 namespace YMouseButtonControl.DependencyInjection;
@@ -24,15 +24,15 @@ public static class KeyboardAndMouseBootstrapper
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600))
         {
-            services.AddScoped<ISkipProfileService, Windows.Services.SkipProfileService>();
+            services.AddScoped<ISkipProfile, Windows.Services.SkipProfileWindows>();
         }
         else if (OperatingSystem.IsMacOS())
         {
-            services.AddScoped<ISkipProfileService, MacOS.Services.SkipProfileService>();
+            services.AddScoped<ISkipProfile, MacOS.Services.SkipProfileOsx>();
         }
         else if (OperatingSystem.IsLinux())
         {
-            services.AddScoped<ISkipProfileService, SkipProfileService>();
+            services.AddScoped<ISkipProfile, SkipProfileLinux>();
         }
         else
         {
@@ -51,7 +51,7 @@ public static class KeyboardAndMouseBootstrapper
 #else
             .AddScoped<IReactiveGlobalHook, SimpleReactiveGlobalHook>()
 #endif
-            .AddScoped<IMouseListener, MouseListener>()
+            .AddScoped<IMouseListener, MouseListenerService>()
             .AddScoped<IEventSimulator, EventSimulator>()
             .AddScoped<IEventSimulatorService, EventSimulatorService>()
             .AddScoped<IStickyHoldService, StickyHoldService>()

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.Services.BackgroundTasks;
-using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.BackgroundTaskRunner;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.Services.Theme;
@@ -62,14 +62,17 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterLinux(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterLinux(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterLinux(services);
-        services.AddScoped<IBackgroundTasksRunner, Linux.Services.BackgroundTasksRunner>();
+        services.AddScoped<IBackgroundTasksRunner, BackgroundTasksRunnerLinux>();
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
         {
-            services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowServiceX11>();
+            services.AddScoped<
+                IGetCurrentWindow,
+                Core.Services.KeyboardAndMouse.Implementations.MouseListener.Queries.CurrentWindow.GetCurrentWindowLinuxX11
+            >();
         }
         else
         {
-            services.AddScoped<ICurrentWindowService, Linux.Services.CurrentWindowService>();
+            services.AddScoped<IGetCurrentWindow, GetCurrentWindowLinux>();
         }
     }
 
@@ -80,8 +83,8 @@ public static class ServicesBootstrapper
         ProcessSelectorDialogHandlerRegistrations.RegisterWindows(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterWindows(services);
         services
-            .AddScoped<ICurrentWindowService, Windows.Services.CurrentWindowService>()
-            .AddScoped<IBackgroundTasksRunner, Windows.Services.BackgroundTasksRunner>();
+            .AddScoped<IGetCurrentWindow, Windows.Services.GetCurrentWindowWindows>()
+            .AddScoped<IBackgroundTasksRunner, BackgroundTasksRunnerWindows>();
     }
 
     private static void RegisterMacOsServices(IServiceCollection services)
@@ -90,7 +93,7 @@ public static class ServicesBootstrapper
         ProcessSelectorDialogHandlerRegistrations.RegisterOsx(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterOsx(services);
         services
-            .AddScoped<ICurrentWindowService, MacOS.Services.CurrentWindowService>()
-            .AddScoped<IBackgroundTasksRunner, MacOS.Services.BackgroundTasksRunner>();
+            .AddScoped<IGetCurrentWindow, GetCurrentWindowOsx>()
+            .AddScoped<IBackgroundTasksRunner, BackgroundTasksRunnerOsx>();
     }
 }

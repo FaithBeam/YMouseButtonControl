@@ -1,15 +1,14 @@
-using YMouseButtonControl.Core.Services.BackgroundTasks;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 
-namespace YMouseButtonControl.Linux.Services;
+namespace YMouseButtonControl.BackgroundTaskRunner;
 
-public class BackgroundTasksRunner : IBackgroundTasksRunner
+public class BackgroundTasksRunnerLinux : IBackgroundTasksRunner
 {
     private readonly IMouseListener _mouseListener;
     private readonly KeyboardSimulatorWorker _keyboardSimulatorWorker;
 
-    public BackgroundTasksRunner(
+    public BackgroundTasksRunnerLinux(
         IMouseListener mouseListener,
         KeyboardSimulatorWorker keyboardSimulatorWorker
     )

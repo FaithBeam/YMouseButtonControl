@@ -13,7 +13,7 @@ using NReco.Logging.File;
 using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.Services.BackgroundTasks;
+using YMouseButtonControl.BackgroundTaskRunner;
 using YMouseButtonControl.Core.Services.Settings;
 using YMouseButtonControl.Core.ViewModels.App;
 using YMouseButtonControl.Core.ViewModels.MainWindow;

@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
-using YMouseButtonControl.Core.Services.Processes;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 using YMouseButtonControl.Core.ViewModels.Models;
 
-namespace YMouseButtonControl.MacOS.Services;
+namespace YMouseButtonControl.Linux.Services;
 
-public partial class SkipProfileService(
-    ILogger<SkipProfileService> logger,
-    ICurrentWindowService currentWindowService
-) : ISkipProfileService
+public partial class SkipProfileLinux(
+    ILogger<SkipProfileLinux> logger,
+    IGetCurrentWindow currentWindowService
+) : ISkipProfile
 {
     // Returns whether this profile should be skipped on mouse events
     public bool ShouldSkipProfile(ProfileVm p, NewMouseHookEventArgs e)
@@ -27,6 +27,11 @@ public partial class SkipProfileService(
         }
 
         if (currentWindowService.ForegroundWindow.Contains(p.Process))
+        {
+            return false;
+        }
+
+        if (currentWindowService.ForegroundWindow == "*")
         {
             return false;
         }

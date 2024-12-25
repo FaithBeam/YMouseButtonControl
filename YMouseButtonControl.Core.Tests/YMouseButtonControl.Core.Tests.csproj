@@ -36,9 +36,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\YMouseButtonControl.Core\YMouseButtonControl.Core.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.Linux\YMouseButtonControl.Linux.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.MacOS\YMouseButtonControl.MacOS.csproj" />
-      <ProjectReference Include="..\YMouseButtonControl.Windows\YMouseButtonControl.Windows.csproj" />
     </ItemGroup>
 
 </Project>
