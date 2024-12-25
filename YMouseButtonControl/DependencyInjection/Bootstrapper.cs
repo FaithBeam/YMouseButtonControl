@@ -8,7 +8,6 @@ public static class Bootstrapper
     {
         ServicesBootstrapper.RegisterServices(services);
         FactoriesBootstrapper.RegisterFactories(services);
-        DataAccessBootstrapper.RegisterDataAccess(services);
         KeyboardAndMouseBootstrapper.RegisterKeyboardAndMouse(services);
         ViewModelsBootstrapper.RegisterViewModels(services);
         ViewBootstrapper.RegisterViews(services);

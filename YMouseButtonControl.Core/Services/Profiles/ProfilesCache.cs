@@ -2,10 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using DynamicData;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
-using YMouseButtonControl.Core.Repositories;
+using YMouseButtonControl.Core.Mappings;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.Domain.Models;
+using YMouseButtonControl.Infrastructure.Context;
 
 namespace YMouseButtonControl.Core.Services.Profiles;
 
@@ -23,11 +24,16 @@ public class ProfilesCache : ReactiveObject, IProfilesCache, IDisposable
     private readonly SourceCache<ProfileVm, int> _profilesSc;
     private readonly ReadOnlyObservableCollection<ProfileVm> _profilesObsCol;
 
-    public ProfilesCache(IRepository<Profile, ProfileVm> profileRepository)
+    public ProfilesCache(YMouseButtonControlDbContext db)
     {
         _profilesSc = new SourceCache<ProfileVm, int>(x => x.Id);
         _profilesSc.Connect().AutoRefresh().Bind(out _profilesObsCol).Subscribe();
-        _profilesSc.AddOrUpdate(profileRepository.GetAll().ToList());
+        _profilesSc.AddOrUpdate(
+            db.Profiles.AsNoTracking()
+                .Include(x => x.ButtonMappings)
+                .ToList()
+                .Select(ProfileMapper.Map)
+        );
         CurrentProfile ??= Profiles.FirstOrDefault();
     }
 
