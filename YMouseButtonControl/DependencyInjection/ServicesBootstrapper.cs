@@ -34,7 +34,8 @@ public static class ServicesBootstrapper
             .AddScoped<ProfileVmConverter>()
             .AddScoped<IThemeService, ThemeService>()
             .AddScoped<IProfilesCache, ProfilesCache>()
-            .AddScoped<ISettingsService, SettingsService>();
+            .AddScoped<ISettingsService, SettingsService>()
+            .AddScoped<IBackgroundTasksRunner, BackgroundTasksRunner>();
     }
 
     private static void RegisterPlatformSpecificServices(IServiceCollection services)
@@ -62,7 +63,6 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterLinux(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterLinux(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterLinux(services);
-        services.AddScoped<IBackgroundTasksRunner, BackgroundTasksRunnerLinux>();
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
         {
             services.AddScoped<
@@ -82,9 +82,7 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterWindows(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterWindows(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterWindows(services);
-        services
-            .AddScoped<IGetCurrentWindow, Windows.Services.GetCurrentWindowWindows>()
-            .AddScoped<IBackgroundTasksRunner, BackgroundTasksRunnerWindows>();
+        services.AddScoped<IGetCurrentWindow, Windows.Services.GetCurrentWindowWindows>();
     }
 
     private static void RegisterMacOsServices(IServiceCollection services)
@@ -92,8 +90,6 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterOsx(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterOsx(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterOsx(services);
-        services
-            .AddScoped<IGetCurrentWindow, GetCurrentWindowOsx>()
-            .AddScoped<IBackgroundTasksRunner, BackgroundTasksRunnerOsx>();
+        services.AddScoped<IGetCurrentWindow, GetCurrentWindowOsx>();
     }
 }

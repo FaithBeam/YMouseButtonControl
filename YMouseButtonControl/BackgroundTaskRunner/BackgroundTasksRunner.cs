@@ -1,14 +1,17 @@
-﻿using YMouseButtonControl.Core.Services.KeyboardAndMouse;
+﻿using System;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 
 namespace YMouseButtonControl.BackgroundTaskRunner;
 
-public class BackgroundTasksRunnerWindows : IBackgroundTasksRunner
+public interface IBackgroundTasksRunner : IDisposable { }
+
+public class BackgroundTasksRunner : IBackgroundTasksRunner
 {
     private readonly IMouseListener _mouseListener;
     private readonly KeyboardSimulatorWorker _keyboardSimulatorWorker;
 
-    public BackgroundTasksRunnerWindows(
+    public BackgroundTasksRunner(
         IMouseListener mouseListener,
         KeyboardSimulatorWorker keyboardSimulatorWorker
     )
