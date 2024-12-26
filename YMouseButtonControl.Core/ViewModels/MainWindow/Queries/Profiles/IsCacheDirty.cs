@@ -11,6 +11,6 @@ public static class IsCacheDirty
     public sealed class Handler(IProfilesCache profilesCache, YMouseButtonControlDbContext db)
     {
         public bool Execute() =>
-            !profilesCache.Profiles.SequenceEqual(db.Profiles.Select(ProfileMapper.Map));
+            !profilesCache.Profiles.SequenceEqual(db.Profiles.Select(ProfileMapper.MapToViewModel));
     }
 }

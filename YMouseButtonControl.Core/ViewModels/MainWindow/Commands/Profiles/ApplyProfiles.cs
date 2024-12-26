@@ -59,12 +59,12 @@ public static class ApplyProfiles
                         // else if button mapping exists in the db and does not equal the button mapping in the profiles service profile, update button mapping
                         if (dbBm is null)
                         {
-                            var newBm = ButtonMappingMapper.Map(profilesServicePvmBtnMapVm);
+                            var newBm = ButtonMappingMapper.MapToEntity(profilesServicePvmBtnMapVm);
                             db.ButtonMappings.Add(newBm);
                         }
                         else
                         {
-                            var dbBmMapped = ButtonMappingMapper.Map(dbBm);
+                            var dbBmMapped = ButtonMappingMapper.MapToViewModel(dbBm);
                             if (profilesServicePvmBtnMapVm.Equals(dbBmMapped))
                             {
                                 continue;
@@ -112,7 +112,7 @@ public static class ApplyProfiles
             await db.Profiles.AddRangeAsync(
                 profilesCache
                     .Profiles.Where(x => dbProfiles.All(y => y.Id != x.Id))
-                    .Select(ProfileMapper.Map)
+                    .Select(ProfileMapper.MapToEntity)
             );
 
             await db.SaveChangesAsync();

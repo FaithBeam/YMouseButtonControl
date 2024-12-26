@@ -40,11 +40,3 @@ public class SimulatedKeystroke : ButtonMapping
 }
 
 public class RightClick : ButtonMapping;
-
-public enum ButtonMappingType
-{
-    Disabled,
-    Nothing,
-    SimulatedKeystroke,
-    RightClick,
-}

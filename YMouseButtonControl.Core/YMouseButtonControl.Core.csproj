@@ -33,7 +33,6 @@
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="ReactiveUI" Version="20.1.1" />
-        <PackageReference Include="Riok.Mapperly" Version="3.6.0" />
         <PackageReference Include="SharpHook" Version="5.3.8" />
         <PackageReference Include="SharpHook.Reactive" Version="5.3.8" />
         <PackageReference Include="System.Drawing.Common" Version="8.0.8" />

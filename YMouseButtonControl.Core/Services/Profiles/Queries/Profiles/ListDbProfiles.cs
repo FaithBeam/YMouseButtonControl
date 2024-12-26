@@ -16,7 +16,7 @@ public static class ListDbProfiles
                 .Profiles.AsNoTracking()
                 .Include(x => x.ButtonMappings)
                 .ToList()
-                .Select(ProfileMapper.Map)
+                .Select(ProfileMapper.MapToViewModel)
                 .ToList();
     }
 }
