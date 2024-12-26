@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Core.Tests", "YMouseButtonControl.Core.Tests\YMouseButtonControl.Core.Tests.csproj", "{0F770391-A4A1-611D-4FBA-125A6EB42834}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Core", "YMouseButtonControl.Core\YMouseButtonControl.Core.csproj", "{CEB84FCC-DB49-6456-7173-1F508E465D31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YMouseButtonControl.Infrastructure", "YMouseButtonControl.DataAccess\YMouseButtonControl.Infrastructure.csproj", "{A4C2C9B9-43FA-ACCF-4C5B-E79ECC6F61BA}"
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F770391-A4A1-611D-4FBA-125A6EB42834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F770391-A4A1-611D-4FBA-125A6EB42834}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F770391-A4A1-611D-4FBA-125A6EB42834}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F770391-A4A1-611D-4FBA-125A6EB42834}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CEB84FCC-DB49-6456-7173-1F508E465D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CEB84FCC-DB49-6456-7173-1F508E465D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEB84FCC-DB49-6456-7173-1F508E465D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
