@@ -88,7 +88,7 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterWindows(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterWindows(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterWindows(services);
-        services.AddScoped<IGetCurrentWindow, Windows.Services.GetCurrentWindowWindows>();
+        services.AddScoped<IGetCurrentWindow, GetCurrentWindowWindows>();
     }
 
     private static void RegisterMacOsServices(IServiceCollection services)

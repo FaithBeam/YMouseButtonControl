@@ -4,9 +4,8 @@ using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
-namespace YMouseButtonControl.Windows.Services;
+namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
 [SupportedOSPlatform("windows5.1.2600")]
 public partial class GetCurrentWindowWindows(ILogger<GetCurrentWindowWindows> logger)

@@ -1,10 +1,9 @@
 ﻿using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 using YMouseButtonControl.Core.ViewModels.Models;
 
-namespace YMouseButtonControl.Windows.Services;
+namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 
 [SupportedOSPlatform("windows5.1.2600")]
 public partial class SkipProfileWindows(ILogger<SkipProfileWindows> logger) : ISkipProfile

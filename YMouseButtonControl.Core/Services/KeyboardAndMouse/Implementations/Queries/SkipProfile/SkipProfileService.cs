@@ -1,10 +1,9 @@
 using Microsoft.Extensions.Logging;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 using YMouseButtonControl.Core.ViewModels.Models;
 
-namespace YMouseButtonControl.Linux.Services;
+namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.SkipProfile;
 
 public partial class SkipProfileLinux(
     ILogger<SkipProfileLinux> logger,
