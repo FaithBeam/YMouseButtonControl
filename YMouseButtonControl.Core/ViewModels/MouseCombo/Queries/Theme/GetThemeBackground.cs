@@ -10,13 +10,20 @@ public static class GetThemeBackground
 {
     public sealed class Handler(YMouseButtonControlDbContext db)
     {
+        private static IBrush? Background;
+
         public IBrush Execute()
         {
+            if (Background is not null)
+            {
+                return Background;
+            }
             var themeId = db.SettingInts.First(x => x.Name == "Theme").IntValue;
             var themeBackground =
                 db.Themes.Find(themeId)?.Background
                 ?? throw new Exception($"Error retrieving theme background for id {themeId}");
-            return GetBackground(themeBackground);
+            Background = GetBackground(themeBackground);
+            return Background;
         }
 
         private static IBrush GetBackground(string background)

@@ -10,13 +10,20 @@ public static class GetThemeHighlight
 {
     public sealed class Handler(YMouseButtonControlDbContext db)
     {
+        private static IBrush? Highlight;
+
         public IBrush Execute()
         {
+            if (Highlight is not null)
+            {
+                return Highlight;
+            }
             var themeId = db.SettingInts.First(x => x.Name == "Theme").IntValue;
             var themeBackground =
                 db.Themes.Find(themeId)?.Highlight
                 ?? throw new Exception($"Error retrieving theme highlight for id {themeId}");
-            return GetHighlight(themeBackground);
+            Highlight = GetHighlight(themeBackground);
+            return Highlight;
         }
 
         private static IBrush GetHighlight(string highlight)
