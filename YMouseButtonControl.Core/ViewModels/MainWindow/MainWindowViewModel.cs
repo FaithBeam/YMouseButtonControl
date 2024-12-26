@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Styling;
 using DynamicData;
-using DynamicData.Binding;
 using ReactiveUI;
-using YMouseButtonControl.Core.Repositories;
 using YMouseButtonControl.Core.Services.Profiles;
-using YMouseButtonControl.Core.Services.Settings;
-using YMouseButtonControl.Core.Services.Theme;
-using YMouseButtonControl.Core.ViewModels.LayerViewModel;
-using YMouseButtonControl.Core.ViewModels.MainWindow.Features.Apply;
-using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.Core.ViewModels.ProfilesInformationViewModel;
+using YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;
+using YMouseButtonControl.Core.ViewModels.Layer;
+using YMouseButtonControl.Core.ViewModels.MainWindow.Commands.Profiles;
+using YMouseButtonControl.Core.ViewModels.MainWindow.Queries.Profiles;
+using YMouseButtonControl.Core.ViewModels.MainWindow.Queries.Theme;
+using YMouseButtonControl.Core.ViewModels.ProfilesInformation;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
-using YMouseButtonControl.DataAccess.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.MainWindow;
 
@@ -32,43 +27,39 @@ public interface IMainWindowViewModel
     ReactiveCommand<Unit, Unit> CloseCommand { get; }
     ReactiveCommand<Unit, Unit> SettingsCommand { get; }
     Interaction<IGlobalSettingsDialogViewModel, Unit> ShowSettingsDialogInteraction { get; }
-    ProfileVm? CurrentProfile { get; }
-    IThemeService ThemeService { get; }
 }
 
 public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 {
     #region Fields
 
-    private readonly IRepository<Profile, ProfileVm> _profileRepository;
-    private readonly IProfilesService _ps;
-    private readonly IThemeService _themeService;
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
-    private readonly ObservableAsPropertyHelper<bool>? _isExecutingSave;
-    private readonly ReadOnlyObservableCollection<ProfileVm> _profileVms;
-    private bool _canSave;
+    private bool _dirty;
+    private bool Dirty
+    {
+        get => _dirty;
+        set => this.RaiseAndSetIfChanged(ref _dirty, value);
+    }
 
     #endregion
 
     #region Constructor
 
     public MainWindowViewModel(
-        IProfilesService ps,
-        IThemeService themeService,
+        IProfilesCache pc,
+        GetThemeVariant.Handler getThemeVariantHandler,
         ILayerViewModel layerViewModel,
         IProfilesListViewModel profilesListViewModel,
         IProfilesInformationViewModel profilesInformationViewModel,
         IGlobalSettingsDialogViewModel globalSettingsDialogViewModel,
-        IApply apply,
-        IRepository<Profile, ProfileVm> profileRepository
+        ApplyProfiles.Handler applyProfilesHandler,
+        IsCacheDirty.Handler isCacheDirtyHandler
     )
     {
-        _profileRepository = profileRepository;
         _profilesListViewModel = profilesListViewModel;
         _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
-        _ps = ps;
-        _themeService = themeService;
+        ThemeVariant = getThemeVariantHandler.Execute();
         LayerViewModel = layerViewModel;
         ProfilesInformationViewModel = profilesInformationViewModel;
         SettingsCommand = ReactiveCommand.CreateFromTask(ShowSettingsDialogAsync);
@@ -83,54 +74,19 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
                 lifetime.MainWindow?.Hide();
             }
         });
-        var myOp = _ps.Connect()
+        var myOp = pc.Connect()
             .AutoRefresh()
-            .RefCount()
-            .Bind(out _profileVms)
             .DisposeMany()
-            .Subscribe(CanSaveHelper);
-        var isExecutingObservable = this.WhenAnyValue(x => x.IsExecutingSave)
-            .Subscribe(_ => CanSave = false);
-        var canSaveCmd = this.WhenAnyValue(x => x.CanSave);
-        ApplyCommand = ReactiveCommand.Create(apply.ApplyProfiles, canSaveCmd);
-        _isExecutingSave = ApplyCommand.IsExecuting.ToProperty(this, x => x.IsExecutingSave);
+            .Subscribe((_) => Dirty = isCacheDirtyHandler.Execute());
+        var canExecuteApply = this.WhenAnyValue(x => x.Dirty);
+        ApplyCommand = ReactiveCommand.CreateFromTask(
+            applyProfilesHandler.ExecuteAsync,
+            canExecuteApply
+        );
+        var isExecutingObservable = this.WhenAnyObservable(x => x.ApplyCommand.IsExecuting);
+        canExecuteApply = canExecuteApply.Merge(isExecutingObservable);
+        isExecutingObservable.Skip(1).Where(x => !x).Subscribe(x => Dirty = false);
     }
-
-    private void CanSaveHelper(IChangeSet<ProfileVm, int> changeSet)
-    {
-        foreach (var cs in changeSet)
-        {
-            var entity = _profileRepository.GetById(cs.Current.Id);
-            switch (cs.Reason)
-            {
-                case ChangeReason.Add:
-                    CanSave = entity is null;
-                    break;
-                case ChangeReason.Update:
-                    CanSave = !entity?.Equals(cs.Current) ?? true;
-                    break;
-                case ChangeReason.Remove:
-                    CanSave = entity is not null;
-                    break;
-                case ChangeReason.Refresh:
-                    CanSave = !entity?.Equals(cs.Current) ?? true;
-                    break;
-                case ChangeReason.Moved:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-    }
-
-    public ProfileVm? CurrentProfile => _ps.CurrentProfile;
-
-    public bool CanSave
-    {
-        get => _canSave;
-        set => this.RaiseAndSetIfChanged(ref _canSave, value);
-    }
-    public bool IsExecutingSave => _isExecutingSave?.Value ?? false;
 
     #endregion
 
@@ -148,8 +104,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     public Interaction<IGlobalSettingsDialogViewModel, Unit> ShowSettingsDialogInteraction { get; }
 
-    public IThemeService ThemeService => _themeService;
-
+    public ThemeVariant ThemeVariant { get; }
     #endregion
 
     private async Task ShowSettingsDialogAsync()

@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
+using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.ViewModels.ProfilesList;
 using YMouseButtonControl.Views.Dialogs;
@@ -90,7 +91,7 @@ public partial class ProfilesListView : ReactiveUserControl<ProfilesListViewMode
         IInteractionContext<IProcessSelectorDialogViewModel, ProfileVm?> interaction
     )
     {
-        interaction.Input.RefreshButtonCommand.Execute(null);
+        //interaction.Input.RefreshButtonCommand.Execute();
         var dialog = new ProcessSelectorDialog { DataContext = interaction.Input };
         var result = await dialog.ShowDialog<ProfileVm?>(MainWindowProvider.GetMainWindow());
         interaction.SetOutput(result);

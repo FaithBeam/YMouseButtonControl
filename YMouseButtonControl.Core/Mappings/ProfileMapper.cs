@@ -1,25 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Riok.Mapperly.Abstractions;
+﻿using System.Linq;
 using YMouseButtonControl.Core.ViewModels.Models;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.Mappings;
 
-[Mapper]
-public static partial class ProfileMapper
+public static class ProfileMapper
 {
-    public static partial ProfileVm Map(Profile? profile);
+    public static ProfileVm MapToViewModel(Profile profile)
+    {
+        var buttonMappings = profile
+            .ButtonMappings.Select(ButtonMappingMapper.MapToViewModel)
+            .ToList();
+        var viewModel = new ProfileVm(buttonMappings)
+        {
+            Id = profile.Id,
+            IsDefault = profile.IsDefault,
+            Checked = profile.Checked,
+            Name = profile.Name,
+            Description = profile.Description,
+            WindowCaption = profile.WindowCaption,
+            Process = profile.Process,
+            WindowClass = profile.WindowClass,
+            ParentClass = profile.ParentClass,
+            MatchType = profile.MatchType,
+            DisplayPriority = profile.DisplayPriority,
+        };
 
-    public static partial Profile Map(ProfileVm vm);
+        return viewModel;
+    }
 
-    public static partial void Map(ProfileVm src, Profile dst);
-
-    private static List<BaseButtonMappingVm> MapButtonMapping(
-        ICollection<ButtonMapping> buttonMappings
-    ) => buttonMappings.Select(ButtonMappingMapper.Map).ToList();
-
-    private static ICollection<ButtonMapping> MapButtonMappingVms(
-        List<BaseButtonMappingVm> buttonMappings
-    ) => buttonMappings.Select(ButtonMappingMapper.Map).ToList();
+    public static Profile MapToEntity(ProfileVm profileVm) =>
+        new()
+        {
+            Id = profileVm.Id,
+            IsDefault = profileVm.IsDefault,
+            Checked = profileVm.Checked,
+            Name = profileVm.Name,
+            Description = profileVm.Description,
+            WindowCaption = profileVm.WindowCaption,
+            Process = profileVm.Process,
+            WindowClass = profileVm.WindowClass,
+            ParentClass = profileVm.ParentClass,
+            MatchType = profileVm.MatchType,
+            DisplayPriority = profileVm.DisplayPriority,
+            ButtonMappings = profileVm
+                .ButtonMappings.Select(ButtonMappingMapper.MapToEntity)
+                .ToList(),
+        };
 }

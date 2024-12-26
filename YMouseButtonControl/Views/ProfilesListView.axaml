@@ -3,7 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
-             xmlns:models="clr-namespace:YMouseButtonControl.Core.ViewModels.Models;assembly=YMouseButtonControl.Core"
+             x:DataType="profilesList:ProfilesListViewModel"
+             x:CompileBindings="True"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -16,7 +17,7 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">
-        <ListBox ItemsSource="{Binding ProfilesService.Profiles}" SelectedIndex="{Binding SelectedIndex}">
+        <ListBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding CurrentProfile}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <Setter Property="Padding" Value="6 0 6 0"></Setter>

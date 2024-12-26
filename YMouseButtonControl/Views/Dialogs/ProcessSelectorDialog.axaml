@@ -3,7 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
-        xmlns:profilesList="clr-namespace:YMouseButtonControl.Core.ViewModels.ProfilesList;assembly=YMouseButtonControl.Core"
+        xmlns:processSelectorDialog="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;assembly=YMouseButtonControl.Core"
+        x:DataType="processSelectorDialog:ProcessSelectorDialogViewModel"
+        x:CompileBindings="True"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="600"
@@ -13,10 +15,10 @@
         x:Class="YMouseButtonControl.Views.Dialogs.ProcessSelectorDialog"
         CanResize="True"
         Title="Choose Application"
-        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
+        RequestedThemeVariant="{Binding ThemeVariant}">
 
     <Design.DataContext>
-        <profilesList:ProcessSelectorDialogViewModel />
+        <processSelectorDialog:ProcessSelectorDialogViewModel />
     </Design.DataContext>
     
     <Window.Resources>
@@ -37,7 +39,7 @@
         <!-- Row 2 -->
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding Filtered}"
-                  SelectedItem="{Binding SelectedProcessModel, Mode=OneWayToSource}"
+                  SelectedItem="{Binding SelectedProcessModel, Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"
@@ -54,7 +56,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Process" Binding="{Binding Process.MainModule.ModuleName}" />
+                <DataGridTextColumn Header="Process"  Binding="{Binding Process.MainModule.ModuleName}" />
                 <DataGridTextColumn Header="ProcessName" Binding="{Binding Process.ProcessName}" />
                 <DataGridTextColumn Header="Window Title" Binding="{Binding Process.MainWindowTitle}" />
                 <DataGridTextColumn Header="File Name" Binding="{Binding Process.MainModule.FileName}" />
@@ -68,14 +70,14 @@
         <!-- Row 4 -->
         <Grid Grid.Row="3" ColumnDefinitions="150,*,Auto" VerticalAlignment="Top">
             <Label Content="Application" />
-            <TextBox Grid.Column="1" Text="{Binding SelectedProcessModel.Process.MainModule.ModuleName}" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Column="1" Text="{Binding SelectedProcessModuleName}" HorizontalAlignment="Stretch" />
             <Button Grid.Column="2" Content="..." HorizontalAlignment="Right" />
         </Grid>
 
         <!-- Row 5 -->
         <Grid Grid.Row="4" ColumnDefinitions="150,*" VerticalAlignment="Top">
             <Label Content="Description" />
-            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding SelectedProcessModel.Process.MainWindowTitle}" />
+            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding SelectedProcessMainWindowTitle}" />
         </Grid>
 
         <!-- Row 6 -->

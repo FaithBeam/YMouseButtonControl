@@ -34,6 +34,17 @@ public abstract class BaseSimulatedKeystrokeTypeVm
         set => this.RaiseAndSetIfChanged(ref _enabled, value);
     }
 
+    protected BaseSimulatedKeystrokeTypeVm CreateClone(BaseSimulatedKeystrokeTypeVm clone)
+    {
+        clone.Index = Index;
+        clone.Description = Description;
+        clone.ShortDescription = ShortDescription;
+        clone.Enabled = Enabled;
+        return clone;
+    }
+
+    public abstract BaseSimulatedKeystrokeTypeVm Clone();
+
     public override string ToString() => $"{Index + 1} {Description}";
 
     public bool Equals(BaseSimulatedKeystrokeTypeVm? other)
@@ -54,7 +65,7 @@ public abstract class BaseSimulatedKeystrokeTypeVm
             return false;
         if (ReferenceEquals(this, obj))
             return true;
-        if (obj.GetType() != this.GetType())
+        if (obj.GetType() != GetType())
             return false;
         return Equals((BaseSimulatedKeystrokeTypeVm)obj);
     }
@@ -74,6 +85,9 @@ public class AsMousePressedAndReleasedActionTypeVm : BaseSimulatedKeystrokeTypeV
         ShortDescription = "pressed & released";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new AsMousePressedAndReleasedActionTypeVm());
 }
 
 public class DuringMouseActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -85,6 +99,9 @@ public class DuringMouseActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "during";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new DuringMouseActionTypeVm());
 }
 
 public class InAnotherThreadPressedActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -96,6 +113,9 @@ public class InAnotherThreadPressedActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "thread-down";
         Enabled = false;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new InAnotherThreadPressedActionTypeVm());
 }
 
 public class InAnotherThreadReleasedActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -107,6 +127,9 @@ public class InAnotherThreadReleasedActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "thread-up";
         Enabled = false;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new InAnotherThreadReleasedActionTypeVm());
 }
 
 public class MouseButtonPressedActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -118,6 +141,9 @@ public class MouseButtonPressedActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "pressed";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new MouseButtonPressedActionTypeVm());
 }
 
 public class MouseButtonReleasedActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -129,6 +155,9 @@ public class MouseButtonReleasedActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "released";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new MouseButtonReleasedActionTypeVm());
 }
 
 public class RepeatedlyWhileButtonDownActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -140,6 +169,9 @@ public class RepeatedlyWhileButtonDownActionTypeVm : BaseSimulatedKeystrokeTypeV
         ShortDescription = "repeat";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new RepeatedlyWhileButtonDownActionTypeVm());
 }
 
 public class StickyHoldActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -151,6 +183,9 @@ public class StickyHoldActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "sticky hold";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new StickyHoldActionTypeVm());
 }
 
 public class StickyRepeatActionTypeVm : BaseSimulatedKeystrokeTypeVm
@@ -162,4 +197,7 @@ public class StickyRepeatActionTypeVm : BaseSimulatedKeystrokeTypeVm
         ShortDescription = "sticky repeat";
         Enabled = true;
     }
+
+    public override BaseSimulatedKeystrokeTypeVm Clone() =>
+        CreateClone(new StickyRepeatActionTypeVm());
 }

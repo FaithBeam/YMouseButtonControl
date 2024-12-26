@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,14 +13,14 @@ using NReco.Logging.File;
 using ReactiveUI;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
-using YMouseButtonControl.Core.Services.BackgroundTasks;
-using YMouseButtonControl.Core.Services.Settings;
-using YMouseButtonControl.Core.ViewModels.AppViewModel;
+using YMouseButtonControl.BackgroundTaskRunner;
+using YMouseButtonControl.Core.ViewModels.App;
 using YMouseButtonControl.Core.ViewModels.MainWindow;
 using YMouseButtonControl.Core.ViewModels.Models;
 using YMouseButtonControl.Core.Views;
-using YMouseButtonControl.DataAccess.Context;
 using YMouseButtonControl.DependencyInjection;
+using YMouseButtonControl.Infrastructure.Context;
+using YMouseButtonControl.Queries.Settings;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -45,8 +46,11 @@ public partial class App : Application
             .ConfigureServices(services =>
             {
                 services.UseMicrosoftDependencyResolver();
+                services.AddDbContext<YMouseButtonControlDbContext>(opts =>
+                    opts.UseSqlite(configuration.GetConnectionString("YMouseButtonControlContext"))
+                );
                 services.AddScoped(_ => configuration);
-                services.AddScoped<YMouseButtonControlDbContext>();
+                //services.AddScoped<YMouseButtonControlDbContext>();
 
                 var resolver = Locator.CurrentMutable;
                 resolver.InitializeSplat();
@@ -75,7 +79,7 @@ public partial class App : Application
         Container = host.Services;
         Container.UseMicrosoftDependencyResolver();
 
-        Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
+        //Container.GetRequiredService<YMouseButtonControlDbContext>().Init();
 
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
@@ -91,16 +95,16 @@ public partial class App : Application
         {
             DataContext = Container?.GetRequiredService<IAppViewModel>();
             _backgroundTasksRunner = Container?.GetRequiredService<IBackgroundTasksRunner>();
-            var settingsService =
-                Container?.GetRequiredService<ISettingsService>()
-                ?? throw new Exception($"Error retrieving {nameof(ISettingsService)}");
-            var startMinimized =
-                settingsService.GetSetting("StartMinimized") as SettingBoolVm
-                ?? throw new Exception("Error retrieving setting StartMinimized");
+            var getBoolSettingHandler =
+                Container?.GetRequiredService<GetBoolSetting.Handler>()
+                ?? throw new Exception($"Error retrieving {nameof(GetBoolSetting.Handler)}");
+            var startMinimized = getBoolSettingHandler.Execute(
+                new GetBoolSetting.Query("StartMinimized")
+            );
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                if (!startMinimized.BoolValue)
+                if (!startMinimized)
                 {
                     var mainWindow = (Window)Container.GetRequiredService<IMainWindow>();
                     mainWindow.DataContext = Container.GetRequiredService<IMainWindowViewModel>();

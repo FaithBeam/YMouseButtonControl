@@ -2,15 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:layerViewModel="clr-namespace:YMouseButtonControl.Core.ViewModels.LayerViewModel;assembly=YMouseButtonControl.Core"
              xmlns:views="clr-namespace:YMouseButtonControl.Views"
+             xmlns:layer="clr-namespace:YMouseButtonControl.Core.ViewModels.Layer;assembly=YMouseButtonControl.Core"
+             x:DataType="layer:LayerViewModel"
+             x:CompileBindings="True"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
              x:Class="YMouseButtonControl.Views.LayerView">
 
     <Design.DataContext>
-        <layerViewModel:LayerViewModel />
+        <layer:LayerViewModel />
     </Design.DataContext>
 
     <UserControl.Styles>

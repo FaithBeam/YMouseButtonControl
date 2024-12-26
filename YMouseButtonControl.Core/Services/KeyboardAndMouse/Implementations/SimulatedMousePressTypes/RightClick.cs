@@ -2,7 +2,6 @@
 using System.Threading;
 using SharpHook.Native;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Interfaces;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.SimulatedMousePressTypes;
 

@@ -3,7 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:YMouseButtonControl.Converters"
-        xmlns:layerViewModel="clr-namespace:YMouseButtonControl.Core.ViewModels.LayerViewModel;assembly=YMouseButtonControl.Core"
+        xmlns:simulatedKeystrokesDialog="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;assembly=YMouseButtonControl.Core"
+        x:DataType="simulatedKeystrokesDialog:SimulatedKeystrokesDialogViewModel"
+        x:CompileBindings="True"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         WindowStartupLocation="CenterOwner"
         Width="800"
@@ -11,9 +13,9 @@
         x:Class="YMouseButtonControl.Views.Dialogs.SimulatedKeystrokesDialog"
         SizeToContent="Height"
         Title="{Binding Title}"
-        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
+        RequestedThemeVariant="{Binding ThemeVariant}">
     <Design.DataContext>
-        <layerViewModel:SimulatedKeystrokesDialogViewModel />
+        <simulatedKeystrokesDialog:SimulatedKeystrokesDialogViewModel />
     </Design.DataContext>
 
     <Window.Resources>

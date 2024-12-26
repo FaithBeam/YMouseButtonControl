@@ -2,22 +2,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mainWindow="clr-namespace:YMouseButtonControl.Core.ViewModels.MainWindow;assembly=YMouseButtonControl.Core"
+        xmlns:globalSettingsDialog="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;assembly=YMouseButtonControl.Core"
+        x:DataType="globalSettingsDialog:GlobalSettingsDialogViewModel"
+        x:CompileBindings="True"
         WindowStartupLocation="CenterOwner"
         Width="400"
         SizeToContent="Height"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YMouseButtonControl.Views.Dialogs.GlobalSettingsDialog"
         Title="Global Settings"
-        RequestedThemeVariant="{Binding ThemeService.ThemeVariant}">
+        RequestedThemeVariant="{Binding ThemeVariant}">
     <Design.DataContext>
-        <mainWindow:GlobalSettingsDialogViewModel />
+        <globalSettingsDialog:GlobalSettingsDialogViewModel />
     </Design.DataContext>
 
     <Grid Margin="6" RowDefinitions="Auto,Auto,Auto,Auto,*">
         <CheckBox Grid.Row="0"
                   Content="Start Minimized"
-                  IsChecked="{Binding StartMinimized.BoolValue}" />
+                  IsChecked="{Binding StartMinimized.Value}" />
         <CheckBox Grid.Row="1"
                   Content="Start Menu"
                   IsEnabled="{Binding StartMenuEnabled}"

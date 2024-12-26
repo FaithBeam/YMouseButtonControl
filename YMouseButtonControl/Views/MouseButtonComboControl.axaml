@@ -2,16 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels.LayerViewModel;assembly=YMouseButtonControl.Core"
+             xmlns:mouseCombo="clr-namespace:YMouseButtonControl.Core.ViewModels.MouseCombo;assembly=YMouseButtonControl.Core"
+             x:DataType="mouseCombo:MouseComboViewModel"
+             x:CompileBindings="True"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="YMouseButtonControl.Views.MouseButtonComboControl">
     <Design.DataContext>
-        <vm:MouseComboViewModel />
+        <mouseCombo:MouseComboViewModel />
     </Design.DataContext>
     
     <UserControl.Styles>
         <Style Selector="Label">
-            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Styles>
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using ReactiveUI;
-using YMouseButtonControl.DataAccess.Models;
+using YMouseButtonControl.Domain.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.Models;
 
@@ -24,6 +24,7 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
     [JsonIgnore]
     public int Id { get; set; }
 
+    [JsonIgnore]
     public int ProfileId { get; set; }
 
     public MouseButton MouseButton { get; set; }
@@ -102,6 +103,30 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
         set => this.RaiseAndSetIfChanged(ref _blockOriginalMouseInput, value);
     }
 
+    protected BaseButtonMappingVm CreateClone(BaseButtonMappingVm clone)
+    {
+        clone.Id = Id;
+        clone.ProfileId = ProfileId;
+        clone.MouseButton = MouseButton;
+        clone.Index = Index;
+        clone.Selected = Selected;
+        clone.HasSettingsPopped = HasSettingsPopped;
+        clone.Enabled = Enabled;
+        clone.Description = Description;
+        clone.PriorityDescription = PriorityDescription;
+        clone.AutoRepeatDelay = AutoRepeatDelay;
+        clone.AutoRepeatRandomizeDelayEnabled = AutoRepeatRandomizeDelayEnabled;
+        clone.Keys = Keys;
+        clone.State = State;
+        clone.CanRaiseDialog = CanRaiseDialog;
+        clone.SimulatedKeystrokeType = SimulatedKeystrokeType?.Clone();
+        clone.BlockOriginalMouseInput = BlockOriginalMouseInput;
+
+        return clone;
+    }
+
+    public abstract BaseButtonMappingVm Clone();
+
     public override string? ToString()
     {
         return Description;
@@ -124,7 +149,8 @@ public abstract class BaseButtonMappingVm : ReactiveObject, IEquatable<BaseButto
             && AutoRepeatDelay == other.AutoRepeatDelay
             && AutoRepeatRandomizeDelayEnabled == other.AutoRepeatRandomizeDelayEnabled
             && Equals(SimulatedKeystrokeType, other.SimulatedKeystrokeType)
-            && BlockOriginalMouseInput == other.BlockOriginalMouseInput;
+            && BlockOriginalMouseInput == other.BlockOriginalMouseInput
+            && Selected == other.Selected;
     }
 
     public override bool Equals(object? obj)
@@ -162,6 +188,8 @@ public class DisabledMappingVm : BaseButtonMappingVm
         Index = 1;
         Description = "Disabled";
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new DisabledMappingVm());
 }
 
 public class NothingMappingVm : BaseButtonMappingVm
@@ -171,6 +199,8 @@ public class NothingMappingVm : BaseButtonMappingVm
         Index = 0;
         Description = "** No Change (Don't Intercept) **";
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new NothingMappingVm());
 }
 
 public class SimulatedKeystrokeVm : BaseButtonMappingVm
@@ -182,6 +212,8 @@ public class SimulatedKeystrokeVm : BaseButtonMappingVm
         CanRaiseDialog = true;
         BlockOriginalMouseInput = true;
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new SimulatedKeystrokeVm());
 
     public override string? ToString()
     {
@@ -210,4 +242,6 @@ public class RightClickVm : BaseButtonMappingVm
         Index = 3;
         Description = "Right Click";
     }
+
+    public override BaseButtonMappingVm Clone() => CreateClone(new RightClickVm());
 }
