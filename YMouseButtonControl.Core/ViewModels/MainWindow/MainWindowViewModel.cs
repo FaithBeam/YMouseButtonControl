@@ -35,6 +35,9 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
 
     private readonly IProfilesListViewModel _profilesListViewModel;
     private readonly IGlobalSettingsDialogViewModel _globalSettingsDialogViewModel;
+    private readonly ObservableAsPropertyHelper<string> _profileName;
+
+    public string ProfileName => _profileName.Value;
     private bool _dirty;
     private bool Dirty
     {
@@ -57,6 +60,7 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         IsCacheDirty.Handler isCacheDirtyHandler
     )
     {
+        ProfilesCache = pc;
         _profilesListViewModel = profilesListViewModel;
         _globalSettingsDialogViewModel = globalSettingsDialogViewModel;
         ThemeVariant = getThemeVariantHandler.Execute();
@@ -77,7 +81,12 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
         var myOp = pc.Connect()
             .AutoRefresh()
             .DisposeMany()
-            .Subscribe((_) => Dirty = isCacheDirtyHandler.Execute());
+            .Subscribe(_ => Dirty = isCacheDirtyHandler.Execute());
+        _profileName = this.WhenAnyValue(
+                x => x.ProfilesCache.CurrentProfile,
+                selector: curProf => $"Profile: {curProf?.Name}"
+            )
+            .ToProperty(this, x => x.ProfileName);
         var canExecuteApply = this.WhenAnyValue(x => x.Dirty);
         ApplyCommand = ReactiveCommand.CreateFromTask(
             applyProfilesHandler.ExecuteAsync,
@@ -91,6 +100,8 @@ public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     #endregion
 
     #region Properties
+
+    private IProfilesCache ProfilesCache { get; }
 
     public IProfilesInformationViewModel ProfilesInformationViewModel { get; }
 
