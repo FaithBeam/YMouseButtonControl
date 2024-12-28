@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;
 using YMouseButtonControl.Core.ViewModels.MouseCombo;
@@ -12,6 +13,7 @@ public static class FactoriesBootstrapper
         services
             .AddScoped<IMouseComboViewModelFactory, MouseComboViewModelFactory>()
             .AddScoped<ISimulatedKeystrokesDialogVmFactory, SimulatedKeystrokesDialogVmFactory>()
-            .AddScoped<IProcessSelectorDialogVmFactory, ProcessSelectorDialogVmFactory>();
+            .AddScoped<IProcessSelectorDialogVmFactory, ProcessSelectorDialogVmFactory>()
+            .AddScoped<IFindWindowDialogVmFactory, FindWindowDialogVmFactory>();
     }
 }

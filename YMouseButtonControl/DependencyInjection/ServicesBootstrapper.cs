@@ -7,6 +7,7 @@ using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries
 using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Profiles.Queries.Profiles;
 using YMouseButtonControl.Core.ViewModels.App;
+using YMouseButtonControl.Core.ViewModels.Dialogs;
 using YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;
@@ -88,6 +89,7 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterWindows(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterWindows(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterWindows(services);
+        FindWindowDialogHandlerRegistrations.RegisterWindows(services);
         services.AddScoped<IGetCurrentWindow, GetCurrentWindowWindows>();
     }
 

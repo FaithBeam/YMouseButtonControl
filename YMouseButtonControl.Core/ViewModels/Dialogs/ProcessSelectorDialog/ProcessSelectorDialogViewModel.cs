@@ -9,6 +9,7 @@ using Avalonia.Styling;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
+using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Processes;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Profiles;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Themes;
@@ -38,7 +39,8 @@ public class ProcessSelectorDialogViewModel
         IListProcessesHandler listProcessesHandler,
         GetMaxProfileId.Handler getMaxProfileIdHandler,
         GetThemeVariant.Handler getThemeVariantHandler,
-        string? selectedProcessModuleName
+        string? selectedProcessModuleName,
+        IFindWindowDialogVmFactory findWindowDialogVmFactory
     )
     {
         Activator = new ViewModelActivator();
@@ -57,6 +59,13 @@ public class ProcessSelectorDialogViewModel
             )
             .Bind(out _filtered)
             .Subscribe();
+
+        ShowSpecificWindowInteraction = new Interaction<FindWindowDialogVm, Unit>();
+        SpecificWindowCmd = ReactiveCommand.CreateFromTask(
+            async () =>
+                await ShowSpecificWindowInteraction.Handle(findWindowDialogVmFactory.Create())
+        );
+
         RefreshButtonCommand = ReactiveCommand.Create(
             () => _sourceProcessModels.EditDiff(listProcessesHandler.Execute())
         );
@@ -156,6 +165,10 @@ public class ProcessSelectorDialogViewModel
     public ReactiveCommand<Unit, Unit> RefreshButtonCommand { get; }
 
     public ReactiveCommand<Unit, ProfileVm> OkCommand { get; }
+
+    public IInteraction<FindWindowDialogVm, Unit> ShowSpecificWindowInteraction { get; }
+
+    public ReactiveCommand<Unit, Unit> SpecificWindowCmd { get; }
 
     public ReadOnlyObservableCollection<Queries.Processes.Models.ProcessModel> Filtered =>
         _filtered;
