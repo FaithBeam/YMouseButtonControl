@@ -15,6 +15,8 @@ public static partial class WindowUnderCursorOsx
 
         public Response? Execute(Query q)
         {
+            // KCgWindowListOptionOnScreenOnly causes the windows to be listed from front to back.
+            // So when matching the window, choose the first one that matches the mouse coordinates
             var windowList = CGWindowListCopyWindowInfo(
                 KCgWindowListOptionOnScreenOnly | ExcludeDesktopElements,
                 KCgNullWindowId
