@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using CFIndex = long;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
@@ -13,17 +12,23 @@ public partial class GetCurrentWindowOsx : IGetCurrentWindow
     private string GetForegroundWindow()
     {
         var nsWorkspace = objc_getClass("NSWorkspace");
-        var sharedWorkspace = objc_msgSend_retIntPtr(nsWorkspace, GetSelector("sharedWorkspace"));
-        var frontmostApplication = objc_msgSend_retIntPtr(
+        var sharedWorkspace = objc_msgSend(nsWorkspace, GetSelector("sharedWorkspace"));
+        var frontMostApplication = objc_msgSend(
             sharedWorkspace,
             GetSelector("frontmostApplication")
         );
-        var localizedName = objc_msgSend_retIntPtr(
-            frontmostApplication,
-            GetSelector("localizedName")
+        var localizedName = objc_msgSend(frontMostApplication, GetSelector("localizedName"));
+        var localizedNameBuffer = new char[CFStringGetLength(localizedName) + 1];
+        CfStringGetCStringWrapper(
+            localizedName,
+            localizedNameBuffer.AsSpan(),
+            localizedNameBuffer.Length,
+            KCfStringEncodingUtf8
         );
-        return GetStrFromCfString(localizedName);
+        return new string(localizedNameBuffer).TrimEnd('\0');
     }
+
+    private const int KCfStringEncodingUtf8 = 0x08000100; // UTF-8 encoding
 
     private const string AppKitFramework = "/System/Library/Frameworks/AppKit.framework/AppKit";
     private const string FoundationFramework =
@@ -32,90 +37,57 @@ public partial class GetCurrentWindowOsx : IGetCurrentWindow
         "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
 
     [LibraryImport(AppKitFramework, StringMarshalling = StringMarshalling.Utf8)]
-    internal static partial nint objc_getClass(string name);
+    private static partial nint objc_getClass(string name);
 
-    [LibraryImport(FoundationFramework, EntryPoint = "objc_msgSend")]
-    internal static partial nint objc_msgSend_retIntPtr(nint target, nint selector);
+    [LibraryImport(FoundationFramework)]
+    private static partial nint objc_msgSend(nint target, nint selector);
 
-    internal static nint GetSelector(string name)
+    [LibraryImport(CoreFoundation)]
+    private static partial long CFStringGetLength(nint theString);
+
+    [LibraryImport(FoundationFramework)]
+    private static partial void CFRelease(nint handle);
+
+    [LibraryImport(AppKitFramework)]
+    private static partial nint NSSelectorFromString(nint cfStr);
+
+    [LibraryImport(CoreFoundation, EntryPoint = "CFStringCreateWithCString")]
+    private static partial nint CfStringCreateWithCString(
+        nint allocator,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string cStr,
+        int encoding
+    );
+
+    [LibraryImport(CoreFoundation, EntryPoint = "CFStringGetCString")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool CfStringGetCString(
+        nint str,
+        Span<byte> buffer,
+        int bufferSize,
+        int encoding
+    );
+
+    private static nint GetSelector(string name)
     {
-        nint cfstrSelector = CreateCfString(name);
-        nint selector = NSSelectorFromString(cfstrSelector);
-        CFRelease(cfstrSelector);
+        var cfStrSelector = CfStringCreateWithCString(nint.Zero, name, KCfStringEncodingUtf8);
+        var selector = NSSelectorFromString(cfStrSelector);
+        CFRelease(cfStrSelector);
         return selector;
     }
 
-    [LibraryImport(CoreFoundation)]
-    internal static partial CFIndex CFStringGetLength(nint theString);
-
-    [LibraryImport(CoreFoundation)]
-    internal static partial void CFStringGetCharacters(nint theString, CfRange range, nint buffer);
-
-    private static unsafe string GetStrFromCfString(nint ptr)
+    private static bool CfStringGetCStringWrapper(
+        nint str,
+        Span<char> buffer,
+        int bufferSize,
+        int encoding
+    )
     {
-        var length = CFStringGetLength(ptr);
-        var u = CFStringGetCharactersPtr(ptr);
-        var buffer = nint.Zero;
-        if (u == nint.Zero)
+        var span = MemoryMarshal.Cast<char, byte>(buffer)[(buffer.Length - 1)..];
+        if (!CfStringGetCString(str, span, bufferSize, encoding))
         {
-            var range = new CfRange(0, length);
-            buffer = Marshal.AllocCoTaskMem((int)(length * 2));
-            CFStringGetCharacters(ptr, range, buffer);
-            u = buffer;
+            return false;
         }
-
-        var str = new string((char*)u, 0, (int)length);
-        if (buffer != nint.Zero)
-            Marshal.FreeCoTaskMem(buffer);
-        return str;
-    }
-
-    [LibraryImport(FoundationFramework)]
-    internal static partial void CFRelease(nint handle);
-
-    [LibraryImport(CoreFoundation)]
-    internal static partial nint CFStringGetCharactersPtr(nint theString);
-
-    [LibraryImport(AppKitFramework)]
-    internal static partial nint NSSelectorFromString(nint cfstr);
-
-    internal static unsafe nint CreateCfString(string aString)
-    {
-        var bytes = Encoding.Unicode.GetBytes(aString);
-        fixed (byte* b = bytes)
-        {
-            var cfStr = CFStringCreateWithBytes(
-                nint.Zero,
-                (nint)b,
-                bytes.Length,
-                CfStringEncoding.Utf16,
-                false
-            );
-            return cfStr;
-        }
-    }
-
-    [LibraryImport(FoundationFramework)]
-    internal static partial nint CFStringCreateWithBytes(
-        nint allocator,
-        nint buffer,
-        long bufferLength,
-        CfStringEncoding encoding,
-        [MarshalAs(UnmanagedType.Bool)] bool isExternalRepresentation
-    );
-
-    public enum CfStringEncoding : uint
-    {
-        Utf16 = 0x0100,
-        Utf16Be = 0x10000100,
-        Utf16Le = 0x14000100,
-        Ascii = 0x0600,
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct CfRange(CFIndex length, CFIndex location)
-    {
-        public CFIndex Length = length;
-        public CFIndex Location = location;
+        Encoding.ASCII.GetChars(span[..^1], buffer);
+        return true;
     }
 }

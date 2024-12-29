@@ -1,11 +1,7 @@
-using System;
-using System.Reactive.Disposables;
-using Avalonia;
 using Avalonia.ReactiveUI;
-using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 
-namespace YMouseButtonControl;
+namespace YMouseButtonControl.Views.Dialogs;
 
 public partial class FindWindowDialog : ReactiveWindow<FindWindowDialogVm>
 {

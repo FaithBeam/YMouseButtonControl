@@ -8,6 +8,7 @@ using YMouseButtonControl.Core.Services.Profiles;
 using YMouseButtonControl.Core.Services.Profiles.Queries.Profiles;
 using YMouseButtonControl.Core.ViewModels.App;
 using YMouseButtonControl.Core.ViewModels.Dialogs;
+using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.GlobalSettingsDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.SimulatedKeystrokesDialog;
@@ -72,10 +73,7 @@ public static class ServicesBootstrapper
         ProcessSelectorDialogHandlerRegistrations.RegisterLinux(services);
         if (Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11")
         {
-            services.AddScoped<
-                IGetCurrentWindow,
-                Core.Services.KeyboardAndMouse.Implementations.MouseListener.Queries.CurrentWindow.GetCurrentWindowLinuxX11
-            >();
+            services.AddScoped<IGetCurrentWindow, GetCurrentWindowLinuxX11>();
         }
         else
         {
@@ -98,6 +96,7 @@ public static class ServicesBootstrapper
         AppHandlerRegistrations.RegisterOsx(services);
         ProcessSelectorDialogHandlerRegistrations.RegisterOsx(services);
         GlobalSettingsDialogHandlerRegistrations.RegisterOsx(services);
+        FindWindowDialogHandlerRegistrations.RegisterOsx(services);
         services.AddScoped<IGetCurrentWindow, GetCurrentWindowOsx>();
     }
 }

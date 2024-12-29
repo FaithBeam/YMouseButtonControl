@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
-namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.MouseListener.Queries.CurrentWindow;
+namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
 public class GetCurrentWindowLinuxX11 : IGetCurrentWindow
 {
