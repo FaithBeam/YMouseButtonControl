@@ -12,5 +12,5 @@
 		<vm:FindWindowDialogVm />
 	</Design.DataContext>
 	
-	<Label Content="{Binding Response.Path}" />
+	<Label x:Name="PathLabel" Content="{Binding Response.Path, TargetNullValue='???', FallbackValue='???'}" />
 </Window>

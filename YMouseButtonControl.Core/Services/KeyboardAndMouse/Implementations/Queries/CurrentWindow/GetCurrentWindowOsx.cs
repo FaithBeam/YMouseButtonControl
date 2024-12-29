@@ -6,7 +6,7 @@ using CFIndex = long;
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
 
 // a lot of this code was copied from https://stackoverflow.com/a/44669560 and https://github.com/isnowrain/CoreFoundation/blob/master/Project/CFType.cs
-public class GetCurrentWindowOsx : IGetCurrentWindow
+public partial class GetCurrentWindowOsx : IGetCurrentWindow
 {
     public string ForegroundWindow => GetForegroundWindow();
 
@@ -31,13 +31,13 @@ public class GetCurrentWindowOsx : IGetCurrentWindow
     private const string CoreFoundation =
         "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
 
-    [DllImport(AppKitFramework, CharSet = CharSet.Ansi)]
-    public static extern nint objc_getClass(string name);
+    [LibraryImport(AppKitFramework, StringMarshalling = StringMarshalling.Utf8)]
+    internal static partial nint objc_getClass(string name);
 
-    [DllImport(FoundationFramework, EntryPoint = "objc_msgSend")]
-    public static extern nint objc_msgSend_retIntPtr(nint target, nint selector);
+    [LibraryImport(FoundationFramework, EntryPoint = "objc_msgSend")]
+    internal static partial nint objc_msgSend_retIntPtr(nint target, nint selector);
 
-    public static nint GetSelector(string name)
+    internal static nint GetSelector(string name)
     {
         nint cfstrSelector = CreateCfString(name);
         nint selector = NSSelectorFromString(cfstrSelector);
@@ -45,11 +45,11 @@ public class GetCurrentWindowOsx : IGetCurrentWindow
         return selector;
     }
 
-    [DllImport(CoreFoundation)]
-    static extern CFIndex CFStringGetLength(nint theString);
+    [LibraryImport(CoreFoundation)]
+    internal static partial CFIndex CFStringGetLength(nint theString);
 
-    [DllImport(CoreFoundation)]
-    static extern void CFStringGetCharacters(nint theString, CfRange range, nint buffer);
+    [LibraryImport(CoreFoundation)]
+    internal static partial void CFStringGetCharacters(nint theString, CfRange range, nint buffer);
 
     private static unsafe string GetStrFromCfString(nint ptr)
     {
@@ -70,16 +70,16 @@ public class GetCurrentWindowOsx : IGetCurrentWindow
         return str;
     }
 
-    [DllImport(FoundationFramework)]
-    public static extern void CFRelease(nint handle);
+    [LibraryImport(FoundationFramework)]
+    internal static partial void CFRelease(nint handle);
 
-    [DllImport(CoreFoundation)]
-    static extern nint CFStringGetCharactersPtr(nint theString);
+    [LibraryImport(CoreFoundation)]
+    internal static partial nint CFStringGetCharactersPtr(nint theString);
 
-    [DllImport(AppKitFramework)]
-    public static extern nint NSSelectorFromString(nint cfstr);
+    [LibraryImport(AppKitFramework)]
+    internal static partial nint NSSelectorFromString(nint cfstr);
 
-    public static unsafe nint CreateCfString(string aString)
+    internal static unsafe nint CreateCfString(string aString)
     {
         var bytes = Encoding.Unicode.GetBytes(aString);
         fixed (byte* b = bytes)
@@ -95,13 +95,13 @@ public class GetCurrentWindowOsx : IGetCurrentWindow
         }
     }
 
-    [DllImport(FoundationFramework)]
-    public static extern nint CFStringCreateWithBytes(
+    [LibraryImport(FoundationFramework)]
+    internal static partial nint CFStringCreateWithBytes(
         nint allocator,
         nint buffer,
         long bufferLength,
         CfStringEncoding encoding,
-        bool isExternalRepresentation
+        [MarshalAs(UnmanagedType.Bool)] bool isExternalRepresentation
     );
 
     public enum CfStringEncoding : uint
@@ -113,7 +113,7 @@ public class GetCurrentWindowOsx : IGetCurrentWindow
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct CfRange(CFIndex length, CFIndex location)
+    internal struct CfRange(CFIndex length, CFIndex location)
     {
         public CFIndex Length = length;
         public CFIndex Location = location;

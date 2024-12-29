@@ -1,29 +1,46 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog.Queries.WindowUnderCursor;
 using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog.Queries.WindowUnderCursor.Models;
 
 namespace YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 
-public partial class FindWindowDialogVm : ReactiveObject
+public partial class FindWindowDialogVm : ReactiveObject, IActivatableViewModel
 {
-    private readonly ObservableAsPropertyHelper<Response?> _response;
+    private ObservableAsPropertyHelper<Response?>? _response;
 
     public FindWindowDialogVm(
         IMouseListener mouseListener,
-        IWindowUnderCursorHandler windowUnderCursorHandler
+        IWindowUnderCursorHandler windowUnderCursorHandler,
+        ILogger<FindWindowDialogVm> logger
     )
     {
-        _response = mouseListener
-            .OnMouseMovedChanged.Select(e =>
-                windowUnderCursorHandler.Execute(
-                    new Queries.WindowUnderCursor.Models.Query(e.X, e.Y)
+        Activator = new ViewModelActivator();
+
+        this.WhenActivated(d =>
+        {
+            _response = mouseListener
+                .OnMouseMovedChanged.Select(e =>
+                    windowUnderCursorHandler.Execute(
+                        new Queries.WindowUnderCursor.Models.Query(e.X, e.Y)
+                    )
                 )
-            )
-            .ToProperty(this, x => x.Response);
+                .ToProperty(this, nameof(Response))
+                .DisposeWith(d);
+            //mouseListener.OnMouseMovedChanged.Subscribe(x => LogPath(logger, x)).DisposeWith(d);
+        });
     }
 
-    public Response? Response => _response.Value;
+    public Response? Response => _response?.Value;
+
+    public ViewModelActivator Activator { get; }
+
+    [LoggerMessage(LogLevel.Information, "{Path}")]
+    private static partial void LogPath(ILogger logger, NewMouseHookMoveEventArgs path);
 }

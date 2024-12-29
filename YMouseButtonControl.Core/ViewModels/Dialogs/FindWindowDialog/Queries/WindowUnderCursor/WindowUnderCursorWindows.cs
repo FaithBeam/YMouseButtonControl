@@ -24,7 +24,7 @@ public static class WindowUnderCursorWindows
             var hwnd = PInvoke.WindowFromPoint(p);
             if (hwnd.IsNull)
             {
-                throw new Win32Exception();
+                return null;
             }
 
             if (_hwnd is null)
@@ -55,7 +55,7 @@ public static class WindowUnderCursorWindows
 
             fixed (char* pText = new char[1024])
             {
-                var lenCopied = PInvoke.GetModuleFileNameEx(hProc, null, pText, 1024);
+                var lenCopied = PInvoke.GetProcessImageFileName(hProc, pText, 1024);
                 if (lenCopied == 0)
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error());

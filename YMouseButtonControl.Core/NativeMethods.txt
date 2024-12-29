@@ -1,5 +1,5 @@
 ﻿GetWindowThreadProcessId
-GetModuleFileNameEx
+GetProcessImageFileName
 OpenProcess
 GetForegroundWindow
 WindowFromPoint
