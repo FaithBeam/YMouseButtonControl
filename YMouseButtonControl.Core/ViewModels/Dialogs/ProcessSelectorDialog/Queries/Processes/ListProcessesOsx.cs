@@ -107,8 +107,7 @@ public static partial class ListProcessesOsx
                 x.WindowName,
                 x.ModuleName,
                 x.ProcessName,
-                x.Path,
-                x.Pid
+                x.Path
             ));
         }
 

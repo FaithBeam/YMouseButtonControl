@@ -3,3 +3,6 @@ GetProcessImageFileName
 OpenProcess
 GetForegroundWindow
 WindowFromPoint
+EnumWindows
+GetWindowText
+IsWindowVisible

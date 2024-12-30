@@ -9,6 +9,6 @@ public static class ListProcessesLinux
     public sealed class Handler : IListProcessesHandler
     {
         public IEnumerable<Models.ProcessModel> Execute() =>
-            Process.GetProcesses().Select(x => new Models.ProcessModel("", "", "", "", -1));
+            Process.GetProcesses().Select(x => new Models.ProcessModel("", "", "", ""));
     }
 }

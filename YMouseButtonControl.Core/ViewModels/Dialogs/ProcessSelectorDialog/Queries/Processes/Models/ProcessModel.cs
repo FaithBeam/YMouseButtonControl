@@ -7,8 +7,7 @@ public record ProcessModel(
     string WindowName,
     string ModuleName,
     string ProcessName,
-    string Path,
-    long Pid
+    string Path
 )
 {
     public Stream? Bitmap { get; set; }
