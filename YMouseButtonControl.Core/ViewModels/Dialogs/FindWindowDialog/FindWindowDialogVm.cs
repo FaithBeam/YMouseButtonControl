@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using YMouseButtonControl.Core.Services.KeyboardAndMouse.Enums;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.EventArgs;
 using YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog.Queries.WindowUnderCursor;
@@ -26,7 +26,10 @@ public partial class FindWindowDialogVm : ReactiveObject, IActivatableViewModel
         this.WhenActivated(d =>
         {
             _response = mouseListener
-                .OnMouseMovedChanged.Select(e =>
+                .OnMouseDragged.Sample(TimeSpan.FromSeconds(0.5))
+                .Where(x => x.Button == YMouseButton.MouseButton1)
+                .WhereNotNull()
+                .Select(e =>
                     windowUnderCursorHandler.Execute(
                         new Queries.WindowUnderCursor.Models.Query(e.X, e.Y)
                     )

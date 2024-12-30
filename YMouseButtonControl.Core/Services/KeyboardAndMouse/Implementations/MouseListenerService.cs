@@ -20,6 +20,7 @@ namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations;
 public interface IMouseListener : IDisposable
 {
     IObservable<NewMouseHookMoveEventArgs> OnMouseMovedChanged { get; }
+    IObservable<NewMouseHookDraggedEventArgs> OnMouseDragged { get; }
     IObservable<NewMouseHookEventArgs> OnMousePressedChanged { get; }
     IObservable<NewMouseHookEventArgs> OnMouseReleasedChanged { get; }
     IObservable<NewMouseWheelEventArgs> OnMouseWheelChanged { get; }
@@ -40,9 +41,11 @@ public partial class MouseListenerService : IMouseListener
     private readonly IDisposable? _mousePressedDisposable;
     private readonly IDisposable? _mouseReleasedDisposable;
     private readonly IDisposable? _mouseWheelDisposable;
+    private readonly IDisposable? _mouseDragDisposable;
     private readonly Subject<NewMouseHookEventArgs> _mousePressedSubject;
     private readonly Subject<NewMouseHookEventArgs> _mouseReleasedSubject;
     private readonly Subject<NewMouseHookMoveEventArgs> _mouseMovedSubject;
+    private readonly Subject<NewMouseHookDraggedEventArgs> _mouseDraggedSubject;
     private readonly Subject<NewMouseWheelEventArgs> _mouseWheelSubject;
     private readonly ReadOnlyCollection<ProfileForMouseListener> _profiles;
 
@@ -59,6 +62,7 @@ public partial class MouseListenerService : IMouseListener
         _mousePressedSubject = new Subject<NewMouseHookEventArgs>();
         _mouseReleasedSubject = new Subject<NewMouseHookEventArgs>();
         _mouseMovedSubject = new Subject<NewMouseHookMoveEventArgs>();
+        _mouseDraggedSubject = new Subject<NewMouseHookDraggedEventArgs>();
         _mouseWheelSubject = new Subject<NewMouseWheelEventArgs>();
         _profiles = listProfilesHandler.Execute();
 
@@ -66,6 +70,10 @@ public partial class MouseListenerService : IMouseListener
             .MouseMoved.Sample(TimeSpan.FromMilliseconds(100))
             .Where(x => !x.IsEventSimulated)
             .Subscribe(ConvertMouseMovedEvent);
+        _mouseDragDisposable = _hook
+            .MouseDragged.Sample(TimeSpan.FromMilliseconds(100))
+            .Where(x => !x.IsEventSimulated)
+            .Subscribe(ConvertMouseDraggedEvent);
         _mousePressedDisposable = _hook
             .MousePressed.Where(x => !x.IsEventSimulated)
             .Subscribe(ConvertMousePressedEvent);
@@ -83,6 +91,9 @@ public partial class MouseListenerService : IMouseListener
         _mouseReleasedSubject.AsObservable();
     public IObservable<NewMouseHookMoveEventArgs> OnMouseMovedChanged =>
         _mouseMovedSubject.AsObservable();
+
+    public IObservable<NewMouseHookDraggedEventArgs> OnMouseDragged =>
+        _mouseDraggedSubject.AsObservable();
     public IObservable<NewMouseWheelEventArgs> OnMouseWheelChanged =>
         _mouseWheelSubject.AsObservable();
 
@@ -143,6 +154,29 @@ public partial class MouseListenerService : IMouseListener
             ),
             _ => throw new ArgumentOutOfRangeException(),
         };
+
+    private void ConvertMouseDraggedEvent(MouseHookEventArgs e)
+    {
+        if (e is null)
+        {
+            return;
+        }
+        _mouseDraggedSubject.OnNext(
+            new NewMouseHookDraggedEventArgs(
+                e.Data.X,
+                e.Data.Y,
+                e.RawEvent.Mask switch
+                {
+                    ModifierMask.Button1 => YMouseButton.MouseButton1,
+                    ModifierMask.Button2 => YMouseButton.MouseButton2,
+                    ModifierMask.Button3 => YMouseButton.MouseButton3,
+                    ModifierMask.Button4 => YMouseButton.MouseButton4,
+                    ModifierMask.Button5 => YMouseButton.MouseButton5,
+                    _ => throw new ArgumentOutOfRangeException(),
+                }
+            )
+        );
+    }
 
     private void ConvertMouseWheelEvent(MouseWheelHookEventArgs e)
     {
@@ -247,6 +281,7 @@ public partial class MouseListenerService : IMouseListener
     public void Dispose()
     {
         _mouseMovedDisposable?.Dispose();
+        _mouseDragDisposable?.Dispose();
         _mousePressedDisposable?.Dispose();
         _mouseReleasedDisposable?.Dispose();
         _mouseWheelDisposable?.Dispose();
