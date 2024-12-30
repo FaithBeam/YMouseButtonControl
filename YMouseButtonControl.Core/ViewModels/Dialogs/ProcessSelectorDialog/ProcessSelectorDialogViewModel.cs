@@ -11,6 +11,7 @@ using DynamicData.Binding;
 using ReactiveUI;
 using YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Processes;
+using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Processes.Models;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Profiles;
 using YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Themes;
 using YMouseButtonControl.Core.ViewModels.Models;
@@ -28,7 +29,6 @@ public class ProcessSelectorDialogViewModel
         IProcessSelectorDialogViewModel,
         IActivatableViewModel
 {
-    private readonly SourceList<Queries.Processes.Models.ProcessModel> _sourceProcessModels;
     private string? _processFilter;
     private readonly ReadOnlyObservableCollection<Queries.Processes.Models.ProcessModel> _filtered;
     private Queries.Processes.Models.ProcessModel? _processModel;
@@ -46,15 +46,15 @@ public class ProcessSelectorDialogViewModel
         Activator = new ViewModelActivator();
 
         ThemeVariant = getThemeVariantHandler.Execute();
-        _sourceProcessModels = new SourceList<Queries.Processes.Models.ProcessModel>();
+        SourceList<ProcessModel> sourceProcessModels = new();
         var dynamicFilter = this.WhenValueChanged(x => x.ProcessFilter)
             .Select(CreateProcessFilterPredicate);
-        var filteredDisposable = _sourceProcessModels
+        var filteredDisposable = sourceProcessModels
             .Connect()
             .Filter(dynamicFilter)
             .Sort(
                 SortExpressionComparer<Queries.Processes.Models.ProcessModel>.Ascending(x =>
-                    x.Process.ProcessName
+                    x.ProcessName
                 )
             )
             .Bind(out _filtered)
@@ -67,7 +67,7 @@ public class ProcessSelectorDialogViewModel
         );
 
         RefreshButtonCommand = ReactiveCommand.Create(
-            () => _sourceProcessModels.EditDiff(listProcessesHandler.Execute())
+            () => sourceProcessModels.EditDiff(listProcessesHandler.Execute())
         );
         var canExecuteOkCommand = this.WhenAnyValue(
             x => x.SelectedProcessModel,
@@ -105,13 +105,13 @@ public class ProcessSelectorDialogViewModel
         this.WhenAnyValue(x => x.SelectedProcessModel)
             .Subscribe(x =>
             {
-                SelectedProcessModuleName = x?.Process.MainModule?.ModuleName;
-                SelectedProcessMainWindowTitle = x?.Process.MainWindowTitle;
+                SelectedProcessModuleName = x?.ModuleName;
+                SelectedProcessMainWindowTitle = x?.WindowName;
             });
         if (!string.IsNullOrWhiteSpace(selectedProcessModuleName))
         {
             var foundProc = _filtered.FirstOrDefault(x =>
-                x.Process.MainModule?.ModuleName == selectedProcessModuleName
+                x.ModuleName == selectedProcessModuleName
             );
             if (foundProc is not null)
             {
@@ -121,7 +121,7 @@ public class ProcessSelectorDialogViewModel
 
         this.WhenActivated(disposables =>
         {
-            _sourceProcessModels.EditDiff(listProcessesHandler.Execute());
+            sourceProcessModels.EditDiff(listProcessesHandler.Execute());
             Disposable.Create(() => { }).DisposeWith(disposables);
         });
     }
@@ -152,8 +152,8 @@ public class ProcessSelectorDialogViewModel
         }
 
         return model =>
-            !string.IsNullOrWhiteSpace(model.Process.ProcessName)
-            && model.Process.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
+            !string.IsNullOrWhiteSpace(model.ProcessName)
+            && model.ProcessName.Contains(txt, StringComparison.OrdinalIgnoreCase);
     }
 
     public string? ProcessFilter

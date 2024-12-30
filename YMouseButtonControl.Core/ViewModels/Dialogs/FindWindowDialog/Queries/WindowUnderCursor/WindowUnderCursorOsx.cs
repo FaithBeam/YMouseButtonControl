@@ -78,7 +78,17 @@ public static partial class WindowUnderCursorOsx
                     CfStringCreateWithCString(IntPtr.Zero, "Height", KCfStringEncodingUtf8)
                 );
 
+                var pidPtr = CFDictionaryGetValue(
+                    val,
+                    CfStringCreateWithCString(
+                        IntPtr.Zero,
+                        "kCGWindowOwnerPID",
+                        KCfStringEncodingUtf8
+                    )
+                );
+
                 // Get values from CFNumber
+                CfNumberGetValue(pidPtr, KcfNumberLongType, out var pid);
                 CfNumberGetValue(xPtr, KCfNumberIntType, out var x);
                 CfNumberGetValue(yPtr, KCfNumberIntType, out var y);
                 CfNumberGetValue(widthPtr, KCfNumberIntType, out var width);
@@ -109,6 +119,7 @@ public static partial class WindowUnderCursorOsx
         private const int KCgNullWindowId = 0;
         private const int KCfStringEncodingUtf8 = 0x08000100; // UTF-8 encoding
         private const int KCfNumberIntType = 3; // Type for CFNumber to int
+        private const int KcfNumberLongType = 10; // Type for CFNumber to long
 
         private const string CoreGraphics =
             "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics";

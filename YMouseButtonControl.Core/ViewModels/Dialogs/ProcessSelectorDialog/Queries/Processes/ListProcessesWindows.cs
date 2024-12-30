@@ -36,7 +36,7 @@ public static class ListProcessesWindows
                 }
             );
             return cb.DistinctBy(x => x.MainModule!.FileName)
-                .Select(x => new ProcessModel(x)
+                .Select(x => new ProcessModel("", "", "", "", -1)
                 {
                     Bitmap = GetBitmapStreamFromPath(x.MainModule!.FileName),
                 });

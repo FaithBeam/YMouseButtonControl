@@ -1,5 +1,4 @@
 using System.Reactive.Disposables;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -18,7 +17,13 @@ public partial class FindWindowDialog : ReactiveWindow<FindWindowDialogVm>
             CrosshairBtn
                 .AddDisposableHandler(
                     PointerPressedEvent,
-                    CrosshairBtn_OnPointerPressed,
+                    (_, _) =>
+                    {
+                        if (ViewModel != null)
+                        {
+                            ViewModel.CrosshairPressed = true;
+                        }
+                    },
                     RoutingStrategies.Tunnel
                 )
                 .DisposeWith(d);
@@ -26,26 +31,16 @@ public partial class FindWindowDialog : ReactiveWindow<FindWindowDialogVm>
             FindWindowDlgGrid
                 .AddDisposableHandler(
                     PointerReleasedEvent,
-                    FindWindowDlgGrid_OnPointerReleased,
+                    (_, _) =>
+                    {
+                        if (ViewModel is not null)
+                        {
+                            ViewModel.CrosshairPressed = false;
+                        }
+                    },
                     RoutingStrategies.Tunnel
                 )
                 .DisposeWith(d);
         });
-    }
-
-    private void CrosshairBtn_OnPointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        if (ViewModel is not null)
-        {
-            ViewModel.CrosshairPressed = true;
-        }
-    }
-
-    private void FindWindowDlgGrid_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        if (ViewModel is not null)
-        {
-            ViewModel.CrosshairPressed = false;
-        }
     }
 }

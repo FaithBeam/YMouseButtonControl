@@ -5,6 +5,8 @@
         xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;assembly=YMouseButtonControl.Core"
         x:DataType="vm:FindWindowDialogVm"
         WindowStartupLocation="CenterOwner"
+        Width="500"
+        Height="800"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YMouseButtonControl.Views.Dialogs.FindWindowDialog"
         Topmost="True"
@@ -14,12 +16,21 @@
         <vm:FindWindowDialogVm />
     </Design.DataContext>
     
-    <Grid x:Name="FindWindowDlgGrid" RowDefinitions="Auto,Auto">
-        <Button x:Name="CrosshairBtn" Grid.Row="0">
-            <Image Source="../../Resources/crosshair.png" Width="32" Height="32" />
-        </Button>
+    <Grid x:Name="FindWindowDlgGrid" RowDefinitions="Auto,Auto" Margin="5">
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*">
+            <Label Grid.Row="0" Grid.Column="0" Content="Find Method" />
+            <Button Grid.Row="1" Grid.Column="0" x:Name="CrosshairBtn">
+                <Image Source="../../Resources/crosshair.png" Width="32" Height="32" />
+            </Button>
+            <Label Grid.Row="1" Grid.Column="1" Content="Click and drag the window finder icon to the window you want to select."/>
+        </Grid>
         
-        <Label Grid.Row="1" x:Name="PathLabel"
-               Content="{Binding Response.Path, TargetNullValue='???', FallbackValue='???'}" />
+        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" ColumnDefinitions="150,*">
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Window Details"/>
+            
+            <Label Grid.Row="1" Grid.Column="0" Content="Process"/>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="PathTxtBox"
+                   Text="{Binding Response.Path, TargetNullValue='???', FallbackValue='???'}" />
+        </Grid>
     </Grid>
 </Window>

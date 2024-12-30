@@ -56,10 +56,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Process"  Binding="{Binding Process.MainModule.ModuleName}" />
-                <DataGridTextColumn Header="ProcessName" Binding="{Binding Process.ProcessName}" />
-                <DataGridTextColumn Header="Window Title" Binding="{Binding Process.MainWindowTitle}" />
-                <DataGridTextColumn Header="File Name" Binding="{Binding Process.MainModule.FileName}" />
+                <DataGridTextColumn Header="Process"  Binding="{Binding ModuleName}" />
+                <DataGridTextColumn Header="ProcessName" Binding="{Binding ProcessName}" />
+                <DataGridTextColumn Header="Window Title" Binding="{Binding WindowName}" />
+                <DataGridTextColumn Header="File Name" Binding="{Binding Path}" />
             </DataGrid.Columns>
         </DataGrid>
 

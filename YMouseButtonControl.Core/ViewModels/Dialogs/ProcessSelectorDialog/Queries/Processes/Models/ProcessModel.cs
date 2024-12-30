@@ -3,14 +3,18 @@ using System.IO;
 
 namespace YMouseButtonControl.Core.ViewModels.Dialogs.ProcessSelectorDialog.Queries.Processes.Models;
 
-public record ProcessModel(Process P)
+public record ProcessModel(
+    string WindowName,
+    string ModuleName,
+    string ProcessName,
+    string Path,
+    long Pid
+)
 {
-    public Process Process { get; } = P;
     public Stream? Bitmap { get; set; }
 
     public void Dispose()
     {
-        Process.Dispose();
         Bitmap?.Dispose();
     }
 }
