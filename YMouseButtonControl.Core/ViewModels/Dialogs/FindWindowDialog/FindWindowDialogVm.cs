@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ namespace YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;
 public partial class FindWindowDialogVm : ReactiveObject, IActivatableViewModel
 {
     private ObservableAsPropertyHelper<Response?>? _response;
+    private bool _crosshairPressed;
 
     public FindWindowDialogVm(
         IMouseListener mouseListener,
@@ -27,7 +29,7 @@ public partial class FindWindowDialogVm : ReactiveObject, IActivatableViewModel
         {
             _response = mouseListener
                 .OnMouseDragged.Sample(TimeSpan.FromSeconds(0.5))
-                .Where(x => x.Button == YMouseButton.MouseButton1)
+                .Where(x => x.Button == YMouseButton.MouseButton1 && CrosshairPressed)
                 .WhereNotNull()
                 .Select(e =>
                     windowUnderCursorHandler.Execute(
@@ -41,6 +43,12 @@ public partial class FindWindowDialogVm : ReactiveObject, IActivatableViewModel
     }
 
     public Response? Response => _response?.Value;
+
+    public bool CrosshairPressed
+    {
+        get => _crosshairPressed;
+        set => this.RaiseAndSetIfChanged(ref _crosshairPressed, value);
+    }
 
     public ViewModelActivator Activator { get; }
 

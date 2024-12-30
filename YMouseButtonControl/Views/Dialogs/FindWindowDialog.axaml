@@ -2,15 +2,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;assembly=YMouseButtonControl.Core"
-		x:DataType="vm:FindWindowDialogVm"
-		WindowStartupLocation="CenterOwner"
+        xmlns:vm="clr-namespace:YMouseButtonControl.Core.ViewModels.Dialogs.FindWindowDialog;assembly=YMouseButtonControl.Core"
+        x:DataType="vm:FindWindowDialogVm"
+        WindowStartupLocation="CenterOwner"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YMouseButtonControl.Views.Dialogs.FindWindowDialog"
+        Topmost="True"
         Title="FindWindowDialog">
-	<Design.DataContext>
-		<vm:FindWindowDialogVm />
-	</Design.DataContext>
-	
-	<Label x:Name="PathLabel" Content="{Binding Response.Path, TargetNullValue='???', FallbackValue='???'}" />
+    
+    <Design.DataContext>
+        <vm:FindWindowDialogVm />
+    </Design.DataContext>
+    
+    <Grid x:Name="FindWindowDlgGrid" RowDefinitions="Auto,Auto">
+        <Button x:Name="CrosshairBtn" Grid.Row="0">
+            <Image Source="../../Resources/crosshair.png" Width="32" Height="32" />
+        </Button>
+        
+        <Label Grid.Row="1" x:Name="PathLabel"
+               Content="{Binding Response.Path, TargetNullValue='???', FallbackValue='???'}" />
+    </Grid>
 </Window>
