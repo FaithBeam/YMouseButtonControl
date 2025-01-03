@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Threading.Tasks;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.Threading;
@@ -41,7 +37,17 @@ public static partial class ListProcessesWindows
                 handle.Free();
             }
 
-            return windows.Select(x => new ProcessModel(x.Title, x.Title, x.Title, GetPath(x.Hwnd)!));
+            return windows.Select(x =>
+            {
+                var path =
+                    GetPath(x.Hwnd)
+                    ?? throw new System.Exception(
+                        $"Could not find path for hwnd: {x.Hwnd}, window title: {x.Title}"
+                    );
+                var moduleName = Path.GetFileName(path);
+                var processName = Path.GetFileNameWithoutExtension(moduleName); // this needs to be changed to actually get the process name
+                return new ProcessModel(x.Title, moduleName, processName, path);
+            });
         }
 
         // Structure to hold window information
@@ -77,7 +83,7 @@ public static partial class ListProcessesWindows
 
             fixed (char* pText = new char[1024])
             {
-                var lenCopied = PInvoke.GetProcessImageFileName(hProc, pText, 1024);
+                var lenCopied = PInvoke.GetModuleFileNameEx(hProc, null, pText, 1024);
                 if (lenCopied == 0)
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -90,7 +96,6 @@ public static partial class ListProcessesWindows
         // Callback function to be called for each window
         private static unsafe BOOL EnumWindowsCallback(HWND hwnd, LPARAM lParam)
         {
-            // Create a StringBuilder to hold the window title
             fixed (char* titleBuff = new char[1024])
             {
                 if (PInvoke.GetWindowText(hwnd, titleBuff, 1024) < 1)

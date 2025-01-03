@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Windows.Win32;
+using Windows.Win32.Foundation;
 using Windows.Win32.System.Threading;
 
 namespace YMouseButtonControl.Core.Services.KeyboardAndMouse.Implementations.Queries.CurrentWindow;
@@ -47,7 +49,7 @@ public partial class GetCurrentWindowWindows(ILogger<GetCurrentWindowWindows> lo
 
         fixed (char* pText = new char[1024])
         {
-            var lenCopied = PInvoke.GetProcessImageFileName(hProc, pText, 1024);
+            var lenCopied = PInvoke.GetModuleFileNameEx(hProc, null, pText, 1024);
             if (lenCopied == 0)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());

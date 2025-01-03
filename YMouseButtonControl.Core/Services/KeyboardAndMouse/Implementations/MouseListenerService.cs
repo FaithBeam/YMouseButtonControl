@@ -157,7 +157,14 @@ public partial class MouseListenerService : IMouseListener
 
     private void ConvertMouseDraggedEvent(MouseHookEventArgs e)
     {
-        if (e is null)
+        if (
+            e is null
+            || e.RawEvent.Mask != ModifierMask.Button1
+            || e.RawEvent.Mask != ModifierMask.Button2
+            || e.RawEvent.Mask != ModifierMask.Button3
+            || e.RawEvent.Mask != ModifierMask.Button4
+            || e.RawEvent.Mask != ModifierMask.Button5
+        )
         {
             return;
         }
