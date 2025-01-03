@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reactive.Disposables;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
@@ -14,6 +15,8 @@ public partial class FindWindowDialog : ReactiveWindow<FindWindowDialogVm>
 
         this.WhenActivated(d =>
         {
+            this.OneWayBind(ViewModel, vm => vm.Response!.Path, v => v.PathTxtBox.Text);
+
             CrosshairBtn
                 .AddDisposableHandler(
                     PointerPressedEvent,

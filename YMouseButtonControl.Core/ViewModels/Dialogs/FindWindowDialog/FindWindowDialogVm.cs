@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -32,10 +33,11 @@ public partial class FindWindowDialogVm : ReactiveObject, IActivatableViewModel
                 .Where(x => x.Button == YMouseButton.MouseButton1 && CrosshairPressed)
                 .WhereNotNull()
                 .Select(e =>
-                    windowUnderCursorHandler.Execute(
+                {
+                    return windowUnderCursorHandler.Execute(
                         new Queries.WindowUnderCursor.Models.Query(e.X, e.Y)
-                    )
-                )
+                    );
+                })
                 .ToProperty(this, nameof(Response))
                 .DisposeWith(d);
             //mouseListener.OnMouseMovedChanged.Subscribe(x => LogPath(logger, x)).DisposeWith(d);

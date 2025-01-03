@@ -30,7 +30,7 @@
             
             <Label Grid.Row="1" Grid.Column="0" Content="Process"/>
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="PathTxtBox"
-                   Text="{Binding Response.Path, TargetNullValue='???', FallbackValue='???'}" />
+                   Text="{Binding Response.Path}" />
         </Grid>
     </Grid>
 </Window>
