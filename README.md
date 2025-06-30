@@ -57,9 +57,14 @@ Anything that can install .NET 8 should be able to run YMouseButtonControl
 2. `cd YMouseButtonControl`
 3. ```
    dotnet publish YMouseButtonControl/YMouseButtonControl.csproj \
-    -c Release \
-    -r YOUR_PLATFORM \
-    -o bin
+       -c Release \
+       -r YOUR_PLATFORM \
+       -o bin \
+       --self-contained true \
+       /p:PublishSingleFile=true \
+       /p:IncludeNativeLibrariesForSelfExtract=true \
+       /p:EnableCompressionInSingleFile=true
+
    ```
     * YOUR_PLATFORM: win-x64, linux-x64, osx-x64, [more runtimes here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog)
 4. YMouseButtonControl executable is located in bin folder
